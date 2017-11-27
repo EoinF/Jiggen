@@ -8,6 +8,7 @@ buildscript {
         jcenter()
     }
     dependencies {
+        classpath 'de.richsource.gradle.plugins:gwt-gradle-plugin:0.6'
         
 
     }
@@ -19,7 +20,7 @@ allprojects {
 
     version = '1.0'
     ext {
-        appName = "jigsaw-generator"
+        appName = "Jiggen"
         gdxVersion = '1.9.6'
         roboVMVersion = '2.3.1'
         box2DLightsVersion = '1.4'
@@ -43,6 +44,20 @@ project(":desktop") {
         compile project(":core")
         compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        
+    }
+}
+
+project(":html") {
+    apply plugin: "gwt"
+    apply plugin: "war"
+
+
+    dependencies {
+        compile project(":core")
+        compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
+        compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
         
     }
 }
