@@ -1,48 +1,43 @@
-package com.github.eoinf.jiggen;
+package com.github.eoinf.jiggen.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.github.eoinf.jiggen.Jiggen;
+import com.github.eoinf.jiggen.PuzzleGraph;
+import com.github.eoinf.jiggen.PuzzlePiece;
 
 import java.util.List;
 
 public class PuzzleSolver implements Screen {
 
+    private static final float MAX_ZOOM = 4;
+    private static final float MIN_ZOOM = 0.1f;
+    private static final float ZOOM_RATE = 0.1f;
+
     private Jiggen game;
     PuzzleGraph puzzleGraph;
+
     OrthographicCamera camera;
-    Texture templateTexture;
-
-    private static final float DEFAULT_CAMERA_SPEED = 200f;
-    private static final int VIEWPORT_WIDTH = 1280;
-    private static final int VIEWPORT_HEIGHT = 720;
-
 
     private PuzzlePiece pieceHeld;
     private Vector2 pieceOffsetHeld;
 
     Stage gameStage;
 
-    public PuzzleSolver(Jiggen game, PuzzleGraph puzzleGraph, Texture templateTexture) {
+    public PuzzleSolver(Jiggen game, PuzzleGraph puzzleGraph) {
         this.game = game;
+        this.camera = game.camera;
         this.puzzleGraph = puzzleGraph;
-        this.templateTexture = templateTexture;
-
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
 
         gameStage = new Stage(new ScreenViewport(camera), game.batch);
         for (Actor actor: puzzleGraph.getVertices()) {
@@ -53,7 +48,7 @@ public class PuzzleSolver implements Screen {
 
         gameStage.addListener(new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                Vector3 mousePositionInWorld = camera.unproject(new Vector3(x, gameStage.getHeight() - y, 0));
+                Vector3 mousePositionInWorld = new Vector3(x, y, 0);
                 Actor a = gameStage.hit(mousePositionInWorld.x, mousePositionInWorld.y, true);
                 if (a != null) {
                     List<PuzzlePiece> pieceList = puzzleGraph.getVertices();
@@ -82,6 +77,15 @@ public class PuzzleSolver implements Screen {
                 }
                 return super.keyDown(event, keycode);
             }
+
+            @Override
+            public boolean scrolled(InputEvent event, float x, float y, int scrollDirection) {
+                OrthographicCamera orthographicCamera = camera;
+                orthographicCamera.zoom += scrollDirection * ZOOM_RATE;
+                orthographicCamera.zoom = Math.max(MIN_ZOOM, orthographicCamera.zoom);
+                orthographicCamera.zoom = Math.min(MAX_ZOOM, orthographicCamera.zoom);
+                return true;
+            }
         });
 
         Gdx.input.setInputProcessor(gameStage);
@@ -101,19 +105,13 @@ public class PuzzleSolver implements Screen {
                     mousePositionInWorld.y + pieceOffsetHeld.y);
         }
         gameStage.act();
-        updateCameraInput(delta);
-        camera.update();
+        game.updateCameraInput(delta);
     }
 
     @Override
     public void render(float delta) {
         update(delta);
 
-        Gdx.gl.glClearColor(0, 0, 0.2f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        game.batch.setProjectionMatrix(camera.combined);
-        //game.batch.draw(templateTexture, 350, 50);
         gameStage.draw();
     }
 
@@ -140,26 +138,5 @@ public class PuzzleSolver implements Screen {
     @Override
     public void dispose() {
 
-    }
-
-    public void updateCameraInput(float delta) {
-        float zoom = camera.zoom * camera.zoom * 2;
-
-        int translateX = 0;
-        int translateY = 0;
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            translateX = -(int)((DEFAULT_CAMERA_SPEED + zoom) * delta);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            translateX = (int)((DEFAULT_CAMERA_SPEED + zoom) * delta);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            translateY = (int)((DEFAULT_CAMERA_SPEED + zoom) * delta);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            translateY = -(int)((DEFAULT_CAMERA_SPEED + zoom) * delta);
-        }
-        camera.translate(translateX, translateY);
-        camera.update();
     }
 }

@@ -38,12 +38,13 @@ public class PuzzleGraph {
         piece.setScale(this.scale);
 
 
-        Color newColour = new Color(0.3f + (seed * 50) % 0.7f,
+        /* Color newColour = new Color(0.3f + (seed * 50) % 0.7f,
                 0.3f + (seed * 200) % 0.7f,
                 0.5f + (seed / 2) % 0.5f,
                 1);
 
         piece.setColor(newColour);
+        */
     }
 
     public void shuffle() {

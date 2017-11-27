@@ -9,29 +9,31 @@ import java.util.Set;
 
 public class PixelSearcher {
 
-    Pixmap pixmap;
-    int width;
-    int height;
+    private Pixmap templatePixmap;
+    private Pixmap backgroundPixmap;
+    private int width;
+    private int height;
 
     Color buffer;
 
     // Represents each of the pixels traversed already
-    boolean[][] pixelsTraversed;
-    int maxX;
-    int maxY;
-    GridPoint2 maxXcoord;
-    GridPoint2 maxYcoord;
-    int minX;
-    int minY;
+    private boolean[][] pixelsTraversed;
+    private int maxX;
+    private int maxY;
+    private GridPoint2 maxXcoord;
+    private GridPoint2 maxYcoord;
+    private int minX;
+    private int minY;
 
-    private static final float BRIGHTNESS_THRESHOLD = 0.95f;
+    public static final float BRIGHTNESS_THRESHOLD = 0.95f;
 
-    public PixelSearcher(Pixmap pixmap, int width, int height) {
-        this.pixmap = pixmap;
+    public PixelSearcher(Pixmap templatePixmap, Pixmap backgroundPixmap, int width, int height) {
+        this.templatePixmap = templatePixmap;
+        this.backgroundPixmap = backgroundPixmap;
         this.width = width;
         this.height = height;
 
-        this.buffer = Color.BLACK;
+        this.buffer = Color.BLACK.cpy();
     }
 
     public GridPoint2 findNearestPixel(boolean targetValue, int currentX, int currentY) {
@@ -62,7 +64,7 @@ public class PixelSearcher {
      * @return
      */
     public void floodFillPiece(int startX, int startY) {
-        pixelsTraversed = new boolean[width + 2][];
+        pixelsTraversed = new boolean[height + 2][];
         // Map out the implicit border of the values outside the image
         for (int y = 0; y < pixelsTraversed.length; y++) {
             pixelsTraversed[y] = new boolean[width + 2];
@@ -122,7 +124,7 @@ public class PixelSearcher {
 
 
     public PuzzlePiece generatePuzzlePiece(int startX, int startY) {
-        // Take the extra width of the border into account for the new pixmap
+        // Take the extra width of the border into account for the new templatePixmap
         int maxXPastBorder = maxXcoord.x + 1;
         while(maxXPastBorder < width && isPixelDark(maxXPastBorder, maxXcoord.y)) {
             maxXPastBorder++;
@@ -150,8 +152,12 @@ public class PixelSearcher {
                 boolean isDark = isPixelDark(x + minX, y + minY);
                 // If we haven't traversed this ignore it
                 if (pixelsTraversed[minY + y + 1][minX + x + 1]) {
+
+                    Color background = isDark ?
+                            Color.BLACK.cpy() :
+                            getBackgroundPixelColour(x + minX, y + minY);
                     // We have traversed this pixel
-                    newPixMap.drawPixel(x, y, Color.rgba8888(buffer));
+                    newPixMap.drawPixel(x, y, Color.rgba8888(background));
                 }
             }
         }
@@ -161,11 +167,16 @@ public class PixelSearcher {
 
     private boolean isPixelDark(int currentX, int currentY) {
         return currentX >= width || currentY >= height || currentX < 0 || currentY < 0 ||
-                getPixelBrightness(currentX, currentY) < BRIGHTNESS_THRESHOLD;
+                utils.getBrightness(getPixelColour(currentX, currentY)) < BRIGHTNESS_THRESHOLD;
     }
 
-    private float getPixelBrightness(int currentX, int currentY) {
-        Color.rgba8888ToColor(buffer, pixmap.getPixel(currentX, currentY));
-        return ((buffer.r + buffer.g + buffer.b) / 3) * buffer.a;
+    private Color getPixelColour(int currentX, int currentY) {
+        Color.rgba8888ToColor(buffer, templatePixmap.getPixel(currentX, currentY));
+        return buffer;
+    }
+
+    private Color getBackgroundPixelColour(int currentX, int currentY) {
+        Color.rgba8888ToColor(buffer, backgroundPixmap.getPixel(currentX, currentY));
+        return buffer;
     }
 }

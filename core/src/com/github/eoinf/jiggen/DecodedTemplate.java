@@ -1,11 +1,8 @@
 package com.github.eoinf.jiggen;
 
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
-
-import java.io.File;
 
 public class DecodedTemplate {
 
@@ -15,26 +12,28 @@ public class DecodedTemplate {
     private PuzzleGraph puzzleGraph;
     private PixelSearcher pixelSearcher;
 
-    public PuzzleGraph getGraph() {
-        return puzzleGraph;
-    }
 
-    public Texture getTexture() {
-        return texture;
-    }
-
-    public DecodedTemplate(File templateFile) {
-        texture = new Texture(new FileHandle(templateFile));
+    public DecodedTemplate(Texture template)
+    {
+        texture = template;
 
         if (!texture.getTextureData().isPrepared()) {
             texture.getTextureData().prepare();
         }
 
-        Pixmap fullTemplatePixmap = texture.getTextureData().consumePixmap();
-
         width = texture.getWidth();
         height = texture.getHeight();
+    }
 
+    public PuzzleGraph decode(Texture backgroundTexture) {
+        if (!texture.getTextureData().isPrepared()) {
+            texture.getTextureData().prepare();
+        }
+        if (!backgroundTexture.getTextureData().isPrepared()) {
+            backgroundTexture.getTextureData().prepare();
+        }
+        Pixmap fullTemplatePixmap = texture.getTextureData().consumePixmap();
+        Pixmap fullBackgroundPixmap = backgroundTexture.getTextureData().consumePixmap();
 
         puzzleGraph = new PuzzleGraph(width, height);
 
@@ -44,7 +43,7 @@ public class DecodedTemplate {
             PuzzlePiece tallestPiece = null;
 
             while(x < width) {
-                PuzzlePiece piece = extractNextPiece(fullTemplatePixmap, x, y);
+                PuzzlePiece piece = extractNextPiece(fullTemplatePixmap, fullBackgroundPixmap, x, y);
                 x = (int)piece.getPosition().x + piece.width;
                 if (tallestPiece == null
                         || piece.height > tallestPiece.height) {
@@ -56,12 +55,18 @@ public class DecodedTemplate {
             y = (int)tallestPiece.getPosition().y + tallestPiece.height;
         }
 
+        // Flip all of the pieces vertically, because the y axis
+        // is inverted when working with pixmaps
         puzzleGraph.flipPieces();
+
+        fullBackgroundPixmap.dispose();
+        fullTemplatePixmap.dispose();
+        return puzzleGraph;
     }
 
 
-    private PuzzlePiece extractNextPiece(Pixmap pixmap, int startX, int startY) {
-        pixelSearcher = new PixelSearcher(pixmap, width, height);
+    private PuzzlePiece extractNextPiece(Pixmap templatePixmap, Pixmap backgroundPixmap, int startX, int startY) {
+        pixelSearcher = new PixelSearcher(templatePixmap, backgroundPixmap, width, height);
 
         GridPoint2 topLeftCorner = pixelSearcher.findNearestPixel(false, startX, startY);
         pixelSearcher.floodFillPiece(topLeftCorner.x, topLeftCorner.y);
