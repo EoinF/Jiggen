@@ -81,7 +81,7 @@ public class PixelSearcher {
         minX = width;
         minY = height;
 
-        Set<GridPoint2> paths = new HashSet<>();
+        Set<GridPoint2> paths = new HashSet<GridPoint2>();
         paths.add(new GridPoint2(startX, startY));
         fillNext(paths);
     }

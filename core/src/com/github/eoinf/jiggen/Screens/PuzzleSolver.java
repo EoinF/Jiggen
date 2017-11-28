@@ -3,7 +3,6 @@ package com.github.eoinf.jiggen.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -34,10 +33,10 @@ public class PuzzleSolver implements Screen {
 
     Stage gameStage;
 
-    public PuzzleSolver(Jiggen game, PuzzleGraph puzzleGraph) {
+    public PuzzleSolver(Jiggen game, PuzzleGraph _puzzleGraph) {
         this.game = game;
         this.camera = game.camera;
-        this.puzzleGraph = puzzleGraph;
+        this.puzzleGraph = _puzzleGraph;
 
         gameStage = new Stage(new ScreenViewport(camera), game.batch);
         for (Actor actor: puzzleGraph.getVertices()) {

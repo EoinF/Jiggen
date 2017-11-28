@@ -32,10 +32,12 @@ public class TemplatePicker implements Screen {
     OrthographicCamera camera;
     Texture templateTexture;
     Stage pickerStage;
+    Texture backgroundTexture;
 
-    public TemplatePicker(Jiggen game, Texture backgroundTexture) {
-        this.game = game;
+    public TemplatePicker(Jiggen _game, Texture _backgroundTexture) {
+        this.game = _game;
         this.camera = game.camera;
+        this.backgroundTexture = _backgroundTexture;
 
         pickerStage = new Stage(new ScreenViewport(game.camera), game.batch);
         pickerStage.addListener(new InputListener() {
@@ -59,19 +61,24 @@ public class TemplatePicker implements Screen {
         });
         Gdx.input.setInputProcessor(pickerStage);
 
-        File[] files = new File("core/assets/templates").listFiles();
+        FileHandle[] files = Gdx.files.internal("templates").list();
 
-        List<File> templateFiles = new ArrayList<>();
-        for (File f: files) {
-            if (f.isFile() && f.getName().endsWith(".jpg")) {
+        List<FileHandle> templateFiles = new ArrayList<>();
+        for (FileHandle f: files) {
+            if (!f.isDirectory() && f.name().endsWith(".jpg")) {
                 templateFiles.add(f);
             }
         }
 
-        Random random = new Random();
-        File randomTemplate = templateFiles.get(random.nextInt(templateFiles.size()));
+        FileHandle fileHandle;
+        if (templateFiles.size() != 0) {
+            Random random = new Random();
+            fileHandle = templateFiles.get(random.nextInt(templateFiles.size()));
+        } else {
+            fileHandle = Gdx.files.internal("templates/5x7puzzletemplate.jpg");
+        }
 
-        this.templateTexture = new Texture(new FileHandle(randomTemplate));
+        this.templateTexture = new Texture(fileHandle);
 
         this.templateTexture = utils.stretchTexture(templateTexture,
                 new GridPoint2(backgroundTexture.getWidth(), backgroundTexture.getHeight()));

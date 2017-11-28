@@ -23,8 +23,8 @@ public class PuzzleGraph {
 
     public PuzzleGraph(int width, int height) {
         super();
-        vertices = new ArrayList<>();
-        edges = new ArrayList<>();
+        vertices = new ArrayList<PuzzlePiece>();
+        edges = new ArrayList<int[]>();
         this.width = width;
         this.height = height;
         this.scale = 1;

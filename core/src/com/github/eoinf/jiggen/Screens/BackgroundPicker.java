@@ -18,8 +18,10 @@ import com.github.eoinf.jiggen.utils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 
 public class BackgroundPicker implements Screen {
@@ -33,8 +35,8 @@ public class BackgroundPicker implements Screen {
     Texture backgroundTexture;
     Stage pickerStage;
 
-    public BackgroundPicker(Jiggen game) {
-        this.game = game;
+    public BackgroundPicker(Jiggen _game) {
+        this.game = _game;
         this.camera = game.camera;
 
         pickerStage = new Stage(new ScreenViewport(game.camera), game.batch);
@@ -58,19 +60,23 @@ public class BackgroundPicker implements Screen {
         });
         Gdx.input.setInputProcessor(pickerStage);
 
-        File[] files = new File("core/assets/backgrounds").listFiles();
+        FileHandle[] files = Gdx.files.internal("backgrounds/").list();
 
-        List<File> backgroundFiles = new ArrayList<>();
-        for (File f: files) {
-            if (f.isFile() && f.getName().endsWith(".jpg")) {
+        List<FileHandle> backgroundFiles = new ArrayList<>();
+        for (FileHandle f: files) {
+            if (!f.isDirectory() && f.name().endsWith(".jpg")) {
                 backgroundFiles.add(f);
             }
         }
 
-        Random random = new Random();
-        File randomTemplate = backgroundFiles.get(random.nextInt(backgroundFiles.size()));
-
-        this.backgroundTexture = new Texture(new FileHandle(randomTemplate));
+        FileHandle fileHandle;
+        if (backgroundFiles.size() != 0) {
+            Random random = new Random();
+            fileHandle = backgroundFiles.get(random.nextInt(backgroundFiles.size()));
+        } else {
+            fileHandle = Gdx.files.internal("backgrounds/pizza.jpg");
+        }
+        this.backgroundTexture = new Texture(fileHandle);
 
         pickerStage.addActor(new Image(backgroundTexture));
     }
