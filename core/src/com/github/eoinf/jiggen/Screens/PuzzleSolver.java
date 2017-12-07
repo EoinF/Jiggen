@@ -12,8 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.eoinf.jiggen.Jiggen;
-import com.github.eoinf.jiggen.PuzzleGraph;
-import com.github.eoinf.jiggen.PuzzlePiece;
+import com.github.eoinf.jiggen.PuzzleExtractor.PuzzleGraph;
+import com.github.eoinf.jiggen.PuzzleExtractor.PuzzlePiece;
 
 import java.util.List;
 

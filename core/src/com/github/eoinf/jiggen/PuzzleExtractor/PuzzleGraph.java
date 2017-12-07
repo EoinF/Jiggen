@@ -1,6 +1,5 @@
-package com.github.eoinf.jiggen;
+package com.github.eoinf.jiggen.PuzzleExtractor;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
@@ -23,8 +22,8 @@ public class PuzzleGraph {
 
     public PuzzleGraph(int width, int height) {
         super();
-        vertices = new ArrayList<PuzzlePiece>();
-        edges = new ArrayList<int[]>();
+        vertices = new ArrayList<>();
+        edges = new ArrayList<>();
         this.width = width;
         this.height = height;
         this.scale = 1;
@@ -33,18 +32,8 @@ public class PuzzleGraph {
 
     public void addVertex(PuzzlePiece piece) {
         Random random = new Random();
-        float seed = random.nextFloat();
         vertices.add(piece);
         piece.setScale(this.scale);
-
-
-        /* Color newColour = new Color(0.3f + (seed * 50) % 0.7f,
-                0.3f + (seed * 200) % 0.7f,
-                0.5f + (seed / 2) % 0.5f,
-                1);
-
-        piece.setColor(newColour);
-        */
     }
 
     public void shuffle() {

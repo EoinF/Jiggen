@@ -12,11 +12,11 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.github.eoinf.jiggen.DecodedTemplate;
+import com.github.eoinf.jiggen.PuzzleExtractor.DecodedTemplate;
 import com.github.eoinf.jiggen.Jiggen;
+import com.github.eoinf.jiggen.PuzzleExtractor.PuzzleFactory;
 import com.github.eoinf.jiggen.utils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -34,10 +34,10 @@ public class TemplatePicker implements Screen {
     Stage pickerStage;
     Texture backgroundTexture;
 
-    public TemplatePicker(Jiggen _game, Texture _backgroundTexture) {
-        this.game = _game;
+    public TemplatePicker(Jiggen game, Texture backgroundTexture) {
+        this.game = game;
         this.camera = game.camera;
-        this.backgroundTexture = _backgroundTexture;
+        this.backgroundTexture = backgroundTexture;
 
         pickerStage = new Stage(new ScreenViewport(game.camera), game.batch);
         pickerStage.addListener(new InputListener() {
@@ -45,7 +45,12 @@ public class TemplatePicker implements Screen {
             public boolean keyUp(InputEvent event, int keycode) {
                 if (keycode == Input.Keys.SPACE) {
                     DecodedTemplate decodedTemplate = new DecodedTemplate(templateTexture);
-                    game.setScreen(new PuzzleSolver(game, decodedTemplate.decode(backgroundTexture)));
+
+                    if (!backgroundTexture.getTextureData().isPrepared()) {
+                        backgroundTexture.getTextureData().prepare();
+                    }
+                    game.setScreen(new PuzzleSolver(game, PuzzleFactory.generatePuzzle(decodedTemplate,
+                            backgroundTexture.getTextureData().consumePixmap())));
                 }
                 return super.keyDown(event, keycode);
             }

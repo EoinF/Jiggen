@@ -9,6 +9,14 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public abstract class utils {
+    public static final float BRIGHTNESS_THRESHOLD = 0.95f;
+
+    private static Color buffer;
+
+    static {
+        buffer = Color.BLACK.cpy();
+    }
+
     /**
      *
      * @param texture The texture we want to stretch
@@ -31,5 +39,15 @@ public abstract class utils {
 
     public static float getBrightness(Color colour) {
         return ((colour.r + colour.g + colour.b) / 3) * colour.a;
+    }
+
+    public static boolean isPixelDark(Pixmap pixmap, int currentX, int currentY, int width, int height) {
+        return currentX >= width || currentY >= height || currentX < 0 || currentY < 0 ||
+                utils.getBrightness(getPixelColour(pixmap, currentX, currentY)) < BRIGHTNESS_THRESHOLD;
+    }
+
+    public static Color getPixelColour(Pixmap pixmap, int currentX, int currentY) {
+        Color.rgba8888ToColor(buffer, pixmap.getPixel(currentX, currentY));
+        return buffer;
     }
 }

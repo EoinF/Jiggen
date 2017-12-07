@@ -9,7 +9,7 @@ public class HtmlLauncher extends GwtApplication {
 
         @Override
         public GwtApplicationConfiguration getConfig () {
-                return new GwtApplicationConfiguration(Jiggen.VIEWPORT_WIDTH, Jiggen.VIEWPORT_HEIGHT);
+                return new GwtApplicationConfiguration(800, 600);
         }
 
         @Override

@@ -1,4 +1,4 @@
-package com.github.eoinf.jiggen;
+package com.github.eoinf.jiggen.PuzzleExtractor;
 
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
