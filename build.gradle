@@ -1,6 +1,4 @@
 buildscript {
-    
-
     repositories {
         mavenLocal()
         mavenCentral()
@@ -18,9 +16,11 @@ allprojects {
     apply plugin: "idea"
 
     version = '1.0'
+    group 'com.github.eoinf.jiggen'
+
     ext {
         appName = "Jiggen"
-        gdxVersion = '1.9.7'
+        gdxVersion = '1.9.8'
         roboVMVersion = '2.3.1'
         box2DLightsVersion = '1.4'
         ashleyVersion = '1.7.0'
@@ -42,12 +42,10 @@ allprojects {
 project(":desktop") {
     apply plugin: "java"
 
-
     dependencies {
         compile project(":core")
         compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        
     }
 }
 
@@ -61,13 +59,13 @@ project(":html") {
         compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
         compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
-        
     }
 }
 
 project(":core") {
     apply plugin: "java"
     apply plugin: 'org.junit.platform.gradle.plugin'
+    apply plugin: 'maven-publish'
 
     junitPlatform {
         // platformVersion '1.0.2'
@@ -85,6 +83,18 @@ project(":core") {
         // enableStandardTestTask true
         // reportsDir file('build/test-results/junit-platform') // this is the default
         logManager 'org.apache.logging.log4j.jul.LogManager'
+    }
+
+    artifacts {
+        archives jar
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
+        }
     }
 
     dependencies {

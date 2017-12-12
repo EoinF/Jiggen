@@ -25,21 +25,55 @@
 
 package com.eoinf.github.jiggen;
 
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.utils.GdxNativesLoader;
+import com.github.eoinf.jiggen.PuzzleExtractor.PixelSearcher;
+import com.github.eoinf.jiggen.PuzzleExtractor.TemplatePiece;
+import org.apache.logging.log4j.LogManager;
 import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
+import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+
+@State(Scope.Benchmark)
 public class MyBenchmark {
+    String name;
+    int width;
+    int height;
+    Pixmap pixmap;
+    Logger logger = LogManager.getLogger();
+
+    @Setup
+    public void prepare() {
+        GdxNativesLoader.load();
+        File f = new File("benchmark/src/main/resources/template.jpg");
+
+        FileHandle handle = new FileHandle(f);
+        this.pixmap = new Pixmap(handle);
+
+        this.width = pixmap.getWidth();
+        this.height = pixmap.getHeight();
+
+        logger.info("Loaded template file: width = {}, height = {}", width, height);
+
+        this.name = handle.name();
+    }
+
 
     @Benchmark
-    public void testMethod() {
-        double total = 0;
-        for (int i = 0; i < Math.pow(10, 2); i++) {
-            total += i * i - ( i / 27);
-        }
-        System.out.println(total);
+    public void pixelSearcher(Blackhole bh) {
+        PixelSearcher pixelSearcher = new PixelSearcher(pixmap, width, height);
+        bh.consume(pixelSearcher.floodFillPiece(100, 50).isTraversed(105, 55));
     }
 
     public static void main(String[] args) throws RunnerException {
