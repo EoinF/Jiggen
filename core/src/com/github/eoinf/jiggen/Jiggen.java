@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.github.eoinf.jiggen.PuzzleExtractor.PixelSearcher.TracingStrategy;
 import com.github.eoinf.jiggen.Screens.BackgroundPicker;
 
 public class Jiggen extends Game {
@@ -17,6 +18,7 @@ public class Jiggen extends Game {
 	public static final int VIEWPORT_WIDTH = 1280;
 	public static final int VIEWPORT_HEIGHT = 720;
 
+	public TracingStrategy tracingStrategy;
 	
 	@Override
 	public void create () {
@@ -25,6 +27,7 @@ public class Jiggen extends Game {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
 
+		this.tracingStrategy = TracingStrategy.FloodFillIterative;
 		this.setScreen(new BackgroundPicker(this));
 	}
 

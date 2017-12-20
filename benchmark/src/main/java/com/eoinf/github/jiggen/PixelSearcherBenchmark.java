@@ -28,8 +28,8 @@ package com.eoinf.github.jiggen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.utils.GdxNativesLoader;
-import com.github.eoinf.jiggen.PuzzleExtractor.PixelSearcher;
-import com.github.eoinf.jiggen.PuzzleExtractor.TemplatePiece;
+import com.github.eoinf.jiggen.PuzzleExtractor.PixelSearcher.BorderTracer;
+import com.github.eoinf.jiggen.PuzzleExtractor.PixelSearcher.FloodFiller;
 import org.apache.logging.log4j.LogManager;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Scope;
@@ -46,12 +46,11 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 
 @State(Scope.Benchmark)
-public class MyBenchmark {
-    String name;
-    int width;
-    int height;
-    Pixmap pixmap;
-    Logger logger = LogManager.getLogger();
+public class PixelSearcherBenchmark {
+    private int width;
+    private int height;
+    private Pixmap pixmap;
+    private Logger logger = LogManager.getLogger();
 
     @Setup
     public void prepare() {
@@ -65,20 +64,24 @@ public class MyBenchmark {
         this.height = pixmap.getHeight();
 
         logger.info("Loaded template file: width = {}, height = {}", width, height);
-
-        this.name = handle.name();
     }
 
 
     @Benchmark
-    public void pixelSearcher(Blackhole bh) {
-        PixelSearcher pixelSearcher = new PixelSearcher(pixmap, width, height);
-        bh.consume(pixelSearcher.floodFillPiece(100, 50).isTraversed(105, 55));
+    public void floodFill(Blackhole bh) {
+        FloodFiller pixelSearcher = new FloodFiller(pixmap, width, height);
+        bh.consume(pixelSearcher.extractPiece(100, 50).isTraversed(105, 55));
+    }
+
+    @Benchmark
+    public void borderTrace(Blackhole bh) {
+        BorderTracer pixelSearcher = new BorderTracer(pixmap, width, height);
+        bh.consume(pixelSearcher.extractPiece(100, 50).isTraversed(105, 55));
     }
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(MyBenchmark.class.getSimpleName())
+                .include(PixelSearcherBenchmark.class.getSimpleName())
                 .forks(1)
                 .build();
 

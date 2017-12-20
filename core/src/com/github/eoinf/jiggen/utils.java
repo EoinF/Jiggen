@@ -32,9 +32,35 @@ public abstract class utils {
         Pixmap srcMap = data.consumePixmap();
         Pixmap dstMap = new Pixmap(dstBounds.x, dstBounds.y, Pixmap.Format.RGBA8888);
 
-        dstMap.drawPixmap(srcMap, 0, 0, data.getWidth(), data.getHeight(), 0, 0, dstBounds.x, dstBounds.y);
+        dstMap.drawPixmap(srcMap, 0, 0, data.getWidth(), data.getHeight(), 0, 0, dstBounds.x,
+                dstBounds.y);
 
         return new Texture(dstMap);
+    }
+
+    public static GridPoint2 findNearestPixel(Pixmap templatePixmap, int width, int height, boolean targetValue,
+                                       int currentX, int currentY) {
+        GridPoint2[] currentPaths = new GridPoint2[] {new GridPoint2(currentX, currentY)};
+
+        return findNearestPixel(templatePixmap, width, height, targetValue, currentPaths);
+    }
+
+    private static GridPoint2 findNearestPixel(Pixmap templatePixmap, int width, int height, boolean targetValue,
+                                        GridPoint2[] currentPaths) {
+        GridPoint2[] newPaths = new GridPoint2[currentPaths.length * 2];
+
+        for (int p = 0; p < currentPaths.length; p++) {
+            int x = currentPaths[p].x;
+            int y = currentPaths[p].y;
+            if (targetValue == utils.isPixelDark(templatePixmap, x, y, width, height)) {
+                return new GridPoint2(x, y);
+            } else {
+                newPaths[p * 2] = new GridPoint2(x + 1, y);
+                newPaths[p * 2 + 1] = new GridPoint2(x, y + 1);
+            }
+        }
+
+        return findNearestPixel(templatePixmap, width, height, targetValue, newPaths);
     }
 
     public static float getBrightness(Color colour) {

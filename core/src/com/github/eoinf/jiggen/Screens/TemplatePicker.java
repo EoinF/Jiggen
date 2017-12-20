@@ -34,7 +34,7 @@ public class TemplatePicker implements Screen {
     Stage pickerStage;
     Texture backgroundTexture;
 
-    public TemplatePicker(Jiggen game, Texture backgroundTexture) {
+    TemplatePicker(Jiggen game, Texture backgroundTexture) {
         this.game = game;
         this.camera = game.camera;
         this.backgroundTexture = backgroundTexture;
@@ -44,12 +44,12 @@ public class TemplatePicker implements Screen {
             @Override
             public boolean keyUp(InputEvent event, int keycode) {
                 if (keycode == Input.Keys.SPACE) {
-                    DecodedTemplate decodedTemplate = new DecodedTemplate(templateTexture);
+                    DecodedTemplate decodedTemplate = new DecodedTemplate(templateTexture, game.tracingStrategy);
 
                     if (!backgroundTexture.getTextureData().isPrepared()) {
                         backgroundTexture.getTextureData().prepare();
                     }
-                    game.setScreen(new PuzzleSolver(game, PuzzleFactory.generatePuzzle(decodedTemplate,
+                    game.setScreen(new PuzzleSolver(game, PuzzleFactory.generatePuzzle(game.tracingStrategy, decodedTemplate,
                             backgroundTexture.getTextureData().consumePixmap())));
                 }
                 return super.keyDown(event, keycode);
@@ -79,7 +79,7 @@ public class TemplatePicker implements Screen {
         if (templateFiles.size() != 0) {
             Random random = new Random();
             fileHandle = templateFiles.get(random.nextInt(templateFiles.size()));
-        } else {
+        } else { // Must explicitly declare filepath when running in the browser
             fileHandle = Gdx.files.internal("templates/5x7puzzletemplate.jpg");
         }
 

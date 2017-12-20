@@ -3,6 +3,12 @@ package com.github.eoinf.jiggen.PuzzleExtractor;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
+import com.github.eoinf.jiggen.PuzzleExtractor.PixelSearcher.BorderTracer;
+import com.github.eoinf.jiggen.PuzzleExtractor.PixelSearcher.FloodFiller;
+import com.github.eoinf.jiggen.PuzzleExtractor.PixelSearcher.FloodFillerIterative;
+import com.github.eoinf.jiggen.PuzzleExtractor.PixelSearcher.PixelSearcher;
+import com.github.eoinf.jiggen.PuzzleExtractor.PixelSearcher.TracingStrategy;
+import com.github.eoinf.jiggen.utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +35,7 @@ public class DecodedTemplate {
         return templatePixmap;
     }
 
-    public DecodedTemplate(Texture template) {
+    public DecodedTemplate(Texture template, TracingStrategy strategy) {
         templatePieces = new ArrayList<>();
 
         width = template.getWidth();
@@ -46,7 +52,7 @@ public class DecodedTemplate {
             TemplatePiece tallestPieceInRow = null;
 
             while(x < width) {
-                TemplatePiece piece = extractNextPiece(templatePixmap, x, y);
+                TemplatePiece piece = extractNextPiece(strategy, templatePixmap, x, y);
                 x = piece.getPosition().x + piece.getWidth();
                 if (tallestPieceInRow == null
                         || piece.getHeight() > tallestPieceInRow.getHeight()) {
@@ -60,12 +66,22 @@ public class DecodedTemplate {
     }
 
 
-    private TemplatePiece extractNextPiece(Pixmap templatePixmap, int startX, int startY) {
-        PixelSearcher pixelSearcher = new PixelSearcher(templatePixmap, width, height);
+    private TemplatePiece extractNextPiece(TracingStrategy strategy, Pixmap templatePixmap, int startX, int startY) {
+        PixelSearcher pixelSearcher;
+        switch (strategy) {
+            case BorderTrace:
+                pixelSearcher = new BorderTracer(templatePixmap, width, height);
+                break;
+            case FloodFillIterative:
+                pixelSearcher = new FloodFillerIterative(templatePixmap, width, height);
+                break;
+            default: // Default is TracingStrategy.FloodFill
+                pixelSearcher = new FloodFiller(templatePixmap, width, height);
+                break;
+        }
 
-        GridPoint2 topLeftCorner = pixelSearcher.findNearestPixel(false, startX, startY);
+        GridPoint2 topLeftCorner = utils.findNearestPixel(templatePixmap, width, height, false, startX, startY);
 
-        return pixelSearcher.floodFillPiece(topLeftCorner.x, topLeftCorner.y);
-        //pixelSearcher.borderTracePiece(topLeftCorner.x, topLeftCorner.y);
+        return pixelSearcher.extractPiece(topLeftCorner.x, topLeftCorner.y);
     }
 }
