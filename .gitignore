@@ -127,3 +127,7 @@ Thumbs.db
 ## Targets
 
 target/
+
+## Logs
+
+*.log

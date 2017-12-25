@@ -29,7 +29,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.utils.GdxNativesLoader;
 import com.github.eoinf.jiggen.PuzzleExtractor.PixelSearcher;
-import com.github.eoinf.jiggen.PuzzleExtractor.TemplatePiece;
 import org.apache.logging.log4j.LogManager;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Scope;

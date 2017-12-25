@@ -5,11 +5,9 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.math.GridPoint2;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 
 public abstract class utils {
-    public static final float BRIGHTNESS_THRESHOLD = 0.95f;
+    public static final float BRIGHTNESS_THRESHOLD = 0.85f;
 
     private static Color buffer;
 

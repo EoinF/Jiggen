@@ -1,9 +1,7 @@
 package com.github.eoinf.jiggen.PuzzleExtractor;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.GridPoint2;
-import com.badlogic.gdx.math.Rectangle;
 import com.github.eoinf.jiggen.utils;
 
 import java.util.HashSet;
@@ -54,88 +52,6 @@ public class PixelSearcher {
         return findNearestPixel(targetValue, newPaths);
     }
 
-    public void borderTracePiece(int startX, int startY) {
-        // The direction we are travelling
-        int directionX = 1;
-        int directionY = 0;
-
-        // First find the border at the top of the piece
-        while (!utils.isPixelDark(templatePixmap, startX, startY - 1, width, height)) {
-            startY -= 1;
-        }
-
-        int currentX = startX;
-        int currentY = startY;
-
-        // Trace out the border by moving in a clockwise direction while hugging the border
-        do {
-            int tmpX = directionX;
-            int tmpY = directionY;
-
-            // Check if the border is still there
-            if (!utils.isPixelDark(templatePixmap, currentX + directionY, currentY - directionX, width, height)) {
-                //
-                // Border is not there, we need to change direction (clockwise)
-                //
-
-                /*
-                 The state transition table is as follows:
-                     ( 1,  0) -> ( 0, -1)
-                     (-1,  0) -> ( 0,  1)
-                     ( 0,  1) -> ( 1,  0)
-                     ( 0, -1) -> (-1,  0)
-                */
-
-                directionX = tmpY;
-                directionY = -tmpX;
-
-                if (currentX > maxX) {
-                    maxX = currentX;
-                    maxXCoord = new GridPoint2(currentX, currentY);
-                } else if (currentX < minX) {
-                    minX = currentX;
-                }
-                if (currentY > maxY) {
-                    maxY = currentY;
-                    maxYCoord = new GridPoint2(currentX, currentY);
-                } else if (currentY < minY) {
-                    minY = currentY;
-                }
-            }
-            // Check if we can continue in the same direction
-            if (utils.isPixelDark(templatePixmap,currentX + directionX, currentY + directionY, width, height)) {
-                /*
-                 The state transition table is as follows:
-                     ( 1,  0) -> ( 0,  1)
-                     (-1,  0) -> ( 0, -1)
-                     ( 0,  1) -> (-1,  0)
-                     ( 0, -1) -> ( 1,  0)
-                */
-                directionX = -tmpY;
-                directionY = tmpX;
-
-                if (currentX > maxX) {
-                    maxX = currentX;
-                    maxXCoord = new GridPoint2(currentX, currentY);
-                } else if (currentX < minX) {
-                    minX = currentX;
-                }
-                if (currentY > maxY) {
-                    maxY = currentY;
-                    maxYCoord = new GridPoint2(currentX, currentY);
-                } else if (currentY < minY) {
-                    minY = currentY;
-                }
-            }
-
-            // Move to the next point (adjacent to the border and clockwise)
-            currentX += directionX;
-            currentY += directionY;
-
-        } while (currentX != startX || currentY != startY);
-    }
-
-
     /**
      * Map out the interior of the puzzle piece using a flood fill algorithm
      * @return
@@ -155,10 +71,10 @@ public class PixelSearcher {
 
         maxXCoord = new GridPoint2(0, 0);
         maxYCoord = new GridPoint2(0, 0);
-        maxX = 0;
-        maxY = 0;
-        minX = width;
-        minY = height;
+        maxX = startX;
+        maxY = startY;
+        minX = startX;
+        minY = startY;
 
         Set<GridPoint2> paths = new HashSet<>();
         paths.add(new GridPoint2(startX, startY));
@@ -181,7 +97,7 @@ public class PixelSearcher {
                 newPaths.add(new GridPoint2(path.x - 1, path.y));
                 newPaths.add(new GridPoint2(path.x, path.y + 1));
                 newPaths.add(new GridPoint2(path.x, path.y - 1));
-            } else {
+
                 if (path.x > maxX) {
                     maxX = path.x;
                     maxXCoord = new GridPoint2(path.x, path.y);
@@ -194,7 +110,6 @@ public class PixelSearcher {
                 } else if (path.y < minY) {
                     minY = path.y;
                 }
-
             }
         }
 
@@ -204,15 +119,18 @@ public class PixelSearcher {
     }
 
     private void adjustBorders() {
+        minX--;
+        minY--;
+
         // Take the extra width of the border into account for the new templatePixmap
-        maxX += 1;
+        maxX++;
         while(maxX < width
                 && utils.isPixelDark(templatePixmap, maxX, maxXCoord.y, width, height)) {
             maxX++;
         }
 
         // Do the same for the y max
-        maxY += 1;
+        maxY++;
         while(maxY < height
                 && utils.isPixelDark(templatePixmap ,maxYCoord.x, maxY, width, height)) {
             maxY++;
