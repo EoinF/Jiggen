@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.github.eoinf.jiggen.Screens.BackgroundPicker;
+import com.github.eoinf.jiggen.Screens.TemplatePicker;
 
 public class Jiggen extends Game {
 	public SpriteBatch batch;
@@ -25,7 +26,7 @@ public class Jiggen extends Game {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
 
-		this.setScreen(new BackgroundPicker(this));
+		this.setScreen(new TemplatePicker(this));
 	}
 
 

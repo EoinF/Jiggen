@@ -12,9 +12,9 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.github.eoinf.jiggen.PuzzleExtractor.DecodedTemplate;
+import com.github.eoinf.jiggen.PuzzleExtractor.Decoder.DecodedTemplate;
 import com.github.eoinf.jiggen.Jiggen;
-import com.github.eoinf.jiggen.PuzzleExtractor.PuzzleFactory;
+import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleFactory;
 import com.github.eoinf.jiggen.utils;
 
 import java.util.ArrayList;
@@ -32,12 +32,10 @@ public class TemplatePicker implements Screen {
     OrthographicCamera camera;
     Texture templateTexture;
     Stage pickerStage;
-    Texture backgroundTexture;
 
-    public TemplatePicker(Jiggen game, Texture backgroundTexture) {
+    public TemplatePicker(Jiggen game) {
         this.game = game;
         this.camera = game.camera;
-        this.backgroundTexture = backgroundTexture;
 
         pickerStage = new Stage(new ScreenViewport(game.camera), game.batch);
         pickerStage.addListener(new InputListener() {
@@ -46,11 +44,7 @@ public class TemplatePicker implements Screen {
                 if (keycode == Input.Keys.SPACE) {
                     DecodedTemplate decodedTemplate = new DecodedTemplate(templateTexture);
 
-                    if (!backgroundTexture.getTextureData().isPrepared()) {
-                        backgroundTexture.getTextureData().prepare();
-                    }
-                    game.setScreen(new PuzzleSolver(game, PuzzleFactory.generatePuzzle(decodedTemplate,
-                            backgroundTexture.getTextureData().consumePixmap())));
+                    game.setScreen(new BackgroundPicker(game, PuzzleFactory.generateTemplatePuzzle(decodedTemplate)));
                 }
                 return super.keyDown(event, keycode);
             }
@@ -84,10 +78,6 @@ public class TemplatePicker implements Screen {
         }
 
         this.templateTexture = new Texture(fileHandle);
-
-        this.templateTexture = utils.stretchTexture(templateTexture,
-                new GridPoint2(backgroundTexture.getWidth(), backgroundTexture.getHeight()));
-
         pickerStage.addActor(new Image(templateTexture));
     }
 

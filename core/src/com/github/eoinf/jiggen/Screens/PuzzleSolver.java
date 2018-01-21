@@ -10,11 +10,14 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.eoinf.jiggen.Jiggen;
-import com.github.eoinf.jiggen.PuzzleExtractor.PuzzleGraph;
-import com.github.eoinf.jiggen.PuzzleExtractor.PuzzlePiece;
+import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleGraph;
+import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzlePiece;
+import com.github.eoinf.jiggen.utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PuzzleSolver implements Screen {
@@ -24,39 +27,43 @@ public class PuzzleSolver implements Screen {
     private static final float ZOOM_RATE = 0.1f;
 
     private Jiggen game;
-    PuzzleGraph puzzleGraph;
 
-    OrthographicCamera camera;
+    private OrthographicCamera camera;
 
-    private PuzzlePiece pieceHeld;
+    private Actor pieceHeld;
     private Vector2 pieceOffsetHeld;
 
-    Stage gameStage;
+    private Stage gameStage;
+    private List<Actor> pieces;
 
-    public PuzzleSolver(Jiggen game, PuzzleGraph _puzzleGraph) {
+    PuzzleSolver(Jiggen game, PuzzleGraph puzzleGraph) {
         this.game = game;
         this.camera = game.camera;
-        this.puzzleGraph = _puzzleGraph;
 
         gameStage = new Stage(new ScreenViewport(camera), game.batch);
-        for (Actor actor: puzzleGraph.getVertices()) {
-            gameStage.addActor(actor);
+        pieces = new ArrayList<>();
+        for (PuzzlePiece piece: puzzleGraph.getVertices()) {
+            Image image = new Image(piece.getTextureRegion());
+            image.setUserObject(piece);
+            image.setPosition(piece.getPosition().x, piece.getPosition().y);
+            pieces.add(image);
+            gameStage.addActor(image);
         }
 
-        puzzleGraph.setPosition(150, 100);
+        camera.position.x = 200;
+        camera.position.y = 250;
 
         gameStage.addListener(new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
                 Vector3 mousePositionInWorld = new Vector3(x, y, 0);
                 Actor a = gameStage.hit(mousePositionInWorld.x, mousePositionInWorld.y, true);
                 if (a != null) {
-                    List<PuzzlePiece> pieceList = puzzleGraph.getVertices();
-                    int index = pieceList.indexOf(a);
+                    int index = pieces.indexOf(a);
                     if (index >= 0) {
-                        pieceHeld = pieceList.get(index);
+                        pieceHeld = pieces.get(index);
                         pieceOffsetHeld = new Vector2(
-                                pieceHeld.getPosition().x - mousePositionInWorld.x,
-                                pieceHeld.getPosition().y - mousePositionInWorld.y - 1
+                                pieceHeld.getX() - mousePositionInWorld.x,
+                                pieceHeld.getY() - mousePositionInWorld.y - 1
                         );
                         pieceHeld.toFront();
                     }
@@ -72,7 +79,7 @@ public class PuzzleSolver implements Screen {
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
                 if (keycode == Input.Keys.SPACE) {
-                    puzzleGraph.shuffle();
+                    utils.shuffle(puzzleGraph, pieces);
                 }
                 return super.keyDown(event, keycode);
             }
@@ -88,7 +95,6 @@ public class PuzzleSolver implements Screen {
         });
 
         Gdx.input.setInputProcessor(gameStage);
-
     }
 
     @Override
@@ -96,7 +102,7 @@ public class PuzzleSolver implements Screen {
 
     }
 
-    public void update(float delta) {
+    private void update(float delta) {
         if (pieceHeld != null) {
             Vector3 mousePositionInWorld = camera.unproject(
                     new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));

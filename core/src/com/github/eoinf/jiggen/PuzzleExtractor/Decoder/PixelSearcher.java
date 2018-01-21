@@ -1,4 +1,4 @@
-package com.github.eoinf.jiggen.PuzzleExtractor;
+package com.github.eoinf.jiggen.PuzzleExtractor.Decoder;
 
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.GridPoint2;
@@ -56,7 +56,7 @@ public class PixelSearcher {
      * Map out the interior of the puzzle piece using a flood fill algorithm
      * @return
      */
-    public TemplatePiece floodFillPiece(int startX, int startY) {
+    public DecodedPiece floodFillPiece(int startX, int startY) {
         pixelsTraversed = new boolean[height + 2][];
         // Map out the implicit border of the values outside the image
         for (int y = 0; y < pixelsTraversed.length; y++) {
@@ -81,7 +81,7 @@ public class PixelSearcher {
         fillNext(paths);
 
         adjustBorders();
-        return new TemplatePiece(pixelsTraversed, new GridPoint2(minX, minY), maxX, maxY);
+        return new DecodedPiece(pixelsTraversed, new GridPoint2(minX, minY), maxX, maxY);
     }
 
     private void fillNext(Set<GridPoint2> currentPaths) {
