@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.GridPoint2;
-import com.badlogic.gdx.math.Vector2;
 import com.github.eoinf.jiggen.PuzzleExtractor.Decoder.DecodedPiece;
 import com.github.eoinf.jiggen.PuzzleExtractor.Decoder.DecodedTemplate;
 import com.github.eoinf.jiggen.utils;
@@ -56,7 +55,7 @@ public abstract class PuzzleFactory {
                             (int) (v.getPosition().y * ratioY)
                     );
                     templateTexture = utils.combineTextures(templateTexture, backgroundPixmap,
-                            scaledPosition.x, backgroundTexture.getHeight() - scaledPosition.y);
+                            scaledPosition.x, backgroundPixmap.getHeight() - (scaledPosition.y + scaledHeight));
                     finishedPuzzle.addVertex(
                             new PuzzlePiece(scaledPosition.x, scaledPosition.y,
                                     scaledWidth, scaledHeight,

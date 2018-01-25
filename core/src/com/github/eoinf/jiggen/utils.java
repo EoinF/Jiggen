@@ -58,10 +58,7 @@ public abstract class utils {
         return new TextureRegion(new Texture(dstMap), dstBounds.x, dstBounds.y);
     }
 
-    public static TextureRegion combineTextures(TextureRegion region, Pixmap srcMap, int offsetX, int offsetY) {
-        assert region.getRegionWidth() >= offsetX;
-        assert region.getRegionHeight() >= offsetY;
-
+    public static TextureRegion combineTextures(TextureRegion region, Pixmap srcMap, int offsetSrcX, int offsetSrcY) {
         TextureData dstData = region.getTexture().getTextureData();
         if (!dstData.isPrepared()) {
             dstData.prepare();
@@ -72,8 +69,8 @@ public abstract class utils {
         for (int x = 0; x < region.getRegionWidth(); x++) {
             for (int y = 0; y < region.getRegionHeight(); y++) {
                 Color colour1 = getPixelColour(srcMap,
-                        x + offsetX,
-                        y + offsetY
+                        x + offsetSrcX,
+                        y + offsetSrcY
                 );
                 Color colour2 = getPixelColour(dstMap,
                         x + region.getRegionX(),
