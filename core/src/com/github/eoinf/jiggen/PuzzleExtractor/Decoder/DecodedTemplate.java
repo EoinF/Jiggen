@@ -1,4 +1,4 @@
-package com.github.eoinf.jiggen.PuzzleExtractor;
+package com.github.eoinf.jiggen.PuzzleExtractor.Decoder;
 
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -20,9 +20,9 @@ public class DecodedTemplate {
         return height;
     }
 
-    private List<TemplatePiece> templatePieces;
-    public List<TemplatePiece> getTemplatePieces() {
-        return templatePieces;
+    private List<DecodedPiece> decodedPieces;
+    public List<DecodedPiece> getDecodedPieces() {
+        return decodedPieces;
     }
 
     public Pixmap getTemplatePixmap() {
@@ -30,7 +30,7 @@ public class DecodedTemplate {
     }
 
     public DecodedTemplate(Texture template) {
-        templatePieces = new ArrayList<>();
+        decodedPieces = new ArrayList<>();
 
         width = template.getWidth();
         height = template.getHeight();
@@ -43,16 +43,16 @@ public class DecodedTemplate {
         int x = 0, y = 0;
 
         while(y < height) {
-            TemplatePiece tallestPieceInRow = null;
+            DecodedPiece tallestPieceInRow = null;
 
             while(x < width) {
-                TemplatePiece piece = extractNextPiece(templatePixmap, x, y);
+                DecodedPiece piece = extractNextPiece(templatePixmap, x, y);
                 x = piece.getPosition().x + piece.getWidth();
                 if (tallestPieceInRow == null
                         || piece.getHeight() > tallestPieceInRow.getHeight()) {
                     tallestPieceInRow = piece;
                 }
-                this.templatePieces.add(piece);
+                this.decodedPieces.add(piece);
             }
             x = 0;
             y = tallestPieceInRow.getPosition().y + tallestPieceInRow.getHeight();
@@ -60,12 +60,11 @@ public class DecodedTemplate {
     }
 
 
-    private TemplatePiece extractNextPiece(Pixmap templatePixmap, int startX, int startY) {
+    private DecodedPiece extractNextPiece(Pixmap templatePixmap, int startX, int startY) {
         PixelSearcher pixelSearcher = new PixelSearcher(templatePixmap, width, height);
 
         GridPoint2 topLeftCorner = pixelSearcher.findNearestPixel(false, startX, startY);
 
         return pixelSearcher.floodFillPiece(topLeftCorner.x, topLeftCorner.y);
-        //pixelSearcher.borderTracePiece(topLeftCorner.x, topLeftCorner.y);
     }
 }

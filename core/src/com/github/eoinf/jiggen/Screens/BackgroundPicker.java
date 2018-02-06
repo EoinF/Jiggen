@@ -12,6 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.eoinf.jiggen.Jiggen;
+import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleFactory;
+import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleGraph;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +31,8 @@ public class BackgroundPicker implements Screen {
     Texture backgroundTexture;
     Stage pickerStage;
 
-    public BackgroundPicker(Jiggen _game) {
-        this.game = _game;
+    public BackgroundPicker(Jiggen game, PuzzleGraph puzzleGraph) {
+        this.game = game;
         this.camera = game.camera;
 
         pickerStage = new Stage(new ScreenViewport(game.camera), game.batch);
@@ -38,7 +40,9 @@ public class BackgroundPicker implements Screen {
             @Override
             public boolean keyUp(InputEvent event, int keycode) {
                 if (keycode == Input.Keys.SPACE) {
-                    game.setScreen(new TemplatePicker(game, backgroundTexture));
+                    game.setScreen(new PuzzleSolver(game,
+                            PuzzleFactory.generateFinishedPuzzle(puzzleGraph, backgroundTexture))
+                    );
                 }
                 return super.keyDown(event, keycode);
             }

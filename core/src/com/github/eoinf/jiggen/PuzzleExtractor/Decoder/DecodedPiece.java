@@ -1,9 +1,8 @@
-package com.github.eoinf.jiggen.PuzzleExtractor;
+package com.github.eoinf.jiggen.PuzzleExtractor.Decoder;
 
 import com.badlogic.gdx.math.GridPoint2;
 
-public class TemplatePiece {
-
+public class DecodedPiece {
     private boolean[][] binaryPixelMap;
     private GridPoint2 position;
     private int width;
@@ -25,7 +24,7 @@ public class TemplatePiece {
         return binaryPixelMap[y][x];
     }
 
-    public TemplatePiece(boolean[][] binaryPixelMap, GridPoint2 position, int maxX, int maxY) {
+    public DecodedPiece(boolean[][] binaryPixelMap, GridPoint2 position, int maxX, int maxY) {
         this.binaryPixelMap = binaryPixelMap;
         this.position = position;
         this.width = maxX - position.x;
