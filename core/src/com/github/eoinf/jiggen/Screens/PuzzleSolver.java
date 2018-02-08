@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -42,8 +43,8 @@ public class PuzzleSolver implements Screen {
 
         gameStage = new Stage(new ScreenViewport(camera), game.batch);
         pieces = new ArrayList<>();
-        for (PuzzlePiece piece: puzzleGraph.getVertices()) {
-            Image image = new Image(piece.getTextureRegion());
+        for (PuzzlePiece<TextureRegion> piece: puzzleGraph.getVertices()) {
+            Image image = new Image(piece.getData());
             image.setUserObject(piece);
             image.setPosition(piece.getPosition().x, piece.getPosition().y);
             pieces.add(image);

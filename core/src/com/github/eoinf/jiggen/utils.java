@@ -48,14 +48,27 @@ public abstract class utils {
 
         Pixmap srcMap = data.consumePixmap();
 
+        dstMap = stretchPixmap(srcMap, new GridPoint2(region.getRegionX(), region.getRegionY()),
+                new GridPoint2(region.getRegionWidth(), region.getRegionHeight()), dstMap, dstBounds);
+
+        return new TextureRegion(new Texture(dstMap), dstBounds.x, dstBounds.y);
+    }
+
+    public static Pixmap stretchPixmap(Pixmap srcMap, GridPoint2 dstBounds) {
+        Pixmap dstMap = new Pixmap(dstBounds.x, dstBounds.y, Pixmap.Format.RGBA8888);
+        stretchPixmap(srcMap, new GridPoint2(0, 0), new GridPoint2(0, 0), dstMap, dstBounds);
+        return dstMap;
+    }
+
+    public static Pixmap stretchPixmap(Pixmap srcMap, GridPoint2 srcOffset, GridPoint2 srcBounds,
+                                       Pixmap dstMap, GridPoint2 dstBounds) {
         dstMap.drawPixmap(srcMap,
-                region.getRegionX(), region.getRegionY(),
-                region.getRegionWidth(), region.getRegionHeight(),
+                srcOffset.x, srcOffset.y,
+                srcBounds.x, srcBounds.y,
                 0, 0,
                 dstBounds.x, dstBounds.y
         );
-
-        return new TextureRegion(new Texture(dstMap), dstBounds.x, dstBounds.y);
+        return dstMap;
     }
 
     public static TextureRegion combineTextures(TextureRegion region, Pixmap srcMap, int offsetSrcX, int offsetSrcY) {
@@ -65,16 +78,35 @@ public abstract class utils {
         }
 
         Pixmap dstMap = dstData.consumePixmap();
+        dstMap = combinePixmaps(dstMap, srcMap, offsetSrcX, offsetSrcY,
+                new GridPoint2(region.getRegionX(), region.getRegionY()),
+                new GridPoint2(region.getRegionWidth(), region.getRegionHeight()));
 
-        for (int x = 0; x < region.getRegionWidth(); x++) {
-            for (int y = 0; y < region.getRegionHeight(); y++) {
+        TextureRegion result = new TextureRegion(new Texture(dstMap),
+                region.getRegionX(), region.getRegionY(),
+                region.getRegionWidth(), region.getRegionHeight()
+        );
+        dstMap.dispose();
+        return result;
+    }
+
+    public static Pixmap combinePixmaps(Pixmap dstMap, Pixmap srcMap, int offsetSrcX, int offsetSrcY) {
+        return combinePixmaps(dstMap, srcMap, offsetSrcX, offsetSrcY, new GridPoint2(0, 0),
+                new GridPoint2(dstMap.getWidth(), dstMap.getHeight()));
+    }
+
+    public static Pixmap combinePixmaps(Pixmap dstMap, Pixmap srcMap, int offsetSrcX, int offsetSrcY,
+                                                   GridPoint2 dstOffset, GridPoint2 dstBounds) {
+
+        for (int x = 0; x < dstBounds.x; x++) {
+            for (int y = 0; y < dstBounds.y; y++) {
                 Color colour1 = getPixelColour(srcMap,
                         x + offsetSrcX,
                         y + offsetSrcY
                 );
                 Color colour2 = getPixelColour(dstMap,
-                        x + region.getRegionX(),
-                        y + region.getRegionY()
+                        x + dstOffset.x,
+                        y + dstOffset.y
                 );
 
                 Color blendedColour = colour1.mul(colour2);
@@ -83,13 +115,7 @@ public abstract class utils {
             }
         }
 
-        TextureRegion result = new TextureRegion(new Texture(dstMap),
-                region.getRegionX(), region.getRegionY(),
-                region.getRegionWidth(), region.getRegionHeight()
-        );
-
-        dstMap.dispose();
-        return result;
+        return dstMap;
     }
 
     private static float getBrightness(Color colour) {

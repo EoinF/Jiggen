@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -42,9 +43,14 @@ public class TemplatePicker implements Screen {
             @Override
             public boolean keyUp(InputEvent event, int keycode) {
                 if (keycode == Input.Keys.SPACE) {
-                    DecodedTemplate decodedTemplate = new DecodedTemplate(templateTexture);
+                    if (!templateTexture.getTextureData().isPrepared()) {
+                        templateTexture.getTextureData().prepare();
+                    }
+                    Pixmap templatePixmap = templateTexture.getTextureData().consumePixmap();
 
-                    game.setScreen(new BackgroundPicker(game, PuzzleFactory.generateTemplatePuzzle(decodedTemplate)));
+                    DecodedTemplate decodedTemplate = new DecodedTemplate(templatePixmap);
+                    game.setScreen(new BackgroundPicker(game,
+                            PuzzleFactory.generateTexturePuzzleFromTemplate(decodedTemplate)));
                 }
                 return super.keyDown(event, keycode);
             }

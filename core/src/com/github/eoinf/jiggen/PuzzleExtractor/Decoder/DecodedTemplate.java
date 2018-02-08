@@ -29,17 +29,12 @@ public class DecodedTemplate {
         return templatePixmap;
     }
 
-    public DecodedTemplate(Texture template) {
+    public DecodedTemplate(Pixmap templatePixmap) {
+        this.templatePixmap = templatePixmap;
         decodedPieces = new ArrayList<>();
 
-        width = template.getWidth();
-        height = template.getHeight();
-
-        if (!template.getTextureData().isPrepared()) {
-            template.getTextureData().prepare();
-        }
-        templatePixmap = template.getTextureData().consumePixmap();
-
+        width = templatePixmap.getWidth();
+        height = templatePixmap.getHeight();
         int x = 0, y = 0;
 
         while(y < height) {
