@@ -6,17 +6,19 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.github.eoinf.jiggen.Screens.BackgroundPicker;
+import com.github.eoinf.jiggen.DataSource.TemplateLoader;
 import com.github.eoinf.jiggen.Screens.TemplatePicker;
 
 public class Jiggen extends Game {
 	public SpriteBatch batch;
-
 	public OrthographicCamera camera;
 
 	private static final float DEFAULT_CAMERA_SPEED = 200f;
 	public static final int VIEWPORT_WIDTH = 1280;
 	public static final int VIEWPORT_HEIGHT = 720;
+	public static final String TEMPLATES_URL = "http://localhost:4567/templates";
+
+	public TemplateLoader templateLoader = new TemplateLoader(TEMPLATES_URL);
 
 	
 	@Override

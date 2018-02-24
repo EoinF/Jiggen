@@ -7,20 +7,22 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.github.eoinf.jiggen.Models.Template;
+import com.github.eoinf.jiggen.Models.TemplateRemote;
 import com.github.eoinf.jiggen.PuzzleExtractor.Decoder.DecodedTemplate;
 import com.github.eoinf.jiggen.Jiggen;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleFactory;
-import com.github.eoinf.jiggen.utils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
 
 
 public class TemplatePicker implements Screen {
@@ -66,25 +68,20 @@ public class TemplatePicker implements Screen {
         });
         Gdx.input.setInputProcessor(pickerStage);
 
-        FileHandle[] files = Gdx.files.internal("templates").list();
+        System.out.println("Fetching remote template list");
 
-        List<FileHandle> templateFiles = new ArrayList<>();
-        for (FileHandle f: files) {
-            if (!f.isDirectory() && f.name().endsWith(".jpg")) {
-                templateFiles.add(f);
-            }
-        }
+        game.templateLoader.getRemoteTemplates()
+                .thenAccept(templateRemotes -> {
+                    System.out.println("Got remote template list");
 
-        FileHandle fileHandle;
-        if (templateFiles.size() != 0) {
-            Random random = new Random();
-            fileHandle = templateFiles.get(random.nextInt(templateFiles.size()));
-        } else {
-            fileHandle = Gdx.files.internal("templates/5x7puzzletemplate.jpg");
-        }
+                    for (TemplateRemote template : templateRemotes) {
+                        System.out.printf("name=%s, id=%s\n", template.getName(), template.getId());
+                    }
+                });
 
-        this.templateTexture = new Texture(fileHandle);
-        pickerStage.addActor(new Image(templateTexture));
+
+
+        pickerStage.addActor();
     }
 
     @Override
