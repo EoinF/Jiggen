@@ -2,55 +2,36 @@ package com.github.eoinf.jiggen;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.github.eoinf.jiggen.DataSource.TemplateLoader;
-import com.github.eoinf.jiggen.Screens.TemplatePicker;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.github.eoinf.jiggen.DataSource.TemplateService;
+import com.github.eoinf.jiggen.View.ScreenManager;
 
 public class Jiggen extends Game {
 	public SpriteBatch batch;
 	public OrthographicCamera camera;
 
-	private static final float DEFAULT_CAMERA_SPEED = 200f;
 	public static final int VIEWPORT_WIDTH = 1280;
 	public static final int VIEWPORT_HEIGHT = 720;
-	public static final String TEMPLATES_URL = "http://localhost:4567/templates";
+	public static final String BACKEND_ENDPOINT = "http://localhost:4567/";
 
-	public TemplateLoader templateLoader = new TemplateLoader(TEMPLATES_URL);
+	public Skin skin;
 
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
+		skin = new Skin(Gdx.files.internal("uiskin.json"));
 
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
 
-		this.setScreen(new TemplatePicker(this));
-	}
+		ScreenManager.init(this);
+		TemplateService.init(BACKEND_ENDPOINT);
 
-
-	public void updateCameraInput(float delta) {
-		float zoom = camera.zoom * camera.zoom * 2;
-
-		int translateX = 0;
-		int translateY = 0;
-		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-			translateX = -(int)((DEFAULT_CAMERA_SPEED + zoom) * delta);
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-			translateX = (int)((DEFAULT_CAMERA_SPEED + zoom) * delta);
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			translateY = (int)((DEFAULT_CAMERA_SPEED + zoom) * delta);
-		}
-		if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-			translateY = -(int)((DEFAULT_CAMERA_SPEED + zoom) * delta);
-		}
-		camera.translate(translateX, translateY);
-		camera.update();
+		ScreenManager.switchToPuzzleOverview();
 	}
 
 	@Override

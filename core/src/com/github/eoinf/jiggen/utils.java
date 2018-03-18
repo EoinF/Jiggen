@@ -1,16 +1,18 @@
 package com.github.eoinf.jiggen;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleGraph;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzlePiece;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -118,6 +120,14 @@ public abstract class utils {
         return dstMap;
     }
 
+    public static Pixmap preparePixmap(Texture texture) {
+        TextureData textureData = texture.getTextureData();
+        if (!textureData.isPrepared()) {
+            textureData.prepare();
+        }
+        return textureData.consumePixmap();
+    }
+
     private static float getBrightness(Color colour) {
         return ((colour.r + colour.g + colour.b) / 3) * colour.a;
     }
@@ -155,5 +165,29 @@ public abstract class utils {
                 piece.toFront();
             }
         }
+    }
+
+    public static List<FileHandle> getTemplateFiles() {
+        FileHandle[] files = Gdx.files.internal("templates").list();
+
+        List<FileHandle> templateFiles = new ArrayList<>();
+        for (FileHandle f: files) {
+            if (!f.isDirectory() && f.name().endsWith(".jpg")) {
+                templateFiles.add(f);
+            }
+        }
+        return templateFiles;
+    }
+
+    public static List<FileHandle> getBackgroundFiles() {
+        FileHandle[] files = Gdx.files.internal("backgrounds/").list();
+
+        List<FileHandle> backgroundFiles = new ArrayList<>();
+        for (FileHandle f: files) {
+            if (!f.isDirectory() && f.name().endsWith(".jpg")) {
+                backgroundFiles.add(f);
+            }
+        }
+        return backgroundFiles;
     }
 }

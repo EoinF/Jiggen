@@ -1,9 +1,9 @@
-package com.github.eoinf.jiggen.Screens;
+package com.github.eoinf.jiggen.View.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.github.eoinf.jiggen.Jiggen;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleGraph;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzlePiece;
 import com.github.eoinf.jiggen.utils;
@@ -21,13 +20,7 @@ import com.github.eoinf.jiggen.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PuzzleSolver implements Screen {
-
-    private static final float MAX_ZOOM = 4;
-    private static final float MIN_ZOOM = 0.1f;
-    private static final float ZOOM_RATE = 0.1f;
-
-    private Jiggen game;
+public class PuzzleSolverScreen extends CameraControlledScreen {
 
     private OrthographicCamera camera;
 
@@ -37,11 +30,11 @@ public class PuzzleSolver implements Screen {
     private Stage gameStage;
     private List<Actor> pieces;
 
-    PuzzleSolver(Jiggen game, PuzzleGraph puzzleGraph) {
-        this.game = game;
-        this.camera = game.camera;
+    public PuzzleSolverScreen(OrthographicCamera camera, SpriteBatch batch, PuzzleGraph puzzleGraph) {
+        super(camera);
+        this.camera = camera;
 
-        gameStage = new Stage(new ScreenViewport(camera), game.batch);
+        gameStage = new Stage(new ScreenViewport(camera), batch);
         pieces = new ArrayList<>();
         for (PuzzlePiece<TextureRegion> piece: puzzleGraph.getVertices()) {
             Image image = new Image(piece.getData());
@@ -50,9 +43,6 @@ public class PuzzleSolver implements Screen {
             pieces.add(image);
             gameStage.addActor(image);
         }
-
-        camera.position.x = 200;
-        camera.position.y = 250;
 
         gameStage.addListener(new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -84,15 +74,6 @@ public class PuzzleSolver implements Screen {
                 }
                 return super.keyDown(event, keycode);
             }
-
-            @Override
-            public boolean scrolled(InputEvent event, float x, float y, int scrollDirection) {
-                OrthographicCamera orthographicCamera = camera;
-                orthographicCamera.zoom += scrollDirection * ZOOM_RATE;
-                orthographicCamera.zoom = Math.max(MIN_ZOOM, orthographicCamera.zoom);
-                orthographicCamera.zoom = Math.min(MAX_ZOOM, orthographicCamera.zoom);
-                return true;
-            }
         });
 
         Gdx.input.setInputProcessor(gameStage);
@@ -111,7 +92,6 @@ public class PuzzleSolver implements Screen {
                     mousePositionInWorld.y + pieceOffsetHeld.y);
         }
         gameStage.act();
-        game.updateCameraInput(delta);
     }
 
     @Override

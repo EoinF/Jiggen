@@ -2,7 +2,9 @@ package com.github.eoinf.jiggen.PuzzleExtractor.Decoder;
 
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.math.GridPoint2;
+import com.github.eoinf.jiggen.utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,10 @@ public class DecodedTemplate {
 
     public Pixmap getTemplatePixmap() {
         return templatePixmap;
+    }
+
+    public DecodedTemplate(Texture texture) {
+        this(utils.preparePixmap(texture));
     }
 
     public DecodedTemplate(Pixmap templatePixmap) {
