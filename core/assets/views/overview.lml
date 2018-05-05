@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!DOCTYPE table SYSTEM "../../src/resources/lml1_8-min.dtd">
+
+<table fillparent="true">
+    <horizontalgroup>
+        <table id="widget" onshow="loadTemplateWidget"/>
+        <textbutton onclick="setView" id="com.github.eoinf.jiggen.views.TemplateSelectView">
+            test
+        </textbutton>
+    </horizontalgroup>
+</table>

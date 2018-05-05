@@ -7,4 +7,5 @@
 	<entry-point class='com.github.eoinf.jiggen.client.HtmlLauncher' />
 	<set-configuration-property name='xsiframe.failIfScriptTag' value='FALSE'/>
 	<set-configuration-property name="gdx.assetpath" value="../core/assets" />
+	<extend-configuration-property name="gdx.reflect.include" value="com.github.eoinf.jiggen.views" />
 </module>

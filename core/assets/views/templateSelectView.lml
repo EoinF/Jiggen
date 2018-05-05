@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!DOCTYPE table SYSTEM "../../src/resources/lml1_8-min.dtd">
+
+<table fillparent="true">
+    <label>template select2</label>
+    <:row/>
+    <textbutton onclick="setView" id="com.github.eoinf.jiggen.views.Overview">
+        aa
+    </textbutton>
+</table>
