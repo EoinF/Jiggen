@@ -1,4 +1,4 @@
-package com.github.eoinf.jiggen.View.Screens;
+package com.github.eoinf.jiggen.views.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;

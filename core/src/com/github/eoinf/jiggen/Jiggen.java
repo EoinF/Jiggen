@@ -7,27 +7,16 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.github.eoinf.jiggen.DataSource.TemplateService;
-import com.github.eoinf.jiggen.View.ScreenManager;
+import com.github.eoinf.jiggen.views.ScreenManager;
+import com.github.eoinf.jiggen.views.ViewManager;
 
 public class Jiggen extends Game {
-	public SpriteBatch batch;
-	public OrthographicCamera camera;
-
-	public static final int VIEWPORT_WIDTH = 1280;
-	public static final int VIEWPORT_HEIGHT = 720;
 	public static final String BACKEND_ENDPOINT = "http://localhost:4567/";
-
-	public Skin skin;
 
 	
 	@Override
 	public void create () {
-		batch = new SpriteBatch();
-		skin = new Skin(Gdx.files.internal("uiskin.json"));
-
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
-
+		ViewManager.init();
 		ScreenManager.init(this);
 		TemplateService.init(BACKEND_ENDPOINT);
 
@@ -39,12 +28,12 @@ public class Jiggen extends Game {
 		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		batch.setProjectionMatrix(camera.combined);
+		ViewManager.batch.setProjectionMatrix(ViewManager.camera.combined);
 		super.render();
 	}
 	
 	@Override
 	public void dispose () {
-		batch.dispose();
+		ViewManager.batch.dispose();
 	}
 }

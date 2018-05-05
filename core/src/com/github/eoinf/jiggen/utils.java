@@ -9,6 +9,9 @@ import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleGraph;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzlePiece;
 
@@ -189,5 +192,14 @@ public abstract class utils {
             }
         }
         return backgroundFiles;
+    }
+
+    public static void setBackgroundColour(Table table, Color colour) {
+        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGB888);
+        pixmap.setColor(colour);
+        pixmap.fill();
+        Drawable background = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
+        table.setBackground(background);
+        pixmap.dispose();
     }
 }

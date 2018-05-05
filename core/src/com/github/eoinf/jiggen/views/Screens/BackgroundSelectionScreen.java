@@ -1,22 +1,14 @@
-package com.github.eoinf.jiggen.View.Screens;
+package com.github.eoinf.jiggen.views.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.github.eoinf.jiggen.View.ScreenManager;
-import com.github.eoinf.jiggen.utils;
-
-import java.util.List;
-import java.util.Random;
 
 
 public class BackgroundSelectionScreen implements Screen {
@@ -29,7 +21,7 @@ public class BackgroundSelectionScreen implements Screen {
             @Override
             public boolean keyUp(InputEvent event, int keycode) {
                 if (keycode == Input.Keys.SPACE) {
-                    ScreenManager.switchToPuzzleSolver(null);
+                    //ScreenManager.switchToPuzzleSolver(null);
                 }
                 return super.keyDown(event, keycode);
             }

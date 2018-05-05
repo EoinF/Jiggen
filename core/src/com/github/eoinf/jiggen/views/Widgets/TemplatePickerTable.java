@@ -1,4 +1,4 @@
-package com.github.eoinf.jiggen.View.Widgets;
+package com.github.eoinf.jiggen.views.Widgets;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;

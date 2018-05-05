@@ -127,6 +127,7 @@ Thumbs.db
 ## Targets
 
 target/
+out/
 
 ## Logs
 

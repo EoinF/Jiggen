@@ -1,26 +1,19 @@
-package com.github.eoinf.jiggen.View.Screens;
+package com.github.eoinf.jiggen.views.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.ByteArray;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.github.eoinf.jiggen.DataSource.TemplateService;
 import com.github.eoinf.jiggen.Models.TemplateRemote;
-import com.github.eoinf.jiggen.View.ScreenManager;
-import com.github.eoinf.jiggen.View.Widgets.TemplatePickerTable;
-import com.github.eoinf.jiggen.View.ZoomableStage;
+import com.github.eoinf.jiggen.views.Widgets.TemplatePickerTable;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 
 public class TemplateSelectionScreen extends CameraControlledScreen {
@@ -36,7 +29,7 @@ public class TemplateSelectionScreen extends CameraControlledScreen {
             @Override
             public boolean keyUp(InputEvent event, int keycode) {
                 if (keycode == Input.Keys.SPACE) {
-                    ScreenManager.switchToPuzzleOverview();
+                    //ScreenManager.switchToPuzzleOverview();
                 }
                 return super.keyDown(event, keycode);
             }

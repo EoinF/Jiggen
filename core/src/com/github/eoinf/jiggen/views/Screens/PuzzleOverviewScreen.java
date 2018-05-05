@@ -1,13 +1,14 @@
-package com.github.eoinf.jiggen.View.Screens;
+package com.github.eoinf.jiggen.views.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.github.eoinf.jiggen.View.Widgets.Overview.OverviewTable;
+import com.github.eoinf.jiggen.views.Widgets.Overview.OverviewTable;
 
 public class PuzzleOverviewScreen implements Screen {
 
@@ -23,8 +24,16 @@ public class PuzzleOverviewScreen implements Screen {
         this.skin = skin;
         this.stage = stage;
 
-        Table table = new OverviewTable(skin);
-        stage.addActor(table);
+        OverviewTable overviewTable = new OverviewTable(skin);
+        overviewTable.onClickTemplateSection(new InputListener() {
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                System.out.println("switch to template select");
+                //ScreenManager.switchToTemplateSelection();
+                super.touchUp(event, x, y, pointer, button);
+            }
+        });
+        stage.addActor(overviewTable);
 
         Gdx.input.setInputProcessor(stage);
     }
