@@ -3,10 +3,6 @@ package com.github.eoinf.jiggen;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.github.eoinf.jiggen.DataSource.TemplateService;
 import com.github.eoinf.jiggen.views.ScreenManager;
 import com.github.eoinf.jiggen.views.ViewManager;
 
@@ -18,7 +14,7 @@ public class Jiggen extends Game {
 	public void create () {
 		ViewManager.init();
 		ScreenManager.init(this);
-		TemplateService.init(BACKEND_ENDPOINT);
+		//TemplateService.init(BACKEND_ENDPOINT);
 
 		ScreenManager.switchToPuzzleOverview();
 	}

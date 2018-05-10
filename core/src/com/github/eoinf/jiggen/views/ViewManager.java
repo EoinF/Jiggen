@@ -18,7 +18,7 @@ public final class ViewManager {
 
     public static void init() {
         batch = new SpriteBatch();
-        skin = new Skin(Gdx.files.internal("uiskin.json"));
+        skin = new Skin(Gdx.files.internal("skin/Holo-dark-hdpi.json"));
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);

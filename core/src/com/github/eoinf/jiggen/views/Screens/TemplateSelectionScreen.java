@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.github.eoinf.jiggen.DataSource.TemplateService;
 import com.github.eoinf.jiggen.Models.TemplateRemote;
 import com.github.eoinf.jiggen.views.Widgets.TemplatePickerTable;
 
@@ -38,27 +37,27 @@ public class TemplateSelectionScreen extends CameraControlledScreen {
 
         System.out.println("Fetching remote template list");
 
-        TemplateService.getRemoteTemplates()
-                .thenAccept(this::onFetchTemplates);
+//        TemplateService.getRemoteTemplates()
+//                .thenAccept(this::onFetchTemplates);
 
         templateSelectionTable = new TemplatePickerTable(skin);
         pickerStage.addActor(templateSelectionTable);
     }
 
-    private void onFetchTemplates(List<TemplateRemote> templateRemotes) {
-        System.out.println("Got remote template list");
-
-        for (TemplateRemote template : templateRemotes) {
-            System.out.printf("name=%s, id=%s\n", template.getName(), template.getId());
-
-            TemplateService.getTemplateImage(template.getId() + "." + template.getExtension())
-                    .thenAccept(image ->
-                    {
-                            template.setTexture(image);
-                            templateSelectionTable.addTemplate(template);
-                    });
-        }
-    }
+//    private void onFetchTemplates(List<TemplateRemote> templateRemotes) {
+//        System.out.println("Got remote template list");
+//
+//        for (TemplateRemote template : templateRemotes) {
+//            //System.out.printf("name=%s, id=%s\n", template.getName(), template.getId());
+//
+//            TemplateService.getTemplateImage(template.getId() + "." + template.getExtension())
+//                    .thenAccept(image ->
+//                    {
+//                            template.setTexture(image);
+//                            templateSelectionTable.addTemplate(template);
+//                    });
+//        }
+//    }
 
     @Override
     public void show() {

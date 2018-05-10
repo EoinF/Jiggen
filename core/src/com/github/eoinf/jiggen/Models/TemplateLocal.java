@@ -2,7 +2,6 @@ package com.github.eoinf.jiggen.Models;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class TemplateLocal implements Template {
 
@@ -28,7 +27,7 @@ public class TemplateLocal implements Template {
 
     @Override
     public Texture getTexture() {
-        throw new NotImplementedException();
+        throw new RuntimeException(new NoSuchMethodException());
     }
 
     @Override
