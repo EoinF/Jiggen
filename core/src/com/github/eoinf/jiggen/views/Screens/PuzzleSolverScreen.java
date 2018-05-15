@@ -2,6 +2,7 @@ package com.github.eoinf.jiggen.views.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -20,7 +21,7 @@ import com.github.eoinf.jiggen.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PuzzleSolverScreen extends CameraControlledScreen {
+public class PuzzleSolverScreen implements Screen {
 
     private OrthographicCamera camera;
 
@@ -30,51 +31,10 @@ public class PuzzleSolverScreen extends CameraControlledScreen {
     private Stage gameStage;
     private List<Actor> pieces;
 
-    public PuzzleSolverScreen(OrthographicCamera camera, SpriteBatch batch, PuzzleGraph puzzleGraph) {
-        super(camera);
+    public PuzzleSolverScreen(OrthographicCamera camera, SpriteBatch batch) {
         this.camera = camera;
 
         gameStage = new Stage(new ScreenViewport(camera), batch);
-        pieces = new ArrayList<>();
-        for (PuzzlePiece<TextureRegion> piece: puzzleGraph.getVertices()) {
-            Image image = new Image(piece.getData());
-            image.setUserObject(piece);
-            image.setPosition(piece.getPosition().x, piece.getPosition().y);
-            pieces.add(image);
-            gameStage.addActor(image);
-        }
-
-        gameStage.addListener(new InputListener() {
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                Vector3 mousePositionInWorld = new Vector3(x, y, 0);
-                Actor a = gameStage.hit(mousePositionInWorld.x, mousePositionInWorld.y, true);
-                if (a != null) {
-                    int index = pieces.indexOf(a);
-                    if (index >= 0) {
-                        pieceHeld = pieces.get(index);
-                        pieceOffsetHeld = new Vector2(
-                                pieceHeld.getX() - mousePositionInWorld.x,
-                                pieceHeld.getY() - mousePositionInWorld.y - 1
-                        );
-                        pieceHeld.toFront();
-                    }
-                }
-                return true;
-            }
-
-            @Override
-            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                pieceHeld = null;
-            }
-
-            @Override
-            public boolean keyDown(InputEvent event, int keycode) {
-                if (keycode == Input.Keys.SPACE) {
-                    utils.shuffle(puzzleGraph, pieces);
-                }
-                return super.keyDown(event, keycode);
-            }
-        });
 
         Gdx.input.setInputProcessor(gameStage);
     }
@@ -123,6 +83,50 @@ public class PuzzleSolverScreen extends CameraControlledScreen {
 
     @Override
     public void dispose() {
+
+    }
+
+    public void setPuzzleGraph(PuzzleGraph puzzleGraph) {
+        pieces = new ArrayList<>();
+        for (PuzzlePiece<TextureRegion> piece: puzzleGraph.getVertices()) {
+            Image image = new Image(piece.getData());
+            image.setUserObject(piece);
+            image.setPosition(piece.getPosition().x, piece.getPosition().y);
+            pieces.add(image);
+            gameStage.addActor(image);
+        }
+
+        gameStage.addListener(new InputListener() {
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                Vector3 mousePositionInWorld = new Vector3(x, y, 0);
+                Actor a = gameStage.hit(mousePositionInWorld.x, mousePositionInWorld.y, true);
+                if (a != null) {
+                    int index = pieces.indexOf(a);
+                    if (index >= 0) {
+                        pieceHeld = pieces.get(index);
+                        pieceOffsetHeld = new Vector2(
+                                pieceHeld.getX() - mousePositionInWorld.x,
+                                pieceHeld.getY() - mousePositionInWorld.y - 1
+                        );
+                        pieceHeld.toFront();
+                    }
+                }
+                return true;
+            }
+
+            @Override
+            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                pieceHeld = null;
+            }
+
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
+                if (keycode == Input.Keys.SPACE) {
+                    utils.shuffle(puzzleGraph, pieces);
+                }
+                return super.keyDown(event, keycode);
+            }
+        });
 
     }
 }
