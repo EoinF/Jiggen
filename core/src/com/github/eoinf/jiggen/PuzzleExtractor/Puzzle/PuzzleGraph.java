@@ -1,19 +1,36 @@
 package com.github.eoinf.jiggen.PuzzleExtractor.Puzzle;
 
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.GridPoint2;
 import com.github.eoinf.jiggen.PuzzleExtractor.GraphEdge;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class PuzzleGraph {
-    private List<PuzzlePiece> vertices;
-    private List<GraphEdge> edges;
+    private VertexList vertices;
+    private EdgeList edges;
 
-    public List<PuzzlePiece> getVertices() {
+    public class VertexList extends ArrayList<PuzzlePiece> {
+        @Override
+        public String toString() {
+            return "";
+        }
+    }
+
+    public class EdgeList extends ArrayList<GraphEdge> {
+        @Override
+        public String toString() {
+            return super.toString();
+        }
+    }
+
+    public VertexList getVertices() {
         return vertices;
     }
-    public List<GraphEdge> getEdges() {
+
+    public EdgeList getEdges() {
         return edges;
     }
 
@@ -35,8 +52,8 @@ public class PuzzleGraph {
     }
 
     public PuzzleGraph(int width, int height) {
-        vertices = new ArrayList<>();
-        edges = new ArrayList<>();
+        vertices = new VertexList();
+        edges = new EdgeList();
         this.width = width;
         this.height = height;
         this.scale = 1;

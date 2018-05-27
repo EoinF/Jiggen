@@ -10,6 +10,7 @@ import com.github.eoinf.jiggen.PuzzleExtractor.Decoder.DecodedPiece;
 import com.github.eoinf.jiggen.PuzzleExtractor.Decoder.DecodedTemplate;
 import com.github.eoinf.jiggen.utils;
 
+import java.util.List;
 import java.util.function.Function;
 
 public abstract class PuzzleFactory {
@@ -64,23 +65,22 @@ public abstract class PuzzleFactory {
         }
         Pixmap backgroundPixmap = dstData.consumePixmap();
 
-        templateGraph.getVertices().forEach(v -> {
-                    int scaledWidth = (int) (ratioX * v.getWidth());
-                    int scaledHeight = (int) (ratioY * v.getHeight());
+        for (PuzzlePiece v : (templateGraph.getVertices())) {
+            int scaledWidth = (int) (ratioX * v.getWidth());
+            int scaledHeight = (int) (ratioY * v.getHeight());
 
-                    PuzzlePiece generatedPiece;
-                    if (v.getData() instanceof Pixmap) {
-                        generatedPiece =
-                                overlayBackgroundOnPixmapPiece((PuzzlePiece<Pixmap>)v, backgroundPixmap,
-                                        scaledWidth, scaledHeight, ratioX, ratioY);
-                    } else {
-                        generatedPiece =
-                                overlayBackgroundOnTextureRegionPiece((PuzzlePiece<TextureRegion>)v, backgroundPixmap,
-                                        scaledWidth, scaledHeight, ratioX, ratioY);
-                    }
-                    finishedPuzzle.addVertex(generatedPiece);
-                }
-        );
+            PuzzlePiece generatedPiece;
+            if (v.getData() instanceof Pixmap) {
+                generatedPiece =
+                        overlayBackgroundOnPixmapPiece((PuzzlePiece<Pixmap>) v, backgroundPixmap,
+                                scaledWidth, scaledHeight, ratioX, ratioY);
+            } else {
+                generatedPiece =
+                        overlayBackgroundOnTextureRegionPiece((PuzzlePiece<TextureRegion>) v, backgroundPixmap,
+                                scaledWidth, scaledHeight, ratioX, ratioY);
+            }
+            finishedPuzzle.addVertex(generatedPiece);
+        }
 
         backgroundPixmap.dispose();
         return finishedPuzzle;
