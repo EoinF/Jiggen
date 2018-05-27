@@ -1,3 +1,24 @@
 .OverviewScreen {
   text-align: center;
+  width: 100%;
+  height: 100%;
+}
+
+.OverviewBody {
+	height: 100%;
+	display: flex;
+	flex-flow: row wrap;
+}
+
+.OverviewBody > * {
+	//min-height: 50%;
+	flex: 50%;
+}
+
+.OverviewTitle {
+	text-align: center;
+	background: #c460dc;
+	height: 2.8rem;
+	font-size: 2rem;
+	margin: auto;
 }

@@ -3,7 +3,11 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import registerServiceWorker from './registerServiceWorker';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
-import { generatedTemplateReducers } from './reducers';
+import {
+	templateReducers,
+	generatedTemplateReducers,
+	resourceLinkReducers
+} from './reducers';
 import thunk from 'redux-thunk';
 
 import App from './App';
@@ -12,7 +16,9 @@ import './globals.js'
 
 const store = createStore(
 	combineReducers({ 
-		generatedTemplates: generatedTemplateReducers
+		templates: templateReducers,
+		generatedTemplates: generatedTemplateReducers,
+		resourceLinks: resourceLinkReducers
 	}),
 	applyMiddleware(thunk)
 )

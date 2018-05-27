@@ -6,21 +6,26 @@ class PuzzleSolver extends Component {
 	componentDidMount() {
 		const { 
 			match: { params },
-			fetchGeneratedTemplate,
+			fetchGeneratedTemplateById,
 			generatedTemplate,
 		} = this.props;
 		
 		if (!generatedTemplate) {
-			fetchGeneratedTemplate(params.id);
+			fetchGeneratedTemplateById(params.id);
 		}
 
 		const gwt_root = document.getElementById('jiggen-puzzle-solver');
+		const react_root = document.getElementById('react-root');
 		gwt_root.classList.remove('hidden');
+		react_root.classList.add('hidden');
 	}
+
 	render() {
-		const {generatedTemplate, generatedTemplateId} = this.props;
-		console.log("props");
-		console.log(this.props);
+		const {
+			generatedTemplate, 
+			generatedTemplateId
+		} = this.props;
+		
 		return (
 			<div>
 				<div>{generatedTemplateId}</div>
@@ -34,9 +39,6 @@ class PuzzleSolver extends Component {
 
 
 const mapStateToProps = state => {
-
-	console.log("state.generatedTemplates");
-	console.log(state.generatedTemplates);
   return {
     generatedTemplate: state.generatedTemplates.generatedTemplatesMap[state.generatedTemplates.selectedId],
     generatedTemplateId: state.generatedTemplates.selectedId
@@ -45,8 +47,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchGeneratedTemplate: id => {
-      dispatch(generatedTemplatesActions.fetchGeneratedTemplate(id))
+    fetchGeneratedTemplateById: id => {
+      dispatch(generatedTemplatesActions.fetchGeneratedTemplateById(id))
     }
   }
 }

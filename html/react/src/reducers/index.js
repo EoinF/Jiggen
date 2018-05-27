@@ -1,3 +1,9 @@
 import generatedTemplates from './generatedTemplates';
+import templates from './templates';
+import resourceLinks from './resourceLinks';
 
-export { generatedTemplates as generatedTemplateReducers };
+export { 
+	templates as templateReducers,
+	generatedTemplates as generatedTemplateReducers,
+	resourceLinks as resourceLinkReducers
+};

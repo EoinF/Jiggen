@@ -20,10 +20,8 @@ function setResourceLinks(resourceLinks) {
 function fetchResourceLinks(onFetchLinksResolver = () => {}) {
 	return (dispatch, getState) => {
 		dispatch(startFetchingResourceLinks);
-		console.log("state", getState());
 		axios.get(API_URL).then(result => {
 			const resourceLinks = result.data.links;
-			console.log(resourceLinks);
 			setResourceLinks(resourceLinks);
 			onFetchLinksResolver(resourceLinks);
 		});
@@ -32,7 +30,7 @@ function fetchResourceLinks(onFetchLinksResolver = () => {}) {
 
 function getOrFetchResourceLinks(dispatch, getState) {
 	return new Promise(function(resolve, reject) {
-		if (getState().resourceLinks) {
+		if (getState().resourceLinks.isLoaded) {
 			resolve(getState().resourceLinks);
 		} else {
 			const resourceLinksThunk = fetchResourceLinks(resolve);

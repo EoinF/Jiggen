@@ -1,6 +1,7 @@
 import { 
 	FETCH_GENERATED_TEMPLATE,
-	SET_GENERATED_TEMPLATE
+	SET_GENERATED_TEMPLATE,
+	ADD_GENERATED_TEMPLATES
 } from '../actions';
 
 const initialState = {
@@ -11,6 +12,27 @@ const initialState = {
   isFetching: false,
 };
 
+function addGeneratedTemplates(state, {generatedTemplates}) {
+	let {
+		generatedTemplatesMap
+	} = state;
+
+	const newEntries = {};
+
+	generatedTemplates.forEach(template => {
+		newEntries[template.id] = template;
+	});
+
+	return {
+		...state,
+		generatedTemplatesMap: {
+			...generatedTemplatesMap,
+			...newEntries
+		},
+		selectedId: generatedTemplates[0].id,
+		isFetching: false
+	}
+}
 
 function setGeneratedTemplate(state, {generatedTemplateId, generatedTemplate}) {
 	let {
@@ -41,10 +63,9 @@ function generatedTemplateReducers(state = initialState, action) {
 		case FETCH_GENERATED_TEMPLATE:
 			return startFetchingGeneratedTemplate(state, action);
 		case SET_GENERATED_TEMPLATE:
-			console.log("Setting generatedTemplates");
-			const x = setGeneratedTemplate(state, action);
-			console.log(x);
-			return x;
+			return setGeneratedTemplate(state, action);
+		case ADD_GENERATED_TEMPLATES:
+			return addGeneratedTemplates(state, action);
 		default:
 			return state;
 	}
