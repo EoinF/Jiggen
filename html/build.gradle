@@ -1,7 +1,8 @@
-import de.richsource.gradle.plugins.gwt.GwtSuperDev
+import org.wisepersist.gradle.plugins.gwt.GwtSuperDev
 
 apply plugin: "java"
 apply plugin: "jetty"
+
 
 gwt {
     gwtVersion='2.8.0' // Should match the gwt version used for building the gwt backend
@@ -12,6 +13,8 @@ gwt {
     modules 'com.github.eoinf.jiggen.GdxDefinition'
     devModules 'com.github.eoinf.jiggen.GdxDefinitionSuperdev'
     project.webAppDirName = 'react/build'
+
+    generateJsInteropExports = true;
 
     compiler {
         strict = true;
@@ -36,6 +39,7 @@ task compileReact(type: Exec) {
 task superDev(type: GwtSuperDev, dependsOn: [draftRun, compileReact]) {
     doFirst {
         gwt.modules = gwt.devModules
+        generateJsInteropExports = true;
     }
 }
 
