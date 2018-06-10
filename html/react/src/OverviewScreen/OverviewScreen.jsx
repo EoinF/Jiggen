@@ -13,7 +13,7 @@ class OverviewScreen extends Component {
 
   componentDidMount() {
     const { selectedTemplate} = this.props;
-    if (selectedTemplate) { 
+    if (selectedTemplate) {
       this.props.fetchGeneratedTemplatesByLink(selectedTemplate.links.generatedTemplates);
     }
   };

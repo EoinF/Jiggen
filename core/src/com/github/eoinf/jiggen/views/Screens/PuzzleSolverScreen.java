@@ -96,6 +96,8 @@ public class PuzzleSolverScreen implements Screen {
             gameStage.addActor(image);
         }
 
+        Gdx.app.log("Puzzle Solver", "Loading new graph");
+
         gameStage.addListener(new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
                 Vector3 mousePositionInWorld = new Vector3(x, y, 0);

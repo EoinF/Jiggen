@@ -6,7 +6,8 @@ import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
 import {
 	templateReducers,
 	generatedTemplateReducers,
-	resourceLinkReducers
+	resourceLinkReducers,
+	puzzleSolverReducers
 } from './reducers';
 import thunk from 'redux-thunk';
 
@@ -18,7 +19,8 @@ const store = createStore(
 	combineReducers({
 		templates: templateReducers,
 		generatedTemplates: generatedTemplateReducers,
-		resourceLinks: resourceLinkReducers
+		resourceLinks: resourceLinkReducers,
+		puzzle: puzzleSolverReducers
 	}),
 	composeEnhancers(
 		applyMiddleware(thunk)

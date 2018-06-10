@@ -22,6 +22,12 @@ import {
 	SET_RESOURCE_LINKS,
 } from './resourceLinks';
 
+import {
+	loadPuzzleSolver,
+	START_LOADING_PUZZLE_SOLVER,
+	SET_PUZZLE_SOLVER_DATA
+} from './puzzleSolver';
+
 const generatedTemplatesActions = {
 	fetchGeneratedTemplateById,
 	fetchGeneratedTemplatesByLink,
@@ -39,6 +45,10 @@ const resourceLinksActions = {
 	fetchResourceLinks
 }
 
+const puzzleSolverActions = {
+	loadPuzzleSolver
+}
+
 export {
 	// templates
 	templatesActions,
@@ -54,5 +64,10 @@ export {
 
 	// resource links
 	resourceLinksActions,
-	SET_RESOURCE_LINKS
+	SET_RESOURCE_LINKS,
+
+	// puzzle solver
+	puzzleSolverActions,
+	START_LOADING_PUZZLE_SOLVER,
+	SET_PUZZLE_SOLVER_DATA
 };

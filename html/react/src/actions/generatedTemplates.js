@@ -27,18 +27,30 @@ function addGeneratedTemplates(generatedTemplates) {
 	}
 }
 
-const fetchGeneratedTemplateById = id => {
+const fetchGeneratedTemplateById = (id, onFetchLinksResolver = () => {}) => {
 	console.log("fetchGeneratedTemplate");
 	return (dispatch, getState) => {
 		getOrFetchResourceLinks(dispatch, getState).then(resourceLinks => {
 			dispatch(startFetchingGeneratedTemplate());
-			console.log(resourceLinks);
 			axios.get(resourceLinks.generatedTemplates + '/' + id)
 				.then((result) => {
+					onFetchLinksResolver(result.data);
 					dispatch(setGeneratedTemplate(id, result.data));
 				});
 		});
 	};
+}
+
+const getOrFetchGeneratedTemplateById = (id, dispatch, getState) => {
+	return new Promise(function(resolve, reject) {
+		var selectedId = getState().generatedTemplates.selectedId;
+		if (selectedId != null) {
+			resolve(getState().generatedTemplates.generatedTemplatesMap[selectedId]);
+		} else {
+			const fetchGeneratedTemplateThunk = fetchGeneratedTemplateById(id, resolve);
+			fetchGeneratedTemplateThunk(dispatch, getState);
+		}
+	});
 }
 
 const fetchGeneratedTemplatesByLink = link => {
@@ -53,6 +65,7 @@ const fetchGeneratedTemplatesByLink = link => {
 
 export {
 	fetchGeneratedTemplateById,
+	getOrFetchGeneratedTemplateById,
 	fetchGeneratedTemplatesByLink,
 	setGeneratedTemplate,
 	addGeneratedTemplates,

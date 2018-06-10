@@ -1,7 +1,5 @@
 package com.github.eoinf.jiggen.PuzzleExtractor.Puzzle;
 
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.GridPoint2;
 
 
@@ -32,7 +30,7 @@ public class PuzzlePiece<T> {
         this.position = new GridPoint2(x, y);
     }
 
-    PuzzlePiece(int startX, int startY, int width, int height, T data) {
+    public PuzzlePiece(int startX, int startY, int width, int height, T data) {
         this.data = data;
         this.width = width;
         this.height = height;
