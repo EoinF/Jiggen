@@ -1,0 +1,29 @@
+@import '../index.scss'; 
+
+.backgroundTable {
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: center;
+
+	padding-top: 1em;
+
+	.messageBoxContainer {
+		padding: 2em;
+
+		display: flex;
+		flex-flow: column nowrap;
+		justify-content: center;
+
+		>* {
+			padding-top: 0.2em;
+		}
+
+		.logoContainer {
+			margin-top: 1em;
+		}
+	}
+}
+
+.backgroundSelectionContainer {
+	height: 100%;
+}

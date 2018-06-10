@@ -1,3 +1,5 @@
+@import '../index.scss';
+
 .OverviewScreen {
   text-align: center;
   
@@ -25,11 +27,9 @@
 
 	display: flex;
 	flex-flow: row wrap;
-}
 
-.OverviewBody > * {
-  //@media (orientation: portrait) {
-  	flex: 1 1 50%;
-  	display: inline-flex;
-  //}
+  > * {
+    flex: 1 1 50%;
+    display: inline-flex;
+  }
 }

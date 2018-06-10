@@ -1,14 +1,33 @@
+
+$theme_f0: white;
+$theme_f1: #fdecec;
+$theme_f2: black;
+
+$theme_b1: #4b1b63;
+$theme_b2: #450454;
+$theme_b3: #9468ab;
+$theme_b4: #f4c5ff;
+
+$theme_b5: #bc7fbf;
+$theme_b6: #cd8fcf;
+
+
+$theme_xb1: #b74c4c;
+$theme_xb2: yellow;
+
 body {
-	color: #fdecec;
+	color: $theme_f1;
 	margin: 0;
 	padding: 0;
 	font-family: sans-serif;
-	background: #4b1b63;
+	background: $theme_b1;
 }
 
 body, html, #react-root {
 	height: 100%;
 	-webkit-box-sizing: border-box;  /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
-	box-sizing: border-box;
+	* {
+		box-sizing: border-box;
+	}
 }

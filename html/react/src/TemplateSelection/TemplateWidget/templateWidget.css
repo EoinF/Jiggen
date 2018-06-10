@@ -1,5 +1,4 @@
 .templateWidget img {
-  opacity: 0.8;
   max-width: 100%; }
 
 .templateWidget {
@@ -8,9 +7,15 @@
   flex-flow: column nowrap; }
 
 .templateWidget.selected img {
-  opacity: 1;
-  border: 3px solid pink;
-  animation: borderpulse 1s ease-in 0s infinite alternate; }
+  border: 5px solid yellow;
+  animation: borderpulse 0.7s ease-in 0s infinite alternate; }
+
+.templateSelectedText {
+  font-size: 1.3em;
+  color: yellow; }
+
+.templateNameContainer {
+  line-height: 1.8em; }
 
 @keyframes borderpulse {
   from {

@@ -37,7 +37,7 @@ class OverviewScreen extends Component {
               <TemplateChooser template={selectedTemplate} />
             </div>
             <div>
-              <BackgroundChooser background={selectedBackground} />
+                <BackgroundChooser background={selectedBackground} />
             </div>
           </div>
           <div className="OverviewBody">

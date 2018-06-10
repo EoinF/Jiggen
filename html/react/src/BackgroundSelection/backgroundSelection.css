@@ -1,0 +1,33 @@
+body {
+  color: #fdecec;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  background: #4b1b63; }
+
+body, html, #react-root {
+  height: 100%;
+  -webkit-box-sizing: border-box;
+  /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box;
+  /* Firefox, other Gecko */ }
+  body *, html *, #react-root * {
+    box-sizing: border-box; }
+
+.backgroundTable {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  padding-top: 1em; }
+  .backgroundTable .messageBoxContainer {
+    padding: 2em;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center; }
+    .backgroundTable .messageBoxContainer > * {
+      padding-top: 0.2em; }
+    .backgroundTable .messageBoxContainer .logoContainer {
+      margin-top: 1em; }
+
+.backgroundSelectionContainer {
+  height: 100%; }

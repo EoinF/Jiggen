@@ -1,9 +1,9 @@
+@import '../../index.scss';
 
 .TemplateChooser {
 	width: 100%;
-	border: solid 2px white;
-	//background: #259ab5;
-	background: #b166ab;
+	border: solid 2px $theme_f0;
+	background: $theme_b3;
 
 	display: flex;
 	flex-flow: column nowrap;
@@ -19,10 +19,10 @@
 	&.selected {
 		opacity: 1;
 		animation: none;
-		background: #65b551;
+		background: $theme_b5;
 		&:hover {
 			opacity: 1;
-			background: #76c662;
+			background: $theme_b6;
 		};
 	}
 }

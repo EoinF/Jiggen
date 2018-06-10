@@ -14,7 +14,10 @@ const TemplateWidget = ({template, isSelected, onClick}) => {
 	
 	return (
 		<div onClick={onClick} className={classNames}>
-			<div>{name || "no name"}</div>
+			<div className="templateNameContainer">
+				<span>{name || "no name"}</span>
+				{ isSelected && (<span className="templateSelectedText"> (selected)</span>) }
+			</div>
 			<div><img src={imageLink} alt="none found"/></div>
 		</div>
 	);

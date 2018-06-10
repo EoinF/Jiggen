@@ -14,8 +14,6 @@ class TemplateSelection extends Component {
 			fetchTemplates,
 			templates
 		} = this.props;
-
-		console.log(templates.length);
 		
 		if (templates.length === 0) {
 			fetchTemplates();
@@ -41,14 +39,13 @@ class TemplateSelection extends Component {
 							<span>Choose a Template</span>
 						</h1>
 					</JiggenHeader>
-					<div className="templateHeaderBuffer" />
 				</PlainLink>
 				<div className="templateTable">
 				{ templates && templates.map(template => { return (
 	            		<PlainLink to={`/`} key={template.id} >
-	            			<TemplateWidget 
-	            				template={template} 
-	            				isSelected={template.id === selectedTemplateId} 
+	            			<TemplateWidget
+	            				template={template}
+	            				isSelected={template.id === selectedTemplateId}
 	            				onClick={(e) => this.onSelectTemplate(e, template.id)}
 	            			/>
 	            		</PlainLink>

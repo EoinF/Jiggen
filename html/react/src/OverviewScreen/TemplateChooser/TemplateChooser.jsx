@@ -10,7 +10,7 @@ const TemplateChooser = ({template}) => {
 	if (template != null) {
 		containerClass = "TemplateChooser selected";
 		content = (
-			<TemplateWidget template={template} isSelected={true} />
+			<TemplateWidget template={template} isSelected={false} />
 		);
 	} else {
 		containerClass = "TemplateChooser";

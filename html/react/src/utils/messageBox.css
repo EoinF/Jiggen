@@ -13,3 +13,9 @@ body, html, #react-root {
   /* Firefox, other Gecko */ }
   body *, html *, #react-root * {
     box-sizing: border-box; }
+
+.messageBox {
+  color: black;
+  background: #f4c5ff;
+  text-align: center;
+  border: 1px solid #9c6ac3; }

@@ -1,14 +1,23 @@
+@import '../../index.scss';
 
-.LauncherContainer {
+.launcherContainer {
 	display: flex;
 	flex-flow: column nowrap;
 	width: 100%;
 }
 
-.LauncherContent {
+.launcherContent {
 	flex: 1 1 auto;
 }
 
-.LauncherControls {
+.launcherControls {
 	padding: 0.2rem 0;
+	display: flex;
+	flex-flow: column nowrap;
+}
+
+.launcherButton {
+	background: $theme_xb2;
+	color: $theme_f2;
+	border: solid 1px $theme_f0;
 }
