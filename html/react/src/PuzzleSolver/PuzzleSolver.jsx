@@ -20,6 +20,13 @@ class PuzzleSolver extends Component {
 		react_root.classList.add('hidden');
 	}
 
+	componentWillUnmount() {
+		const gwt_root = document.getElementById('jiggen-puzzle-solver');
+		const react_root = document.getElementById('react-root');
+		gwt_root.classList.add('hidden');
+		react_root.classList.remove('hidden');
+	}
+
 	render() {
 		const {
 			generatedTemplate, 

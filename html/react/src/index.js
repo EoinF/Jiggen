@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import registerServiceWorker from './registerServiceWorker';
-import { createStore, applyMiddleware, combineReducers } from 'redux';
+import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
 import {
 	templateReducers,
 	generatedTemplateReducers,
@@ -12,15 +12,17 @@ import thunk from 'redux-thunk';
 
 import App from './App';
 
-import './globals.js'
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const store = createStore(
-	combineReducers({ 
+	combineReducers({
 		templates: templateReducers,
 		generatedTemplates: generatedTemplateReducers,
 		resourceLinks: resourceLinkReducers
 	}),
-	applyMiddleware(thunk)
+	composeEnhancers(
+		applyMiddleware(thunk)
+	)
 )
 
 ReactDOM.render(

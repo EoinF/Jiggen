@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import PlainLink from '../utils/PlainLink';
 
 import './OverviewScreen.css';
-import ContentOrMessage from './ContentOrMessage';
-import { TemplateWidget } from '../TemplateSelection';
+import JiggenHeader from './JiggenHeader';
 import { generatedTemplatesActions } from '../actions';
+
+import TemplateChooser from './TemplateChooser';
+import BackgroundChooser from './BackgroundChooser';
+import PuzzleLauncher from './PuzzleLauncher';
 
 class OverviewScreen extends Component {
 
@@ -20,37 +22,27 @@ class OverviewScreen extends Component {
     const {
       selectedTemplate,
       selectedGeneratedTemplate,
-      selectedBackground 
+      selectedBackground
     } = this.props;
-
-    const puzzleLink = '/puzzle/' + (selectedGeneratedTemplate ? `${selectedGeneratedTemplate.id}` : '');
 
     return (
         <div className="OverviewScreen">
-          <h1 className="OverviewTitle">Jiggen</h1>
+          <div>
+            <JiggenHeader>
+              <h1>Jiggen</h1>
+            </JiggenHeader>
+          </div>
           <div className="OverviewBody">
             <div>
-              <PlainLink to={`/templates`}>
-                <ContentOrMessage message="Select a template" showContent={!!selectedTemplate}>
-                  <TemplateWidget template={selectedTemplate} />
-                </ContentOrMessage>
-              </PlainLink>
+              <TemplateChooser template={selectedTemplate} />
             </div>
             <div>
-              <PlainLink to={`/backgrounds`}>
-                <ContentOrMessage message="Select a background" showContent={!!selectedBackground}>
-                  <TemplateWidget template={selectedBackground} />
-                </ContentOrMessage>
-              </PlainLink>
+              <BackgroundChooser background={selectedBackground} />
             </div>
+          </div>
+          <div className="OverviewBody">
             <div>
-              <button>
-                <PlainLink to={puzzleLink}>
-                  <ContentOrMessage message="Select a template" showContent={!!selectedGeneratedTemplate}>
-                    <TemplateWidget template={selectedGeneratedTemplate} />
-                  </ContentOrMessage>
-                </PlainLink>
-              </button>
+              <PuzzleLauncher generatedTemplate={selectedGeneratedTemplate} />
             </div>
           </div>
         </div>

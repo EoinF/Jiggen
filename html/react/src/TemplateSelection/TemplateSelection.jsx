@@ -3,8 +3,10 @@ import { connect } from 'react-redux';
 import PlainLink from '../utils/PlainLink';
 import { templatesActions } from '../actions';
 
-import StickyHeader from './StickyHeader';
+import { JiggenHeader } from '../OverviewScreen'
 import TemplateWidget from './TemplateWidget';
+
+import './templateSelection.css';
  
 class TemplateSelection extends Component {
 	componentDidMount() {
@@ -30,20 +32,20 @@ class TemplateSelection extends Component {
 			selectedTemplateId
 		} = this.props;
 
-		console.log("props");
-		console.log(this.props);
 		return (
 			<div>
 	            <PlainLink to={`/`} >
-					<StickyHeader className="templateTableHeader">
-						<span>{"◄ "}</span>
-						<span>Choose a Template</span>
-					</StickyHeader>
+					<JiggenHeader>
+						<h1>
+							<span>{"◄ "}</span>
+							<span>Choose a Template</span>
+						</h1>
+					</JiggenHeader>
 					<div className="templateHeaderBuffer" />
 				</PlainLink>
 				<div className="templateTable">
 				{ templates && templates.map(template => { return (
-	            		<PlainLink to={`/`} key={template.id} style={{ textDecoration: 'none' }}>
+	            		<PlainLink to={`/`} key={template.id} >
 	            			<TemplateWidget 
 	            				template={template} 
 	            				isSelected={template.id === selectedTemplateId} 

@@ -1,0 +1,31 @@
+.TemplateChooser {
+  width: 100%;
+  border: solid 2px white;
+  background: #b166ab;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-around;
+  animation: pulse 1s ease-in 0s infinite alternate; }
+  .TemplateChooser:hover {
+    opacity: 1;
+    animation: none; }
+  .TemplateChooser.selected {
+    opacity: 1;
+    animation: none;
+    background: #65b551; }
+    .TemplateChooser.selected:hover {
+      opacity: 1;
+      background: #76c662; }
+
+.SelectTemplateMessage {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center; }
+  .SelectTemplateMessage div {
+    padding: 3px 0; }
+
+@keyframes pulse {
+  from {
+    opacity: 0.7; }
+  to {
+    background-opacity: 1; } }

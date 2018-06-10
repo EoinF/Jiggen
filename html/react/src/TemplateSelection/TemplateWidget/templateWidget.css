@@ -1,0 +1,19 @@
+.templateWidget img {
+  opacity: 0.8;
+  max-width: 100%; }
+
+.templateWidget {
+  padding: 0 auto;
+  display: flex;
+  flex-flow: column nowrap; }
+
+.templateWidget.selected img {
+  opacity: 1;
+  border: 3px solid pink;
+  animation: borderpulse 1s ease-in 0s infinite alternate; }
+
+@keyframes borderpulse {
+  from {
+    border-color: yellow; }
+  to {
+    border-color: #4b1b63; } }

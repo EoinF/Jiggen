@@ -1,0 +1,44 @@
+
+.BackgroundChooser {
+	width: 100%;
+	border: solid 2px white;
+	border-left: 1px;
+	//background: #259ab5;
+	background: #b166ab;
+
+	display: flex;
+	flex-flow: column nowrap;
+	justify-content: space-around;
+
+	animation: pulse 1s ease-in 0s infinite alternate;
+	
+	&:hover {
+		opacity: 1;
+		animation: none;
+	}
+
+	img {
+		width: auto;
+	}
+}
+
+.SelectBackgroundMessage {
+	display: flex;
+	flex-flow: column nowrap;
+	justify-content: center;
+	div {
+		padding: 3px 0;
+	}
+}
+
+@keyframes pulse {
+  from {
+  	opacity: 0.7;
+    //background: #207184;
+  }
+
+  to {
+  	background-opacity: 1;
+    //background: #4293A6;
+  }
+}

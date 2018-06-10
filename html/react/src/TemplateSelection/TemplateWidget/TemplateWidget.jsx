@@ -1,5 +1,7 @@
 import React from 'react';
 
+import './templateWidget.css';
+
 const TemplateWidget = ({template, isSelected, onClick}) => {
 	const {
 		name,
@@ -11,10 +13,10 @@ const TemplateWidget = ({template, isSelected, onClick}) => {
 	let classNames = "templateWidget" + (isSelected ? " selected" : "");
 	
 	return (
-			<div onClick={onClick} className={classNames}>
-				<span>{name || "no name"}</span>
-				<div><img src={imageLink} alt="none found"/></div>
-			</div>
+		<div onClick={onClick} className={classNames}>
+			<div>{name || "no name"}</div>
+			<div><img src={imageLink} alt="none found"/></div>
+		</div>
 	);
 }
 

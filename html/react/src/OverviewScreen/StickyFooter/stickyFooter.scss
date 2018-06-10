@@ -1,0 +1,32 @@
+
+.stickyHeader {
+  z-index: 1;
+  position: fixed;
+  width: 100%;
+  overflow: hidden;
+}
+
+.jiggenHeader {
+	text-align: center;
+	background: #450454;
+	height: 2.8rem;
+
+	h1 {
+		font-size: 2rem;
+		margin: auto;
+	}
+
+/*
+	@media (max-width:768px) {
+		height: 2.4rem;
+	}
+
+	h1 {
+		@media (max-width:768px) {
+			font-size: 1.5rem;
+		}
+		font-size: 2rem;
+		//height: 100%;
+		margin: auto;
+	}	*/
+}

@@ -1,0 +1,14 @@
+
+.LauncherContainer {
+	display: flex;
+	flex-flow: column nowrap;
+	width: 100%;
+}
+
+.LauncherContent {
+	flex: 1 1 auto;
+}
+
+.LauncherControls {
+	padding: 0.2rem 0;
+}

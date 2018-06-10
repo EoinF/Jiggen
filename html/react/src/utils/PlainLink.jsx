@@ -7,8 +7,8 @@ const PlainLink = (props) => {
 		...otherProps
 	} = props;
 	return (
-		<Link 
-			style={{ textDecoration: 'none' }}
+		<Link
+			style={{ textDecoration: 'none', color: 'inherit' }}
 			{...otherProps}
 		>
 		{children}
