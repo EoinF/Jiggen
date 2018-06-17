@@ -15,6 +15,11 @@ import App from './App';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
+// If not in production, enable gwt dev tools
+if (process.env.NODE_ENV !== 'production') {
+	document.getElementById('superdev-reload').classList.remove('hidden');
+}
+
 const store = createStore(
 	combineReducers({
 		templates: templateReducers,

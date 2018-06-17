@@ -11,16 +11,23 @@ $theme_b4: #f4c5ff;
 $theme_b5: #bc7fbf;
 $theme_b6: #cd8fcf;
 
-
+$theme_xf1: #c7bd95;
 $theme_xb1: #b74c4c;
 $theme_xb2: yellow;
 
 body {
-	color: $theme_f1;
+	color: $theme_f0;
 	margin: 0;
 	padding: 0;
 	font-family: sans-serif;
 	background: $theme_b1;
+
+
+	font-size: 20px;
+
+	@media (min-width: 768px) {
+		font-size: 32px;
+	}
 }
 
 body, html, #react-root {

@@ -15,6 +15,9 @@
 	background: $theme_b2;
 	height: 2.4rem;
 
+	animation: header_borderpulse 1s ease-in 0s infinite alternate;
+	border-bottom: 1px solid $theme_xf1;
+
 	h1 {
 		font-size: 1.5rem;
 		margin: auto;
@@ -27,4 +30,13 @@
 		}
 	}
 
+}
+
+@keyframes header_borderpulse {
+	from {
+		border-color: $theme_xf1;
+	}
+	to {
+		border-color: $theme_f1;
+	}
 }

@@ -10,8 +10,15 @@
 
 .jiggenFooter {
 	text-align: center;
-	background: $theme_xb1;
-	height: 2.8rem;
+	animation: footer_borderpulse 1s ease-in 0s infinite alternate;
+	border-top: 1px solid $theme_xf1;
+	background: $theme_b3;
+	min-height: 3.5rem;
+	opacity: 0.95;
+
+	&:hover, &:active {
+		opacity: 1;
+	}
 
 	h1 {
 		font-size: 2rem;
@@ -31,4 +38,13 @@
 		//height: 100%;
 		margin: auto;
 	}	*/
+}
+
+@keyframes footer_borderpulse {
+	from {
+		border-color: $theme_xf1;
+	}
+	to {
+		border-color: $theme_f1;
+	}
 }

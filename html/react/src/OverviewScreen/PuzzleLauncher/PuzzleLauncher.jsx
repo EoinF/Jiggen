@@ -14,11 +14,11 @@ const PuzzleLauncher = ({generatedTemplate}) => {
 					<TemplateWidget template={generatedTemplate} />
 				</div>
 				<StickyFooter>
-					<PlainLink className="launcherControls" to={puzzleLink}>
-						<div>
+					<div className="launcherControls">
+						<PlainLink to={puzzleLink}>
 							<div className="launcherButton">Start Solving!</div>
-						</div>
-					</PlainLink>
+						</PlainLink>
+					</div>
 				</StickyFooter>
 			</div>
 		);
