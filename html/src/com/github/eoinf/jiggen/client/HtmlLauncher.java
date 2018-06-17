@@ -10,31 +10,32 @@ import com.google.gwt.core.client.GWT;
 
 public class HtmlLauncher extends GwtApplication {
 
-        @Override
-        public GwtApplicationConfiguration getConfig() {
-                return new GwtApplicationConfiguration(800, 600);
-        }
+    @Override
+    public GwtApplicationConfiguration getConfig() {
+        return new GwtApplicationConfiguration(800, 600);
+    }
 
 
-        @Override
-        public Preloader createPreloader() {
-                return new DynamicPreloader(getPreloaderBaseURL());
-        }
+    @Override
+    public Preloader createPreloader() {
+        Preloader preloader = new DynamicPreloader(getPreloaderBaseURL());
+        BrowserWindow.setGwtLoaded();
+        return preloader;
+    }
 
-        @Override
-        public ApplicationListener createApplicationListener() {
-                GWT.log("Initializing GWT Adapter");
-                BrowserWindow.setGwtLoaded();
+    @Override
+    public ApplicationListener createApplicationListener() {
+        GWT.log("Initializing GWT Adapter");
 
-                Jiggen jiggen = new Jiggen();
-                GwtAdapter.setJiggen(jiggen);
-                GwtAdapter.setApp(this);
-                return jiggen;
-        }
+        Jiggen jiggen = new Jiggen();
+        GwtAdapter.setJiggen(jiggen);
+        GwtAdapter.setApp(this);
+        return jiggen;
+    }
 
-        @Override
-        public void addLifecycleListener(LifecycleListener listener) {
-                super.addLifecycleListener(listener);
-        }
+    @Override
+    public void addLifecycleListener(LifecycleListener listener) {
+        super.addLifecycleListener(listener);
+    }
 
 }

@@ -1,7 +1,12 @@
 package com.github.eoinf.jiggen.client;
 
-import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Files;
+import com.badlogic.gdx.backends.gwt.GwtApplication;
+import com.badlogic.gdx.backends.gwt.GwtFileHandle;
+import com.badlogic.gdx.backends.gwt.preloader.AssetFilter;
+import com.badlogic.gdx.backends.gwt.preloader.Preloader;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.Array;
 import com.github.eoinf.jiggen.Jiggen;
 import com.google.gwt.core.client.GWT;
 import jsinterop.annotations.JsPackage;
@@ -11,14 +16,37 @@ import jsinterop.annotations.JsType;
 public class GwtAdapter {
 
     private static Jiggen jiggen;
-    private static Application gdxApp;
+    private static GwtApplication gdxApp;
 
     public static void setGeneratedTemplate(GeneratedTemplate generatedTemplate) {
         GWT.log(JSON.stringify(generatedTemplate));
 
-        new PuzzleLoader(generatedTemplate.links.image, generatedTemplate.links.atlas,
-                (templateFile, atlasFile) -> {
+        String atlasLink = generatedTemplate.links.atlas;
+        String templateLink = generatedTemplate.links.image;
 
+        DynamicPreloader preloader = (DynamicPreloader) gdxApp.getPreloader();
+
+        Array<Preloader.Asset> assets = new Array<>();
+        assets.add(
+                new Preloader.Asset(atlasLink, AssetFilter.AssetType.Text, Integer.MAX_VALUE, "text/plain"));
+
+        assets.add(new Preloader.Asset(templateLink, AssetFilter.AssetType.Image, Integer.MAX_VALUE,
+                        "image/" + generatedTemplate.extension));
+
+        GWT.log("Loading assets");
+
+        preloader.preload(assets, new Preloader.PreloaderCallback() {
+            @Override
+            public void error (String file) {
+                gdxApp.error("Preloading dynamic assets", "Unhandled error!");
+            }
+
+            @Override
+            public void update (Preloader.PreloaderState state) {
+                if (state.hasEnded()) {
+                    GWT.log("Loaded assets");
+                    FileHandle atlasFile = new GwtFileHandle(preloader, atlasLink, Files.FileType.Internal);
+                    FileHandle templateFile = new GwtFileHandle(preloader, templateLink, Files.FileType.Internal);
                     FileHandle fakeDirectory = new FileHandle() {
                         @Override
                         public FileHandle child(String name) {
@@ -26,17 +54,19 @@ public class GwtAdapter {
                         }
                     };
 
-                    GWT.log(String.valueOf(templateFile.readBytes() == null));
-                    GWT.log(String.valueOf(atlasFile.readBytes() == null));
+                    GWT.log("Loaded assets" + preloader.images.get(templateLink));
+
                     gdxApp.postRunnable(() -> jiggen.loadFromAtlas(atlasFile, fakeDirectory));
-                });
+                }
+            }
+        });
     }
 
     static void setJiggen(Jiggen _jiggen) {
         jiggen = _jiggen;
     }
 
-    static void setApp(Application _gdxApp) {
+    static void setApp(GwtApplication _gdxApp) {
         gdxApp = _gdxApp;
     }
 }
@@ -51,6 +81,7 @@ class RawTemplate {
 @JsType(isNative = true)
 class GeneratedTemplate {
     String id;
+    String extension;
     HateosLinks links;
 }
 
