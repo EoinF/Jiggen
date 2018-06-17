@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import registerServiceWorker from './registerServiceWorker';
+import registerServiceWorker, {unregister} from './registerServiceWorker';
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
 import {
 	templateReducers,
@@ -31,4 +31,4 @@ ReactDOM.render(
   	<App store={store}/>
   , document.getElementById('react-root'));
 
-registerServiceWorker();
+// registerServiceWorker();
