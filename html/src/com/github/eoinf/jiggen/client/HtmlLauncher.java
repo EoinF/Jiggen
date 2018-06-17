@@ -15,11 +15,6 @@ public class HtmlLauncher extends GwtApplication {
                 return new GwtApplicationConfiguration(800, 600);
         }
 
-        @Override
-        public String getPreloaderBaseURL()
-        {
-                return getHostPageBaseURL() + "assets/";
-        }
 
         @Override
         public Preloader createPreloader() {
@@ -42,8 +37,4 @@ public class HtmlLauncher extends GwtApplication {
                 super.addLifecycleListener(listener);
         }
 
-        public static native String getHostPageBaseURL() /*-{
-            var s = $doc.location.origin;
-            return s + "/" + $moduleName + "/";
-          }-*/;
 }

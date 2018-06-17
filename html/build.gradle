@@ -3,7 +3,6 @@ import org.wisepersist.gradle.plugins.gwt.GwtSuperDev
 apply plugin: "java"
 apply plugin: "jetty"
 
-
 gwt {
     gwtVersion='2.8.0' // Should match the gwt version used for building the gwt backend
     maxHeapSize="1G" // Default 256m is not enough for gwt compiler. GWT is HUNGRY
@@ -30,20 +29,29 @@ task draftRun(type: JettyRunWar) {
 }
 
 
-task compileReact(type: Exec) {
+task compileReactDev(type: Exec) {
     environment 'REACT_APP_PUBLIC_URL', '/html'
+    environment 'PUBLIC_URL', '/html'
     workingDir = 'react'
     commandLine 'cmd', '/c', 'npm run build'
 }
 
-task superDev(type: GwtSuperDev, dependsOn: [draftRun, compileReact]) {
+task compileReactProd(type: Exec) {
+    environment 'REACT_APP_PUBLIC_URL', '/jiggen'
+    environment 'PUBLIC_URL', '/jiggen'
+    environment 'REACT_APP_API_URL', '/jiggen-backend'
+    workingDir = 'react'
+    commandLine 'cmd', '/c', 'npm run build'
+}
+
+task superDev(type: GwtSuperDev, dependsOn: [draftRun, compileReactDev]) {
     doFirst {
         gwt.modules = gwt.devModules
         generateJsInteropExports = true;
     }
 }
 
-task dist(dependsOn: [clean, compileGwt, compileReact]) {
+task dist(dependsOn: [clean, compileGwt, compileReactProd]) {
     doLast {
         file("build/dist").mkdirs()
         copy {
