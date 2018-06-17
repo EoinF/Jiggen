@@ -32,6 +32,7 @@ class PuzzleSolver extends Component {
 		const react_root = document.getElementById('react-root');
 		gwt_root.classList.add('hidden');
 		react_root.classList.remove('hidden');
+	}
 
 	startPuzzleSolver (generatedTemplate) {
 		if (generatedTemplate != null) {
