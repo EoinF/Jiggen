@@ -15,6 +15,15 @@ public class HtmlLauncher extends GwtApplication {
         return new GwtApplicationConfiguration(800, 600);
     }
 
+    @Override
+    public String getPreloaderBaseURL() {
+        return getHostPageBaseURL() + "assets/";
+    }
+
+    private static native String getHostPageBaseURL() /*-{
+        var pathnameParts = $doc.location.pathname.split('/');
+        return $doc.location.origin + '/' + pathnameParts[1] + '/';
+    }-*/;
 
     @Override
     public Preloader createPreloader() {

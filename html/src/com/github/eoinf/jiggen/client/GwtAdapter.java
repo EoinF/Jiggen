@@ -19,8 +19,6 @@ public class GwtAdapter {
     private static GwtApplication gdxApp;
 
     public static void setGeneratedTemplate(GeneratedTemplate generatedTemplate) {
-        GWT.log(JSON.stringify(generatedTemplate));
-
         String atlasLink = generatedTemplate.links.atlas;
         String templateLink = generatedTemplate.links.image;
 
@@ -44,7 +42,6 @@ public class GwtAdapter {
             @Override
             public void update (Preloader.PreloaderState state) {
                 if (state.hasEnded()) {
-                    GWT.log("Loaded assets");
                     FileHandle atlasFile = new GwtFileHandle(preloader, atlasLink, Files.FileType.Internal);
                     FileHandle templateFile = new GwtFileHandle(preloader, templateLink, Files.FileType.Internal);
                     FileHandle fakeDirectory = new FileHandle() {
@@ -53,8 +50,6 @@ public class GwtAdapter {
                             return templateFile;
                         }
                     };
-
-                    GWT.log("Loaded assets" + preloader.images.get(templateLink));
 
                     gdxApp.postRunnable(() -> jiggen.loadFromAtlas(atlasFile, fakeDirectory));
                 }

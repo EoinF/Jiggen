@@ -36,6 +36,7 @@ public class PuzzleSolverScreen implements Screen {
         this.camera = camera;
 
         gameStage = new Stage(new ScreenViewport(camera), batch);
+        pieces = new ArrayList<>();
 
         Gdx.input.setInputProcessor(gameStage);
     }
@@ -92,7 +93,8 @@ public class PuzzleSolverScreen implements Screen {
         for (Actor piece : pieces) {
             piece.remove();
         }
-        pieces = new ArrayList<>();
+        pieces.clear();
+
         for (PuzzlePiece<TextureRegion> piece: puzzleGraph.getVertices()) {
             Image image = new Image(piece.getData());
             image.setUserObject(piece);
@@ -132,7 +134,6 @@ public class PuzzleSolverScreen implements Screen {
                 return super.keyDown(event, keycode);
             }
         });
-
     }
 
     public void shuffle() {

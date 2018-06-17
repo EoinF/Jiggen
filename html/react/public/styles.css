@@ -3,7 +3,7 @@ canvas {
     outline: none;
 }
 
-.hidden {
+.hidden, .superdev.hidden {
     display: none;
 }
 
