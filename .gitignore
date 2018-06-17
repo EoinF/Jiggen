@@ -132,3 +132,6 @@ out/
 ## Logs
 
 *.log
+
+## React generated css files
+html/react/src/*/*.css
