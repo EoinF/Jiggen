@@ -18,6 +18,7 @@ class App extends Component {
 						<Route exact path='/templates' component={TemplateSelection}/>
 						<Route exact path='/backgrounds' component={BackgroundSelection}/>
 						<Route path='/puzzle/:id' component={PuzzleSolver}/>
+						<Route path='/' component={OverviewScreen}/>
 					</Switch>
 				</BrowserRouter>
   			</Provider>

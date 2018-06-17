@@ -29,6 +29,7 @@ public class PuzzleSolverScreen implements Screen {
     private Vector2 pieceOffsetHeld;
 
     private Stage gameStage;
+    private PuzzleGraph puzzleGraph;
     private List<Actor> pieces;
 
     public PuzzleSolverScreen(OrthographicCamera camera, SpriteBatch batch) {
@@ -87,6 +88,10 @@ public class PuzzleSolverScreen implements Screen {
     }
 
     public void setPuzzleGraph(PuzzleGraph puzzleGraph) {
+        this.puzzleGraph = puzzleGraph;
+        for (Actor piece : pieces) {
+            piece.remove();
+        }
         pieces = new ArrayList<>();
         for (PuzzlePiece<TextureRegion> piece: puzzleGraph.getVertices()) {
             Image image = new Image(piece.getData());
@@ -95,8 +100,6 @@ public class PuzzleSolverScreen implements Screen {
             pieces.add(image);
             gameStage.addActor(image);
         }
-
-        Gdx.app.log("Puzzle Solver", "Loading new graph");
 
         gameStage.addListener(new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -124,11 +127,15 @@ public class PuzzleSolverScreen implements Screen {
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
                 if (keycode == Input.Keys.SPACE) {
-                    utils.shuffle(puzzleGraph, pieces);
+                    shuffle();
                 }
                 return super.keyDown(event, keycode);
             }
         });
 
+    }
+
+    public void shuffle() {
+        utils.shuffle(this.puzzleGraph, pieces);
     }
 }

@@ -62,8 +62,6 @@ public class Jiggen extends Game {
 	}
 
 	public void loadFromAtlas(FileHandle atlasFile, FileHandle atlasImageFolder) {
-		Gdx.app.error("loadFromAtlas", "starting to load from atlas");
-
 		TextureAtlas atlas = null;
 		try {
 			atlas = new TextureAtlas(atlasFile, atlasImageFolder);
@@ -74,14 +72,13 @@ public class Jiggen extends Game {
 			}
 		}
 
-		Gdx.app.error("loadFromAtlas", "creating graph");
 		PuzzleGraph graph = new PuzzleGraph(320, 227);
 		for (TextureRegion region: atlas.getRegions()) {
-			Gdx.app.error("loadFromAtlas", "iteration graph");
 			PuzzlePiece piece = new PuzzlePiece<>(0, 0, region.getRegionWidth(), region.getRegionHeight(), region);
 			graph.addVertex(piece);
 		}
 		screen.setPuzzleGraph(graph);
+		screen.shuffle();
 	}
 
 	@Override
