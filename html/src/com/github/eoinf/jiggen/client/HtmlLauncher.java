@@ -27,14 +27,22 @@ public class HtmlLauncher extends GwtApplication {
 
     @Override
     public Preloader createPreloader() {
-        Preloader preloader = new DynamicPreloader(getPreloaderBaseURL());
-        BrowserWindow.setGwtLoaded();
-        return preloader;
+        return new DynamicPreloader(getPreloaderBaseURL());
     }
 
     @Override
     public ApplicationListener createApplicationListener() {
         GWT.log("Initializing GWT Adapter");
+        this.setLoadingListener(new LoadingListener() {
+            @Override
+            public void beforeSetup() {
+            }
+
+            @Override
+            public void afterSetup() {
+                BrowserWindow.setGwtLoaded();
+            }
+        });
 
         Jiggen jiggen = new Jiggen();
         GwtAdapter.setJiggen(jiggen);

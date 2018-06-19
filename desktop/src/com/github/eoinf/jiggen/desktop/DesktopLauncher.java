@@ -1,5 +1,6 @@
 package com.github.eoinf.jiggen.desktop;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.github.eoinf.jiggen.Jiggen;
@@ -10,7 +11,7 @@ public class DesktopLauncher {
 		config.fullscreen = false;
 
 		Jiggen game = new Jiggen();
-		game.loadDefaultPuzzle();
 		new LwjglApplication(game, config);
+		Gdx.app.postRunnable(game::loadDefaultPuzzle);
 	}
 }

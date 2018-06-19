@@ -9,6 +9,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.github.eoinf.jiggen.Jiggen;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.CanvasElement;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 
@@ -63,6 +64,14 @@ public class GwtAdapter {
 
     static void setApp(GwtApplication _gdxApp) {
         gdxApp = _gdxApp;
+    }
+
+    public static void resize(int width, int height) {
+        CanvasElement canvas = gdxApp.getCanvasElement();
+        gdxApp.getRootPanel().setWidth("" + width + "px");
+        gdxApp.getRootPanel().setHeight("" + height + "px");
+        canvas.setWidth(width);
+        canvas.setHeight(height);
     }
 }
 

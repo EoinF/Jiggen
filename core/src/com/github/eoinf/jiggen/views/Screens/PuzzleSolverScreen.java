@@ -32,10 +32,13 @@ public class PuzzleSolverScreen implements Screen {
     private PuzzleGraph puzzleGraph;
     private List<Actor> pieces;
 
+    private ScreenViewport viewport;
+
     public PuzzleSolverScreen(OrthographicCamera camera, SpriteBatch batch) {
         this.camera = camera;
 
-        gameStage = new Stage(new ScreenViewport(camera), batch);
+        viewport = new ScreenViewport(camera);
+        gameStage = new Stage(viewport, batch);
         pieces = new ArrayList<>();
 
         Gdx.input.setInputProcessor(gameStage);
@@ -65,7 +68,7 @@ public class PuzzleSolverScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
+        viewport.update(width, height, true);
     }
 
     @Override
@@ -111,9 +114,10 @@ public class PuzzleSolverScreen implements Screen {
                     int index = pieces.indexOf(a);
                     if (index >= 0) {
                         pieceHeld = pieces.get(index);
+
                         pieceOffsetHeld = new Vector2(
                                 pieceHeld.getX() - mousePositionInWorld.x,
-                                pieceHeld.getY() - mousePositionInWorld.y - 1
+                                pieceHeld.getY() - mousePositionInWorld.y
                         );
                         pieceHeld.toFront();
                     }

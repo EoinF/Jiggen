@@ -4,6 +4,19 @@ const onGwtLoadedPromise = new Promise((resolve, reject) => {
 	window.setGwtLoaded = resolve;
 });
 
+function resize() {
+	onGwtLoadedPromise.then(() => {
+		window.gwtAdapter.resize(document.body.clientWidth, document.body.clientHeight);
+	});
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+	onGwtLoadedPromise.then(() => {
+		resize();
+		window.addEventListener('resize', resize, true);
+	});
+});
+
 function setGeneratedTemplate(generatedTemplate) {
 	onGwtLoadedPromise.then(() => {
 		// The gwtAdapter object is exported from java gwt code using JsInterop
