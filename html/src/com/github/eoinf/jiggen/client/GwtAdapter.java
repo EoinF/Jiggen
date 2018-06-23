@@ -8,10 +8,15 @@ import com.badlogic.gdx.backends.gwt.preloader.Preloader;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.github.eoinf.jiggen.Jiggen;
+import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.IntRectangle;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.CanvasElement;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @JsType(name = "gwtAdapter", namespace = JsPackage.GLOBAL)
 public class GwtAdapter {
@@ -24,6 +29,8 @@ public class GwtAdapter {
         String templateLink = generatedTemplate.links.image;
 
         DynamicPreloader preloader = (DynamicPreloader) gdxApp.getPreloader();
+
+        Map<Integer, IntRectangle> verticesMap = generatedTemplate.vertices.toMap();
 
         Array<Preloader.Asset> assets = new Array<>();
         assets.add(
@@ -52,7 +59,7 @@ public class GwtAdapter {
                         }
                     };
 
-                    gdxApp.postRunnable(() -> jiggen.loadFromAtlas(atlasFile, fakeDirectory));
+                    gdxApp.postRunnable(() -> jiggen.loadFromAtlas(atlasFile, fakeDirectory, verticesMap));
                 }
             }
         });
@@ -73,6 +80,7 @@ public class GwtAdapter {
         canvas.setWidth(width);
         canvas.setHeight(height);
     }
+
 }
 
 @JsType(isNative = true)
@@ -87,6 +95,7 @@ class GeneratedTemplate {
     String id;
     String extension;
     HateosLinks links;
+    GwtVerticesMap vertices;
 }
 
 @JsType(isNative = true)
@@ -99,4 +108,36 @@ class HateosLinks {
 @JsType(isNative = true, namespace = JsPackage.GLOBAL)
 class JSON {
     public static native String stringify(Object obj);
+}
+
+class GwtVerticesMap extends JavaScriptObject {
+    protected GwtVerticesMap() { }
+
+    public final native GwtRectangle get(Object key) /*-{
+        return this[key];
+    }-*/;
+
+    public final native String[] keySet() /*-{
+        return Object.keys(this);
+    }-*/;
+
+    public final Map toMap() {
+        String[] keys = this.keySet();
+
+        Map<Integer, IntRectangle> map = new HashMap<>();
+        for (int i = 0; i < keys.length; i++) {
+            Integer key = Integer.valueOf(keys[i]);
+            GwtRectangle value = this.get(i);
+            map.put(key, new IntRectangle(value.x, value.y, value.width, value.height));
+        }
+        return map;
+    }
+}
+
+@JsType(isNative = true)
+class GwtRectangle {
+    int x;
+    int y;
+    int width;
+    int height;
 }

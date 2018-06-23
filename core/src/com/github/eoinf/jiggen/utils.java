@@ -12,8 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleGraph;
-import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzlePiece;
+import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleGraphTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -145,15 +144,7 @@ public abstract class utils {
         return buffer.cpy();
     }
 
-    public static void flipPieces(PuzzleGraph graph) {
-        for (PuzzlePiece piece: graph.getVertices()) {
-            int x = piece.getPosition().x;
-            int y = graph.getHeight() - piece.getPosition().y - piece.getHeight();
-            piece.setPosition(x, y);
-        }
-    }
-
-    public static void shuffle(PuzzleGraph graph, List<Actor> pieces) {
+    public static void shuffle(PuzzleGraphTemplate graph, List<Actor> pieces) {
         Random random = new Random();
 
         for (Actor piece: pieces) {

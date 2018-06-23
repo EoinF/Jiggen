@@ -10,32 +10,30 @@ import com.github.eoinf.jiggen.PuzzleExtractor.Decoder.DecodedPiece;
 import com.github.eoinf.jiggen.PuzzleExtractor.Decoder.DecodedTemplate;
 import com.github.eoinf.jiggen.utils;
 
-import java.util.List;
 import java.util.function.Function;
 
 public abstract class PuzzleFactory {
 
-
-    public static PuzzleGraph generatePixmapPuzzleFromTemplate(DecodedTemplate decodedTemplate) {
+    public static PuzzleGraphTemplate generatePixmapPuzzleFromTemplate(DecodedTemplate decodedTemplate) {
         return generatePuzzleFromTemplate(decodedTemplate, p -> p);
     }
 
-    public static PuzzleGraph generateTexturePuzzleFromTemplate(DecodedTemplate decodedTemplate) {
+    public static PuzzleGraphTemplate generateTexturePuzzleFromTemplate(DecodedTemplate decodedTemplate) {
         return generatePuzzleFromTemplate(decodedTemplate, p -> {
             Pixmap pixmap = p.getData();
 
-            return new PuzzlePiece<>(
-                    p.getPosition().x, p.getPosition().y,
+            return new PuzzlePieceTemplate<>(
+                    p.x(), p.y(),
                     p.getWidth(), p.getHeight(), new TextureRegion(new Texture(pixmap)));
         });
     }
 
-    private static PuzzleGraph generatePuzzleFromTemplate(DecodedTemplate decodedTemplate, Function<PuzzlePiece<Pixmap>,
-            PuzzlePiece> pieceTransformer) {
-        PuzzleGraph puzzleGraph = new PuzzleGraph(decodedTemplate.getWidth(), decodedTemplate.getHeight());
+    private static PuzzleGraphTemplate generatePuzzleFromTemplate(DecodedTemplate decodedTemplate, Function<PuzzlePieceTemplate<Pixmap>,
+            PuzzlePieceTemplate> pieceTransformer) {
+        PuzzleGraphTemplate puzzleGraph = new PuzzleGraphTemplate(decodedTemplate.getWidth(), decodedTemplate.getHeight());
 
         for (DecodedPiece piece: decodedTemplate.getDecodedPieces()) {
-            PuzzlePiece<Pixmap> generatedPiece = generatePiece(decodedTemplate.getTemplatePixmap(),
+            PuzzlePieceTemplate<Pixmap> generatedPiece = generatePiece(decodedTemplate.getTemplatePixmap(),
                     decodedTemplate.getWidth(), decodedTemplate.getHeight(), piece);
 
             puzzleGraph.addVertex(
@@ -43,7 +41,6 @@ public abstract class PuzzleFactory {
             );
         }
 
-        utils.flipPieces(puzzleGraph);
         return puzzleGraph;
     }
 
@@ -53,8 +50,8 @@ public abstract class PuzzleFactory {
      * @param backgroundTexture The texture to overlay onto the pieces
      * @return The finished puzzle with the incorporated background picture
      */
-    public static PuzzleGraph generateFinishedPuzzle(PuzzleGraph templateGraph, Texture backgroundTexture) {
-        PuzzleGraph finishedPuzzle = new PuzzleGraph(backgroundTexture.getWidth(), backgroundTexture.getHeight());
+    public static PuzzleGraphTemplate generateFinishedPuzzle(PuzzleGraphTemplate templateGraph, Texture backgroundTexture) {
+        PuzzleGraphTemplate finishedPuzzle = new PuzzleGraphTemplate(backgroundTexture.getWidth(), backgroundTexture.getHeight());
         float ratioX = (float)backgroundTexture.getWidth() / (float)templateGraph.getWidth();
         float ratioY = (float)backgroundTexture.getHeight() / (float)templateGraph.getHeight();
 
@@ -65,18 +62,18 @@ public abstract class PuzzleFactory {
         }
         Pixmap backgroundPixmap = dstData.consumePixmap();
 
-        for (PuzzlePiece v : (templateGraph.getVertices())) {
+        for (PuzzlePieceTemplate v : templateGraph.getVertices().values()) {
             int scaledWidth = (int) (ratioX * v.getWidth());
             int scaledHeight = (int) (ratioY * v.getHeight());
 
-            PuzzlePiece generatedPiece;
+            PuzzlePieceTemplate generatedPiece;
             if (v.getData() instanceof Pixmap) {
                 generatedPiece =
-                        overlayBackgroundOnPixmapPiece((PuzzlePiece<Pixmap>) v, backgroundPixmap,
+                        overlayBackgroundOnPixmapPiece((PuzzlePieceTemplate<Pixmap>) v, backgroundPixmap,
                                 scaledWidth, scaledHeight, ratioX, ratioY);
             } else {
                 generatedPiece =
-                        overlayBackgroundOnTextureRegionPiece((PuzzlePiece<TextureRegion>) v, backgroundPixmap,
+                        overlayBackgroundOnTextureRegionPiece((PuzzlePieceTemplate<TextureRegion>) v, backgroundPixmap,
                                 scaledWidth, scaledHeight, ratioX, ratioY);
             }
             finishedPuzzle.addVertex(generatedPiece);
@@ -86,46 +83,46 @@ public abstract class PuzzleFactory {
         return finishedPuzzle;
     }
 
-    private static PuzzlePiece<Pixmap> overlayBackgroundOnPixmapPiece(PuzzlePiece<Pixmap> piece,
-                                                                Pixmap backgroundPixmap,
-                                                                int scaledWidth, int scaledHeight,
-                                                                float ratioX, float ratioY) {
+    private static PuzzlePieceTemplate<Pixmap> overlayBackgroundOnPixmapPiece(PuzzlePieceTemplate<Pixmap> piece,
+                                                                              Pixmap backgroundPixmap,
+                                                                              int scaledWidth, int scaledHeight,
+                                                                              float ratioX, float ratioY) {
         Pixmap templateTexture = piece.getData();
         templateTexture = utils.stretchPixmap(templateTexture, new GridPoint2(scaledWidth, scaledHeight));
 
-        GridPoint2 scaledPosition = new GridPoint2((int) (piece.getPosition().x * ratioX),
-                (int) (piece.getPosition().y * ratioY)
+        GridPoint2 scaledPosition = new GridPoint2((int) (piece.x() * ratioX),
+                (int) (piece.y() * ratioY)
         );
         templateTexture = utils.combinePixmaps(templateTexture, backgroundPixmap,
                 scaledPosition.x,
                 backgroundPixmap.getHeight() - (scaledPosition.y + scaledHeight));
 
-        return new PuzzlePiece<>(scaledPosition.x, scaledPosition.y,
+        return new PuzzlePieceTemplate<>(scaledPosition.x, scaledPosition.y,
                         scaledWidth, scaledHeight,
                         templateTexture);
     }
 
-    private static PuzzlePiece<TextureRegion> overlayBackgroundOnTextureRegionPiece(PuzzlePiece<TextureRegion> piece,
-                                                                Pixmap backgroundPixmap,
-                                                                int scaledWidth, int scaledHeight,
-                                                                float ratioX, float ratioY) {
+    private static PuzzlePieceTemplate<TextureRegion> overlayBackgroundOnTextureRegionPiece(PuzzlePieceTemplate<TextureRegion> piece,
+                                                                                            Pixmap backgroundPixmap,
+                                                                                            int scaledWidth, int scaledHeight,
+                                                                                            float ratioX, float ratioY) {
         TextureRegion templateTexture = piece.getData();
         templateTexture = utils.stretchTexture(templateTexture, new GridPoint2(scaledWidth, scaledHeight));
 
-        GridPoint2 scaledPosition = new GridPoint2((int) (piece.getPosition().x * ratioX),
-                (int) (piece.getPosition().y * ratioY)
+        GridPoint2 scaledPosition = new GridPoint2((int) (piece.x() * ratioX),
+                (int) (piece.y() * ratioY)
         );
         templateTexture = utils.combineTextures(templateTexture, backgroundPixmap,
                 scaledPosition.x,
                 backgroundPixmap.getHeight() - (scaledPosition.y + scaledHeight));
 
-        return new PuzzlePiece<>(scaledPosition.x, scaledPosition.y,
+        return new PuzzlePieceTemplate<>(scaledPosition.x, scaledPosition.y,
                 scaledWidth, scaledHeight,
                 templateTexture);
     }
 
-    private static PuzzlePiece<Pixmap> generatePiece(Pixmap templatePixmap, int bgWidth, int bgHeight,
-                                             DecodedPiece decodedPiece) {
+    private static PuzzlePieceTemplate<Pixmap> generatePiece(Pixmap templatePixmap, int bgWidth, int bgHeight,
+                                                             DecodedPiece decodedPiece) {
 
         int templateX = decodedPiece.getPosition().x;
         int templateY = decodedPiece.getPosition().y;
@@ -150,6 +147,7 @@ public abstract class PuzzleFactory {
             }
         }
 
-        return new PuzzlePiece<Pixmap>(templateX, templateY, decodedPiece.getWidth(), decodedPiece.getHeight(), newPixMap);
+        return new PuzzlePieceTemplate<>(templateX, bgHeight - templateY - decodedPiece.getHeight(),
+                decodedPiece.getWidth(), decodedPiece.getHeight(), newPixMap);
     }
 }

@@ -14,8 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleGraph;
-import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzlePiece;
+import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleGraphTemplate;
+import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzlePieceTemplate;
 import com.github.eoinf.jiggen.utils;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class PuzzleSolverScreen implements Screen {
     private Vector2 pieceOffsetHeld;
 
     private Stage gameStage;
-    private PuzzleGraph puzzleGraph;
+    private PuzzleGraphTemplate puzzleGraph;
     private List<Actor> pieces;
 
     private ScreenViewport viewport;
@@ -91,17 +91,17 @@ public class PuzzleSolverScreen implements Screen {
 
     }
 
-    public void setPuzzleGraph(PuzzleGraph puzzleGraph) {
+    public void setPuzzleGraph(PuzzleGraphTemplate puzzleGraph) {
         this.puzzleGraph = puzzleGraph;
         for (Actor piece : pieces) {
             piece.remove();
         }
         pieces.clear();
 
-        for (PuzzlePiece<TextureRegion> piece: puzzleGraph.getVertices()) {
+        for (PuzzlePieceTemplate<TextureRegion> piece: puzzleGraph.getVertices().values()) {
             Image image = new Image(piece.getData());
             image.setUserObject(piece);
-            image.setPosition(piece.getPosition().x, piece.getPosition().y);
+            image.setPosition(piece.x(), piece.y());
             pieces.add(image);
             gameStage.addActor(image);
         }

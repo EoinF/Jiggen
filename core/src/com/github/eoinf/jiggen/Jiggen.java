@@ -11,12 +11,14 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.github.eoinf.jiggen.PuzzleExtractor.Decoder.DecodedTemplate;
+import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.IntRectangle;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleFactory;
-import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleGraph;
-import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzlePiece;
+import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleGraphTemplate;
+import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzlePieceTemplate;
 import com.github.eoinf.jiggen.views.Screens.PuzzleSolverScreen;
 
 import java.util.List;
+import java.util.Map;
 
 public class Jiggen extends Game {
 
@@ -57,11 +59,11 @@ public class Jiggen extends Game {
 	}
 
 	public void loadFromTemplate(FileHandle template) {
-		PuzzleGraph puzzle = PuzzleFactory.generateTexturePuzzleFromTemplate(new DecodedTemplate(new Texture(template)));
+		PuzzleGraphTemplate puzzle = PuzzleFactory.generateTexturePuzzleFromTemplate(new DecodedTemplate(new Texture(template)));
 		screen.setPuzzleGraph(puzzle);
 	}
 
-	public void loadFromAtlas(FileHandle atlasFile, FileHandle atlasImageFolder) {
+	public void loadFromAtlas(FileHandle atlasFile, FileHandle atlasImageFolder, Map<Integer, IntRectangle> vertices) {
 		TextureAtlas atlas = null;
 		try {
 			atlas = new TextureAtlas(atlasFile, atlasImageFolder);
@@ -72,13 +74,13 @@ public class Jiggen extends Game {
 			}
 		}
 
-		PuzzleGraph graph = new PuzzleGraph(320, 227);
-		for (TextureRegion region: atlas.getRegions()) {
-			PuzzlePiece piece = new PuzzlePiece<>(0, 0, region.getRegionWidth(), region.getRegionHeight(), region);
+		PuzzleGraphTemplate graph = new PuzzleGraphTemplate(320, 227);
+		for (Integer key: vertices.keySet()) {
+			TextureRegion region = atlas.findRegion(key.toString());
+			PuzzlePieceTemplate piece = new PuzzlePieceTemplate<>(vertices.get(key), region);
 			graph.addVertex(piece);
 		}
 		screen.setPuzzleGraph(graph);
-		screen.shuffle();
 	}
 
 	@Override
