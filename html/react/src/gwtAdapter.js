@@ -6,7 +6,9 @@ const onGwtLoadedPromise = new Promise((resolve, reject) => {
 
 function resize() {
 	onGwtLoadedPromise.then(() => {
-		window.gwtAdapter.resize(document.body.clientWidth, document.body.clientHeight);
+	    const width = window.innerWidth || document.body.clientWidth;
+	    const height = window.innerHeight || document.body.clientHeight;
+		window.gwtAdapter.resize(width, height);
 	});
 }
 

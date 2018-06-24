@@ -16,7 +16,7 @@ import App from './App';
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 // If not in production, enable gwt dev tools
-if (process.env.REACT_APP_SHOW_SUPERDEV) {
+if (process.env.REACT_APP_SHOW_SUPERDEV == true) {
 	document.getElementById('superdev-reload').classList.remove('hidden');
 }
 

@@ -9,13 +9,13 @@ import gwtAdapter from '../gwtAdapter';
 
 class PuzzleSolver extends Component {
 	componentDidMount() {
-		const { 
+		const {
 			match: { params },
 			generatedTemplate,
 			fetchGeneratedTemplateById,
 		} = this.props;
 
-		if (!generatedTemplate) {
+		if (!this.isFullyLoadedPuzzleTemplate(generatedTemplate)) {
 			fetchGeneratedTemplateById(params.id);
 		} else {
 			this.startPuzzleSolver(generatedTemplate);
@@ -25,6 +25,8 @@ class PuzzleSolver extends Component {
 		const react_root = document.getElementById('react-root');
 		gwt_root.classList.remove('hidden');
 		react_root.classList.add('hidden');
+
+		this.zoomOutMobile();
 	}
 
 	componentWillUnmount() {
@@ -34,8 +36,13 @@ class PuzzleSolver extends Component {
 		react_root.classList.remove('hidden');
 	}
 
+	isFullyLoadedPuzzleTemplate(generatedTemplate) {
+		return (generatedTemplate != null)
+			&& ('vertices' in generatedTemplate);
+	}
+
 	startPuzzleSolver (generatedTemplate) {
-		if (generatedTemplate != null) {
+		if (this.isFullyLoadedPuzzleTemplate(generatedTemplate)) {
 			console.log("Starting puzzle solver with ", generatedTemplate);
 			gwtAdapter.setGeneratedTemplate(generatedTemplate);
 		} else {
@@ -43,10 +50,16 @@ class PuzzleSolver extends Component {
 		}
 	}
 
-	componentDidUpdate(nextProps, nextState) {
-		console.log("updating props", this.props);
-		console.log("updating props", nextProps);
-		if (this.props.generatedTemplate !== nextProps.generatedTemplate) {
+	zoomOutMobile() {
+		var viewport = document.querySelector('meta[name="viewport"]');
+
+		if (viewport) {
+			viewport.content = "initial-scale=1";
+		}	
+	}
+
+	componentDidUpdate(prevProps, prevState) {
+		if (this.props.generatedTemplate !== prevProps.generatedTemplate) {
 			this.startPuzzleSolver(this.props.generatedTemplate);
 		}
 	}
@@ -60,8 +73,6 @@ class PuzzleSolver extends Component {
 		
 		return (
 			<div>
-				{ generatedTemplate && <img src = {generatedTemplate.links.image} /> }
-				{ template && <img src = {template.links.image} /> }
 			</div>
 		);
 	}
@@ -70,9 +81,8 @@ class PuzzleSolver extends Component {
 
 const mapStateToProps = state => {
   return {
-    generatedTemplate: state.generatedTemplates.generatedTemplatesMap[state.generatedTemplates.selectedId],
-    generatedTemplateId: state.generatedTemplates.selectedId,
-    template: state.templates.templatesMap[state.templates.selectedId]
+    generatedTemplate: state.generatedTemplates.generatedTemplatesMap[state.generatedTemplates.selectedId] || null,
+    generatedTemplateId: state.generatedTemplates.selectedId
   }
 }
 
