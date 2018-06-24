@@ -12,14 +12,15 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleGraphTemplate;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzlePieceTemplate;
-import com.github.eoinf.jiggen.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class PuzzleSolverScreen implements Screen {
 
@@ -36,6 +37,7 @@ public class PuzzleSolverScreen implements Screen {
 
     public PuzzleSolverScreen(OrthographicCamera camera, SpriteBatch batch) {
         this.camera = camera;
+
 
         viewport = new ScreenViewport(camera);
         gameStage = new Stage(viewport, batch);
@@ -101,7 +103,7 @@ public class PuzzleSolverScreen implements Screen {
         for (PuzzlePieceTemplate<TextureRegion> piece: puzzleGraph.getVertices().values()) {
             Image image = new Image(piece.getData());
             image.setUserObject(piece);
-            image.setPosition(piece.x(), piece.y());
+            image.setPosition(centreX() + piece.x(), centreY() + piece.y());
             pieces.add(image);
             gameStage.addActor(image);
         }
@@ -134,13 +136,49 @@ public class PuzzleSolverScreen implements Screen {
             public boolean keyDown(InputEvent event, int keycode) {
                 if (keycode == Input.Keys.SPACE) {
                     shuffle();
+                } else if (keycode == Input.Keys.A) {
+                    autoSolve();
                 }
                 return super.keyDown(event, keycode);
             }
         });
     }
 
+    public void autoSolve() {
+        for (Actor piece: pieces) {
+            MoveToAction moveToHome = new MoveToAction();
+            PuzzlePieceTemplate templatePiece = (PuzzlePieceTemplate)piece.getUserObject();
+            int homeX = centreX() + templatePiece.x();
+            int homeY = centreY() + templatePiece.y();
+            moveToHome.setX(homeX);
+            moveToHome.setY(homeY);
+            moveToHome.setDuration(3 * Vector2.dst(homeX, homeY, piece.getX(), piece.getY())
+                    / Math.max(viewport.getWorldWidth(), viewport.getWorldHeight()));
+            piece.addAction(moveToHome);
+        }
+    }
+
     public void shuffle() {
-        utils.shuffle(this.puzzleGraph, pieces);
+        Random random = new Random();
+
+        for (Actor piece: pieces) {
+            float r1 = random.nextFloat();
+            float r2 = random.nextFloat();
+
+            int x = (int)(r1 * (viewport.getWorldWidth() - puzzleGraph.getMaxPieceWidth()));
+            int y = (int)(r2 * (viewport.getWorldHeight() - puzzleGraph.getMaxPieceHeight()));
+            piece.setPosition(x, y);
+
+            if (r1 + r2 > 1){
+                piece.toFront();
+            }
+        }
+    }
+
+    public int centreX() {
+        return (int)(viewport.getWorldWidth() - puzzleGraph.getWidth()) / 2;
+    }
+    public int centreY() {
+        return (int)(viewport.getWorldHeight() - puzzleGraph.getHeight()) / 2;
     }
 }

@@ -8,15 +8,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.GridPoint2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleGraphTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public abstract class utils {
     public static final float BRIGHTNESS_THRESHOLD = 0.85f;
@@ -142,23 +139,6 @@ public abstract class utils {
     private static Color getPixelColour(Pixmap pixmap, int currentX, int currentY) {
         Color.rgba8888ToColor(buffer, pixmap.getPixel(currentX, currentY));
         return buffer.cpy();
-    }
-
-    public static void shuffle(PuzzleGraphTemplate graph, List<Actor> pieces) {
-        Random random = new Random();
-
-        for (Actor piece: pieces) {
-            float r1 = random.nextFloat();
-            float r2 = random.nextFloat();
-
-            int x = (int)(r1 * graph.getWidth() + graph.getPosition().x);
-            int y = (int)(r2 * graph.getHeight() + graph.getPosition().y);
-            piece.setPosition(x, y);
-
-            if (r1 + r2 > 1){
-                piece.toFront();
-            }
-        }
     }
 
     public static List<FileHandle> getTemplateFiles() {

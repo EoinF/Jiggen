@@ -121,7 +121,7 @@ class GwtVerticesMap extends JavaScriptObject {
         return Object.keys(this);
     }-*/;
 
-    public final Map toMap() {
+    public final Map<Integer, IntRectangle> toMap() {
         String[] keys = this.keySet();
 
         Map<Integer, IntRectangle> map = new HashMap<>();

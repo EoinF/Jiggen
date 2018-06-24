@@ -23,6 +23,8 @@ public class PuzzleGraphTemplate {
     private GridPoint2 position;
     private int width;
     private int height;
+    private int maxPieceWidth;
+    private int maxPieceHeight;
 
     public GridPoint2 getPosition() {
         return position;
@@ -36,6 +38,13 @@ public class PuzzleGraphTemplate {
         return height;
     }
 
+    public int getMaxPieceWidth() {
+        return this.maxPieceWidth;
+    }
+    public int getMaxPieceHeight() {
+        return this.maxPieceHeight;
+    }
+
     public PuzzleGraphTemplate(int width, int height) {
         vertices = new HashMap<>();
         edges = new ArrayList<>();
@@ -46,6 +55,8 @@ public class PuzzleGraphTemplate {
 
     public void addVertex(PuzzlePieceTemplate piece) {
         vertices.put(vertices.values().size(), piece);
+        this.maxPieceWidth = Math.max(this.maxPieceWidth, piece.getWidth());
+        this.maxPieceHeight = Math.max(this.maxPieceHeight, piece.getHeight());
     }
 
     public void addEdge(int v0, int v1) {
