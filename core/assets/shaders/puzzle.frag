@@ -14,7 +14,7 @@ uniform sampler2D u_background;
 void main()
 {
     vec4 template_colour = texture2D(u_texture, vec2(v_texCoords.x, v_texCoords.y));
-    vec4 background_colour = texture2D(u_background, vec2(uv_overlay.x, 1.0 - uv_overlay.y));
+    vec4 background_colour = texture2D(u_background, vec2(uv_overlay.x, uv_overlay.y));
 
     // If the colour is black, then use gray (so the background is visible when combined)
     if (template_colour == vec4(0, 0, 0, 1)) {

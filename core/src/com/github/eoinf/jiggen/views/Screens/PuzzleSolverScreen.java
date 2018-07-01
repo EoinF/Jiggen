@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.PuzzleOverlayBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -18,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleGraphTemplate;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzlePieceTemplate;
+import com.github.eoinf.jiggen.views.PuzzleOverlayBatch;
 import com.github.eoinf.jiggen.views.TextureOverlayImage;
 
 import java.util.ArrayList;
@@ -192,9 +192,9 @@ public class PuzzleSolverScreen implements Screen {
         float scaledPuzzleHeight = puzzleGraph.getHeight() * scales.y;
 
         float u = sX / scaledPuzzleWidth;
-        float v = sY / scaledPuzzleHeight;
+        float v = 1 - ((sY + sH) / scaledPuzzleHeight);
         float u2 = (sX + sW) / scaledPuzzleWidth;
-        float v2 = (sY + sH) / scaledPuzzleHeight;
+        float v2 = 1 - (sY / scaledPuzzleHeight);
 
         image.setOverlay(new TextureRegionDrawable(
                 new TextureRegion(backgroundImage, u, v, u2, v2)));

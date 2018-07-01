@@ -6,7 +6,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.PuzzleOverlayBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -18,6 +17,7 @@ import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.IntRectangle;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleFactory;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleGraphTemplate;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzlePieceTemplate;
+import com.github.eoinf.jiggen.views.PuzzleOverlayBatch;
 import com.github.eoinf.jiggen.views.Screens.PuzzleSolverScreen;
 
 import java.util.Map;

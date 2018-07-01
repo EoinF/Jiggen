@@ -1,4 +1,4 @@
-package com.badlogic.gdx.graphics.g2d;
+package com.github.eoinf.jiggen.views;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -7,13 +7,13 @@ import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.NumberUtils;
-
-import static com.badlogic.gdx.graphics.g2d.Sprite.SPRITE_SIZE;
 
 public class PuzzleOverlayBatch implements Batch {
     /**
@@ -22,6 +22,8 @@ public class PuzzleOverlayBatch implements Batch {
      */
     @Deprecated
     public static Mesh.VertexDataType defaultVertexDataType = Mesh.VertexDataType.VertexArray;
+    static final int VERTEX_SIZE = 2 + 1 + 2;
+    static final int SPRITE_SIZE = 4 * VERTEX_SIZE;
 
     private Mesh mesh;
 
@@ -204,8 +206,8 @@ public class PuzzleOverlayBatch implements Batch {
 
     public void setOverlayTextureRegion(TextureRegion region) {
         this.currentOverlayRegion = region;
-        if (region.texture != this.lastOverlay) {
-            this.lastOverlay = region.texture;
+        if (region.getTexture() != this.lastOverlay) {
+            this.lastOverlay = region.getTexture();
             this.lastOverlay.bind(1);
             Gdx.gl.glActiveTexture(GL20.GL_TEXTURE0);
         }
@@ -334,10 +336,10 @@ public class PuzzleOverlayBatch implements Batch {
         float u2 = (srcX + srcWidth) * invTexWidth;
         float v2 = srcY * invTexHeight;
 
-        float t2u = currentOverlayRegion.u;
-        float t2v = currentOverlayRegion.v;
-        float t2u2 = currentOverlayRegion.u2;
-        float t2v2 = currentOverlayRegion.v2;
+        final float t2u = currentOverlayRegion.getU();
+        final float t2v = currentOverlayRegion.getV();
+        final float t2u2 = currentOverlayRegion.getU2();
+        final float t2v2 = currentOverlayRegion.getV2();
 
         if (flipX) {
             float tmp = u;
@@ -406,10 +408,10 @@ public class PuzzleOverlayBatch implements Batch {
         final float fx2 = x + width;
         final float fy2 = y + height;
 
-        float t2u = currentOverlayRegion.u;
-        float t2v = currentOverlayRegion.v;
-        float t2u2 = currentOverlayRegion.u2;
-        float t2v2 = currentOverlayRegion.v2;
+        final float t2u = currentOverlayRegion.getU();
+        final float t2v = currentOverlayRegion.getV();
+        final float t2u2 = currentOverlayRegion.getU2();
+        final float t2v2 = currentOverlayRegion.getV2();
 
         if (flipX) {
             float tmp = u;
@@ -477,10 +479,10 @@ public class PuzzleOverlayBatch implements Batch {
         final float fx2 = x + srcWidth;
         final float fy2 = y + srcHeight;
 
-        float t2u = currentOverlayRegion.u;
-        float t2v = currentOverlayRegion.v;
-        float t2u2 = currentOverlayRegion.u2;
-        float t2v2 = currentOverlayRegion.v2;
+        final float t2u = currentOverlayRegion.getU();
+        final float t2v = currentOverlayRegion.getV();
+        final float t2u2 = currentOverlayRegion.getU2();
+        final float t2v2 = currentOverlayRegion.getV2();
 
         float color = this.color;
         int idx = this.idx;
@@ -532,10 +534,10 @@ public class PuzzleOverlayBatch implements Batch {
         final float fx2 = x + width;
         final float fy2 = y + height;
 
-        float t2u = currentOverlayRegion.u;
-        float t2v = currentOverlayRegion.v;
-        float t2u2 = currentOverlayRegion.u2;
-        float t2v2 = currentOverlayRegion.v2;
+        final float t2u = currentOverlayRegion.getU();
+        final float t2v = currentOverlayRegion.getV();
+        final float t2u2 = currentOverlayRegion.getU2();
+        final float t2v2 = currentOverlayRegion.getV2();
 
         float color = this.color;
         int idx = this.idx;
@@ -596,10 +598,10 @@ public class PuzzleOverlayBatch implements Batch {
         final float u2 = 1;
         final float v2 = 0;
 
-        float t2u = currentOverlayRegion.u;
-        float t2v = currentOverlayRegion.v;
-        float t2u2 = currentOverlayRegion.u2;
-        float t2v2 = currentOverlayRegion.v2;
+        final float t2u = currentOverlayRegion.getU();
+        final float t2v = currentOverlayRegion.getV();
+        final float t2u2 = currentOverlayRegion.getU2();
+        final float t2v2 = currentOverlayRegion.getV2();
 
         float color = this.color;
         int idx = this.idx;
@@ -678,7 +680,7 @@ public class PuzzleOverlayBatch implements Batch {
 
         float[] vertices = this.vertices;
 
-        Texture texture = region.texture;
+        Texture texture = region.getTexture();
         if (texture != lastTexture) {
             switchTexture(texture);
         } else if (idx == vertices.length) //
@@ -686,15 +688,15 @@ public class PuzzleOverlayBatch implements Batch {
 
         final float fx2 = x + width;
         final float fy2 = y + height;
-        final float u = region.u;
-        final float v = region.v2;
-        final float u2 = region.u2;
-        final float v2 = region.v;
+        final float u = region.getU();
+        final float v = region.getV2();
+        final float u2 = region.getU2();
+        final float v2 = region.getV();
 
-        float t2u = currentOverlayRegion.u;
-        float t2v = currentOverlayRegion.v;
-        float t2u2 = currentOverlayRegion.u2;
-        float t2v2 = currentOverlayRegion.v2;
+        final float t2u = currentOverlayRegion.getU();
+        final float t2v = currentOverlayRegion.getV2();
+        final float t2u2 = currentOverlayRegion.getU2();
+        final float t2v2 = currentOverlayRegion.getV();
 
         float color = this.color;
         int idx = this.idx;
@@ -739,7 +741,7 @@ public class PuzzleOverlayBatch implements Batch {
 
         float[] vertices = this.vertices;
 
-        Texture texture = region.texture;
+        Texture texture = region.getTexture();
         if (texture != lastTexture) {
             switchTexture(texture);
         } else if (idx == vertices.length) //
@@ -819,15 +821,15 @@ public class PuzzleOverlayBatch implements Batch {
         x4 += worldOriginX;
         y4 += worldOriginY;
 
-        final float u = region.u;
-        final float v = region.v2;
-        final float u2 = region.u2;
-        final float v2 = region.v;
+        final float u = region.getU();
+        final float v = region.getV2();
+        final float u2 = region.getU2();
+        final float v2 = region.getV();
 
-        float t2u = currentOverlayRegion.u;
-        float t2v = currentOverlayRegion.v;
-        float t2u2 = currentOverlayRegion.u2;
-        float t2v2 = currentOverlayRegion.v2;
+        final float t2u = currentOverlayRegion.getU();
+        final float t2v = currentOverlayRegion.getV2();
+        final float t2u2 = currentOverlayRegion.getU2();
+        final float t2v2 = currentOverlayRegion.getV();
 
         float color = this.color;
         int idx = this.idx;
@@ -872,7 +874,7 @@ public class PuzzleOverlayBatch implements Batch {
 
         float[] vertices = this.vertices;
 
-        Texture texture = region.texture;
+        Texture texture = region.getTexture();
         if (texture != lastTexture) {
             switchTexture(texture);
         } else if (idx == vertices.length) //
@@ -954,34 +956,34 @@ public class PuzzleOverlayBatch implements Batch {
 
         float u1, v1, u2, v2, u3, v3, u4, v4;
         if (clockwise) {
-            u1 = region.u2;
-            v1 = region.v2;
-            u2 = region.u;
-            v2 = region.v2;
-            u3 = region.u;
-            v3 = region.v;
-            u4 = region.u2;
-            v4 = region.v;
+            u1 = region.getU2();
+            v1 = region.getV2();
+            u2 = region.getU();
+            v2 = region.getV2();
+            u3 = region.getU();
+            v3 = region.getV();
+            u4 = region.getU2();
+            v4 = region.getV();
         } else {
-            u1 = region.u;
-            v1 = region.v;
-            u2 = region.u2;
-            v2 = region.v;
-            u3 = region.u2;
-            v3 = region.v2;
-            u4 = region.u;
-            v4 = region.v2;
+            u1 = region.getU();
+            v1 = region.getV();
+            u2 = region.getU2();
+            v2 = region.getV();
+            u3 = region.getU2();
+            v3 = region.getV2();
+            u4 = region.getU();
+            v4 = region.getV2();
         }
 
-        float t2u1 = currentOverlayRegion.u;
-        float t2v1 = currentOverlayRegion.v;
-        float t2u2 = currentOverlayRegion.u2;
-        float t2v2 = currentOverlayRegion.v2;
+        float t2u1 = currentOverlayRegion.getU();
+        float t2v1 = currentOverlayRegion.getV();
+        float t2u2 = currentOverlayRegion.getU2();
+        float t2v2 = currentOverlayRegion.getV2();
 
-        float t2u3 = currentOverlayRegion.u;
-        float t2v3 = currentOverlayRegion.v;
-        float t2u4 = currentOverlayRegion.u2;
-        float t2v4 = currentOverlayRegion.v2;
+        float t2u3 = currentOverlayRegion.getU();
+        float t2v3 = currentOverlayRegion.getV();
+        float t2u4 = currentOverlayRegion.getU2();
+        float t2v4 = currentOverlayRegion.getV2();
 
         float color = this.color;
         int idx = this.idx;
@@ -1025,7 +1027,7 @@ public class PuzzleOverlayBatch implements Batch {
 
         float[] vertices = this.vertices;
 
-        Texture texture = region.texture;
+        Texture texture = region.getTexture();
         if (texture != lastTexture) {
             switchTexture(texture);
         } else if (idx == vertices.length) {
@@ -1042,15 +1044,15 @@ public class PuzzleOverlayBatch implements Batch {
         float x4 = transform.m00 * width + transform.m02;
         float y4 = transform.m10 * width + transform.m12;
 
-        float u = region.u;
-        float v = region.v2;
-        float u2 = region.u2;
-        float v2 = region.v;
+        float u = region.getU();
+        float v = region.getV2();
+        float u2 = region.getU2();
+        float v2 = region.getV();
 
-        float t2u = currentOverlayRegion.u;
-        float t2v = currentOverlayRegion.v;
-        float t2u2 = currentOverlayRegion.u2;
-        float t2v2 = currentOverlayRegion.v2;
+        final float t2u = currentOverlayRegion.getU();
+        final float t2v = currentOverlayRegion.getV();
+        final float t2u2 = currentOverlayRegion.getU2();
+        final float t2v2 = currentOverlayRegion.getV2();
 
         float color = this.color;
         int idx = this.idx;

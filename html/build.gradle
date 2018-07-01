@@ -33,7 +33,7 @@ task compileReactDev(type: Exec) {
     environment 'REACT_APP_PUBLIC_URL', '/html'
     environment 'PUBLIC_URL', '/html'
     environment 'REACT_APP_API_URL', 'http://outterest.com/jiggen-backend'
-    environment 'REACT_APP_SHOW_SUPERDEV', 'true'
+    environment 'REACT_APP_SHOW_SUPERDEV', 'false'
     workingDir = 'react'
     commandLine 'cmd', '/c', 'npm run build'
 }
