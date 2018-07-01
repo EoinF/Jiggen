@@ -141,6 +141,16 @@ public abstract class utils {
         return buffer.cpy();
     }
 
+    public static FileHandle getRandomTemplate() {
+        List<FileHandle> templates = utils.getTemplateFiles();
+
+        if (templates.isEmpty()) {
+            return Gdx.files.internal("templates/5x7puzzletemplate.jpg");
+        } else {
+            return templates.get(0);
+        }
+    }
+
     public static List<FileHandle> getTemplateFiles() {
         FileHandle[] files = Gdx.files.internal("templates").list();
 
@@ -153,12 +163,23 @@ public abstract class utils {
         return templateFiles;
     }
 
+    public static FileHandle getRandomBackground() {
+        List<FileHandle> backgrounds = utils.getBackgroundFiles();
+
+        if (backgrounds.isEmpty()) {
+            return Gdx.files.internal("backgrounds/pizza.jpg");
+        } else {
+            return backgrounds.get(0);
+        }
+
+    }
+
     public static List<FileHandle> getBackgroundFiles() {
-        FileHandle[] files = Gdx.files.internal("backgrounds/").list();
+        FileHandle[] files = Gdx.files.internal("backgrounds").list();
 
         List<FileHandle> backgroundFiles = new ArrayList<>();
         for (FileHandle f: files) {
-            if (!f.isDirectory() && f.name().endsWith(".jpg")) {
+            if (!f.isDirectory() && (f.name().endsWith(".jpg") || f.name().endsWith(".png"))) {
                 backgroundFiles.add(f);
             }
         }

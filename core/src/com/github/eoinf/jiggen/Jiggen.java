@@ -6,10 +6,13 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.PuzzleOverlayBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.github.eoinf.jiggen.PuzzleExtractor.Decoder.DecodedTemplate;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.IntRectangle;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleFactory;
@@ -17,22 +20,23 @@ import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleGraphTemplate;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzlePieceTemplate;
 import com.github.eoinf.jiggen.views.Screens.PuzzleSolverScreen;
 
-import java.util.List;
 import java.util.Map;
 
 public class Jiggen extends Game {
 
-	public SpriteBatch batch;
+	public PuzzleOverlayBatch batch;
 	public Skin skin;
 	public OrthographicCamera camera;
 	public PuzzleSolverScreen screen;
+	private ShaderProgram shader;
 
 	public static final int VIEWPORT_WIDTH = 1280;
 	public static final int VIEWPORT_HEIGHT = 720;
 
 	@Override
 	public void create () {
-		batch = new SpriteBatch();
+		this.shader = this.createShader();
+		batch = new PuzzleOverlayBatch(1000, this.shader);
 		FileHandle f = Gdx.files.internal("skin/Holo-dark-hdpi.json");
 		skin = new Skin(f);
 
@@ -43,24 +47,30 @@ public class Jiggen extends Game {
 		setScreen(screen);
 	}
 
+	private ShaderProgram createShader() {
+		FileHandle vertSrc = Gdx.files.internal("shaders/puzzle.vert");
+		FileHandle fragSrc = Gdx.files.internal("shaders/puzzle.frag");
+		ShaderProgram prog = new ShaderProgram(vertSrc, fragSrc);
+		if (!prog.isCompiled())
+			throw new GdxRuntimeException("could not compile splat batch: " + prog.getLog());
+		if (prog.getLog().length() != 0)
+			Gdx.app.log("PuzzleBatch", prog.getLog());
+
+		prog.begin();
+		prog.setUniformi("u_background", 1);
+		prog.end();
+		return prog;
+	}
+
+
 	public void loadDefaultPuzzle() {
-		// Set the puzzle (because puzzles are set differently in the gwt application)
-		List<FileHandle> templates = utils.getTemplateFiles();
-
-		FileHandle template;
-
-		if (templates.isEmpty()) {
-			Gdx.files.internal("");
-			template = Gdx.files.internal("templates/5x7puzzletemplate.jpg");
-		} else {
-			template = templates.get(0);
-		}
-		loadFromTemplate(template);
+		loadFromTemplate(utils.getRandomTemplate());
 	}
 
 	public void loadFromTemplate(FileHandle template) {
 		PuzzleGraphTemplate puzzle = PuzzleFactory.generateTexturePuzzleFromTemplate(new DecodedTemplate(new Texture(template)));
-		screen.setPuzzleGraph(puzzle);
+
+		screen.setPuzzleGraph(puzzle, new Texture(utils.getRandomBackground()));
 	}
 
 	public void loadFromAtlas(FileHandle atlasFile, FileHandle atlasImageFolder, Map<Integer, IntRectangle> vertices) {
@@ -74,13 +84,24 @@ public class Jiggen extends Game {
 			}
 		}
 
-		PuzzleGraphTemplate graph = new PuzzleGraphTemplate(320, 227);
+		GridPoint2 puzzleSize = getPuzzleSize(vertices);
+
+		PuzzleGraphTemplate graph = new PuzzleGraphTemplate(puzzleSize.x, puzzleSize.y);
 		for (Integer key: vertices.keySet()) {
 			TextureRegion region = atlas.findRegion(key.toString());
 			PuzzlePieceTemplate piece = new PuzzlePieceTemplate<>(vertices.get(key), region);
 			graph.addVertex(piece);
 		}
-		screen.setPuzzleGraph(graph);
+		screen.setPuzzleGraph(graph, new Texture(utils.getRandomBackground()));
+	}
+
+	private GridPoint2 getPuzzleSize(Map<Integer, IntRectangle> vertices) {
+		int width = 0; int height = 0;
+		for (IntRectangle v: vertices.values()) {
+			width = Math.max(v.x + v.width, width);
+			height = Math.max(v.y + v.height, height);
+		}
+		return new GridPoint2(width, height);
 	}
 
 	@Override
