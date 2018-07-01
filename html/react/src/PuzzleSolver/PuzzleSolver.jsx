@@ -1,6 +1,9 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
+import queryString from 'query-string';
+
 import { 
+	backgroundsActions,
 	generatedTemplatesActions,
 	puzzleSolverActions
 } from '../actions';
@@ -10,15 +13,27 @@ import gwtAdapter from '../gwtAdapter';
 class PuzzleSolver extends Component {
 	componentDidMount() {
 		const {
+			location: { search },
 			match: { params },
+			background,
 			generatedTemplate,
 			fetchGeneratedTemplateById,
+			setBackgroundFromUrl
 		} = this.props;
 
-		if (!this.isFullyLoadedPuzzleTemplate(generatedTemplate)) {
+		const queryParams = queryString.parse(search);
+
+		const isTemplateReady = this.isFullyLoadedPuzzleTemplate(generatedTemplate);
+		const isBackgroundReady = background !== null;
+		if (!isTemplateReady) {
 			fetchGeneratedTemplateById(params.id);
-		} else {
-			this.startPuzzleSolver(generatedTemplate);
+		}
+		if (!isBackgroundReady) {
+			setBackgroundFromUrl(queryParams.background);
+		}
+
+		if (isTemplateReady && isBackgroundReady) {
+			this.startPuzzleSolver(generatedTemplate, background);
 		}
 
 		const gwt_root = document.getElementById('jiggen-puzzle-solver');
@@ -41,12 +56,13 @@ class PuzzleSolver extends Component {
 			&& ('vertices' in generatedTemplate);
 	}
 
-	startPuzzleSolver (generatedTemplate) {
-		if (this.isFullyLoadedPuzzleTemplate(generatedTemplate)) {
-			console.log("Starting puzzle solver with ", generatedTemplate);
-			gwtAdapter.setGeneratedTemplate(generatedTemplate);
+	startPuzzleSolver (generatedTemplate, background) {
+		if (this.isFullyLoadedPuzzleTemplate(generatedTemplate) && background !== null) {
+			console.log("Starting puzzle solver with ", generatedTemplate, background);
+			gwtAdapter.startPuzzle(generatedTemplate, background);
 		} else {
-			console.log("Failed to start puzzle solver with generated template: ", generatedTemplate)
+			console.log("Failed to start puzzle solver with generated template: ", generatedTemplate);
+			console.log("background: ", background);
 		}
 	}
 
@@ -55,26 +71,18 @@ class PuzzleSolver extends Component {
 
 		if (viewport) {
 			viewport.content = "initial-scale=1";
-		}	
+		}
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		if (this.props.generatedTemplate !== prevProps.generatedTemplate) {
-			this.startPuzzleSolver(this.props.generatedTemplate);
+		if (this.props.generatedTemplate !== prevProps.generatedTemplate 
+			|| this.props.background !== prevProps.background) {
+			this.startPuzzleSolver(this.props.generatedTemplate, this.props.background);
 		}
 	}
 
 	render() {
-		const {
-			generatedTemplate,
-			template,
-			generatedTemplateId
-		} = this.props;
-		
-		return (
-			<div>
-			</div>
-		);
+		return null;
 	}
 }
 
@@ -82,7 +90,9 @@ class PuzzleSolver extends Component {
 const mapStateToProps = state => {
   return {
     generatedTemplate: state.generatedTemplates.generatedTemplatesMap[state.generatedTemplates.selectedId] || null,
-    generatedTemplateId: state.generatedTemplates.selectedId
+    generatedTemplateId: state.generatedTemplates.selectedId,
+    background: state.backgrounds.backgroundsMap[state.backgrounds.selectedId] || null,
+    backgroundId: state.backgrounds.selectedId
   }
 }
 
@@ -93,6 +103,9 @@ const mapDispatchToProps = dispatch => {
     },
     loadGeneratedTemplateIntoPuzzleSolver: (generatedTemplate, id) => {
     	dispatch(puzzleSolverActions.loadPuzzleSolver(generatedTemplate, id));
+    },
+    setBackgroundFromUrl: url => {
+    	dispatch(backgroundsActions.setBackgroundFromUrl(url));
     }
   }
 }

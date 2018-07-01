@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import registerServiceWorker, {unregister} from './registerServiceWorker';
+//import registerServiceWorker, {unregister} from './registerServiceWorker';
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
 import {
 	templateReducers,
+	backgroundReducers,
 	generatedTemplateReducers,
 	resourceLinkReducers,
 	puzzleSolverReducers
@@ -23,6 +24,7 @@ if (process.env.REACT_APP_SHOW_SUPERDEV == true) {
 const store = createStore(
 	combineReducers({
 		templates: templateReducers,
+		backgrounds: backgroundReducers,
 		generatedTemplates: generatedTemplateReducers,
 		resourceLinks: resourceLinkReducers,
 		puzzle: puzzleSolverReducers

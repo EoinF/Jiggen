@@ -73,7 +73,8 @@ public class Jiggen extends Game {
 		screen.setPuzzleGraph(puzzle, new Texture(utils.getRandomBackground()));
 	}
 
-	public void loadFromAtlas(FileHandle atlasFile, FileHandle atlasImageFolder, Map<Integer, IntRectangle> vertices) {
+	public void loadFromAtlas(FileHandle atlasFile, FileHandle atlasImageFolder, Map<Integer, IntRectangle> vertices,
+							  FileHandle backgroundFile) {
 		TextureAtlas atlas = null;
 		try {
 			atlas = new TextureAtlas(atlasFile, atlasImageFolder);
@@ -92,7 +93,7 @@ public class Jiggen extends Game {
 			PuzzlePieceTemplate piece = new PuzzlePieceTemplate<>(vertices.get(key), region);
 			graph.addVertex(piece);
 		}
-		screen.setPuzzleGraph(graph, new Texture(utils.getRandomBackground()));
+		screen.setPuzzleGraph(graph, new Texture(backgroundFile));
 	}
 
 	private GridPoint2 getPuzzleSize(Map<Integer, IntRectangle> vertices) {

@@ -18,7 +18,7 @@ const BackgroundChooser = ({background}) => {
 					Select a background
 				</div>
 				<div>
-					<img src={logo} />
+					<img src={logo} alt="" />
 				</div>
 			</div>
 		);

@@ -23,7 +23,7 @@ const BackgroundSelection = () => {
 					<div>Coming soon...</div>
 					<div>Check back later!</div>
 					<div className="logoContainer">
-						<img src={logo} />
+						<img src={logo} alt="" />
 					</div>
 				</MessageBox>
 			</div>

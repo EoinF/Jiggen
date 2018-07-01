@@ -24,12 +24,12 @@ public class GwtAdapter {
     private static Jiggen jiggen;
     private static GwtApplication gdxApp;
 
-    public static void setGeneratedTemplate(GeneratedTemplate generatedTemplate) {
+    public static void startPuzzle(GeneratedTemplate generatedTemplate, Background background) {
         String atlasLink = generatedTemplate.links.atlas;
         String templateLink = generatedTemplate.links.image;
+        String backgroundLink = background.links.image;
 
         DynamicPreloader preloader = (DynamicPreloader) gdxApp.getPreloader();
-
         Map<Integer, IntRectangle> verticesMap = generatedTemplate.vertices.toMap();
 
         Array<Preloader.Asset> assets = new Array<>();
@@ -38,6 +38,9 @@ public class GwtAdapter {
 
         assets.add(new Preloader.Asset(templateLink, AssetFilter.AssetType.Image, Integer.MAX_VALUE,
                         "image/" + generatedTemplate.extension));
+
+        assets.add(new Preloader.Asset(backgroundLink, AssetFilter.AssetType.Image, Integer.MAX_VALUE,
+                "image/unknown"));
 
         GWT.log("Loading assets");
 
@@ -50,6 +53,7 @@ public class GwtAdapter {
             @Override
             public void update (Preloader.PreloaderState state) {
                 if (state.hasEnded()) {
+                    FileHandle backgroundFile = new GwtFileHandle(preloader, backgroundLink, Files.FileType.Internal);
                     FileHandle atlasFile = new GwtFileHandle(preloader, atlasLink, Files.FileType.Internal);
                     FileHandle templateFile = new GwtFileHandle(preloader, templateLink, Files.FileType.Internal);
                     FileHandle fakeDirectory = new FileHandle() {
@@ -59,7 +63,7 @@ public class GwtAdapter {
                         }
                     };
 
-                    gdxApp.postRunnable(() -> jiggen.loadFromAtlas(atlasFile, fakeDirectory, verticesMap));
+                    gdxApp.postRunnable(() -> jiggen.loadFromAtlas(atlasFile, fakeDirectory, verticesMap, backgroundFile));
                 }
             }
         });
@@ -96,6 +100,12 @@ class GeneratedTemplate {
     String extension;
     HateosLinks links;
     GwtVerticesMap vertices;
+}
+
+@JsType(isNative = true)
+class Background {
+    String id;
+    HateosLinks links;
 }
 
 @JsType(isNative = true)

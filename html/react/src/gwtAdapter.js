@@ -19,10 +19,10 @@ document.addEventListener("DOMContentLoaded", () => {
 	});
 });
 
-function setGeneratedTemplate(generatedTemplate) {
+function startPuzzle(generatedTemplate, background) {
 	onGwtLoadedPromise.then(() => {
 		// The gwtAdapter object is exported from java gwt code using JsInterop
-		window.gwtAdapter.setGeneratedTemplate(generatedTemplate);
+		window.gwtAdapter.startPuzzle(generatedTemplate, background);
 	});
 }
 
@@ -35,6 +35,6 @@ function setTemplate(template) {
 }
 
 export default {
-	setGeneratedTemplate,
+	startPuzzle,
 	setTemplate
 };

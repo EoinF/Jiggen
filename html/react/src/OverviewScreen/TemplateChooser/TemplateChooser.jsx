@@ -20,7 +20,7 @@ const TemplateChooser = ({template}) => {
 					Select a Template
 				</div>
 				<div>
-					<img src={logo} />
+					<img src={logo} alt="" />
 				</div>
 			</div>);
 	}
