@@ -40,7 +40,7 @@ public class GwtAdapter {
                         "image/" + generatedTemplate.extension));
 
         assets.add(new Preloader.Asset(backgroundLink, AssetFilter.AssetType.Image, Integer.MAX_VALUE,
-                "image/unknown"));
+                "application/unknown"));
 
         GWT.log("Loading assets");
 

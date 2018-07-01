@@ -13,7 +13,7 @@ class DynamicPreloader extends Preloader {
         super(preloaderUrl);
     }
 
-    public static class DynamicPreloaderState extends PreloaderState{
+    public static class DynamicPreloaderState extends PreloaderState {
         public DynamicPreloaderState(Array<Asset> assets) {
             super(assets);
         }
@@ -30,7 +30,8 @@ class DynamicPreloader extends Preloader {
     }
 
     void preload(Array<Asset> assets, final PreloaderCallback callback) {
-        final AssetDownloader loader = new AssetDownloader();
+        final CORSAssetDownloader loader = new CORSAssetDownloader();
+
         final DynamicPreloaderState state = new DynamicPreloaderState(assets);
         for (int i = 0; i < assets.size; i++) {
             final Asset asset = assets.get(i);
