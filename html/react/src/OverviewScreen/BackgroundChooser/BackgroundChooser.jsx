@@ -6,12 +6,14 @@ import './BackgroundChooser.css';
 import logo from './Background-icon.png';
 
 const BackgroundChooser = ({background}) => {
-	let content;
+	let content, containerClass;
 	if (background != null) {
+		containerClass = "BackgroundChooser selected";
 		content = (
-			<TemplateWidget background={background} isSelected={true} />
+			<TemplateWidget template={background} isSelected={false} />
 		);
 	} else {
+		containerClass = "BackgroundChooser";
 		content = (
 			<div className="SelectBackgroundMessage">
 				<div>
@@ -25,7 +27,7 @@ const BackgroundChooser = ({background}) => {
 	}
 
 	return (
-		<PlainLink className="BackgroundChooser" to={`/backgrounds`}>
+		<PlainLink className={containerClass} to={`/backgrounds`}>
 			{content}
 		</PlainLink>
 	);

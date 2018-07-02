@@ -5,9 +5,9 @@ import StickyFooter from '../StickyFooter';
 
 import './puzzleLauncher.css'
 
-const PuzzleLauncher = ({generatedTemplate}) => {
+const PuzzleLauncher = ({generatedTemplate, background}) => {
 	if (generatedTemplate != null) {
-    	const puzzleLink = `/puzzle/${generatedTemplate.id}`;
+    	const puzzleLink = `/puzzle/${generatedTemplate.id}?background=${background.links.image}`;
 		return (
 			<div className="launcherContainer">
 				<div className="launcherContent">

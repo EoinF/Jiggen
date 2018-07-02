@@ -37,12 +37,12 @@ class OverviewScreen extends Component {
               <TemplateChooser template={selectedTemplate} />
             </div>
             <div>
-                <BackgroundChooser background={selectedBackground} />
+              <BackgroundChooser background={selectedBackground} />
             </div>
           </div>
           <div className="OverviewBody">
             <div>
-              <PuzzleLauncher generatedTemplate={selectedGeneratedTemplate} />
+              <PuzzleLauncher generatedTemplate={selectedGeneratedTemplate} background={selectedBackground} />
             </div>
           </div>
         </div>
@@ -52,6 +52,7 @@ class OverviewScreen extends Component {
 
 const mapStateToProps = state => {
   return {
+    selectedBackground: state.backgrounds.backgroundsMap[state.backgrounds.selectedId],
     selectedTemplate: state.templates.templatesMap[state.templates.selectedId],
     selectedGeneratedTemplate: state.generatedTemplates.generatedTemplatesMap[state.generatedTemplates.selectedId]
   };

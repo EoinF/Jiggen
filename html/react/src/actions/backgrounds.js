@@ -25,6 +25,7 @@ function setBackgroundFromUrl(url) {
 		type: SET_BACKGROUND,
 		background: {
 			id: url,
+			name: url,
 			links: {
 				image: url
 			}

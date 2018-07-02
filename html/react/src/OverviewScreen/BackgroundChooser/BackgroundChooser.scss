@@ -2,7 +2,6 @@
 
 .BackgroundChooser {
 	width: 100%;
-	height: 100%;
 	border: solid 2px $theme_f0;
 	border-left: 1px;
 	background: $theme_b3;
@@ -18,9 +17,7 @@
 		animation: none;
 	}
 
-	img {
-		width: auto;
-	}
+	overflow: hidden;
 }
 
 .SelectBackgroundMessage {

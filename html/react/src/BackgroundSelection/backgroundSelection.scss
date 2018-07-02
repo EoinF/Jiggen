@@ -1,29 +1,70 @@
 @import '../index.scss'; 
 
-.backgroundTable {
+.backgroundSelectionContainer {
+  	width: 100%;
+	min-height: 100%;
 	display: flex;
-	flex-flow: row nowrap;
-	justify-content: center;
+	flex-flow: column wrap;
+}
 
-	padding-top: 1em;
+.mainBackgroundContent {
+	flex: 1 1 100%;
+	display: flex;
+}
 
-	.messageBoxContainer {
-		padding: 2em;
+.backgroundTable {
+	flex: 1 1 auto;
+	display: flex;
+	width: 100%;
+	flex-wrap: wrap;
+	padding: 1.5rem;
 
-		display: flex;
-		flex-flow: column nowrap;
-		justify-content: center;
-
+	.cardContainer {
 		>* {
-			padding-top: 0.2em;
+			padding-top: 0.2rem;
 		}
 
 		.logoContainer {
-			margin-top: 1em;
+			margin-top: 1rem;
 		}
 	}
-}
 
-.backgroundSelectionContainer {
-	height: 100%;
+	@media(max-width: 768px) {
+		@media (orientation: portrait) {
+			min-height: 100%;
+			align-items: flex-start;
+			> * {
+		        flex: 0 0 100%;
+				height: 50%;
+			}
+		}
+
+		@media(orientation: landscape) {
+			align-items: flex-start;
+			> * {
+		        flex: 0 0 100%;
+			}
+
+			.cardContainer {
+				margin: auto;
+				max-width: 20rem;
+			}
+		}
+	}
+
+	@media(min-width: 768px) {
+		flex-direction: column;
+		min-height: 100%;
+		> * {
+			flex: 0 0 50%;
+			height: 50%;
+		}
+	
+		.cardContainer {
+			margin: auto;
+			min-width: 20rem;
+			min-height: 10rem;
+			max-width: 20rem;
+		}
+	}
 }
