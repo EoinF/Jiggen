@@ -1,4 +1,11 @@
 
-.backgroundDisplay img {
-	max-width: 100%;
+.backgroundDisplay {
+
+	img {
+		max-width: 100%;
+	}
+
+	.imageContainer {
+		padding: 1rem 2rem;
+	}
 }

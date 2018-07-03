@@ -41,15 +41,6 @@ class BackgroundSelection extends Component {
 									initialLink={background && background.links.image} />
 							</CardContainer>
 						</div>
-						<div>
-							<h3>Select a background below.</h3>
-							<CardContainer className="cardContainer">
-								<div>Coming soon!</div>
-								<div className="logoContainer">
-									<img src={logo} alt="Coming soon" />
-								</div>
-							</CardContainer>
-						</div>
 					</div>
 				</div>
 			</div>

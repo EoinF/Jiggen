@@ -34,14 +34,12 @@ class SelectedBackgroundDisplay extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		if (prevState.inputText != this.state.inputText) {
-			console.log("update", prevState.inputText, this.state.inputText);
+		if (prevState.inputText !== this.state.inputText) {
 	    	this.onChangeLink$.next(this.state.inputText);
 		}
 	}
 
 	onChangeInputText = (e) => {
-		console.log('set state of input', e.target.value);
 		this.setState({inputText: e.target.value});
 	};
 
@@ -53,6 +51,14 @@ class SelectedBackgroundDisplay extends Component {
 	onError = (e) => {
 		this.setState({isValid: false});
 	};
+
+	getImageElement = () => {
+		return (
+			<div className="imageContainer">
+				<img src={this.state.link} onLoad={this.onLoad} onError={this.onError} />
+			</div>
+		);
+	}
 
 	render() {
 		const {
@@ -69,12 +75,12 @@ class SelectedBackgroundDisplay extends Component {
 						onChange={this.onChangeInputText}
 					/>
 				</div>
-				{ link && !isValid && (
-					<img src={link} onLoad={this.onLoad} onError={this.onError} />
-				)}
+				{ link && !isValid && 
+					this.getImageElement()
+				}
 				{ link && isValid && (
 					<PlainLink to={`/`}>
-						<img src={link} onLoad={this.onLoad} onError={this.onError} />
+						{this.getImageElement()}
 					</PlainLink>
 				)}
 			</div>

@@ -1,19 +1,4 @@
-
-$theme_f0: white;
-$theme_f1: #fdecec;
-$theme_f2: black;
-
-$theme_b1: #4b1b63;
-$theme_b2: #450454;
-$theme_b3: #9468ab;
-$theme_b4: #f4c5ff;
-
-$theme_b5: #bc7fbf;
-$theme_b6: #cd8fcf;
-
-$theme_xf1: #c7bd95;
-$theme_xb1: #b74c4c;
-$theme_xb2: yellow;
+@import './theming.scss';
 
 body {
 	color: $theme_f0;
@@ -26,6 +11,10 @@ body {
 	font-size: 20px;
 
 	@media (min-width: 768px) {
+		font-size: 24px;
+	}
+
+	@media (min-width: 920px) {
 		font-size: 32px;
 	}
 }

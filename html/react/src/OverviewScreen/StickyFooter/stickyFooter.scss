@@ -1,4 +1,4 @@
-@import '../../index.scss';
+@import '../../theming.scss';
 
 .stickyFooter {
   z-index: 1;
@@ -11,10 +11,8 @@
 .jiggenFooter {
 	text-align: center;
 	animation: footer_borderpulse 1s ease-in 0s infinite alternate;
-	border-top: 1px solid $theme_xf1;
-	background: $theme_b3;
 	min-height: 3.5rem;
-	opacity: 0.95;
+	opacity: 0.9;
 
 	&:hover, &:active {
 		opacity: 1;
@@ -24,20 +22,6 @@
 		font-size: 2rem;
 		margin: auto;
 	}
-
-/*
-	@media (max-width:768px) {
-		height: 2.4rem;
-	}
-
-	h1 {
-		@media (max-width:768px) {
-			font-size: 1.5rem;
-		}
-		font-size: 2rem;
-		//height: 100%;
-		margin: auto;
-	}	*/
 }
 
 @keyframes footer_borderpulse {

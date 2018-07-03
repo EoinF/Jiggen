@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux'
 
+import './index.scss';
+
 import OverviewScreen from './OverviewScreen';
 import TemplateSelection from './TemplateSelection';
 import BackgroundSelection from './BackgroundSelection';

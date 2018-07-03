@@ -1,4 +1,4 @@
-@import '../../index.scss';
+@import '../../theming.scss';
 
 .launcherContainer {
 	display: flex;
@@ -21,7 +21,21 @@
 	background: $theme_xb2;
 	color: $theme_f2;
 	border: solid 1px $theme_f0;
-	//max-width: 15em;
-	padding: 0 3px;
+	padding: 0 1rem;
 	line-height: 3rem;
+
+	border-radius: 20px;
+
+	&:hover {
+		animation: launcherButtonPulse 1s ease-in 0.5s infinite alternate;
+	}
+}
+
+@keyframes launcherButtonPulse {
+	from {
+		background: $theme_xb2;
+	}
+	to {
+		background: $theme_xb3;
+	}
 }

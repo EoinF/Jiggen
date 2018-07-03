@@ -6,7 +6,15 @@ import StickyFooter from '../StickyFooter';
 import './puzzleLauncher.css'
 
 const PuzzleLauncher = ({generatedTemplate, background}) => {
-	if (generatedTemplate != null) {
+	if (generatedTemplate == null) {
+		return (<div>
+			Please select a template first
+		</div>);
+	} else if (background == null) {
+		return (<div>
+			Pick a background!
+		</div>);
+	} else {
     	const puzzleLink = `/puzzle/${generatedTemplate.id}?background=${background.links.image}`;
 		return (
 			<div className="launcherContainer">
@@ -22,10 +30,6 @@ const PuzzleLauncher = ({generatedTemplate, background}) => {
 				</StickyFooter>
 			</div>
 		);
-	} else {
-		return (<div>
-			Please select a template first
-		</div>);
 	}
 
 }
