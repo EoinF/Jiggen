@@ -66,6 +66,8 @@ class SelectedBackgroundDisplay extends Component {
 			link,
 			isValid
 		 } = this.state;
+
+		 console.log(this.state);
 		return (
 			<div className="backgroundDisplay">
 				<div>

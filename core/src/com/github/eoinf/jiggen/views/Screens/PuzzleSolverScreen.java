@@ -17,16 +17,22 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleGraphTemplate;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzlePieceTemplate;
-import com.github.eoinf.jiggen.views.PuzzleOverlayBatch;
-import com.github.eoinf.jiggen.views.TextureOverlayImage;
+import com.github.eoinf.jiggen.graphics.PuzzleOverlayBatch;
+import com.github.eoinf.jiggen.graphics.TextureOverlayImage;
+import com.github.eoinf.jiggen.graphics.TouchControlledCamera;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static com.github.eoinf.jiggen.utils.getMinimumScaleToFixAspectRatio;
+
 public class PuzzleSolverScreen implements Screen {
 
-    private OrthographicCamera camera;
+    private static int WORLD_PADDING = 50;
+    private static float ZOOM_RATE = 0.1f;
+
+    private TouchControlledCamera boundedCamera;
 
     private Actor pieceHeld;
     private Vector2 pieceOffsetHeld;
@@ -41,13 +47,13 @@ public class PuzzleSolverScreen implements Screen {
     private Texture backgroundImage;
 
     public PuzzleSolverScreen(OrthographicCamera camera, PuzzleOverlayBatch batch) {
-        this.camera = camera;
-
-
         viewport = new ScreenViewport(camera);
         gameStage = new Stage(viewport, batch);
         pieceActors = new ArrayList<>();
         scales = new Vector2(1, 1);
+
+        this.boundedCamera = new TouchControlledCamera(camera,
+                (int)viewport.getWorldWidth(), (int)viewport.getWorldHeight());
 
         initInputManager();
         Gdx.input.setInputProcessor(gameStage);
@@ -57,6 +63,8 @@ public class PuzzleSolverScreen implements Screen {
         gameStage.addListener(new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
                 Vector3 mousePositionInWorld = new Vector3(x, y, 0);
+                Vector3 mousePositionInScreen = boundedCamera.camera.project(mousePositionInWorld.cpy());
+
                 Actor a = gameStage.hit(mousePositionInWorld.x, mousePositionInWorld.y, true);
                 if (a != null) {
                     int index = pieceActors.indexOf(a);
@@ -69,12 +77,16 @@ public class PuzzleSolverScreen implements Screen {
                         );
                         pieceHeld.toFront();
                     }
+                } else {
+                    // Only pan the camera when we havent picked up a piece
+                    boundedCamera.setPivotPoint(mousePositionInScreen.x, mousePositionInScreen.y, pointer);
                 }
                 return true;
             }
 
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                boundedCamera.liftPivot(pointer);
                 pieceHeld = null;
             }
 
@@ -84,8 +96,26 @@ public class PuzzleSolverScreen implements Screen {
                     shuffle();
                 } else if (keycode == Input.Keys.A) {
                     autoSolve();
+                } else if (keycode == Input.Keys.T) {
+                    boundedCamera.centreCamera();
                 }
                 return super.keyDown(event, keycode);
+            }
+
+            @Override
+            public void touchDragged(InputEvent event, float x, float y, int pointer) {
+                Vector3 mousePositionInWorld = new Vector3(x, y, 0);
+                Vector3 mousePositionInScreen = boundedCamera.camera.project(mousePositionInWorld);
+
+                boundedCamera.dragTo(mousePositionInScreen.x, mousePositionInScreen.y, pointer);
+
+                super.touchDragged(event, x, y, pointer);
+            }
+
+            @Override
+            public boolean scrolled(InputEvent event, float x, float y, int scrollDirection) {
+                boundedCamera.zoomBy(scrollDirection * ZOOM_RATE);
+                return super.scrolled(event, x, y, scrollDirection);
             }
         });
     }
@@ -96,8 +126,9 @@ public class PuzzleSolverScreen implements Screen {
     }
 
     private void update(float delta) {
+        boundedCamera.update();
         if (pieceHeld != null) {
-            Vector3 mousePositionInWorld = camera.unproject(
+            Vector3 mousePositionInWorld = boundedCamera.camera.unproject(
                     new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
             pieceHeld.setPosition(mousePositionInWorld.x + pieceOffsetHeld.x,
                     mousePositionInWorld.y + pieceOffsetHeld.y);
@@ -137,32 +168,6 @@ public class PuzzleSolverScreen implements Screen {
 
     }
 
-    private Vector2 getMinimumScaleToFixAspectRatio(int a, int b, int c, int d) {
-        //
-        // The variables s1 and s2 are the scales required to transform the aspect ratio
-        // The variables a and b are the width and height of the current texture
-        // The variables c and d are the width and height of the target texture
-        // s1 * a(x) + s2 * b(y) = c(x) + d(y)
-        //
-        // ad >= bc  ->  s1 = 1
-        // bc >= ad  ->  s2 = 1
-        //
-        //
-        float s1; float s2;
-        float ad = a * d;
-        float bc = b * c;
-
-        if (ad >= bc) {
-            s1 = 1;
-            s2 = ad / bc;
-        } else {
-            s2 = 1;
-            s1 = bc / ad;
-        }
-
-        return new Vector2(s1, s2);
-    }
-
     public void setPuzzleGraph(PuzzleGraphTemplate puzzleGraph, Texture backgroundImage) {
         this.puzzleGraph = puzzleGraph;
         this.backgroundImage = backgroundImage;
@@ -174,6 +179,11 @@ public class PuzzleSolverScreen implements Screen {
             piece.remove();
         }
         pieceActors.clear();
+
+        this.boundedCamera.setWorldBounds(
+                (int)Math.max(puzzleGraph.getWidth() * scales.x + WORLD_PADDING, viewport.getWorldWidth()),
+                (int)Math.max(puzzleGraph.getHeight() * scales.y + WORLD_PADDING, viewport.getWorldHeight())
+        );
 
         for (PuzzlePieceTemplate<TextureRegion> piece: puzzleGraph.getVertices().values()) {
             addNewPiece(piece);
@@ -213,7 +223,7 @@ public class PuzzleSolverScreen implements Screen {
             moveToHome.setX(homeX);
             moveToHome.setY(homeY);
             moveToHome.setDuration(3 * Vector2.dst(homeX, homeY, piece.getX(), piece.getY())
-                    / Math.max(viewport.getWorldWidth(), viewport.getWorldHeight()));
+                    / Math.max(boundedCamera.worldWidth(), boundedCamera.worldHeight()));
             piece.addAction(moveToHome);
         }
     }
@@ -225,8 +235,8 @@ public class PuzzleSolverScreen implements Screen {
             float r1 = random.nextFloat();
             float r2 = random.nextFloat();
 
-            int x = (int)(r1 * (viewport.getWorldWidth() - puzzleGraph.getMaxPieceWidth() * scales.x));
-            int y = (int)(r2 * (viewport.getWorldHeight() - puzzleGraph.getMaxPieceHeight() * scales.y));
+            int x = (int)(r1 * (boundedCamera.worldWidth() - puzzleGraph.getMaxPieceWidth() * scales.x));
+            int y = (int)(r2 * (boundedCamera.worldHeight() - puzzleGraph.getMaxPieceHeight() * scales.y));
             piece.setPosition(x, y);
 
             if (r1 + r2 > 1){
@@ -236,9 +246,9 @@ public class PuzzleSolverScreen implements Screen {
     }
 
     public int centreX() {
-        return (int)(viewport.getWorldWidth() - puzzleGraph.getWidth() * scales.x) / 2;
+        return (int)(boundedCamera.worldWidth() - puzzleGraph.getWidth() * scales.x) / 2;
     }
     public int centreY() {
-        return (int)(viewport.getWorldHeight() - puzzleGraph.getHeight() * scales.y) / 2;
+        return (int)(boundedCamera.worldHeight() - puzzleGraph.getHeight() * scales.y) / 2;
     }
 }

@@ -40,7 +40,10 @@ class PuzzleSolver extends Component {
 		const react_root = document.getElementById('react-root');
 		gwt_root.classList.remove('hidden');
 		react_root.classList.add('hidden');
-
+		// In chrome, the height of the table that holds the canvas is rendered incorrectly, so scrollbars appear
+		// if we don't disable them 
+		document.body.classList.add('overflow-hidden');
+		
 		this.zoomOutMobile();
 	}
 
@@ -49,6 +52,7 @@ class PuzzleSolver extends Component {
 		const react_root = document.getElementById('react-root');
 		gwt_root.classList.add('hidden');
 		react_root.classList.remove('hidden');
+		document.body.classList.remove('overflow-hidden');
 	}
 
 	isFullyLoadedPuzzleTemplate(generatedTemplate) {

@@ -17,7 +17,7 @@ import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.IntRectangle;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleFactory;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleGraphTemplate;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzlePieceTemplate;
-import com.github.eoinf.jiggen.views.PuzzleOverlayBatch;
+import com.github.eoinf.jiggen.graphics.PuzzleOverlayBatch;
 import com.github.eoinf.jiggen.views.Screens.PuzzleSolverScreen;
 
 import java.util.Map;
