@@ -8,49 +8,55 @@ import java.util.Map;
 
 public class TouchControlledCamera extends WorldBoundedCamera {
 
-    private Map<Integer, Vector2> pivots;
-    private Map<Integer, Vector2> deltaVectors;
+    private static float ZOOM_MULTIPLIER = 0.05f;
+
+    private float initialZoom;
+    private Map<Integer, Vector2> pointersInitial;
+    private Map<Integer, Vector2> pointersCurrent;
 
     public TouchControlledCamera(OrthographicCamera camera, int worldWidth, int worldHeight) {
         super(camera, worldWidth, worldHeight);
-        pivots = new HashMap<>();
-        deltaVectors = new HashMap<>();
+        pointersInitial = new HashMap<>();
+        pointersCurrent = new HashMap<>();
+        initialZoom = -1;
     }
 
-    public void setPivotPoint(float screenX, float screenY, int pointer) {
-        this.pivots.put(pointer, new Vector2(
+    public void setInitialPointer(float screenX, float screenY, int pointer) {
+        this.pointersInitial.put(pointer, new Vector2(
                 camera.position.x + (screenX * camera.zoom),
                 camera.position.y + (screenY * camera.zoom))
         );
     }
 
     public void dragTo(float x, float y, int pointer) {
-        Vector2 pivotCurrent = pivots.get(pointer);
+        Vector2 pivotCurrent = pointersInitial.get(pointer);
         if (pivotCurrent != null) {
-            deltaVectors.put(pointer, new Vector2(
+            pointersCurrent.put(pointer, new Vector2(
                     pivotCurrent.x - (x * camera.zoom),
                     pivotCurrent.y - (y * camera.zoom))
             );
         }
 
-        if (pivots.size() == 1) {
-            Vector2 pivot = deltaVectors.get(0);
-            setX(pivot.x);
-            setY(pivot.y);
-        } else if (pivots.size() == 2) {
-            Vector2[] pivotArray = new Vector2[2];
-            pivots.values().toArray(pivotArray);
-            Vector2[] deltasArray = new Vector2[2];
-            deltaVectors.values().toArray(deltasArray);
+        if (pointersInitial.size() == 1) {
+            Vector2 delta = pointersCurrent.get(0);
+            setX(delta.x);
+            setY(delta.y);
+        } else if (pointersInitial.size() == 2) {
+            Vector2[] pointersInitialArray = new Vector2[2];
+            pointersInitial.values().toArray(pointersInitialArray);
+            Vector2[] pointersCurrentArray = new Vector2[2];
+            pointersCurrent.values().toArray(pointersCurrentArray);
 
-            Vector2 distanceBetweenPivots = pivotArray[0].sub(pivotArray[1]);
-            Vector2 directionA = distanceBetweenPivots.mulAdd(deltasArray[0], 0);
-            Vector2 directionB = distanceBetweenPivots.mulAdd(deltasArray[1], 0);
+            float initialDistanceBetweenPivots = pointersInitialArray[0].dst2(pointersInitialArray[1]);
+            float currentDistanceBetweenPivots = pointersCurrentArray[0].dst(pointersCurrentArray[1]);
+
+            float zoomChange = (initialDistanceBetweenPivots - currentDistanceBetweenPivots) * ZOOM_MULTIPLIER;
+            setZoom(initialZoom + zoomChange);
         }
     }
 
     public void liftPivot(int pointer) {
-        pivots.remove(pointer);
-        deltaVectors.remove(pointer);
+        pointersInitial.remove(pointer);
+        pointersCurrent.remove(pointer);
     }
 }

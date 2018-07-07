@@ -79,7 +79,7 @@ public class PuzzleSolverScreen implements Screen {
                     }
                 } else {
                     // Only pan the camera when we havent picked up a piece
-                    boundedCamera.setPivotPoint(mousePositionInScreen.x, mousePositionInScreen.y, pointer);
+                    boundedCamera.setInitialPointer(mousePositionInScreen.x, mousePositionInScreen.y, pointer);
                 }
                 return true;
             }

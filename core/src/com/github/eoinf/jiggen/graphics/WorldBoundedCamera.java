@@ -77,8 +77,10 @@ public class WorldBoundedCamera {
     }
 
     public void zoomBy(float zoomDelta) {
-        float newZoom = camera.zoom + zoomDelta;
+        setZoom(camera.zoom + zoomDelta);
+    }
 
+    void setZoom(float newZoom) {
         float maxZoomX = worldWidth / camera.viewportWidth;
         float maxZoomY = worldHeight / camera.viewportHeight;
         float maxZoom = Math.max(maxZoomX, maxZoomY);
