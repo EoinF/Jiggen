@@ -15,16 +15,24 @@ import java.util.function.Function;
 public abstract class PuzzleFactory {
 
     public static PuzzleGraphTemplate generatePixmapPuzzleFromTemplate(DecodedTemplate decodedTemplate) {
-        return generatePuzzleFromTemplate(decodedTemplate, p -> p);
+        return generatePuzzleFromTemplate(decodedTemplate, new Function<PuzzlePieceTemplate<Pixmap>, PuzzlePieceTemplate>() {
+            @Override
+            public PuzzlePieceTemplate apply(PuzzlePieceTemplate<Pixmap> p) {
+                return p;
+            }
+        });
     }
 
     public static PuzzleGraphTemplate generateTexturePuzzleFromTemplate(DecodedTemplate decodedTemplate) {
-        return generatePuzzleFromTemplate(decodedTemplate, p -> {
-            Pixmap pixmap = p.getData();
+        return generatePuzzleFromTemplate(decodedTemplate, new Function<PuzzlePieceTemplate<Pixmap>, PuzzlePieceTemplate>() {
+            @Override
+            public PuzzlePieceTemplate apply(PuzzlePieceTemplate<Pixmap> p) {
+                Pixmap pixmap = p.getData();
 
-            return new PuzzlePieceTemplate<>(
-                    p.x(), p.y(),
-                    p.getWidth(), p.getHeight(), new TextureRegion(new Texture(pixmap)));
+                return new PuzzlePieceTemplate<>(
+                        p.x(), p.y(),
+                        p.getWidth(), p.getHeight(), new TextureRegion(new Texture(pixmap)));
+            }
         });
     }
 

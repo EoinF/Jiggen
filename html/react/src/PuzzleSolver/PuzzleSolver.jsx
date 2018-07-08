@@ -91,7 +91,7 @@ class PuzzleSolver extends Component {
 		var viewport = document.querySelector('meta[name="viewport"]');
 
 		if (viewport) {
-			viewport.content = "initial-scale=1";
+			viewport.content = "initial-scale=1, width=device-width, minimum-scale=1, maximum-scale=1";
 		}
 	}
 

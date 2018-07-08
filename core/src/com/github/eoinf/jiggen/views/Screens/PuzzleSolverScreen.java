@@ -29,7 +29,7 @@ import static com.github.eoinf.jiggen.utils.getMinimumScaleToFixAspectRatio;
 
 public class PuzzleSolverScreen implements Screen {
 
-    private static int WORLD_PADDING = 50;
+    private static int WORLD_PADDING = 75;
     private static float ZOOM_RATE = 0.1f;
 
     private TouchControlledCamera boundedCamera;

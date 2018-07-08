@@ -30,8 +30,8 @@ public class Jiggen extends Game {
 	public PuzzleSolverScreen screen;
 	private ShaderProgram shader;
 
-	public static final int VIEWPORT_WIDTH = 1280;
-	public static final int VIEWPORT_HEIGHT = 720;
+	public static final int VIEWPORT_WIDTH = 320;
+	public static final int VIEWPORT_HEIGHT = 240;
 
 	@Override
 	public void create () {
