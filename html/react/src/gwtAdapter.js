@@ -26,6 +26,13 @@ function startPuzzle(generatedTemplate, background) {
 	});
 }
 
+function startDemo() {
+	onGwtLoadedPromise.then(() => {
+		// The gwtAdapter object is exported from java gwt code using JsInterop
+		window.gwtAdapter.startDemo();
+	});
+}
+
 
 function setTemplate(template) {
 	onGwtLoadedPromise.then(() => {
@@ -36,5 +43,6 @@ function setTemplate(template) {
 
 export default {
 	startPuzzle,
-	setTemplate
+	setTemplate,
+	startDemo
 };

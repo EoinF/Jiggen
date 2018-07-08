@@ -69,6 +69,10 @@ public class GwtAdapter {
         });
     }
 
+    public static void startDemo() {
+        gdxApp.postRunnable(() -> jiggen.loadDefaultPuzzle());
+    }
+
     static void setJiggen(Jiggen _jiggen) {
         jiggen = _jiggen;
     }

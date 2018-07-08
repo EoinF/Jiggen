@@ -11,6 +11,13 @@ import {
 import gwtAdapter from '../gwtAdapter';
 
 class PuzzleSolver extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			isDemo: false
+		};
+	}
+
 	componentDidMount() {
 		const {
 			location: { search },
@@ -23,17 +30,23 @@ class PuzzleSolver extends Component {
 
 		const queryParams = queryString.parse(search);
 
-		const isTemplateReady = this.isFullyLoadedPuzzleTemplate(generatedTemplate);
-		const isBackgroundReady = background !== null;
-		if (!isTemplateReady) {
-			fetchGeneratedTemplateById(params.id);
-		}
-		if (!isBackgroundReady) {
-			setBackgroundFromUrl(queryParams.background);
-		}
+		if (queryParams.demo === "true") {
+			this.setState({
+				isDemo: true
+			});
+		} else {
+			const isTemplateReady = this.isFullyLoadedPuzzleTemplate(generatedTemplate);
+			const isBackgroundReady = background !== null;
+			if (!isTemplateReady) {
+				fetchGeneratedTemplateById(params.id);
+			}
+			if (!isBackgroundReady) {
+				setBackgroundFromUrl(queryParams.background);
+			}
 
-		if (isTemplateReady && isBackgroundReady) {
-			this.startPuzzleSolver(generatedTemplate, background);
+			if (isTemplateReady && isBackgroundReady) {
+				this.startPuzzleSolver(generatedTemplate, background);
+			}
 		}
 
 		const gwt_root = document.getElementById('jiggen-puzzle-solver');
@@ -70,6 +83,10 @@ class PuzzleSolver extends Component {
 		}
 	}
 
+	startDemo() {
+		gwtAdapter.startDemo();
+	}
+
 	zoomOutMobile() {
 		var viewport = document.querySelector('meta[name="viewport"]');
 
@@ -79,9 +96,12 @@ class PuzzleSolver extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		if (this.props.generatedTemplate !== prevProps.generatedTemplate 
+		if (this.props.generatedTemplate !== prevProps.generatedTemplate
 			|| this.props.background !== prevProps.background) {
 			this.startPuzzleSolver(this.props.generatedTemplate, this.props.background);
+		}
+		if (this.state.isDemo && !prevState.isDemo) {
+			this.startDemo();
 		}
 	}
 

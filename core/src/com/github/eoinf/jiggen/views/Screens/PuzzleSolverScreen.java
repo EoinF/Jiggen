@@ -53,7 +53,7 @@ public class PuzzleSolverScreen implements Screen {
         scales = new Vector2(1, 1);
 
         this.boundedCamera = new TouchControlledCamera(camera,
-                (int)viewport.getWorldWidth(), (int)viewport.getWorldHeight());
+                viewport.getScreenWidth(), viewport.getScreenHeight());
 
         initInputManager();
         Gdx.input.setInputProcessor(gameStage);
@@ -181,8 +181,8 @@ public class PuzzleSolverScreen implements Screen {
         pieceActors.clear();
 
         this.boundedCamera.setWorldBounds(
-                (int)Math.max(puzzleGraph.getWidth() * scales.x + WORLD_PADDING, viewport.getWorldWidth()),
-                (int)Math.max(puzzleGraph.getHeight() * scales.y + WORLD_PADDING, viewport.getWorldHeight())
+                (int)Math.max(puzzleGraph.getWidth() * scales.x + WORLD_PADDING, viewport.getScreenWidth()),
+                (int)Math.max(puzzleGraph.getHeight() * scales.y + WORLD_PADDING, viewport.getScreenHeight())
         );
 
         for (PuzzlePieceTemplate<TextureRegion> piece: puzzleGraph.getVertices().values()) {

@@ -68,8 +68,10 @@ public class Jiggen extends Game {
 	}
 
 	public void loadFromTemplate(FileHandle template) {
-		PuzzleGraphTemplate puzzle = PuzzleFactory.generateTexturePuzzleFromTemplate(new DecodedTemplate(new Texture(template)));
+		Texture tex = new Texture(template);
+		DecodedTemplate t = new DecodedTemplate(tex);
 
+		PuzzleGraphTemplate puzzle = PuzzleFactory.generateTexturePuzzleFromTemplate(t);
 		screen.setPuzzleGraph(puzzle, new Texture(utils.getRandomBackground()));
 	}
 
