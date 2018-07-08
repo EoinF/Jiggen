@@ -66,7 +66,9 @@ public class PuzzleSolverScreen implements Screen {
                 Vector3 mousePositionInScreen = boundedCamera.camera.project(mousePositionInWorld.cpy());
 
                 Actor a = gameStage.hit(mousePositionInWorld.x, mousePositionInWorld.y, true);
-                if (a != null) {
+
+                boundedCamera.setInitialPointer(mousePositionInScreen.x, mousePositionInScreen.y, pointer);
+                if (a != null && boundedCamera.isPinching()) {
                     int index = pieceActors.indexOf(a);
                     if (index >= 0) {
                         pieceHeld = pieceActors.get(index);
@@ -77,9 +79,6 @@ public class PuzzleSolverScreen implements Screen {
                         );
                         pieceHeld.toFront();
                     }
-                } else {
-                    // Only pan the camera when we havent picked up a piece
-                    boundedCamera.setInitialPointer(mousePositionInScreen.x, mousePositionInScreen.y, pointer);
                 }
                 return true;
             }
@@ -104,12 +103,14 @@ public class PuzzleSolverScreen implements Screen {
 
             @Override
             public void touchDragged(InputEvent event, float x, float y, int pointer) {
-                Vector3 mousePositionInWorld = new Vector3(x, y, 0);
-                Vector3 mousePositionInScreen = boundedCamera.camera.project(mousePositionInWorld);
+                if (pieceHeld != null) {
+                    Vector3 mousePositionInWorld = new Vector3(x, y, 0);
+                    Vector3 mousePositionInScreen = boundedCamera.camera.project(mousePositionInWorld);
 
-                boundedCamera.dragTo(mousePositionInScreen.x, mousePositionInScreen.y, pointer);
+                    boundedCamera.dragTo(mousePositionInScreen.x, mousePositionInScreen.y, pointer);
 
-                super.touchDragged(event, x, y, pointer);
+                    super.touchDragged(event, x, y, pointer);
+                }
             }
 
             @Override

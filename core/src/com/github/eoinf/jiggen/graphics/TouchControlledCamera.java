@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class TouchControlledCamera extends WorldBoundedCamera {
 
-    private static float ZOOM_MULTIPLIER = 0.0035f;
+    private static float ZOOM_MULTIPLIER = 0.005f;
 
     private float initialZoom;
     private Vector3 initialCameraPosition;
@@ -57,7 +57,7 @@ public class TouchControlledCamera extends WorldBoundedCamera {
                 float initialDistanceBetweenPivots = pointersInitialArray[0].dst(pointersInitialArray[1]);
                 float currentDistanceBetweenPivots = pointersCurrentArray[0].dst(pointersCurrentArray[1]);
 
-                float zoomChange = (currentDistanceBetweenPivots - initialDistanceBetweenPivots) * ZOOM_MULTIPLIER;
+                float zoomChange = (initialDistanceBetweenPivots - currentDistanceBetweenPivots) * ZOOM_MULTIPLIER;
                 setZoom(initialZoom + zoomChange);
             } else {
                 currentMode = TouchMode.PINCH;
@@ -72,6 +72,10 @@ public class TouchControlledCamera extends WorldBoundedCamera {
         if (pointersInitial.size() == 0) {
             currentMode = TouchMode.NONE;
         }
+    }
+
+    public boolean isPinching() {
+        return currentMode == TouchMode.PINCH;
     }
 
     enum TouchMode {
