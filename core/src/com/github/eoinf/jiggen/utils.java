@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.IntRectangle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -220,6 +221,13 @@ public abstract class utils {
         }
 
         return new Vector2(s1, s2);
+    }
+
+    public static boolean overlaps(IntRectangle rect1, IntRectangle rect2) {
+        return (rect1.x + rect1.width >= rect2.x
+                && rect1.x <= rect2.x + rect2.width
+                && rect1.y + rect1.height >= rect2.y
+                && rect1.y <= rect2.y + rect2.height);
     }
 
 }

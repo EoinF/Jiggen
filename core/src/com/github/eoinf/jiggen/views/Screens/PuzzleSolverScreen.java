@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleGraphTemplate;
@@ -20,6 +19,7 @@ import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzlePieceTemplate;
 import com.github.eoinf.jiggen.graphics.PuzzleOverlayBatch;
 import com.github.eoinf.jiggen.graphics.TextureOverlayImage;
 import com.github.eoinf.jiggen.graphics.TouchControlledCamera;
+import com.github.eoinf.jiggen.views.PuzzlePieceGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,17 +29,17 @@ import static com.github.eoinf.jiggen.utils.getMinimumScaleToFixAspectRatio;
 
 public class PuzzleSolverScreen implements Screen {
 
-    private static int WORLD_PADDING = 75;
+    private static int WORLD_PADDING = 150;
     private static float ZOOM_RATE = 0.1f;
 
     private TouchControlledCamera boundedCamera;
 
-    private Actor pieceHeld;
+    private PuzzlePieceGroup pieceGroupHeld;
     private Vector2 pieceOffsetHeld;
 
     private Stage gameStage;
     private PuzzleGraphTemplate puzzleGraph;
-    private List<Actor> pieceActors;
+    private List<PuzzlePieceGroup> pieceGroups;
 
     private ScreenViewport viewport;
     private Vector2 scales;
@@ -49,7 +49,7 @@ public class PuzzleSolverScreen implements Screen {
     public PuzzleSolverScreen(OrthographicCamera camera, PuzzleOverlayBatch batch) {
         viewport = new ScreenViewport(camera);
         gameStage = new Stage(viewport, batch);
-        pieceActors = new ArrayList<>();
+        pieceGroups = new ArrayList<>();
         scales = new Vector2(1, 1);
 
         this.boundedCamera = new TouchControlledCamera(camera,
@@ -67,34 +67,43 @@ public class PuzzleSolverScreen implements Screen {
 
                 Actor a = gameStage.hit(mousePositionInWorld.x, mousePositionInWorld.y, true);
 
-                boundedCamera.setInitialPointer(mousePositionInScreen.x, mousePositionInScreen.y, pointer);
-                if (a != null && boundedCamera.isPinching()) {
-                    int index = pieceActors.indexOf(a);
+                if (a != null && !boundedCamera.isTouching()) {
+                    int index = pieceGroups.indexOf(a);
                     if (index >= 0) {
-                        pieceHeld = pieceActors.get(index);
+                        pieceGroupHeld = pieceGroups.get(index);
 
                         pieceOffsetHeld = new Vector2(
-                                pieceHeld.getX() - mousePositionInWorld.x,
-                                pieceHeld.getY() - mousePositionInWorld.y
+                                pieceGroupHeld.getX() - mousePositionInWorld.x,
+                                pieceGroupHeld.getY() - mousePositionInWorld.y
                         );
-                        pieceHeld.toFront();
+                        pieceGroupHeld.toFront();
                     }
                 }
+                boundedCamera.setInitialPointer(mousePositionInScreen.x, mousePositionInScreen.y, pointer);
                 return true;
             }
 
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
                 boundedCamera.liftPivot(pointer);
-                pieceHeld = null;
+
+                if (pieceGroupHeld != null) {
+                    for (PuzzlePieceGroup otherPieceGroup : pieceGroups) {
+                        if (pieceGroupHeld != otherPieceGroup) {
+                            if (pieceGroupHeld.tryConnectTo(otherPieceGroup, scales, puzzleGraph)) {
+                                pieceGroups.remove(pieceGroupHeld);
+                                break;
+                            }
+                        }
+                    }
+                    pieceGroupHeld = null;
+                }
             }
 
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
                 if (keycode == Input.Keys.SPACE) {
                     shuffle();
-                } else if (keycode == Input.Keys.A) {
-                    autoSolve();
                 } else if (keycode == Input.Keys.T) {
                     boundedCamera.centreCamera();
                 }
@@ -103,7 +112,7 @@ public class PuzzleSolverScreen implements Screen {
 
             @Override
             public void touchDragged(InputEvent event, float x, float y, int pointer) {
-                if (pieceHeld != null) {
+                if (pieceGroupHeld == null) {
                     Vector3 mousePositionInWorld = new Vector3(x, y, 0);
                     Vector3 mousePositionInScreen = boundedCamera.camera.project(mousePositionInWorld);
 
@@ -128,10 +137,10 @@ public class PuzzleSolverScreen implements Screen {
 
     private void update(float delta) {
         boundedCamera.update();
-        if (pieceHeld != null) {
+        if (pieceGroupHeld != null) {
             Vector3 mousePositionInWorld = boundedCamera.camera.unproject(
                     new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
-            pieceHeld.setPosition(mousePositionInWorld.x + pieceOffsetHeld.x,
+            pieceGroupHeld.setPosition(mousePositionInWorld.x + pieceOffsetHeld.x,
                     mousePositionInWorld.y + pieceOffsetHeld.y);
         }
         gameStage.act();
@@ -176,10 +185,10 @@ public class PuzzleSolverScreen implements Screen {
         this.scales = getMinimumScaleToFixAspectRatio(puzzleGraph.getWidth(), puzzleGraph.getHeight(),
                 backgroundImage.getWidth(), backgroundImage.getHeight());
 
-        for (Actor piece : pieceActors) {
-            piece.remove();
+        for (Actor pieceGroup : pieceGroups) {
+            pieceGroup.remove();
         }
-        pieceActors.clear();
+        pieceGroups.clear();
 
         this.boundedCamera.setWorldBounds(
                 (int)Math.max(puzzleGraph.getWidth() * scales.x + WORLD_PADDING, viewport.getScreenWidth()),
@@ -210,38 +219,27 @@ public class PuzzleSolverScreen implements Screen {
         image.setOverlay(new TextureRegionDrawable(
                 new TextureRegion(backgroundImage, u, v, u2, v2)));
         image.setScale(this.scales.x, this.scales.y);
-        image.setPosition(centreX() + sX, centreY() + sY);
-        pieceActors.add(image);
-        gameStage.addActor(image);
-    }
 
-    public void autoSolve() {
-        for (Actor piece: pieceActors) {
-            MoveToAction moveToHome = new MoveToAction();
-            PuzzlePieceTemplate templatePiece = (PuzzlePieceTemplate)piece.getUserObject();
-            int homeX = centreX() + (int)(templatePiece.x() * scales.x);
-            int homeY = centreY() + (int)(templatePiece.y() * scales.y);
-            moveToHome.setX(homeX);
-            moveToHome.setY(homeY);
-            moveToHome.setDuration(3 * Vector2.dst(homeX, homeY, piece.getX(), piece.getY())
-                    / Math.max(boundedCamera.worldWidth(), boundedCamera.worldHeight()));
-            piece.addAction(moveToHome);
-        }
+        PuzzlePieceGroup pieceGroup = new PuzzlePieceGroup(image);
+        pieceGroup.setPosition(centreX() + sX, centreY() + sY);
+
+        pieceGroups.add(pieceGroup);
+        gameStage.addActor(pieceGroup);
     }
 
     public void shuffle() {
         Random random = new Random();
 
-        for (Actor piece: pieceActors) {
+        for (PuzzlePieceGroup group: pieceGroups) {
             float r1 = random.nextFloat();
             float r2 = random.nextFloat();
 
             int x = (int)(r1 * (boundedCamera.worldWidth() - puzzleGraph.getMaxPieceWidth() * scales.x));
             int y = (int)(r2 * (boundedCamera.worldHeight() - puzzleGraph.getMaxPieceHeight() * scales.y));
-            piece.setPosition(x, y);
+            group.setPosition(x, y);
 
             if (r1 + r2 > 1){
-                piece.toFront();
+                group.toFront();
             }
         }
     }

@@ -10,7 +10,11 @@ import com.github.eoinf.jiggen.PuzzleExtractor.Decoder.DecodedPiece;
 import com.github.eoinf.jiggen.PuzzleExtractor.Decoder.DecodedTemplate;
 import com.github.eoinf.jiggen.utils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
+
+import static com.github.eoinf.jiggen.utils.overlaps;
 
 public abstract class PuzzleFactory {
 
@@ -47,6 +51,24 @@ public abstract class PuzzleFactory {
             puzzleGraph.addVertex(
                 pieceTransformer.apply(generatedPiece)
             );
+        }
+
+        // Gather a list of vertices we've already checked
+        // so we don't end up adding edges ab and ba since they are identical
+        List<Integer> calculatedVertices = new ArrayList<>();
+
+        for (int p: puzzleGraph.getVertices().keySet()) {
+            PuzzlePieceTemplate pieceP = puzzleGraph.getVertex(p);
+
+            for (int q: puzzleGraph.getVertices().keySet()) {
+                if (p != q && !calculatedVertices.contains(q)) {
+                    PuzzlePieceTemplate pieceQ = puzzleGraph.getVertex(q);
+                    if (overlaps(pieceP.getPositionData(), pieceQ.getPositionData())) {
+                        puzzleGraph.addEdge(p, q);
+                    }
+                }
+            }
+            calculatedVertices.add(p);
         }
 
         return puzzleGraph;

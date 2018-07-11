@@ -37,7 +37,7 @@ public class PuzzlePieceTemplate<T> {
         this(positionData.x, positionData.y, positionData.width, positionData.height, textureData);
     }
 
-    IntRectangle getPositionData() {
+    public IntRectangle getPositionData() {
         return new IntRectangle(x, y, width, height);
     }
 }

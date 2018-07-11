@@ -74,8 +74,8 @@ public class TouchControlledCamera extends WorldBoundedCamera {
         }
     }
 
-    public boolean isPinching() {
-        return currentMode == TouchMode.PINCH;
+    public boolean isTouching() {
+        return pointersInitial.size() > 0;
     }
 
     enum TouchMode {
