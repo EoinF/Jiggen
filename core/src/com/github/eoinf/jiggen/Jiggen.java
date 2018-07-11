@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.github.eoinf.jiggen.PuzzleExtractor.Decoder.DecodedTemplate;
+import com.github.eoinf.jiggen.PuzzleExtractor.GraphEdge;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.IntRectangle;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleFactory;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleGraphTemplate;
@@ -75,8 +76,8 @@ public class Jiggen extends Game {
 		screen.setPuzzleGraph(puzzle, new Texture(utils.getRandomBackground()));
 	}
 
-	public void loadFromAtlas(FileHandle atlasFile, FileHandle atlasImageFolder, Map<Integer, IntRectangle> vertices,
-							  FileHandle backgroundFile) {
+	public void loadFromAtlas(FileHandle atlasFile, FileHandle atlasImageFolder, FileHandle backgroundFile,
+							  Map<Integer, IntRectangle> vertices, GraphEdge[] graphEdges) {
 		TextureAtlas atlas = null;
 		try {
 			atlas = new TextureAtlas(atlasFile, atlasImageFolder);
@@ -95,7 +96,11 @@ public class Jiggen extends Game {
 			PuzzlePieceTemplate piece = new PuzzlePieceTemplate<>(vertices.get(key), region);
 			graph.addVertex(piece);
 		}
+		for (GraphEdge edge: graphEdges) {
+			graph.addEdge(edge.v0, edge.v1);
+		}
 		screen.setPuzzleGraph(graph, new Texture(backgroundFile));
+		screen.shuffle();
 	}
 
 	private GridPoint2 getPuzzleSize(Map<Integer, IntRectangle> vertices) {

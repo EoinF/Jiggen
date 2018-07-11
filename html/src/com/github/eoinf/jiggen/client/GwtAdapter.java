@@ -8,6 +8,7 @@ import com.badlogic.gdx.backends.gwt.preloader.Preloader;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.github.eoinf.jiggen.Jiggen;
+import com.github.eoinf.jiggen.PuzzleExtractor.GraphEdge;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.IntRectangle;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -31,6 +32,7 @@ public class GwtAdapter {
 
         DynamicPreloader preloader = (DynamicPreloader) gdxApp.getPreloader();
         Map<Integer, IntRectangle> verticesMap = generatedTemplate.vertices.toMap();
+        GraphEdge[] graphEdges = generatedTemplate.edges.toArray();
 
         Array<Preloader.Asset> assets = new Array<>();
         assets.add(
@@ -63,7 +65,7 @@ public class GwtAdapter {
                         }
                     };
 
-                    gdxApp.postRunnable(() -> jiggen.loadFromAtlas(atlasFile, fakeDirectory, verticesMap, backgroundFile));
+                    gdxApp.postRunnable(() -> jiggen.loadFromAtlas(atlasFile, fakeDirectory, backgroundFile, verticesMap, graphEdges));
                 }
             }
         });
@@ -104,6 +106,7 @@ class GeneratedTemplate {
     String extension;
     HateosLinks links;
     GwtVerticesMap vertices;
+    GwtEdgesList edges;
 }
 
 @JsType(isNative = true)
@@ -148,10 +151,40 @@ class GwtVerticesMap extends JavaScriptObject {
     }
 }
 
+
+class GwtEdgesList extends JavaScriptObject {
+    protected GwtEdgesList() { }
+
+    public final native GwtGraphEdge get(int key) /*-{
+        return this[key];
+    }-*/;
+
+    public final native int length() /*-{
+        return this.length;
+    }-*/;
+
+    public final GraphEdge[] toArray() {
+        int length = this.length();
+
+        GraphEdge[] edges = new GraphEdge[length];
+        for (int i = 0; i < length; i++) {
+            GwtGraphEdge edge = this.get(i);
+            edges[i] = new GraphEdge(edge.v0, edge.v1);
+        }
+        return edges;
+    }
+}
+
 @JsType(isNative = true)
 class GwtRectangle {
     int x;
     int y;
     int width;
     int height;
+}
+
+@JsType(isNative = true)
+class GwtGraphEdge {
+    int v0;
+    int v1;
 }
