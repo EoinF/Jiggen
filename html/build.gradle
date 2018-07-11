@@ -53,7 +53,7 @@ task superDev(type: GwtSuperDev, dependsOn: [draftRun, compileReactDev]) {
     }
 }
 
-task dist(dependsOn: [clean, compileGwt, compileReactProd]) {
+task generateDist(dependsOn: [clean, compileGwt, compileReactProd]) {
     doLast {
         file("build/dist").mkdirs()
         copy {
@@ -63,7 +63,7 @@ task dist(dependsOn: [clean, compileGwt, compileReactProd]) {
         copy {
             from "webapp"
             into "build/dist"
-            }
+        }
         copy {
             from "war"
             into "build/dist"
@@ -73,6 +73,17 @@ task dist(dependsOn: [clean, compileGwt, compileReactProd]) {
             into "build/dist"
         }
     }
+}
+
+task dist(dependsOn: [generateDist]) {
+    doLast {
+        generateWar()
+    }
+}
+
+task generateWar(type: Exec) {
+    workingDir = 'build/dist'
+    commandLine 'cmd', '/c', 'jar cvf ../jiggen.war .'
 }
 
 draftWar {
