@@ -24,6 +24,9 @@
 
 .templateNameContainer {
 	line-height: 1.8em;
+	text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 @keyframes borderpulse {
