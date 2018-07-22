@@ -58,6 +58,7 @@ class PuzzleSolver extends Component {
 		document.body.classList.add('overflow-hidden');
 		
 		this.zoomOutMobile();
+		this.setFullScreen();
 	}
 
 	componentWillUnmount() {
@@ -92,6 +93,22 @@ class PuzzleSolver extends Component {
 
 		if (viewport) {
 			viewport.content = "initial-scale=1, width=device-width, minimum-scale=1, maximum-scale=1";
+		}
+	}
+
+	setFullScreen() {
+		const el = document.querySelector('canvas');
+
+		if (el) {
+			// for newer Webkit and Firefox
+			const rfs = el.requestFullscreen
+			|| el.webkitRequestFullscreen
+			|| el.mozRequestFullScreen
+			|| el.msRequestFullscreen;
+
+			if (typeof rfs != "undefined" && rfs) {
+				rfs.call(el);
+			}
 		}
 	}
 

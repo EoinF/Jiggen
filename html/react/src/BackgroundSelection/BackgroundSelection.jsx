@@ -5,6 +5,7 @@ import { JiggenHeader } from '../OverviewScreen';
 import PlainLink from '../utils/PlainLink';
 import CardContainer from '../utils/CardContainer';
 import SelectedBackgroundDisplay from './SelectedBackgroundDisplay';
+import ImageDisplayReel from './ImageDisplayReel';
 
 import { 
 	backgroundsActions
@@ -13,34 +14,50 @@ import {
 import './backgroundSelection.css';
 import logo from './WIP-icon.png';
 
-class BackgroundSelection extends Component { 
+class BackgroundSelection extends Component {
+	constructor(props) {
+		super(props);
+
+		this.state= {
+			suggestedInputs: JSON.parse(localStorage.getItem('suggestedInputs')) || []
+		};
+	}
+
 	render () {
 		const {
 			background,
 			onSelectBackground
 		} = this.props;
 
-		console.log(background);
+		const {
+			suggestedInputs
+		} = this.state;
 
 		return (
 			<div className="backgroundSelectionContainer">
-	            <PlainLink to={`/`} >
+	            <div>
+	            	<PlainLink to={`/`} >
 					<JiggenHeader>
 						<h1>
 							<span>{"◄ "}</span>
 							<span>Choose a Background</span>
 						</h1>
 					</JiggenHeader>
-				</PlainLink>
+					</PlainLink>
+				</div>
 				<div className="mainBackgroundContent">
 					<div className="backgroundTable">
-						<div>
+						<div className="backgroundCard">
 							<CardContainer className="cardContainer">
 								<SelectedBackgroundDisplay
 									onSelectBackground={onSelectBackground}
 									initialLink={background && background.links.image} />
 							</CardContainer>
 						</div>
+						<ImageDisplayReel
+							imageLinks={suggestedInputs} 
+							onSelectBackground={onSelectBackground}
+						/>
 					</div>
 				</div>
 			</div>

@@ -4,20 +4,20 @@ const onGwtLoadedPromise = new Promise((resolve, reject) => {
 	window.setGwtLoaded = resolve;
 });
 
-function resize() {
-	onGwtLoadedPromise.then(() => {
-	    const width = window.innerWidth || document.body.clientWidth;
-	    const height = window.innerHeight || document.body.clientHeight;
-		window.gwtAdapter.resize(width, height);
-	});
-}
+// function resize() {
+// 	onGwtLoadedPromise.then(() => {
+// 	    const width = window.innerWidth || document.body.clientWidth;
+// 	    const height = window.innerHeight || document.body.clientHeight;
+// 		window.gwtAdapter.resize(width, height);
+// 	});
+// }
 
-document.addEventListener("DOMContentLoaded", () => {
-	onGwtLoadedPromise.then(() => {
-		resize();
-		window.addEventListener('resize', resize, true);
-	});
-});
+// document.addEventListener("DOMContentLoaded", () => {
+// 	onGwtLoadedPromise.then(() => {
+// 		resize();
+// 		window.addEventListener('resize', resize, true);
+// 	});
+// });
 
 function startPuzzle(generatedTemplate, background) {
 	onGwtLoadedPromise.then(() => {

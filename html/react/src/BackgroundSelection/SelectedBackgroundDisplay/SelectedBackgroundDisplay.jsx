@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import { Subject } from 'rxjs';
 import { debounceTime, throttleTime, distinctUntilChanged } from 'rxjs/operators'
-
-import PlainLink from '../../utils/PlainLink';
 
 import './selectedBackgroundDisplay.css';
 
@@ -13,7 +12,8 @@ class SelectedBackgroundDisplay extends Component {
 		this.state = {
 			inputText: props.initialLink || '',
 			link: props.initialLink || '',
-			isValid: false
+			isValid: false,
+			isSubmitted: false
 		}
 	    this.onChangeLink$ = new Subject();
 	}
@@ -39,6 +39,26 @@ class SelectedBackgroundDisplay extends Component {
 		}
 	}
 
+	onSubmit = (e) => {
+		e.preventDefault();
+
+		if (this.state.isValid) {
+			let suggestedInputs = JSON.parse(localStorage.getItem('suggestedInputs'));
+			if (suggestedInputs === null) {
+				suggestedInputs = [];
+			}
+
+			console.log(this.state.link);
+			console.log({suggestedInputs});
+			if (!suggestedInputs.includes(this.state.link)) {
+				suggestedInputs.push(this.state.link);
+				localStorage.setItem('suggestedInputs', JSON.stringify(suggestedInputs));
+			}
+
+			this.setState({isSubmitted: true});
+		}
+	}
+
 	onChangeInputText = (e) => {
 		this.setState({inputText: e.target.value});
 	};
@@ -55,7 +75,14 @@ class SelectedBackgroundDisplay extends Component {
 	getImageElement = () => {
 		return (
 			<div className="imageContainer">
-				<img src={this.state.link} onLoad={this.onLoad} onError={this.onError} />
+				<button type="submit" className="imageButton">
+					<img
+						src={this.state.link}
+						onLoad={this.onLoad}
+						onError={this.onError}
+						alt="error loading background"
+					 />
+				 </button>
 			</div>
 		);
 	}
@@ -64,29 +91,32 @@ class SelectedBackgroundDisplay extends Component {
 		const {
 			inputText,
 			link,
-			isValid
-		 } = this.state;
+			isSubmitted
+		} = this.state;
 
-		 console.log(this.state);
-		return (
-			<div className="backgroundDisplay">
-				<div>
-					<input
-						value={inputText}
-						placeholder="Paste a link here"
-						onChange={this.onChangeInputText}
-					/>
-				</div>
-				{ link && !isValid && 
-					this.getImageElement()
-				}
-				{ link && isValid && (
-					<PlainLink to={`/`}>
-						{this.getImageElement()}
-					</PlainLink>
-				)}
-			</div>
-		);
+		if (isSubmitted) {
+			return (<Redirect to="/" />)
+		} else {
+			return (
+				<form
+					className="backgroundDisplay" 
+					onSubmit={this.onSubmit}
+				>
+					<div>
+						<input
+							value={inputText}
+							placeholder="Paste a link here"
+							onChange={this.onChangeInputText}
+							name="background"
+							type="text"
+						/>
+					</div>
+					{ link && (
+						this.getImageElement()
+					)}
+				</form>
+			);
+		}
 	}
 }
 

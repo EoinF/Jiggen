@@ -1,0 +1,24 @@
+
+.imageDisplayReel {
+	display: flex;
+	flex-flow: row wrap;
+
+	@media (min-width: 768px) {
+		display: grid;
+		grid-template-columns: 33% 33% 33%;
+	}
+
+	width: 100%;
+	
+	list-style-type: none;
+	padding: 0;
+	margin: auto;
+
+
+	img {
+		max-width: 100%;
+	}
+	a {
+		display: grid;
+	}
+}

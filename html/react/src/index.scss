@@ -1,11 +1,15 @@
 @import './theming.scss';
 
+#react-root {
+	background: $theme_b1;
+}
+
 body {
+	background: black;
 	color: $theme_f0;
 	margin: 0;
 	padding: 0;
 	font-family: sans-serif;
-	background: $theme_b1;
 
 
 	font-size: 20px;
@@ -23,11 +27,6 @@ body, html, #react-root {
     width: 100%;
 	height: 100%;
 	margin: 0;
-	-webkit-box-sizing: border-box;  /* Safari/Chrome, other WebKit */
-	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
-	* {
-		box-sizing: border-box;
-	}
 }
 
 .overflow-hidden {

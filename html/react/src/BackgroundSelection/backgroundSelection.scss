@@ -4,7 +4,7 @@
   	width: 100%;
 	min-height: 100%;
 	display: flex;
-	flex-flow: column wrap;
+	flex-flow: column nowrap;
 }
 
 .mainBackgroundContent {
@@ -13,21 +13,8 @@
 }
 
 .backgroundTable {
-	flex: 1 1 auto;
-	display: flex;
 	width: 100%;
-	flex-wrap: wrap;
 	padding: 1.5rem;
-
-	.cardContainer {
-		>* {
-			padding-top: 0.2rem;
-		}
-
-		.logoContainer {
-			margin-top: 1rem;
-		}
-	}
 
 	@media(max-width: 768px) {
 		@media (orientation: portrait) {
@@ -35,36 +22,23 @@
 			align-items: flex-start;
 			> * {
 		        flex: 0 0 100%;
-				height: 50%;
-			}
-		}
-
-		@media(orientation: landscape) {
-			align-items: flex-start;
-			> * {
-		        flex: 0 0 100%;
-			}
-
-			.cardContainer {
-				margin: auto;
-				max-width: 20rem;
 			}
 		}
 	}
 
 	@media(min-width: 768px) {
-		flex-direction: column;
 		min-height: 100%;
-		> * {
-			flex: 0 0 50%;
-			height: 50%;
+	}
+
+	.backgroundCard {
+		width: 100%;
+		padding-bottom: 3px;
+	}
+	.cardContainer {
+		width: 100%;
+		@media(min-width: 768px) {
+			width: 30rem;
 		}
-	
-		.cardContainer {
-			margin: auto;
-			min-width: 20rem;
-			min-height: 10rem;
-			max-width: 30rem;
-		}
+		margin: auto;
 	}
 }

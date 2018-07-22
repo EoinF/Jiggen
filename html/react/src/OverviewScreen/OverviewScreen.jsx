@@ -12,7 +12,9 @@ import PuzzleLauncher from './PuzzleLauncher';
 class OverviewScreen extends Component {
 
   componentDidMount() {
-    const { selectedTemplate} = this.props;
+    const { 
+      selectedTemplate
+    } = this.props;
     if (selectedTemplate) {
       this.props.fetchGeneratedTemplatesByLink(selectedTemplate.links.generatedTemplates);
     }
