@@ -75,13 +75,7 @@ task generateDist(dependsOn: [clean, compileGwt, compileReactProd]) {
     }
 }
 
-task dist(dependsOn: [generateDist]) {
-    doLast {
-        generateWar()
-    }
-}
-
-task generateWar(type: Exec) {
+task dist(type: Exec, dependsOn: [generateDist]) {
     workingDir = 'build/dist'
     commandLine 'cmd', '/c', 'jar cvf ../jiggen.war .'
 }

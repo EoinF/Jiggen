@@ -238,7 +238,7 @@ public class PuzzleSolverScreen implements Screen {
             int y = (int)(r2 * (boundedCamera.worldHeight() - puzzleGraph.getMaxPieceHeight() * scales.y));
             group.setPosition(x, y);
 
-            if (r1 + r2 > 1){
+            if (r1 + r2 > 1) {
                 group.toFront();
             }
         }
