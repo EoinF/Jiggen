@@ -80,6 +80,7 @@ class SelectedBackgroundDisplay extends Component {
 						src={this.state.link}
 						onLoad={this.onLoad}
 						onError={this.onError}
+						crossOrigin=""
 						alt="error loading background"
 					 />
 				 </button>
