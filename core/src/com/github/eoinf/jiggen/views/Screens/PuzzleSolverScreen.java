@@ -19,7 +19,7 @@ import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleGraphTemplate;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzlePieceTemplate;
 import com.github.eoinf.jiggen.graphics.PuzzleOverlayBatch;
 import com.github.eoinf.jiggen.graphics.TextureOverlayImage;
-import com.github.eoinf.jiggen.graphics.TouchControlledCamera;
+import com.github.eoinf.jiggen.graphics.WorldBoundedCamera;
 import com.github.eoinf.jiggen.views.PuzzleGestureListener;
 import com.github.eoinf.jiggen.views.PuzzlePieceGroup;
 import io.reactivex.functions.Consumer;
@@ -31,7 +31,7 @@ public class PuzzleSolverScreen implements Screen {
     private static int WORLD_PADDING = 50;
     private static float ZOOM_RATE = 0.1f;
 
-    private TouchControlledCamera boundedCamera;
+    private WorldBoundedCamera boundedCamera;
 
     private Stage gameStage;
     private PuzzleGraphTemplate puzzleGraph;
@@ -49,7 +49,7 @@ public class PuzzleSolverScreen implements Screen {
         gameStage = new Stage(viewport, batch);
         this.batch = batch;
 
-        this.boundedCamera = new TouchControlledCamera(camera);
+        this.boundedCamera = new WorldBoundedCamera(camera);
 
         this.puzzleViewModel = new PuzzleViewModel();
         this.puzzleView = new PuzzleView(puzzleViewModel);
