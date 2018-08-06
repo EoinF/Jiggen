@@ -26,6 +26,8 @@ allprojects {
         ashleyVersion = '1.7.0'
         aiVersion = '1.8.1'
 
+        rxJavaVersion = '2.1.17'
+
         junitPlatformVersion = '1.0.2'
         junitJupiterVersion  = '5.0.2'
         log4jVersion         = '2.9.0'
@@ -100,6 +102,8 @@ project(":core") {
 
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+
+        compile "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
 
         // JUnit Jupiter API and TestEngine implementation
         testCompile("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")

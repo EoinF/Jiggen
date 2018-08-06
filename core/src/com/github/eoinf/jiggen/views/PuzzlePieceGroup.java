@@ -78,6 +78,13 @@ public class PuzzlePieceGroup extends Group {
     }
 
     @Override
+    public void setScale(float x, float y) {
+        for (Actor item : this.getChildren()) {
+            item.setScale(x, y);
+        }
+    }
+
+    @Override
     public void setPosition(float x, float y) {
         float deltaX = x - this.internalPosition.x;
         float deltaY = y - this.internalPosition.y;

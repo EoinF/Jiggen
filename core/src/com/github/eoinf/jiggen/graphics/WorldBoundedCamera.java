@@ -4,26 +4,50 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 
 public class WorldBoundedCamera {
     public OrthographicCamera camera;
-    private int worldWidth;
-    private int worldHeight;
 
     private static float minZoom = 0.5f;
 
-    public WorldBoundedCamera(OrthographicCamera camera, int worldWidth, int worldHeight) {
-        this.camera = camera;
-        this.worldWidth = worldWidth;
-        this.worldHeight = worldHeight;
-    }
+    private float worldWidth;
+    private float worldHeight;
+    private float maxZoom;
 
-    public void setWorldBounds(int worldWidth, int worldHeight) {
-        this.worldWidth = worldWidth;
-        this.worldHeight = worldHeight;
+
+    public WorldBoundedCamera(OrthographicCamera camera) {
+        this.camera = camera;
     }
 
     public void update() {
-        setX(camera.position.x);
-        setY(camera.position.y);
+        adjustPositionToWorldBounds();
+        adjustZoomToWorldBounds();
         camera.update();
+    }
+
+    private void adjustZoomToWorldBounds() {
+        if (camera.zoom > maxZoom) {
+            setZoom(maxZoom);
+        } else if (camera.zoom < minZoom) {
+            setZoom(minZoom);
+        }
+    }
+
+    private void adjustPositionToWorldBounds() {
+        float x = x();
+        float y = y();
+        float minX = (this.camera.zoom * this.camera.viewportWidth / 2f);
+        float maxX = worldWidth - minX;
+        float minY = (this.camera.zoom * this.camera.viewportHeight / 2f);
+        float maxY = worldHeight - minY;
+
+        if (x > maxX) {
+            this.setX(maxX);
+        } else if (x < minX) {
+            this.setX(minX);
+        }
+        if (y > maxY) {
+            this.setY(maxY);
+        } else if (y < minY) {
+            this.setY(minY);
+        }
     }
 
     public float x() {
@@ -34,62 +58,30 @@ public class WorldBoundedCamera {
         return camera.position.y;
     }
 
-    protected void setX(float x) {
-        float halfCameraCoverageX = camera.zoom * camera.viewportWidth / 2;
-        float minX = Math.min(worldWidth / 2, halfCameraCoverageX);
-        float maxX = worldWidth - minX;
+    public void setCameraBounds(float worldWidth, float worldHeight, float maxZoom) {
+        this.worldWidth = worldWidth;
+        this.worldHeight = worldHeight;
+        this.maxZoom = maxZoom;
+    }
 
-        if (x > maxX) {
-            x = maxX;
-        }
-        else if (x < minX){
-            x = minX;
-        }
+    public void setX(float x) {
         camera.position.x = x;
     }
 
-    protected void setY(float y) {
-        float cameraCoverageY = camera.zoom * camera.viewportHeight / 2;
-        float minY = Math.min(worldHeight / 2, cameraCoverageY);
-        float maxY = worldHeight - minY;
-
-        if (y > maxY) {
-            y = maxY;
-        }
-        else if (y < minY){
-            y = minY;
-        }
-
+    public void setY(float y) {
         camera.position.y = y;
-    }
-
-    public int worldWidth() {
-        return worldWidth;
-    }
-
-    public int worldHeight() {
-        return worldHeight;
-    }
-
-    public void centreCamera() {
-        this.camera.position.x = this.worldWidth / 2.0f;
-        this.camera.position.y = this.worldHeight / 2.0f;
     }
 
     public void zoomBy(float zoomDelta) {
         setZoom(camera.zoom + zoomDelta);
     }
 
-    void setZoom(float newZoom) {
-        float maxZoomX = worldWidth / camera.viewportWidth;
-        float maxZoomY = worldHeight / camera.viewportHeight;
-        float maxZoom = Math.max(maxZoomX, maxZoomY);
+    public void translate(float deltaX, float deltaY) {
+        this.camera.translate(deltaX, deltaY);
+    }
 
+    void setZoom(float newZoom) {
         newZoom = Math.min(maxZoom, newZoom);
         camera.zoom = Math.max(minZoom, newZoom);
-
-        // Refresh the camera position based on the new zoom
-        setX(camera.position.x);
-        setY(camera.position.y);
     }
 }

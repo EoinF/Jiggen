@@ -93,7 +93,7 @@ public class Jiggen extends Game {
 		PuzzleGraphTemplate graph = new PuzzleGraphTemplate(puzzleSize.x, puzzleSize.y);
 		for (Integer key: vertices.keySet()) {
 			TextureRegion region = atlas.findRegion(key.toString());
-			PuzzlePieceTemplate piece = new PuzzlePieceTemplate<>(vertices.get(key), region);
+			PuzzlePieceTemplate piece = new PuzzlePieceTemplate(vertices.get(key), region);
 			graph.addVertex(piece);
 		}
 		for (GraphEdge edge: graphEdges) {
@@ -117,7 +117,6 @@ public class Jiggen extends Game {
 		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		batch.setProjectionMatrix(camera.combined);
 		super.render();
 	}
 	
