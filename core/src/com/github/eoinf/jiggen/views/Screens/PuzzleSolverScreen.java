@@ -1,93 +1,67 @@
 package com.github.eoinf.jiggen.views.Screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleGraphTemplate;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzlePieceTemplate;
 import com.github.eoinf.jiggen.graphics.PuzzleOverlayBatch;
 import com.github.eoinf.jiggen.graphics.TextureOverlayImage;
 import com.github.eoinf.jiggen.graphics.WorldBoundedCamera;
-import com.github.eoinf.jiggen.views.PuzzleGestureListener;
 import com.github.eoinf.jiggen.views.PuzzlePieceGroup;
-import io.reactivex.functions.Consumer;
+
+import java.util.function.Consumer;
 
 import static com.github.eoinf.jiggen.utils.getMinimumScaleToFixAspectRatio;
 
 public class PuzzleSolverScreen implements Screen {
 
-    private static int WORLD_PADDING = 50;
-    private static float ZOOM_RATE = 0.1f;
-
-    private WorldBoundedCamera boundedCamera;
-
-    private Stage gameStage;
     private PuzzleGraphTemplate puzzleGraph;
-
-    private ScreenViewport viewport;
+    private Viewport viewport;
+    private Viewport viewportHUD;
 
     private Texture backgroundImage;
-    private Batch batch;
 
     private PuzzleViewModel puzzleViewModel;
     private PuzzleView puzzleView;
+    private PuzzleToolbar toolbar;
 
-    public PuzzleSolverScreen(final OrthographicCamera camera, PuzzleOverlayBatch batch) {
+    private static final float DEFAULT_VIEWPORT_WIDTH = 320;
+    private static final float DEFAULT_VIEWPORT_HEIGHT = 240;
+
+    public PuzzleSolverScreen(PuzzleOverlayBatch batch, TextureAtlas uiTextureAtlas, Skin skin) {
+
+        WorldBoundedCamera camera = new WorldBoundedCamera();
+        camera.setToOrtho(false, DEFAULT_VIEWPORT_WIDTH, DEFAULT_VIEWPORT_HEIGHT);
+
         viewport = new ScreenViewport(camera);
-        gameStage = new Stage(viewport, batch);
-        this.batch = batch;
-
-        this.boundedCamera = new WorldBoundedCamera(camera);
+        viewportHUD = new ScreenViewport();
 
         this.puzzleViewModel = new PuzzleViewModel();
-        this.puzzleView = new PuzzleView(puzzleViewModel);
+        this.puzzleView = new PuzzleView(puzzleViewModel, camera, viewport, batch, skin);
+        this.toolbar = new PuzzleToolbar(viewportHUD, uiTextureAtlas, puzzleViewModel);
 
-        gameStage.addActor(puzzleView);
-        gameStage.addListener(new PuzzleGestureListener(gameStage, puzzleViewModel, boundedCamera));
-        gameStage.addListener(new InputListener() {
+        this.puzzleViewModel.getFullScreenObservable().subscribe(new Consumer<Boolean>() {
             @Override
-            public boolean keyDown(InputEvent event, int keycode) {
-                if (keycode == Input.Keys.SPACE) {
-                    shuffle();
-                } else if (keycode == Input.Keys.T) {
-//                    puzzleViewModel.centreCamera();
-//                    boundedCamera.setX(worldWidth / 2);
-//                    boundedCamera.setY(worldHeight / 2);
-                }
-                return super.keyDown(event, keycode);
-            }
-
-            @Override
-            public boolean scrolled(InputEvent event, float x, float y, int scrollDirection) {
-                boundedCamera.zoomBy(scrollDirection * ZOOM_RATE);
-                return super.scrolled(event, x, y, scrollDirection);
+            public void accept(Boolean aBoolean) {
+                Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayModes()[0]);
             }
         });
 
-        puzzleViewModel.getWorldBoundsObservable().subscribe(new Consumer<GridPoint2>() {
-            @Override
-            public void accept(GridPoint2 worldBounds) {
-                float maxZoomX = worldBounds.x / camera.viewportWidth;
-                float maxZoomY = worldBounds.y / camera.viewportHeight;
-
-                float maxZoom = Math.min(maxZoomX, maxZoomY);
-                boundedCamera.setCameraBounds(worldBounds.x, worldBounds.y, maxZoom);
-            }
-        });
-
-        Gdx.input.setInputProcessor(gameStage);
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(toolbar.stage);
+        multiplexer.addProcessor(puzzleView.stage);
+        multiplexer.addProcessor(puzzleView.getGestureDetector());
+        Gdx.input.setInputProcessor(multiplexer);
     }
 
     @Override
@@ -96,26 +70,23 @@ public class PuzzleSolverScreen implements Screen {
     }
 
     private void update(float delta) {
-        boundedCamera.update();
-
-        Vector3 mousePositionInWorld = boundedCamera.camera.unproject(
-                new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
-        puzzleViewModel.setMousePosition(mousePositionInWorld);
-
-        gameStage.act();
+        puzzleView.update();
+        toolbar.update();
     }
 
     @Override
     public void render(float delta) {
         update(delta);
-
-        batch.setProjectionMatrix(boundedCamera.camera.combined);
-        gameStage.draw();
+        puzzleView.draw();
+        toolbar.draw();
     }
 
     @Override
     public void resize(int width, int height) {
-        viewport.update(width, height, true);
+        viewport.update(width, height);
+        viewportHUD.update(width, height, true);
+
+        puzzleViewModel.setViewportSize(width, height);
     }
 
     @Override
@@ -135,7 +106,8 @@ public class PuzzleSolverScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        backgroundImage.dispose();
+        toolbar.dispose();
     }
 
     public void setPuzzleGraph(PuzzleGraphTemplate puzzleGraphTemplate, Texture backgroundImage) {
@@ -149,17 +121,19 @@ public class PuzzleSolverScreen implements Screen {
                 backgroundImage.getWidth(), backgroundImage.getHeight());
 
         puzzleViewModel.setScales(scales);
+        puzzleViewModel.setViewportSize(viewport.getScreenWidth(), viewport.getScreenHeight());
 
-        int worldWidth = (int) Math.max(puzzleGraphTemplate.getWidth() * scales.x, viewport.getScreenWidth());
-        int worldHeight = (int) Math.max(puzzleGraphTemplate.getHeight() * scales.y, viewport.getScreenHeight());
+        puzzleViewModel.getWorldBoundsObservable().subscribe(new Consumer<GridPoint2>() {
+            @Override
+            public void accept(GridPoint2 worldBounds) {
+                // Only accept the first element
+                puzzleViewModel.getWorldBoundsObservable().unsubscribe(this);
 
-        worldHeight = worldWidth = Math.max(worldWidth, worldHeight) + WORLD_PADDING;
-
-        puzzleViewModel.setWorldBounds(new GridPoint2(worldWidth, worldHeight));
-
-        for (PuzzlePieceTemplate<TextureRegion> piece : puzzleGraphTemplate.getVertices().values()) {
-            addNewPiece(piece, scales, worldWidth, worldHeight);
-        }
+                for (PuzzlePieceTemplate<TextureRegion> piece : puzzleGraphTemplate.getVertices().values()) {
+                    addNewPiece(piece, scales, worldBounds.x, worldBounds.y);
+                }
+            }
+        });
     }
 
     private void addNewPiece(PuzzlePieceTemplate<TextureRegion> piece, Vector2 scales, float worldWidth, float worldHeight) {
@@ -184,7 +158,7 @@ public class PuzzleSolverScreen implements Screen {
                 new TextureRegion(backgroundImage, u, v, u2, v2)));
 
         PuzzlePieceGroup pieceGroup = new PuzzlePieceGroup(image);
-        pieceGroup.setPosition(centreX(worldWidth , scales.x) + sX, centreY(worldHeight, scales.y) + sY);
+        pieceGroup.setPosition(centreX(worldWidth, scales.x) + sX, centreY(worldHeight, scales.y) + sY);
         pieceGroup.setScale(scales.x, scales.y);
 
         puzzleViewModel.addPiece(pieceGroup);

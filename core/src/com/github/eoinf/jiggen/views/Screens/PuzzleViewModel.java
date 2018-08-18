@@ -5,9 +5,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleGraphTemplate;
 import com.github.eoinf.jiggen.views.PuzzlePieceGroup;
-import io.reactivex.Observable;
-import io.reactivex.subjects.ReplaySubject;
-import io.reactivex.subjects.Subject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,14 +12,17 @@ import java.util.Random;
 
 public class PuzzleViewModel {
 
+    private static final int WORLD_PADDING = 50;
+
     private PuzzleGraphTemplate puzzleGraphTemplate;
     private List<PuzzlePieceGroup> puzzlePieceGroups;
 
-    private Subject<PuzzlePieceGroup> puzzlePieceAddedSubject;
-    private Subject<PuzzlePieceGroup> puzzlePieceRemovedSubject;
-    private ReplaySubject<HeldPuzzlePiece> heldPuzzlePieceSubject;
-    private ReplaySubject<Vector2> scalesSubject;
-    private ReplaySubject<GridPoint2> worldBoundsSubject;
+    private SimpleSubject<PuzzlePieceGroup> puzzlePieceAddedSubject;
+    private SimpleSubject<PuzzlePieceGroup> puzzlePieceRemovedSubject;
+    private SimpleSubject<HeldPuzzlePiece> heldPuzzlePieceSubject;
+    private SimpleSubject<Vector2> scalesSubject;
+    private SimpleSubject<GridPoint2> worldBoundsSubject;
+    private SimpleSubject<Boolean> fullScreenSubject;
 
     //
     // On puzzle scales changed
@@ -30,7 +30,8 @@ public class PuzzleViewModel {
     public void setScales(Vector2 scales) {
         this.scalesSubject.onNext(scales);
     }
-    public Observable<Vector2> getScalesObservable() {
+
+    public SimpleObservable getScalesObservable() {
         return this.scalesSubject;
     }
 
@@ -38,9 +39,14 @@ public class PuzzleViewModel {
     // On world bounds changed
     //
     public void setWorldBounds(GridPoint2 worldBounds) {
-        this.worldBoundsSubject.onNext(worldBounds);
+        GridPoint2 oldWorldBounds = worldBoundsSubject.getValue();
+        this.worldBoundsSubject.onNext(new GridPoint2(
+                Math.max(worldBounds.x, oldWorldBounds.x),
+                Math.max(worldBounds.y, oldWorldBounds.y))
+        );
     }
-    public Observable<GridPoint2> getWorldBoundsObservable() {
+
+    public SimpleObservable<GridPoint2> getWorldBoundsObservable() {
         return this.worldBoundsSubject;
     }
 
@@ -48,7 +54,7 @@ public class PuzzleViewModel {
     //
     //  On Puzzle Piece Added
     //
-    public Observable<PuzzlePieceGroup> getPuzzlePieceAddedObservable() {
+    public SimpleObservable<PuzzlePieceGroup> getPuzzlePieceAddedObservable() {
         return puzzlePieceAddedSubject;
     }
 
@@ -60,7 +66,7 @@ public class PuzzleViewModel {
     //
     //  Held puzzle piece
     //
-    public Observable<HeldPuzzlePiece> getHeldPieceObservable() {
+    public SimpleObservable<HeldPuzzlePiece> getHeldPieceObservable() {
         return heldPuzzlePieceSubject;
     }
 
@@ -68,7 +74,7 @@ public class PuzzleViewModel {
         heldPuzzlePieceSubject.onNext(new HeldPuzzlePiece(pieceGroup, mouseOffset));
     }
 
-    public void dropPiece(Vector2 positionDropped) {
+    public void dropPiece(float x, float y) {
         HeldPuzzlePiece heldPuzzlePiece = heldPuzzlePieceSubject.getValue();
         if (heldPuzzlePiece != HeldPuzzlePiece.NONE) {
             PuzzlePieceGroup pieceGroupHeld = heldPuzzlePiece.getPieceGroup();
@@ -81,8 +87,8 @@ public class PuzzleViewModel {
                 }
             }
 
-            Vector2 newPosition = fitInWorldBounds(new Vector2(positionDropped.x + heldPuzzlePiece.getOffset().x,
-                    positionDropped.y + heldPuzzlePiece.getOffset().y),
+            Vector2 newPosition = fitInWorldBounds(new Vector2(x + heldPuzzlePiece.getOffset().x,
+                            y + heldPuzzlePiece.getOffset().y),
                     pieceGroupHeld.getWidth(), pieceGroupHeld.getHeight());
 
             pieceGroupHeld.setPosition(newPosition.x, newPosition.y);
@@ -97,21 +103,39 @@ public class PuzzleViewModel {
     //
     // On Puzzle Piece removed
     //
-    public Observable<PuzzlePieceGroup> getRemovedPieceObservable() {
+    public SimpleObservable<PuzzlePieceGroup> getRemovedPieceObservable() {
         return puzzlePieceRemovedSubject;
     }
 
+
+    //
+    // On set full screen
+    //
+    public SimpleObservable<Boolean> getFullScreenObservable() {
+        return fullScreenSubject;
+    }
+
+    public void setFullScreen(boolean isFullScreen) {
+        fullScreenSubject.onNext(isFullScreen);
+    }
+
+
+    //
+    // Constructor
+    //
     public PuzzleViewModel() {
-        puzzlePieceAddedSubject = ReplaySubject.create();
-        puzzlePieceRemovedSubject = ReplaySubject.create();
-        heldPuzzlePieceSubject = ReplaySubject.createWithSize(1);
-        scalesSubject = ReplaySubject.createWithSize(1);
-        worldBoundsSubject = ReplaySubject.createWithSize(1);
+        puzzlePieceAddedSubject = SimpleSubject.create();
+        puzzlePieceRemovedSubject = SimpleSubject.create();
+        heldPuzzlePieceSubject = SimpleSubject.create();
+        scalesSubject = SimpleSubject.create();
+        worldBoundsSubject = SimpleSubject.createDefault(new GridPoint2());
+        fullScreenSubject = SimpleSubject.create();
 
         heldPuzzlePieceSubject.onNext(HeldPuzzlePiece.NONE);
 
         puzzlePieceGroups = new ArrayList<>();
     }
+
 
     public void setPuzzleGraphTemplate(PuzzleGraphTemplate template) {
         this.puzzleGraphTemplate = template;
@@ -129,16 +153,27 @@ public class PuzzleViewModel {
         puzzlePieceGroups.clear();
     }
 
+    public void setViewportSize(int viewportWidth, int viewportHeight) {
+        Vector2 scales = scalesSubject.getValue();
+        if (scales != null && puzzleGraphTemplate != null) {
+            int worldWidth = (int) Math.max(puzzleGraphTemplate.getWidth() * scales.x, viewportWidth);
+            int worldHeight = (int) Math.max(puzzleGraphTemplate.getHeight() * scales.y, viewportHeight);
+
+            worldHeight = worldWidth = Math.max(worldWidth, worldHeight) + WORLD_PADDING;
+            setWorldBounds(new GridPoint2(worldWidth, worldHeight));
+        }
+    }
+
     public void shuffle() {
         Random random = new Random();
         GridPoint2 worldBounds = worldBoundsSubject.getValue();
 
-        for (PuzzlePieceGroup group: puzzlePieceGroups) {
+        for (PuzzlePieceGroup group : puzzlePieceGroups) {
             float r1 = random.nextFloat();
-            float r2 = 0; //random.nextFloat();
+            float r2 = random.nextFloat();
 
-            int x = (int)(r1 * (worldBounds.x - group.getWidth()));
-            int y = (int)(r2 * (worldBounds.y - group.getHeight()));
+            int x = (int) (r1 * (worldBounds.x - group.getWidth()));
+            int y = (int) (r2 * (worldBounds.y - group.getHeight()));
             group.setPosition(x, y);
 
             if (r1 + r2 > 1) {

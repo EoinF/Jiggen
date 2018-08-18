@@ -2,30 +2,24 @@ package com.github.eoinf.jiggen.graphics;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
-public class WorldBoundedCamera {
-    public OrthographicCamera camera;
-
+public class WorldBoundedCamera extends OrthographicCamera {
     private static float minZoom = 0.5f;
 
     private float worldWidth;
     private float worldHeight;
     private float maxZoom;
 
-
-    public WorldBoundedCamera(OrthographicCamera camera) {
-        this.camera = camera;
-    }
-
+    @Override
     public void update() {
         adjustPositionToWorldBounds();
         adjustZoomToWorldBounds();
-        camera.update();
+        super.update();
     }
 
     private void adjustZoomToWorldBounds() {
-        if (camera.zoom > maxZoom) {
+        if (zoom > maxZoom) {
             setZoom(maxZoom);
-        } else if (camera.zoom < minZoom) {
+        } else if (zoom < minZoom) {
             setZoom(minZoom);
         }
     }
@@ -33,9 +27,9 @@ public class WorldBoundedCamera {
     private void adjustPositionToWorldBounds() {
         float x = x();
         float y = y();
-        float minX = (this.camera.zoom * this.camera.viewportWidth / 2f);
+        float minX = (this.zoom * this.viewportWidth / 2f);
         float maxX = worldWidth - minX;
-        float minY = (this.camera.zoom * this.camera.viewportHeight / 2f);
+        float minY = (this.zoom * this.viewportHeight / 2f);
         float maxY = worldHeight - minY;
 
         if (x > maxX) {
@@ -51,11 +45,11 @@ public class WorldBoundedCamera {
     }
 
     public float x() {
-        return camera.position.x;
+        return this.position.x;
     }
 
     public float y() {
-        return camera.position.y;
+        return this.position.y;
     }
 
     public void setCameraBounds(float worldWidth, float worldHeight, float maxZoom) {
@@ -65,23 +59,25 @@ public class WorldBoundedCamera {
     }
 
     public void setX(float x) {
-        camera.position.x = x;
+        this.position.x = x;
     }
 
     public void setY(float y) {
-        camera.position.y = y;
+        this.position.y = y;
     }
 
     public void zoomBy(float zoomDelta) {
-        setZoom(camera.zoom + zoomDelta);
-    }
-
-    public void translate(float deltaX, float deltaY) {
-        this.camera.translate(deltaX, deltaY);
+        setZoom(this.zoom + zoomDelta);
     }
 
     void setZoom(float newZoom) {
         newZoom = Math.min(maxZoom, newZoom);
-        camera.zoom = Math.max(minZoom, newZoom);
+        this.zoom = Math.max(minZoom, newZoom);
+    }
+
+    @Override
+    public void translate(float x, float y) {
+        final float MOVE_SPEED = 0.5f;
+        super.translate(x * MOVE_SPEED, y * MOVE_SPEED);
     }
 }

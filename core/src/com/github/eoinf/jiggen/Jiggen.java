@@ -4,7 +4,6 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -25,14 +24,11 @@ import java.util.Map;
 
 public class Jiggen extends Game {
 
-	public PuzzleOverlayBatch batch;
-	public Skin skin;
-	public OrthographicCamera camera;
-	public PuzzleSolverScreen screen;
+    private PuzzleOverlayBatch batch;
+	private Skin skin;
+	private PuzzleSolverScreen screen;
+    private TextureAtlas atlas = null;
 	private ShaderProgram shader;
-
-	public static final int VIEWPORT_WIDTH = 320;
-	public static final int VIEWPORT_HEIGHT = 240;
 
 	@Override
 	public void create () {
@@ -41,10 +37,9 @@ public class Jiggen extends Game {
 		FileHandle f = Gdx.files.internal("skin/Holo-dark-hdpi.json");
 		skin = new Skin(f);
 
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+		TextureAtlas uiTextureAtlas = new TextureAtlas("ui/ui.atlas");
 
-		screen = new PuzzleSolverScreen(camera, batch);
+		screen = new PuzzleSolverScreen(batch, uiTextureAtlas, skin);
 		setScreen(screen);
 	}
 
@@ -53,7 +48,7 @@ public class Jiggen extends Game {
 		FileHandle fragSrc = Gdx.files.internal("shaders/puzzle.frag");
 		ShaderProgram prog = new ShaderProgram(vertSrc, fragSrc);
 		if (!prog.isCompiled())
-			throw new GdxRuntimeException("could not compile splat batch: " + prog.getLog());
+			throw new GdxRuntimeException("could not compile batch: " + prog.getLog());
 		if (prog.getLog().length() != 0)
 			Gdx.app.log("PuzzleBatch", prog.getLog());
 
@@ -78,7 +73,6 @@ public class Jiggen extends Game {
 
 	public void loadFromAtlas(FileHandle atlasFile, FileHandle atlasImageFolder, FileHandle backgroundFile,
 							  Map<Integer, IntRectangle> vertices, GraphEdge[] graphEdges) {
-		TextureAtlas atlas = null;
 		try {
 			atlas = new TextureAtlas(atlasFile, atlasImageFolder);
 		} catch(Exception ex) {
@@ -93,12 +87,13 @@ public class Jiggen extends Game {
 		PuzzleGraphTemplate graph = new PuzzleGraphTemplate(puzzleSize.x, puzzleSize.y);
 		for (Integer key: vertices.keySet()) {
 			TextureRegion region = atlas.findRegion(key.toString());
-			PuzzlePieceTemplate piece = new PuzzlePieceTemplate(vertices.get(key), region);
+			PuzzlePieceTemplate piece = new PuzzlePieceTemplate<>(vertices.get(key), region);
 			graph.addVertex(piece);
 		}
 		for (GraphEdge edge: graphEdges) {
 			graph.addEdge(edge.v0, edge.v1);
 		}
+
 		screen.setPuzzleGraph(graph, new Texture(backgroundFile));
 		screen.shuffle();
 	}
@@ -123,5 +118,10 @@ public class Jiggen extends Game {
 	@Override
 	public void dispose () {
 		batch.dispose();
+		skin.dispose();
+		shader.dispose();
+		if (atlas != null) {
+            atlas.dispose();
+        }
 	}
 }

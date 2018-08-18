@@ -38,6 +38,7 @@ allprojects {
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        maven { url = 'https://raw.githubusercontent.com/intendia-oss/rxjava-gwt/mvn-repo/' }
     }
 }
 
@@ -102,8 +103,7 @@ project(":core") {
 
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-
-        compile "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
+        compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
 
         // JUnit Jupiter API and TestEngine implementation
         testCompile("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")

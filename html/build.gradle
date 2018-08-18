@@ -21,7 +21,7 @@ gwt {
     }
 }
 
-task draftRun(type: JettyRunWar) {
+task draftRun(dependsOn: ':desktop:buildAssets', type: JettyRunWar) {
     dependsOn draftWar
     dependsOn.remove('war')
     webApp=draftWar.archivePath
@@ -46,7 +46,7 @@ task compileReactProd(type: Exec) {
     commandLine 'cmd', '/c', 'npm run build'
 }
 
-task superDev(type: GwtSuperDev, dependsOn: [draftRun, compileReactDev]) {
+task superDev(type: GwtSuperDev, dependsOn: [draftRun]) {
     doFirst {
         gwt.modules = gwt.devModules
         generateJsInteropExports = true;
@@ -88,7 +88,7 @@ task addSource << {
 	sourceSets.main.compileClasspath += files(project(':core').sourceSets.main.allJava.srcDirs)
 }
 
-tasks.compileGwt.dependsOn(addSource)
+tasks.compileGwt.dependsOn(':desktop:buildAssets', addSource)
 tasks.draftCompileGwt.dependsOn(addSource)
 
 sourceCompatibility = 1.8

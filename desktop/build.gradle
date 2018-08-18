@@ -6,7 +6,7 @@ sourceSets.main.java.srcDirs = [ "src/" ]
 project.ext.mainClassName = "com.github.eoinf.jiggen.desktop.DesktopLauncher"
 project.ext.assetsDir = new File("../core/assets");
 
-task run(dependsOn: classes, type: JavaExec) {
+task run(dependsOn: 'buildAssets', type: JavaExec) {
     main = project.mainClassName
     classpath = sourceSets.main.runtimeClasspath
     standardInput = System.in
@@ -14,7 +14,7 @@ task run(dependsOn: classes, type: JavaExec) {
     ignoreExitValue = true
 }
 
-task debug(dependsOn: classes, type: JavaExec) {
+task debug(dependsOn: 'buildAssets', type: JavaExec) {
     main = project.mainClassName
     classpath = sourceSets.main.runtimeClasspath
     standardInput = System.in
@@ -23,7 +23,7 @@ task debug(dependsOn: classes, type: JavaExec) {
     debug = true
 }
 
-task dist(type: Jar) {
+task dist(dependsOn: 'buildAssets', type: Jar) {
     from files(sourceSets.main.output.classesDir)
     from files(sourceSets.main.output.resourcesDir)
     from {configurations.compile.collect {zipTree(it)}}
@@ -34,7 +34,12 @@ task dist(type: Jar) {
     }
 }
 
-dist.dependsOn classes
+build.dependsOn('buildAssets')
+
+task('buildAssets', type: JavaExec, dependsOn: 'classes') {
+    main = 'com.github.eoinf.jiggen.GenerateAssets'
+    classpath = sourceSets.main.runtimeClasspath
+}
 
 eclipse {
     project {

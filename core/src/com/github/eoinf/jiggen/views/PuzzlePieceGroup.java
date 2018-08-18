@@ -85,6 +85,17 @@ public class PuzzlePieceGroup extends Group {
     }
 
     @Override
+    public float getWidth() {
+        Actor firstChild = this.getChildren().first();
+        return firstChild.getWidth() * firstChild.getScaleX();
+    }
+    @Override
+    public float getHeight() {
+        Actor firstChild = this.getChildren().first();
+        return firstChild.getHeight() * firstChild.getScaleY();
+    }
+
+    @Override
     public void setPosition(float x, float y) {
         float deltaX = x - this.internalPosition.x;
         float deltaY = y - this.internalPosition.y;
