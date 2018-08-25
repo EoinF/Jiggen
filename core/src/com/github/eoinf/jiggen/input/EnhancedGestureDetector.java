@@ -1,11 +1,11 @@
-package com.github.eoinf.jiggen.views.Screens;
+package com.github.eoinf.jiggen.input;
 
 import com.badlogic.gdx.input.GestureDetector;
 
 public class EnhancedGestureDetector extends GestureDetector {
 
     private EnhancedGestureListener listener;
-    EnhancedGestureDetector(EnhancedGestureListener listener) {
+    public EnhancedGestureDetector(EnhancedGestureListener listener) {
         super(listener);
         this.listener = listener;
     }

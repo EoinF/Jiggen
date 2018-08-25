@@ -8,13 +8,17 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.GridPoint2;
 import com.github.eoinf.jiggen.PuzzleExtractor.Decoder.DecodedPiece;
 import com.github.eoinf.jiggen.PuzzleExtractor.Decoder.DecodedTemplate;
-import com.github.eoinf.jiggen.utils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-import static com.github.eoinf.jiggen.utils.overlaps;
+import static com.github.eoinf.jiggen.utils.PixmapUtils.combinePixmaps;
+import static com.github.eoinf.jiggen.utils.PixmapUtils.combineTextures;
+import static com.github.eoinf.jiggen.utils.PixmapUtils.isPixelDark;
+import static com.github.eoinf.jiggen.utils.PixmapUtils.overlaps;
+import static com.github.eoinf.jiggen.utils.PixmapUtils.stretchPixmap;
+import static com.github.eoinf.jiggen.utils.PixmapUtils.stretchTexture;
 
 public abstract class PuzzleFactory {
 
@@ -118,12 +122,12 @@ public abstract class PuzzleFactory {
                                                                               int scaledWidth, int scaledHeight,
                                                                               float ratioX, float ratioY) {
         Pixmap templateTexture = piece.getData();
-        templateTexture = utils.stretchPixmap(templateTexture, new GridPoint2(scaledWidth, scaledHeight));
+        templateTexture = stretchPixmap(templateTexture, new GridPoint2(scaledWidth, scaledHeight));
 
         GridPoint2 scaledPosition = new GridPoint2((int) (piece.x() * ratioX),
                 (int) (piece.y() * ratioY)
         );
-        templateTexture = utils.combinePixmaps(templateTexture, backgroundPixmap,
+        templateTexture = combinePixmaps(templateTexture, backgroundPixmap,
                 scaledPosition.x,
                 backgroundPixmap.getHeight() - (scaledPosition.y + scaledHeight));
 
@@ -137,12 +141,12 @@ public abstract class PuzzleFactory {
                                                                                             int scaledWidth, int scaledHeight,
                                                                                             float ratioX, float ratioY) {
         TextureRegion templateTexture = piece.getData();
-        templateTexture = utils.stretchTexture(templateTexture, new GridPoint2(scaledWidth, scaledHeight));
+        templateTexture = stretchTexture(templateTexture, new GridPoint2(scaledWidth, scaledHeight));
 
         GridPoint2 scaledPosition = new GridPoint2((int) (piece.x() * ratioX),
                 (int) (piece.y() * ratioY)
         );
-        templateTexture = utils.combineTextures(templateTexture, backgroundPixmap,
+        templateTexture = combineTextures(templateTexture, backgroundPixmap,
                 scaledPosition.x,
                 backgroundPixmap.getHeight() - (scaledPosition.y + scaledHeight));
 
@@ -164,7 +168,7 @@ public abstract class PuzzleFactory {
         for (int x = 0; x < decodedPiece.getWidth(); x++) {
             for (int y = 0; y < decodedPiece.getHeight(); y++) {
                 boolean isDark =
-                        utils.isPixelDark(templatePixmap, x + templateX, y + templateY, bgWidth, bgHeight);
+                        isPixelDark(templatePixmap, x + templateX, y + templateY, bgWidth, bgHeight);
                 // If we haven't traversed this ignore it
                 if (decodedPiece.isTraversed(templateX + x + 1, templateY + y + 1)) {
 

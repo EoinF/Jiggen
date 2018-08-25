@@ -74,10 +74,4 @@ public class WorldBoundedCamera extends OrthographicCamera {
         newZoom = Math.min(maxZoom, newZoom);
         this.zoom = Math.max(minZoom, newZoom);
     }
-
-    @Override
-    public void translate(float x, float y) {
-        final float MOVE_SPEED = 0.5f;
-        super.translate(x * MOVE_SPEED, y * MOVE_SPEED);
-    }
 }

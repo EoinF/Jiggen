@@ -1,4 +1,4 @@
-package com.github.eoinf.jiggen.views.Screens;
+package com.github.eoinf.jiggen.utils;
 
 import java.util.function.Consumer;
 

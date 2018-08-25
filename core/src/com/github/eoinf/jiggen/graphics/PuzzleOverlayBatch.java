@@ -1,6 +1,7 @@
 package com.github.eoinf.jiggen.graphics;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.NumberUtils;
 
 public class PuzzleOverlayBatch implements Batch {
@@ -138,38 +140,18 @@ public class PuzzleOverlayBatch implements Batch {
      * Returns a new instance of the default shader used by SpriteBatch for GL2 when no shader is specified.
      */
     static public ShaderProgram createDefaultShader() {
-        String vertexShader = "attribute vec4 " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" //
-                + "attribute vec4 " + ShaderProgram.COLOR_ATTRIBUTE + ";\n" //
-                + "attribute vec2 " + ShaderProgram.TEXCOORD_ATTRIBUTE + "0;\n" //
-                + "uniform mat4 u_projTrans;\n" //
-                + "varying vec4 v_color;\n" //
-                + "varying vec2 v_texCoords;\n" //
-                + "\n" //
-                + "void main()\n" //
-                + "{\n" //
-                + "   v_color = " + ShaderProgram.COLOR_ATTRIBUTE + ";\n" //
-                + "   v_color.a = v_color.a * (255.0/254.0);\n" //
-                + "   v_texCoords = " + ShaderProgram.TEXCOORD_ATTRIBUTE + "0;\n" //
-                + "   gl_Position =  u_projTrans * " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" //
-                + "}\n";
-        String fragmentShader = "#ifdef GL_ES\n" //
-                + "#define LOWP lowp\n" //
-                + "precision mediump float;\n" //
-                + "#else\n" //
-                + "#define LOWP \n" //
-                + "#endif\n" //
-                + "varying LOWP vec4 v_color;\n" //
-                + "varying vec2 v_texCoords;\n" //
-                + "uniform sampler2D u_texture;\n" //
-                + "void main()\n"//
-                + "{\n" //
-                + "  gl_FragColor = v_color * texture2D(u_texture, v_texCoords);\n" //
-                + "}";
+        FileHandle vertSrc = Gdx.files.internal("shaders/puzzle.vert");
+        FileHandle fragSrc = Gdx.files.internal("shaders/puzzle.frag");
+        ShaderProgram prog = new ShaderProgram(vertSrc, fragSrc);
+        if (!prog.isCompiled())
+            throw new GdxRuntimeException("could not compile batch: " + prog.getLog());
+        if (prog.getLog().length() != 0)
+            Gdx.app.log("PuzzleBatch", prog.getLog());
 
-        ShaderProgram shader = new ShaderProgram(vertexShader, fragmentShader);
-        if (shader.isCompiled() == false)
-            throw new IllegalArgumentException("Error compiling shader: " + shader.getLog());
-        return shader;
+        prog.begin();
+        prog.setUniformi("u_background", 1);
+        prog.end();
+        return prog;
     }
 
     @Override

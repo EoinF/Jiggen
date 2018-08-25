@@ -10,7 +10,13 @@ public class DesktopLauncher {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.fullscreen = false;
 
-		Jiggen game = new Jiggen();
+		Jiggen game = new Jiggen(isFullScreen -> {
+			if (isFullScreen) {
+				Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+			} else {
+				Gdx.graphics.setWindowedMode(config.width, config.height);
+			}
+		});
 		new LwjglApplication(game, config);
 		Gdx.app.postRunnable(game::loadDefaultPuzzle);
 	}

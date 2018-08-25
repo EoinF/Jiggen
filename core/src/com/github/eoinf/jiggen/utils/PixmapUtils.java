@@ -1,4 +1,4 @@
-package com.github.eoinf.jiggen;
+package com.github.eoinf.jiggen.utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -17,7 +17,7 @@ import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.IntRectangle;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class utils {
+public abstract class PixmapUtils {
     public static final float BRIGHTNESS_THRESHOLD = 0.85f;
 
     private static Color buffer;
@@ -135,7 +135,7 @@ public abstract class utils {
 
     public static boolean isPixelDark(Pixmap pixmap, int currentX, int currentY, int width, int height) {
         return currentX >= width || currentY >= height || currentX < 0 || currentY < 0 ||
-                utils.getBrightness(getPixelColour(pixmap, currentX, currentY)) < BRIGHTNESS_THRESHOLD;
+                getBrightness(getPixelColour(pixmap, currentX, currentY)) < BRIGHTNESS_THRESHOLD;
     }
 
     private static Color getPixelColour(Pixmap pixmap, int currentX, int currentY) {
@@ -144,7 +144,7 @@ public abstract class utils {
     }
 
     public static FileHandle getRandomTemplate() {
-        List<FileHandle> templates = utils.getTemplateFiles();
+        List<FileHandle> templates = getTemplateFiles();
 
         if (templates.isEmpty()) {
             return Gdx.files.internal("templates/5x7puzzletemplate.jpg");
@@ -166,7 +166,7 @@ public abstract class utils {
     }
 
     public static FileHandle getRandomBackground() {
-        List<FileHandle> backgrounds = utils.getBackgroundFiles();
+        List<FileHandle> backgrounds = getBackgroundFiles();
 
         if (backgrounds.isEmpty()) {
             return Gdx.files.internal("backgrounds/pizza.jpg");

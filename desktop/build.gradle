@@ -37,7 +37,7 @@ task dist(dependsOn: 'buildAssets', type: Jar) {
 build.dependsOn('buildAssets')
 
 task('buildAssets', type: JavaExec, dependsOn: 'classes') {
-    main = 'com.github.eoinf.jiggen.GenerateAssets'
+    main = 'com.github.eoinf.tools.GenerateAssets'
     classpath = sourceSets.main.runtimeClasspath
 }
 

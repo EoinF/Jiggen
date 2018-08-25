@@ -46,7 +46,7 @@ task compileReactProd(type: Exec) {
     commandLine 'cmd', '/c', 'npm run build'
 }
 
-task superDev(type: GwtSuperDev, dependsOn: [draftRun]) {
+task superDev(type: GwtSuperDev, dependsOn: [draftRun, compileReactDev]) {
     doFirst {
         gwt.modules = gwt.devModules
         generateJsInteropExports = true;

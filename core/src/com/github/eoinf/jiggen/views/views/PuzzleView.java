@@ -1,4 +1,4 @@
-package com.github.eoinf.jiggen.views.Screens;
+package com.github.eoinf.jiggen.views.views;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -12,8 +12,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.eoinf.jiggen.graphics.WorldBoundedCamera;
-import com.github.eoinf.jiggen.views.PuzzleGestureListener;
-import com.github.eoinf.jiggen.views.PuzzlePieceGroup;
+import com.github.eoinf.jiggen.input.EnhancedGestureDetector;
+import com.github.eoinf.jiggen.input.PuzzleGestureListener;
+import com.github.eoinf.jiggen.views.PuzzleViewModel;
+import com.github.eoinf.jiggen.views.widgets.PuzzlePieceGroup;
 
 import java.util.function.Consumer;
 
@@ -23,11 +25,10 @@ public class PuzzleView {
     private PuzzleViewModel viewModel;
     private WorldBoundedCamera boundedCamera;
     private Batch batch;
-    Stage stage;
+    public Stage stage;
     private GestureDetector gestureDetector;
 
     public PuzzleView(PuzzleViewModel puzzleViewModel, WorldBoundedCamera camera, Viewport viewport, Batch batch, Skin skin) {
-
         this.viewModel = puzzleViewModel;
         this.boundedCamera = camera;
         this.batch = batch;

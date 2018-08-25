@@ -1,7 +1,6 @@
 package com.github.eoinf.jiggen.client;
 
 import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.LifecycleListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
@@ -11,6 +10,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Window;
+
+import java.util.function.Consumer;
 
 public class HtmlLauncher extends GwtApplication {
 
@@ -40,7 +41,7 @@ public class HtmlLauncher extends GwtApplication {
         cfg = new GwtApplicationConfiguration(w, h);
         Window.enableScrolling(false);
         Window.setMargin("0");
-        //Window.addResizeHandler(new ResizeListener());
+        Window.addResizeHandler(new ResizeListener());
         cfg.preferFlash = false;
         return cfg;
     }
@@ -50,10 +51,12 @@ public class HtmlLauncher extends GwtApplication {
         public void onResize(ResizeEvent event) {
             int width = event.getWidth() - PADDING;
             int height = event.getHeight() - PADDING;
+            getCanvasElement().setWidth(width);
+            getCanvasElement().setHeight(height);
             getRootPanel().setWidth("" + width + "px");
             getRootPanel().setHeight("" + height + "px");
             getApplicationListener().resize(width, height);
-            Gdx.graphics.setWindowedMode(width, height);
+//            Gdx.graphics.setWindowedMode(width, height);
         }
     }
 
@@ -72,7 +75,12 @@ public class HtmlLauncher extends GwtApplication {
             }
         });
 
-        Jiggen jiggen = new Jiggen();
+        Jiggen jiggen = new Jiggen(new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean isFullScreen) {
+                GwtAdapter.setFullScreen(isFullScreen);
+            }
+        });
         GwtAdapter.setJiggen(jiggen);
         GwtAdapter.setApp(this);
         return jiggen;

@@ -1,4 +1,4 @@
-package com.github.eoinf.jiggen.views;
+package com.github.eoinf.jiggen.input;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -6,8 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.github.eoinf.jiggen.graphics.WorldBoundedCamera;
-import com.github.eoinf.jiggen.views.Screens.EnhancedGestureListener;
-import com.github.eoinf.jiggen.views.Screens.PuzzleViewModel;
+import com.github.eoinf.jiggen.views.PuzzleViewModel;
+import com.github.eoinf.jiggen.views.widgets.PuzzlePieceGroup;
 
 public class PuzzleGestureListener implements EnhancedGestureListener {
 
@@ -77,7 +77,7 @@ public class PuzzleGestureListener implements EnhancedGestureListener {
         if (!puzzleViewModel.isHoldingPiece()) {
             System.out.println("Pan to " + x + ", " + y + " -> " + deltaX + ", " + deltaY);
             // Assume only one pointer is being used (Panning is only possible with a single pointer)
-            boundedCamera.translate(-deltaX, deltaY);
+            boundedCamera.translate(-deltaX * boundedCamera.zoom, deltaY * boundedCamera.zoom);
         }
         return false;
     }

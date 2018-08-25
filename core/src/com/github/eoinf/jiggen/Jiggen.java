@@ -7,10 +7,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.github.eoinf.jiggen.PuzzleExtractor.Decoder.DecodedTemplate;
 import com.github.eoinf.jiggen.PuzzleExtractor.GraphEdge;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.IntRectangle;
@@ -21,6 +19,10 @@ import com.github.eoinf.jiggen.graphics.PuzzleOverlayBatch;
 import com.github.eoinf.jiggen.views.Screens.PuzzleSolverScreen;
 
 import java.util.Map;
+import java.util.function.Consumer;
+
+import static com.github.eoinf.jiggen.utils.PixmapUtils.getRandomBackground;
+import static com.github.eoinf.jiggen.utils.PixmapUtils.getRandomTemplate;
 
 public class Jiggen extends Game {
 
@@ -28,39 +30,27 @@ public class Jiggen extends Game {
 	private Skin skin;
 	private PuzzleSolverScreen screen;
     private TextureAtlas atlas = null;
-	private ShaderProgram shader;
+
+    public Consumer<Boolean> onSetFullScreen;
+
+    public Jiggen(Consumer<Boolean> onSetFullScreen) {
+    	this.onSetFullScreen = onSetFullScreen;
+	}
 
 	@Override
 	public void create () {
-		this.shader = this.createShader();
-		batch = new PuzzleOverlayBatch(1000, this.shader);
+		batch = new PuzzleOverlayBatch();
 		FileHandle f = Gdx.files.internal("skin/Holo-dark-hdpi.json");
 		skin = new Skin(f);
 
 		TextureAtlas uiTextureAtlas = new TextureAtlas("ui/ui.atlas");
 
-		screen = new PuzzleSolverScreen(batch, uiTextureAtlas, skin);
+		screen = new PuzzleSolverScreen(this, batch, uiTextureAtlas, skin);
 		setScreen(screen);
 	}
 
-	private ShaderProgram createShader() {
-		FileHandle vertSrc = Gdx.files.internal("shaders/puzzle.vert");
-		FileHandle fragSrc = Gdx.files.internal("shaders/puzzle.frag");
-		ShaderProgram prog = new ShaderProgram(vertSrc, fragSrc);
-		if (!prog.isCompiled())
-			throw new GdxRuntimeException("could not compile batch: " + prog.getLog());
-		if (prog.getLog().length() != 0)
-			Gdx.app.log("PuzzleBatch", prog.getLog());
-
-		prog.begin();
-		prog.setUniformi("u_background", 1);
-		prog.end();
-		return prog;
-	}
-
-
 	public void loadDefaultPuzzle() {
-		loadFromTemplate(utils.getRandomTemplate());
+		loadFromTemplate(getRandomTemplate());
 	}
 
 	public void loadFromTemplate(FileHandle template) {
@@ -68,7 +58,7 @@ public class Jiggen extends Game {
 		DecodedTemplate t = new DecodedTemplate(tex);
 
 		PuzzleGraphTemplate puzzle = PuzzleFactory.generateTexturePuzzleFromTemplate(t);
-		screen.setPuzzleGraph(puzzle, new Texture(utils.getRandomBackground()));
+		screen.setPuzzleGraph(puzzle, new Texture(getRandomBackground()));
 	}
 
 	public void loadFromAtlas(FileHandle atlasFile, FileHandle atlasImageFolder, FileHandle backgroundFile,
@@ -119,7 +109,6 @@ public class Jiggen extends Game {
 	public void dispose () {
 		batch.dispose();
 		skin.dispose();
-		shader.dispose();
 		if (atlas != null) {
             atlas.dispose();
         }

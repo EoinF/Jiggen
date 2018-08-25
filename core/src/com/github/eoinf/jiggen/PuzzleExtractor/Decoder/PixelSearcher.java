@@ -2,10 +2,11 @@ package com.github.eoinf.jiggen.PuzzleExtractor.Decoder;
 
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.GridPoint2;
-import com.github.eoinf.jiggen.utils;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import static com.github.eoinf.jiggen.utils.PixmapUtils.isPixelDark;
 
 public class PixelSearcher {
 
@@ -41,7 +42,7 @@ public class PixelSearcher {
         for (int p = 0; p < currentPaths.length; p++) {
             int x = currentPaths[p].x;
             int y = currentPaths[p].y;
-            if (targetValue == utils.isPixelDark(templatePixmap, x, y, width, height)) {
+            if (targetValue == isPixelDark(templatePixmap, x, y, width, height)) {
                 return new GridPoint2(x, y);
             } else {
                 newPaths[p * 2] = new GridPoint2(x + 1, y);
@@ -92,7 +93,7 @@ public class PixelSearcher {
             }
             pixelsTraversed[path.y + 1][path.x + 1] = true;
 
-            if (!utils.isPixelDark(templatePixmap, path.x, path.y, width, height)) {
+            if (!isPixelDark(templatePixmap, path.x, path.y, width, height)) {
                 newPaths.add(new GridPoint2(path.x + 1, path.y));
                 newPaths.add(new GridPoint2(path.x - 1, path.y));
                 newPaths.add(new GridPoint2(path.x, path.y + 1));
@@ -125,14 +126,14 @@ public class PixelSearcher {
         // Take the extra width of the border into account for the new templatePixmap
         maxX++;
         while(maxX < width
-                && utils.isPixelDark(templatePixmap, maxX, maxXCoord.y, width, height)) {
+                && isPixelDark(templatePixmap, maxX, maxXCoord.y, width, height)) {
             maxX++;
         }
 
         // Do the same for the y max
         maxY++;
         while(maxY < height
-                && utils.isPixelDark(templatePixmap ,maxYCoord.x, maxY, width, height)) {
+                && isPixelDark(templatePixmap ,maxYCoord.x, maxY, width, height)) {
             maxY++;
         }
     }

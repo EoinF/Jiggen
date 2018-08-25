@@ -1,4 +1,4 @@
-package com.github.eoinf.jiggen.views.Screens;
+package com.github.eoinf.jiggen.input;
 
 import com.badlogic.gdx.input.GestureDetector;
 

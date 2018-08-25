@@ -1,4 +1,4 @@
-package com.github.eoinf.jiggen;
+package com.github.eoinf.tools;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 
 public class GenerateAssets {

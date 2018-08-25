@@ -1,4 +1,4 @@
-package com.github.eoinf.jiggen.views;
+package com.github.eoinf.jiggen.views.widgets;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;

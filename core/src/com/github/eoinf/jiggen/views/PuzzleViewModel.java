@@ -1,10 +1,13 @@
-package com.github.eoinf.jiggen.views.Screens;
+package com.github.eoinf.jiggen.views;
 
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleGraphTemplate;
-import com.github.eoinf.jiggen.views.PuzzlePieceGroup;
+import com.github.eoinf.jiggen.utils.SimpleObservable;
+import com.github.eoinf.jiggen.utils.SimpleSubject;
+import com.github.eoinf.jiggen.views.widgets.HeldPuzzlePiece;
+import com.github.eoinf.jiggen.views.widgets.PuzzlePieceGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +23,7 @@ public class PuzzleViewModel {
     private SimpleSubject<PuzzlePieceGroup> puzzlePieceAddedSubject;
     private SimpleSubject<PuzzlePieceGroup> puzzlePieceRemovedSubject;
     private SimpleSubject<HeldPuzzlePiece> heldPuzzlePieceSubject;
+    private SimpleSubject<PuzzlePieceGroup> droppedPuzzlePieceSubject;
     private SimpleSubject<Vector2> scalesSubject;
     private SimpleSubject<GridPoint2> worldBoundsSubject;
     private SimpleSubject<Boolean> fullScreenSubject;
@@ -74,6 +78,11 @@ public class PuzzleViewModel {
         heldPuzzlePieceSubject.onNext(new HeldPuzzlePiece(pieceGroup, mouseOffset));
     }
 
+    // Dropped puzzle piece
+    public SimpleObservable<PuzzlePieceGroup> getDroppedPuzzlePiece() {
+        return droppedPuzzlePieceSubject;
+    }
+
     public void dropPiece(float x, float y) {
         HeldPuzzlePiece heldPuzzlePiece = heldPuzzlePieceSubject.getValue();
         if (heldPuzzlePiece != HeldPuzzlePiece.NONE) {
@@ -92,6 +101,7 @@ public class PuzzleViewModel {
                     pieceGroupHeld.getWidth(), pieceGroupHeld.getHeight());
 
             pieceGroupHeld.setPosition(newPosition.x, newPosition.y);
+            droppedPuzzlePieceSubject.onNext(pieceGroupHeld);
             heldPuzzlePieceSubject.onNext(HeldPuzzlePiece.NONE);
         }
     }
@@ -131,7 +141,10 @@ public class PuzzleViewModel {
         worldBoundsSubject = SimpleSubject.createDefault(new GridPoint2());
         fullScreenSubject = SimpleSubject.create();
 
+        droppedPuzzlePieceSubject = SimpleSubject.create();
+
         heldPuzzlePieceSubject.onNext(HeldPuzzlePiece.NONE);
+
 
         puzzlePieceGroups = new ArrayList<>();
     }
