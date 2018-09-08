@@ -150,7 +150,6 @@ public class PuzzleView {
 
             Vector2 updatedPosition = new Vector2(mousePositionInWorld.x + heldPiece.getOffset().x,
                     mousePositionInWorld.y + heldPiece.getOffset().y);
-            System.out.println();
             puzzleViewController.setGroupPosition(heldPiece.getPiecesHeld(), updatedPosition);
         }
         stage.act(delta);

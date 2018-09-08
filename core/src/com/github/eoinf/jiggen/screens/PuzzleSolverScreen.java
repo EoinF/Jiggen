@@ -5,6 +5,8 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.github.eoinf.jiggen.Jiggen;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleGraphTemplate;
@@ -14,6 +16,8 @@ import com.github.eoinf.jiggen.screens.controllers.PuzzleViewController;
 import com.github.eoinf.jiggen.screens.controllers.PuzzleViewModel;
 import com.github.eoinf.jiggen.screens.views.PuzzleToolbar;
 import com.github.eoinf.jiggen.screens.views.PuzzleView;
+
+import java.util.function.Consumer;
 
 public class PuzzleSolverScreen implements Screen {
 
@@ -37,6 +41,48 @@ public class PuzzleSolverScreen implements Screen {
         multiplexer.addProcessor(puzzleView.stage);
         multiplexer.addProcessor(puzzleView.getGestureDetector());
         Gdx.input.setInputProcessor(multiplexer);
+
+        puzzleViewModel.getPuzzleTemplateObservable().subscribe(new Consumer<PuzzleGraphTemplate>() {
+            @Override
+            public void accept(PuzzleGraphTemplate puzzleGraphTemplate) {
+                Texture backgroundImage = puzzleViewModel.getBackgroundImageObservable().getValue();
+                puzzleViewController.updatePuzzleGraph(puzzleGraphTemplate, backgroundImage);
+                puzzleViewController.updateWorldBounds(camera.viewportWidth, camera.viewportHeight);
+            }
+        });
+
+        puzzleViewModel.getBackgroundImageObservable().subscribe(new Consumer<Texture>() {
+            @Override
+            public void accept(Texture backgroundImage) {
+                PuzzleGraphTemplate puzzleGraphTemplate = puzzleViewModel.getPuzzleTemplateObservable().getValue();
+                puzzleViewController.updatePuzzleGraph(puzzleGraphTemplate, backgroundImage);
+            }
+        });
+
+        puzzleViewModel.getScalesObservable().subscribe(new Consumer<Vector2>() {
+            @Override
+            public void accept(Vector2 scales) {
+                puzzleViewController.updateWorldBounds(camera.viewportWidth, camera.viewportHeight);
+            }
+        });
+
+        puzzleViewModel.getWorldBoundsObservable().subscribe(new Consumer<GridPoint2>() {
+            @Override
+            public void accept(GridPoint2 worldBounds) {
+                float maxZoomX = worldBounds.x / camera.viewportWidth;
+                float maxZoomY = worldBounds.y / camera.viewportHeight;
+
+                float maxZoom = Math.min(maxZoomX, maxZoomY);
+                camera.setCameraBounds(worldBounds.x, worldBounds.y, maxZoom);
+            }
+        });
+
+        puzzleViewModel.getResizeScreenObservable().subscribe(new Consumer<GridPoint2>() {
+            @Override
+            public void accept(GridPoint2 newScreenSize) {
+                puzzleViewController.updateWorldBounds(newScreenSize.x, newScreenSize.y);
+            }
+        });
     }
 
     public void setPuzzleGraph(PuzzleGraphTemplate puzzleGraphTemplate, Texture backgroundImage) {

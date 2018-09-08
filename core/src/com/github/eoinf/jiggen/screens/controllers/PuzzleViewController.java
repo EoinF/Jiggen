@@ -13,7 +13,6 @@ import com.github.eoinf.jiggen.screens.models.PuzzlePiece;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.function.Consumer;
 
 import static com.github.eoinf.jiggen.utils.PixmapUtils.getMinimumScaleToFixAspectRatio;
 
@@ -22,7 +21,7 @@ import static com.github.eoinf.jiggen.utils.PixmapUtils.getMinimumScaleToFixAspe
  * This is enforced with the 'protected' keyword
  */
 public class PuzzleViewController {
-    private static float WORLD_PADDING = 0;
+    private static float WORLD_PADDING = 50;
     private static float ZOOM_RATE = 0.1f;
 
     private PuzzleViewModel puzzleViewModel;
@@ -33,45 +32,9 @@ public class PuzzleViewController {
         this.puzzleViewModel = puzzleViewModel;
         this.camera = camera;
         heldPieceController = new HeldPieceController(puzzleViewModel, this, camera);
-
-        puzzleViewModel.getPuzzleTemplateObservable().subscribe(new Consumer<PuzzleGraphTemplate>() {
-            @Override
-            public void accept(PuzzleGraphTemplate puzzleGraphTemplate) {
-                setPuzzleGraph();
-                calculateWorldBounds();
-            }
-        });
-
-        puzzleViewModel.getBackgroundImageObservable().subscribe(new Consumer<Texture>() {
-            @Override
-            public void accept(Texture backgroundImage) {
-                setPuzzleGraph();
-            }
-        });
-
-        puzzleViewModel.getScalesObservable().subscribe(new Consumer<Vector2>() {
-            @Override
-            public void accept(Vector2 scales) {
-                calculateWorldBounds();
-            }
-        });
-
-        puzzleViewModel.getWorldBoundsObservable().subscribe(new Consumer<GridPoint2>() {
-            @Override
-            public void accept(GridPoint2 worldBounds) {
-                float maxZoomX = worldBounds.x / camera.viewportWidth;
-                float maxZoomY = worldBounds.y / camera.viewportHeight;
-
-                float maxZoom = Math.min(maxZoomX, maxZoomY);
-                camera.setCameraBounds(worldBounds.x, worldBounds.y, maxZoom);
-            }
-        });
     }
 
-    private void setPuzzleGraph() {
-        PuzzleGraphTemplate puzzleGraphTemplate = puzzleViewModel.getPuzzleTemplateObservable().getValue();
-        Texture backgroundImage = puzzleViewModel.getBackgroundImageObservable().getValue();
-
+    public void updatePuzzleGraph(PuzzleGraphTemplate puzzleGraphTemplate, Texture backgroundImage) {
         if (puzzleGraphTemplate != null && backgroundImage != null) {
             Vector2 scales = getMinimumScaleToFixAspectRatio(puzzleGraphTemplate.getWidth(), puzzleGraphTemplate.getHeight(),
                     backgroundImage.getWidth(), backgroundImage.getHeight());
@@ -94,19 +57,29 @@ public class PuzzleViewController {
         }
     }
 
-    private void calculateWorldBounds() {
+    public void updateWorldBounds(float viewportWidth, float viewportHeight) {
         Vector2 scales = puzzleViewModel.getScalesObservable().getValue();
         PuzzleGraphTemplate puzzleGraphTemplate = puzzleViewModel.getPuzzleTemplateObservable().getValue();
         if (scales != null && puzzleGraphTemplate != null) {
-            int worldWidth = (int) Math.max(puzzleGraphTemplate.getWidth() * scales.x + WORLD_PADDING, camera.viewportWidth);
-            int worldHeight = (int) Math.max(puzzleGraphTemplate.getHeight() * scales.y + WORLD_PADDING, camera.viewportHeight);
+            int worldWidth = (int) Math.max(puzzleGraphTemplate.getWidth() * scales.x + WORLD_PADDING, viewportWidth);
+            int worldHeight = (int) Math.max(puzzleGraphTemplate.getHeight() * scales.y + WORLD_PADDING, viewportHeight);
 
+            for (ConnectedPuzzlePieces connectedPieces: puzzleViewModel.getConnectedPiecesListObservable().getValue()) {
+                int minX = (int)(connectedPieces.getPosition().x + connectedPieces.getWidth());
+                int minY = (int)(connectedPieces.getPosition().y + connectedPieces.getHeight());
+
+                if (worldWidth < minX) {
+                    worldWidth = minX;
+                }
+                if (worldHeight < minY) {
+                    worldHeight = minY;
+                }
+            }
             puzzleViewModel.setWorldBounds(new GridPoint2(worldWidth, worldHeight));
         }
     }
 
     public void zoomBy(float zoomDelta) {
-        System.out.println("Camera zoom = " + camera.zoom);
         puzzleViewModel.setCameraZoom(camera.zoom + zoomDelta * ZOOM_RATE);
     }
 
@@ -152,7 +125,6 @@ public class PuzzleViewController {
 
     public void panBy(float deltaX, float deltaY) {
         if (!puzzleViewModel.isHoldingPiece()) {
-            System.out.println("Pan by " + deltaX + ", " + deltaY);
             // Assume only one pointer is being used (Panning is only possible with a single pointer)
             camera.translate(-deltaX * camera.zoom, deltaY * camera.zoom);
         }
