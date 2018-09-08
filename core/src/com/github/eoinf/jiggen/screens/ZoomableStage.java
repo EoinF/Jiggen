@@ -1,4 +1,4 @@
-package com.github.eoinf.jiggen.views;
+package com.github.eoinf.jiggen.screens;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;

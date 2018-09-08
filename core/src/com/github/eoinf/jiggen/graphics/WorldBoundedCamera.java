@@ -66,10 +66,6 @@ public class WorldBoundedCamera extends OrthographicCamera {
         this.position.y = y;
     }
 
-    public void zoomBy(float zoomDelta) {
-        setZoom(this.zoom + zoomDelta);
-    }
-
     void setZoom(float newZoom) {
         newZoom = Math.min(maxZoom, newZoom);
         this.zoom = Math.max(minZoom, newZoom);

@@ -4,23 +4,19 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.github.eoinf.jiggen.graphics.WorldBoundedCamera;
-import com.github.eoinf.jiggen.views.PuzzleViewModel;
-import com.github.eoinf.jiggen.views.widgets.PuzzlePieceGroup;
+import com.github.eoinf.jiggen.screens.controllers.PuzzleViewController;
+import com.github.eoinf.jiggen.screens.widgets.ConnectedPiecesGroup;
 
 public class PuzzleGestureListener implements EnhancedGestureListener {
 
+    private PuzzleViewController puzzleViewController;
     private Stage stage;
-    private PuzzleViewModel puzzleViewModel;
-    private WorldBoundedCamera boundedCamera;
     private static float ZOOM_MULTIPLIER = 0.005f;
     private int numPointersTouchedDown = 0;
 
-    public PuzzleGestureListener(Stage stage, PuzzleViewModel puzzleViewModel, WorldBoundedCamera camera, Skin skin) {
+    public PuzzleGestureListener(PuzzleViewController puzzleViewController, Stage stage) {
+        this.puzzleViewController = puzzleViewController;
         this.stage = stage;
-        this.puzzleViewModel = puzzleViewModel;
-        this.boundedCamera = camera;
     }
 
     private boolean isTouching() {
@@ -31,12 +27,12 @@ public class PuzzleGestureListener implements EnhancedGestureListener {
     public boolean touchDown(float x, float y, int pointer, int button) {
         Vector3 mousePositionOnScreen = new Vector3(x, y, 0);
 
-        Vector3 mousePositionInWorld = boundedCamera.unproject(mousePositionOnScreen);
+        Vector3 mousePositionInWorld = stage.getCamera().unproject(mousePositionOnScreen);
         Actor a = stage.hit(mousePositionInWorld.x, mousePositionInWorld.y, true);
 
         if (a != null && !isTouching()) {
-            if (a instanceof PuzzlePieceGroup) {
-                puzzleViewModel.pickUpPiece((PuzzlePieceGroup) a, new Vector2(
+            if (a instanceof ConnectedPiecesGroup) {
+                puzzleViewController.pickUpPiece(((ConnectedPiecesGroup) a).getConnectedPieces(), new Vector2(
                         a.getX() - mousePositionInWorld.x,
                         a.getY() - mousePositionInWorld.y
                 ));
@@ -49,11 +45,8 @@ public class PuzzleGestureListener implements EnhancedGestureListener {
 
     @Override
     public boolean touchUp(float x, float y, int pointer, int button) {
-        Vector3 mousePositionOnScreen = new Vector3(x, y, 0);
-
-        Vector3 mousePositionInWorld = boundedCamera.unproject(mousePositionOnScreen);
         numPointersTouchedDown--;
-        puzzleViewModel.dropPiece(mousePositionInWorld.x, mousePositionInWorld.y);
+        puzzleViewController.dropPiece();
         return false;
     }
 
@@ -74,11 +67,7 @@ public class PuzzleGestureListener implements EnhancedGestureListener {
 
     @Override
     public boolean pan(float x, float y, float deltaX, float deltaY) {
-        if (!puzzleViewModel.isHoldingPiece()) {
-            System.out.println("Pan to " + x + ", " + y + " -> " + deltaX + ", " + deltaY);
-            // Assume only one pointer is being used (Panning is only possible with a single pointer)
-            boundedCamera.translate(-deltaX * boundedCamera.zoom, deltaY * boundedCamera.zoom);
-        }
+        puzzleViewController.panBy(deltaX, deltaY);
         return false;
     }
 
@@ -99,7 +88,7 @@ public class PuzzleGestureListener implements EnhancedGestureListener {
         float currentDistanceBetweenPivots = pointer1.dst(pointer2);
 
         float zoomChange = (initialDistanceBetweenPivots - currentDistanceBetweenPivots) * ZOOM_MULTIPLIER;
-        boundedCamera.zoomBy(zoomChange);
+        puzzleViewController.zoomBy(zoomChange);
         return false;
     }
 

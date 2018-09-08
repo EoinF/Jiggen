@@ -114,10 +114,9 @@ public class TextureOverlayImage extends Widget {
 
         if (drawable != null) {
             float rotation = getRotation();
-            if (scaleX != 1 || scaleY != 1 || rotation != 0) {
-                pBatch.draw(drawable.getRegion(), x + imageX, y + imageY, getOriginX() - imageX, getOriginY() - imageY,
-                        imageWidth, imageHeight, scaleX, scaleY, rotation);
-            }
+            pBatch.draw(drawable.getRegion(), x + imageX, y + imageY, getOriginX() - imageX, getOriginY() - imageY,
+                    imageWidth, imageHeight, scaleX, scaleY, rotation);
+
         }
     }
 
