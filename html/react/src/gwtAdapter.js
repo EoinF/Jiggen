@@ -33,18 +33,20 @@ function setFullScreen(isFullScreen) {
 		if (isFullScreen) {
 			// for newer Webkit and Firefox
 			const requestFullScreen = el.requestFullscreen
-				|| el.webkitRequestFullscreen
-				|| el.mozRequestFullScreen
-				|| el.msRequestFullscreen;
+				|| el.webkitRequestFullscreen // Chrome, Safari and Edge
+				|| el.mozRequestFullScreen // Firefox
+				|| el.msRequestFullscreen; // IE 11
 			if (typeof requestFullScreen != "undefined" && requestFullScreen) {
 				requestFullScreen.call(el);
 			}
 		} else {
-			const cancelFullScreen = document.cancelFullScreen 
-				|| document.webkitCancelFullScreen 
-				|| document.mozCancelFullScreen;
+			const cancelFullScreen = document.exitFullScreen
+				|| document.webkitExitFullscreen // Edge and Safari
+				|| document.webkitCancelFullScreen // Chrome
+				|| document.mozCancelFullScreen // Firefox
+				|| document.msExitFullscreen; // IE 11
 			if (typeof cancelFullScreen != "undefined" && cancelFullScreen) {
-				cancelFullScreen();
+				cancelFullScreen.call(document);
 			}
 		}
 	}
