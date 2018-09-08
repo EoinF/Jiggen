@@ -2,8 +2,8 @@
 
 .TemplateChooser {
 	width: 100%;
-	border: solid 2px $theme_f0;
-	background: $theme_b3;
+	border: solid 2px $white;
+	background: $purple300;
 
 	display: flex;
 	flex-flow: column nowrap;
@@ -19,10 +19,10 @@
 	/*&.selected {
 		opacity: 1;
 		animation: none;
-		background: $theme_b5;
+		background: $purple400;
 		&:hover {
 			opacity: 1;
-			background: $theme_b6;
+			background: $purple500;
 		};
 	}*/
 }

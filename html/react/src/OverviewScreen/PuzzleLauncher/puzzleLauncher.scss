@@ -18,9 +18,9 @@
 }
 
 .launcherButton {
-	background: $theme_xb2;
-	color: $theme_f2;
-	border: solid 1px $theme_f0;
+	background: $yellow200;
+	color: $black;
+	border: solid 1px $white;
 	padding: 0 1rem;
 	line-height: 3rem;
 
@@ -33,9 +33,9 @@
 
 @keyframes launcherButtonPulse {
 	from {
-		background: $theme_xb2;
+		background: $yellow200;
 	}
 	to {
-		background: $theme_xb3;
+		background: $yellow100;
 	}
 }

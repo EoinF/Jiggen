@@ -4,19 +4,17 @@
   z-index: 1;
   position: fixed;
   width: 100%;
-  overflow: hidden;
 
-  display: flex;
-  flex-flow: column nowrap;
+  background: $purple400;
 }
 
 .jiggenHeader {
 	text-align: center;
-	background: $theme_b2;
+	background: $purple100;
 	height: 2.4rem;
 
 	animation: header_borderpulse 1s ease-in 0s infinite alternate;
-	border-bottom: 1px solid $theme_xf1;
+	border-bottom: 1px solid $grey100;
 
 	h1 {
 		font-size: 1.5rem;
@@ -29,14 +27,13 @@
 			font-size: 2rem;
 		}
 	}
-
 }
 
 @keyframes header_borderpulse {
 	from {
-		border-color: $theme_xf1;
+		border-color: $grey100;
 	}
 	to {
-		border-color: $theme_f1;
+		border-color: $pink200;
 	}
 }
