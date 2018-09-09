@@ -1,0 +1,50 @@
+@import '../../theming.scss'; 
+
+.backgroundSelection {
+  	width: 100%;
+	min-height: 100%;
+	display: flex;
+	flex-flow: column nowrap;
+
+	h1, h2 {
+		text-align: center;
+		font-size: 1.5rem;
+		margin: auto;
+	}
+}
+
+.mainBackgroundContent {
+	flex: 1 1 100%;
+	display: flex;
+}
+
+.backgroundTable {
+	width: 100%;
+	padding: 1.5rem;
+
+	@media(max-width: 768px) {
+		@media (orientation: portrait) {
+			min-height: 100%;
+			align-items: flex-start;
+			> * {
+		        flex: 0 0 100%;
+			}
+		}
+	}
+
+	@media(min-width: 768px) {
+		min-height: 100%;
+	}
+
+	.backgroundCard {
+		width: 100%;
+		padding-bottom: 3px;
+	}
+	.cardContainer {
+		width: 100%;
+		@media(min-width: 768px) {
+			width: 30rem;
+		}
+		margin: auto;
+	}
+}

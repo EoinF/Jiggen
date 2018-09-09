@@ -1,0 +1,36 @@
+@import '../../theming.scss';
+
+.OverviewScreen {
+  height: 100%;
+  text-align: center;
+
+  display: flex;
+  flex-flow: column nowrap;
+
+  h1, h2 {
+    font-size: 2rem;
+    margin: auto;
+  }
+
+
+  .overviewBody {
+    display: flex;
+    flex-flow: row wrap;
+
+    > * {
+      flex: 1;
+    }
+  }
+
+  .gameContainer {
+    flex: 1;
+  }
+
+  #embed-html {
+    background: $yellow100;
+    width: 100%;
+    height: 100%;
+  }
+
+}
+

@@ -4,10 +4,10 @@ import { Provider } from 'react-redux'
 
 import './index.scss';
 
-import OverviewScreen from './OverviewScreen';
-import TemplateSelection from './TemplateSelection';
-import BackgroundSelection from './BackgroundSelection';
-import PuzzleSolver from './PuzzleSolver';
+import OverviewScreen from './pages/OverviewScreen';
+import TemplateSelection from './pages/TemplateSelection';
+import BackgroundSelection from './pages/BackgroundSelection';
+import PuzzleSolver from './pages/PuzzleSolver';
 
 class App extends Component {
 	render() {

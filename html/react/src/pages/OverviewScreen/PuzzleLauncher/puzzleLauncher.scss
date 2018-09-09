@@ -1,0 +1,41 @@
+@import '../../../theming.scss';
+
+.launcherContainer {
+	display: flex;
+	flex-flow: column nowrap;
+	width: 100%;
+}
+
+.launcherContent {
+	flex: 1 1 auto;
+}
+
+.launcherControls {
+	padding: 0.2rem 0;
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: center;
+}
+
+.launcherButton {
+	background: $yellow200;
+	color: $black;
+	border: solid 1px $white;
+	padding: 0 1rem;
+	line-height: 3rem;
+
+	border-radius: 20px;
+
+	&:hover {
+		animation: launcherButtonPulse 1s ease-in 0.5s infinite alternate;
+	}
+}
+
+@keyframes launcherButtonPulse {
+	from {
+		background: $yellow200;
+	}
+	to {
+		background: $yellow100;
+	}
+}

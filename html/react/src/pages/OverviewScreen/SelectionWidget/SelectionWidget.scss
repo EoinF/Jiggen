@@ -1,0 +1,28 @@
+@import '../../../theming.scss';
+
+.SelectionWidget {
+	width: 100%;
+	border: solid 2px $white;
+	background: $purple300;
+	display: flex;
+	flex-flow: column nowrap;
+	padding: 5px 0;
+
+	min-height: 150px;
+
+	.description {
+		padding-bottom: 5px;
+	}
+
+	.imageSection {
+		flex: 1;
+
+		display: flex;
+		align-items: center;
+    	justify-content: center;
+
+		img {
+			max-width: 100%;
+		}
+	}
+}

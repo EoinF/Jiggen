@@ -36,7 +36,7 @@ function setFullScreen(isFullScreen) {
 				|| el.webkitRequestFullscreen // Chrome, Safari and Edge
 				|| el.mozRequestFullScreen // Firefox
 				|| el.msRequestFullscreen; // IE 11
-			if (typeof requestFullScreen != "undefined" && requestFullScreen) {
+			if (requestFullScreen != null) {
 				requestFullScreen.call(el);
 			}
 		} else {
@@ -45,7 +45,7 @@ function setFullScreen(isFullScreen) {
 				|| document.webkitCancelFullScreen // Chrome
 				|| document.mozCancelFullScreen // Firefox
 				|| document.msExitFullscreen; // IE 11
-			if (typeof cancelFullScreen != "undefined" && cancelFullScreen) {
+			if (cancelFullScreen != null) {
 				cancelFullScreen.call(document);
 			}
 		}

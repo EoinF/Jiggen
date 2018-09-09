@@ -1,0 +1,34 @@
+@import '../../../theming.scss';
+
+.stickyFooter {
+  z-index: 1;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+.jiggenFooter {
+	text-align: center;
+	animation: footer_borderpulse 1s ease-in 0s infinite alternate;
+	min-height: 3.5rem;
+	opacity: 0.9;
+
+	&:hover, &:active {
+		opacity: 1;
+	}
+
+	h1 {
+		font-size: 2rem;
+		margin: auto;
+	}
+}
+
+@keyframes footer_borderpulse {
+	from {
+		border-color: $grey100;
+	}
+	to {
+		border-color: $pink200;
+	}
+}

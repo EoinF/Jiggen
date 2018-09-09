@@ -1,0 +1,38 @@
+
+.templateWidget img {
+	max-width: 100%;
+}
+
+.templateWidget {
+	display: flex;
+	flex-flow: column nowrap;
+}
+
+.templateWidget.selected {
+	img {
+		border: 5px solid yellow;
+		animation: borderpulse 0.7s ease-in 0s infinite alternate;
+	}
+}
+
+.templateSelectedText {
+	font-size: 0.8em;
+	color: yellow;
+}
+
+.templateNameContainer {
+	line-height: 1.8em;
+	text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+@keyframes borderpulse {
+  from {
+  	border-color: yellow;
+  }
+
+  to {
+  	border-color: #4b1b63;
+  }
+}

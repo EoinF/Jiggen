@@ -1,6 +1,7 @@
 package com.github.eoinf.jiggen.client;
 
 import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.LifecycleListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
@@ -51,13 +52,21 @@ public class HtmlLauncher extends GwtApplication {
         public void onResize(ResizeEvent event) {
             int width = event.getWidth() - PADDING;
             int height = event.getHeight() - PADDING;
-            getCanvasElement().setWidth(width);
-            getCanvasElement().setHeight(height);
-            getRootPanel().setWidth("" + width + "px");
-            getRootPanel().setHeight("" + height + "px");
-            getApplicationListener().resize(width, height);
-//            Gdx.graphics.setWindowedMode(width, height);
+
+            if (Gdx.graphics.isFullscreen()) {
+                resizeGameContainer(width, height);
+            }
         }
+    }
+
+    private void resizeGameContainer(int width, int height) {
+        GWT.log(width + "," + height + ": " + Gdx.graphics.isFullscreen());
+
+        getCanvasElement().setWidth(width);
+        getCanvasElement().setHeight(height);
+        getRootPanel().setWidth("" + width + "px");
+        getRootPanel().setHeight("" + height + "px");
+        getApplicationListener().resize(width, height);
     }
 
 
@@ -79,6 +88,7 @@ public class HtmlLauncher extends GwtApplication {
             @Override
             public void accept(Boolean isFullScreen) {
                 GwtAdapter.setFullScreen(isFullScreen);
+                resizeGameContainer(Window.getClientWidth(), Window.getClientHeight());
             }
         });
         GwtAdapter.setJiggen(jiggen);
