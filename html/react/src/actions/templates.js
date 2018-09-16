@@ -37,11 +37,13 @@ const fetchTemplates = (id) => {
 		});
 	};
 }
-
-export {
+const templatesActions = {
 	fetchTemplates,
 	setTemplates,
-	selectTemplate,
+	selectTemplate
+}
+export {
+	templatesActions,
 	FETCH_TEMPLATES, 
 	SET_TEMPLATES,
 	SELECT_TEMPLATE

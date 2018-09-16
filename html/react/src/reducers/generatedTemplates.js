@@ -2,7 +2,7 @@ import {
 	FETCH_GENERATED_TEMPLATE,
 	SET_GENERATED_TEMPLATE,
 	ADD_GENERATED_TEMPLATES
-} from '../actions';
+} from '../actions/generatedTemplates';
 
 const initialState = {
   selectedId: null,

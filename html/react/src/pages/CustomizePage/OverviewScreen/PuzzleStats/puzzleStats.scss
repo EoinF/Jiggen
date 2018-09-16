@@ -1,41 +1,21 @@
 @import '../../../../theming.scss';
 
-.launcherContainer {
+.puzzleStats {
+	padding: 5px;
 	display: flex;
 	flex-flow: column nowrap;
-	width: 100%;
-}
 
-.launcherContent {
-	flex: 1 1 auto;
-}
+	.compatibilitySection {
+		display: flex;
+		flex-flow: row nowrap;
+		.description {
+			align-self: center;
+		}
 
-.launcherControls {
-	padding: 0.2rem 0;
-	display: flex;
-	flex-flow: column nowrap;
-	align-items: center;
-}
-
-.launcherButton {
-	background: $yellow200;
-	color: $black;
-	border: solid 1px $white;
-	padding: 0 1rem;
-	line-height: 3rem;
-
-	border-radius: 20px;
-
-	&:hover {
-		animation: launcherButtonPulse 1s ease-in 0.5s infinite alternate;
-	}
-}
-
-@keyframes launcherButtonPulse {
-	from {
-		background: $yellow200;
-	}
-	to {
-		background: $yellow100;
+		.compatibilityMeasure {
+			padding: 2px 5px;
+			color: #202;
+			border-radius: 40px;
+		}
 	}
 }

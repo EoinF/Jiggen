@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import './OverviewScreen.css';
 import JiggenHeader from './JiggenHeader';
-import { generatedTemplatesActions } from '../../../actions';
+import { generatedTemplatesActions } from '../../../actions/generatedTemplates';
 
 import SelectionWidget from './SelectionWidget';
 import PuzzleStats from './PuzzleStats';
@@ -45,7 +45,7 @@ class OverviewScreen extends Component {
                 selectedCaption='Template'
                 href='/templates'
               />
-              <SelectionWidget 
+              <SelectionWidget
                 selection={selectedBackground}
                 fallbackImageSrc={backgroundLogo}
                 notSelectedCaption='Select a Background' 
@@ -54,7 +54,7 @@ class OverviewScreen extends Component {
                />
           </div>
           <div className="overviewBody">
-              <PuzzleStats generatedTemplate={selectedGeneratedTemplate} background={selectedBackground} />
+              <PuzzleStats/>
           </div>
           <div className="overviewBody gameContainer">
             <GameContainer/>
@@ -68,7 +68,6 @@ const mapStateToProps = state => {
   return {
     selectedBackground: state.backgrounds.backgroundsMap[state.backgrounds.selectedId],
     selectedTemplate: state.templates.templatesMap[state.templates.selectedId],
-    selectedGeneratedTemplate: state.generatedTemplates.generatedTemplatesMap[state.generatedTemplates.selectedId]
   };
 }
 

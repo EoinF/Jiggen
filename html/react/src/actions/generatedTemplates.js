@@ -60,12 +60,16 @@ const fetchGeneratedTemplatesByLink = link => {
 	};
 };
 
-export {
+const generatedTemplatesActions = {
 	fetchGeneratedTemplateById,
 	getOrFetchGeneratedTemplateById,
 	fetchGeneratedTemplatesByLink,
 	setGeneratedTemplate,
-	addGeneratedTemplates,
+	addGeneratedTemplates
+}
+
+export {
+	generatedTemplatesActions,
 	FETCH_GENERATED_TEMPLATE,
 	SET_GENERATED_TEMPLATE,
 	ADD_GENERATED_TEMPLATES

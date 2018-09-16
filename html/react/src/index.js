@@ -8,8 +8,7 @@ import {
 	templateReducers,
 	backgroundReducers,
 	generatedTemplateReducers,
-	resourceLinkReducers,
-	puzzleSolverReducers
+	resourceLinkReducers
 } from './reducers';
 import thunk from 'redux-thunk';
 
@@ -27,8 +26,7 @@ const store = createStore(
 		templates: templateReducers,
 		backgrounds: backgroundReducers,
 		generatedTemplates: generatedTemplateReducers,
-		resourceLinks: resourceLinkReducers,
-		puzzle: puzzleSolverReducers
+		resourceLinks: resourceLinkReducers
 	}),
 	composeEnhancers(
 		applyMiddleware(thunk)

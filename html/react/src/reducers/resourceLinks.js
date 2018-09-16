@@ -1,6 +1,6 @@
 import { 
 	SET_RESOURCE_LINKS
-} from '../actions';
+} from '../actions/resourceLinks';
 
 const initialState = {
 	isLoaded: false

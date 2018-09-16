@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { 
   generatedTemplatesActions,
-} from '../../actions';
+} from '../../actions/generatedTemplates';
 
 import gwtAdapter from '../../gwtAdapter';
 

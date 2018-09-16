@@ -2,7 +2,7 @@ import {
 	FETCH_TEMPLATES,
 	SET_TEMPLATES,
 	SELECT_TEMPLATE
-} from '../actions';
+} from '../actions/templates';
 
 const initialState = {
   selectedId: null,

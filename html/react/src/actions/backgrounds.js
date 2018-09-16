@@ -5,6 +5,7 @@ const FETCH_BACKGROUNDS = "FETCH_BACKGROUNDS";
 const SET_BACKGROUNDS = "SET_BACKGROUNDS";
 const SET_BACKGROUND = "SET_BACKGROUND";
 const SELECT_BACKGROUND = "SELECT_BACKGROUND";
+const UPDATE_BACKGROUND = "UPDATE_BACKGROUND";
 
 
 function startFetchingBackgrounds() {
@@ -40,25 +41,50 @@ function selectBackground(id) {
 	}
 }
 
+function updateBackgroundById(id, updatedAttributes) {
+	return {
+		type: UPDATE_BACKGROUND,
+		id,
+		updatedAttributes
+	}
+}
+
 const fetchBackgrounds = () => {
-	return (dispatch, getState) => {
-		getOrFetchResourceLinks(dispatch, getState).then(resourceLinks => {
-			dispatch(startFetchingBackgrounds());
-			axios.get(resourceLinks.backgrounds)
-				.then((result) => {
-					dispatch(setBackgrounds(result.data));
-				});
-		});
+	return async (dispatch, getState) => {
+		const resourceLinks = await getOrFetchResourceLinks(dispatch, getState);
+		dispatch(startFetchingBackgrounds());
+		const result = await axios.get(resourceLinks.backgrounds);
+		dispatch(setBackgrounds(result.data));
 	};
 }
 
-export {
+const loadBackgroundImageDataById = (id, imageSrc) => {
+	return async(dispatch, getState) => {
+		console.log('blah');
+		const imageLoadingPromise = new Promise((resolve, reject) => {
+			const image = new Image();
+			image.onload = data => resolve(image);
+			image.onerror = reject;
+			image.src = imageSrc;
+		});
+		const {width, height} = await imageLoadingPromise;
+		dispatch(updateBackgroundById(id, {width, height}));
+	}
+}
+
+const backgroundsActions = {
 	fetchBackgrounds,
 	setBackgroundFromUrl,
 	setBackgrounds,
 	selectBackground,
-	FETCH_BACKGROUNDS, 
+	loadBackgroundImageDataById
+}
+
+export {
+	backgroundsActions,
+	FETCH_BACKGROUNDS,
 	SET_BACKGROUNDS,
 	SET_BACKGROUND,
-	SELECT_BACKGROUND
+	SELECT_BACKGROUND,
+	UPDATE_BACKGROUND
 };

@@ -41,6 +41,7 @@ function getOrFetchResourceLinks(dispatch, getState) {
 
 export {
 	FETCH_RESOURCE_LINKS,
+	SET_RESOURCE_LINKS,
 	fetchResourceLinks,
 	getOrFetchResourceLinks
 }

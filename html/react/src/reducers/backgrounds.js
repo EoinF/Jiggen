@@ -2,12 +2,12 @@ import {
 	FETCH_BACKGROUNDS,
 	SET_BACKGROUND,
 	SET_BACKGROUNDS,
-	SELECT_BACKGROUND
-} from '../actions';
+	SELECT_BACKGROUND,
+	UPDATE_BACKGROUND
+} from '../actions/backgrounds';
 
 const initialState = {
   selectedId: null,
-  backgrounds: [],
   backgroundsMap: {
   	// map of background ids to backgrounds
   },
@@ -23,17 +23,15 @@ function selectBackground(state, {id}) {
 
 function setBackground(state, {background}) {
 	const {
-		backgroundsMap,
-		backgrounds
+		backgroundsMap
 	} = state;
 
 	const newMap = {...backgroundsMap};
-	newMap[background.id] = background;
+	newMap[background.id] = JSON.parse(JSON.stringify(background));
 
 	return {
 		...state,
 		selectedId: background.id,
-		backgrounds: [...backgrounds, background],
 		backgroundsMap: newMap,
 		isFetching: false
 	};
@@ -48,10 +46,17 @@ function setBackgrounds(state, {backgrounds}) {
 
 	return {
 		...state,
-		backgrounds,
 		backgroundsMap,
 		isFetching: false
 	};
+}
+
+function updateBackground(state, {id, updatedAttributes}) {
+	const updatedBackground = {
+		...state.backgroundsMap[id],
+		...updatedAttributes
+	};
+	return setBackground(state, {background: updatedBackground});
 }
 
 function startFetchingBackgrounds(state, _) {
@@ -72,6 +77,8 @@ function backgroundReducers(state = initialState, action) {
 			return setBackgrounds(state, action)
 		case SELECT_BACKGROUND:
 			return selectBackground(state, action)
+		case UPDATE_BACKGROUND:
+			return updateBackground(state, action)
 		default:
 			return state;
 	}
