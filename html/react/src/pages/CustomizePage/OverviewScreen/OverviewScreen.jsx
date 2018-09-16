@@ -3,12 +3,12 @@ import { connect } from 'react-redux';
 
 import './OverviewScreen.css';
 import JiggenHeader from './JiggenHeader';
-import { generatedTemplatesActions } from '../../actions';
+import { generatedTemplatesActions } from '../../../actions';
 
 import SelectionWidget from './SelectionWidget';
-import PuzzleLauncher from './PuzzleLauncher';
+import PuzzleStats from './PuzzleStats';
 
-import GameContainer from '../../widgets/GameContainer';
+import GameContainer from '../../../widgets/GameContainer';
 
 
 import templateLogo from './Template-icon-simple.png';
@@ -38,10 +38,10 @@ class OverviewScreen extends Component {
             <h1>Jiggen</h1>
           </JiggenHeader>
           <div className="overviewBody">
-              <SelectionWidget 
+              <SelectionWidget
                 selection={selectedTemplate} 
                 fallbackImageSrc={templateLogo}
-                notSelectedCaption='Select a Template' 
+                notSelectedCaption='Select a Template'
                 selectedCaption='Template'
                 href='/templates'
               />
@@ -54,7 +54,7 @@ class OverviewScreen extends Component {
                />
           </div>
           <div className="overviewBody">
-              <PuzzleLauncher generatedTemplate={selectedGeneratedTemplate} background={selectedBackground} />
+              <PuzzleStats generatedTemplate={selectedGeneratedTemplate} background={selectedBackground} />
           </div>
           <div className="overviewBody gameContainer">
             <GameContainer/>

@@ -1,4 +1,4 @@
-@import '../../theming.scss';
+@import '../../../theming.scss';
 
 .OverviewScreen {
   height: 100%;
@@ -17,14 +17,18 @@
     display: flex;
     flex-flow: row wrap;
 
+    flex: 1;
+    &.gameContainer {
+      flex: 2;
+    }
+
     > * {
       flex: 1;
     }
+
   }
 
-  .gameContainer {
-    flex: 1;
-  }
+  
 
   #embed-html {
     background: $yellow100;

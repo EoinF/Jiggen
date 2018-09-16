@@ -4,10 +4,17 @@ const onGwtLoadedPromise = new Promise((resolve, reject) => {
 	window.setGwtLoaded = resolve;
 });
 
-function startPuzzle(generatedTemplate, background) {
+function setTemplate(generatedTemplate) {
 	onGwtLoadedPromise.then(() => {
 		// The gwtAdapter object is exported from java gwt code using JsInterop
-		window.gwtAdapter.startPuzzle(generatedTemplate, background);
+		window.gwtAdapter.setTemplate(generatedTemplate);
+	});
+}
+
+function setBackground(background) {
+	onGwtLoadedPromise.then(() => {
+		// The gwtAdapter object is exported from java gwt code using JsInterop
+		window.gwtAdapter.setBackground(background);
 	});
 }
 
@@ -15,14 +22,6 @@ function startDemo() {
 	onGwtLoadedPromise.then(() => {
 		// The gwtAdapter object is exported from java gwt code using JsInterop
 		window.gwtAdapter.startDemo();
-	});
-}
-
-
-function setTemplate(template) {
-	onGwtLoadedPromise.then(() => {
-		// The gwtAdapter object is exported from java gwt code using JsInterop
-		window.gwtAdapter.setTemplate(template);
 	});
 }
 
@@ -57,7 +56,7 @@ onGwtLoadedPromise.then(() => {
 });
 
 export default {
-	startPuzzle,
+	setBackground,
 	setTemplate,
 	startDemo,
 	setFullScreen

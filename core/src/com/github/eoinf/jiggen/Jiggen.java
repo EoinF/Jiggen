@@ -58,10 +58,15 @@ public class Jiggen extends Game {
 		DecodedTemplate t = new DecodedTemplate(tex);
 
 		PuzzleGraphTemplate puzzle = PuzzleFactory.generateTexturePuzzleFromTemplate(t);
-		screen.setPuzzleGraph(puzzle, new Texture(getRandomBackground()));
+		screen.setTemplate(puzzle);
+		screen.setBackground(new Texture(getRandomBackground()));
 	}
 
-	public void loadFromAtlas(FileHandle atlasFile, FileHandle atlasImageFolder, FileHandle backgroundFile,
+	public void setBackground(FileHandle backgroundFile) {
+		screen.setBackground(new Texture(backgroundFile));
+	}
+
+	public void setTemplateFromAtlas(FileHandle atlasFile, FileHandle atlasImageFolder,
 							  Map<Integer, IntRectangle> vertices, GraphEdge[] graphEdges) {
 		try {
 			atlas = new TextureAtlas(atlasFile, atlasImageFolder);
@@ -84,8 +89,7 @@ public class Jiggen extends Game {
 			graph.addEdge(edge.v0, edge.v1);
 		}
 
-		screen.setPuzzleGraph(graph, new Texture(backgroundFile));
-		screen.shuffle();
+		screen.setTemplate(graph);
 	}
 
 	private GridPoint2 getPuzzleSize(Map<Integer, IntRectangle> vertices) {

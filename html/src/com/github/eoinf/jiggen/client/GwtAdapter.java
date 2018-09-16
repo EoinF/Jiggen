@@ -25,21 +25,13 @@ public class GwtAdapter {
     private static Jiggen jiggen;
     private static GwtApplication gdxApp;
 
-    public static void startPuzzle(GeneratedTemplate generatedTemplate, Background background) {
-        String atlasLink = generatedTemplate.links.atlas;
-        String templateLink = generatedTemplate.links.image;
+
+    public static void setBackground(Background background) {
         String backgroundLink = background.links.image;
 
         DynamicPreloader preloader = (DynamicPreloader) gdxApp.getPreloader();
-        Map<Integer, IntRectangle> verticesMap = generatedTemplate.vertices.toMap();
-        GraphEdge[] graphEdges = generatedTemplate.edges.toArray();
 
         Array<Preloader.Asset> assets = new Array<>();
-        assets.add(
-                new Preloader.Asset(atlasLink, AssetFilter.AssetType.Text, Integer.MAX_VALUE, "text/plain"));
-
-        assets.add(new Preloader.Asset(templateLink, AssetFilter.AssetType.Image, Integer.MAX_VALUE,
-                        "image/" + generatedTemplate.extension));
 
         assets.add(new Preloader.Asset(backgroundLink, AssetFilter.AssetType.Image, Integer.MAX_VALUE,
                 "application/unknown"));
@@ -56,6 +48,39 @@ public class GwtAdapter {
             public void update (Preloader.PreloaderState state) {
                 if (state.hasEnded()) {
                     FileHandle backgroundFile = new GwtFileHandle(preloader, backgroundLink, Files.FileType.Internal);
+
+                    gdxApp.postRunnable(() -> jiggen.setBackground(backgroundFile));
+                }
+            }
+        });
+    }
+
+    public static void setTemplate(GeneratedTemplate generatedTemplate) {
+        String atlasLink = generatedTemplate.links.atlas;
+        String templateLink = generatedTemplate.links.image;
+
+        DynamicPreloader preloader = (DynamicPreloader) gdxApp.getPreloader();
+        Map<Integer, IntRectangle> verticesMap = generatedTemplate.vertices.toMap();
+        GraphEdge[] graphEdges = generatedTemplate.edges.toArray();
+
+        Array<Preloader.Asset> assets = new Array<>();
+        assets.add(
+                new Preloader.Asset(atlasLink, AssetFilter.AssetType.Text, Integer.MAX_VALUE, "text/plain"));
+
+        assets.add(new Preloader.Asset(templateLink, AssetFilter.AssetType.Image, Integer.MAX_VALUE,
+                        "image/" + generatedTemplate.extension));
+
+        GWT.log("Loading assets");
+
+        preloader.preload(assets, new Preloader.PreloaderCallback() {
+            @Override
+            public void error (String file) {
+                gdxApp.error("Preloading dynamic assets", "Unhandled error!");
+            }
+
+            @Override
+            public void update (Preloader.PreloaderState state) {
+                if (state.hasEnded()) {
                     FileHandle atlasFile = new GwtFileHandle(preloader, atlasLink, Files.FileType.Internal);
                     FileHandle templateFile = new GwtFileHandle(preloader, templateLink, Files.FileType.Internal);
                     FileHandle fakeDirectory = new FileHandle() {
@@ -65,7 +90,7 @@ public class GwtAdapter {
                         }
                     };
 
-                    gdxApp.postRunnable(() -> jiggen.loadFromAtlas(atlasFile, fakeDirectory, backgroundFile, verticesMap, graphEdges));
+                    gdxApp.postRunnable(() -> jiggen.setTemplateFromAtlas(atlasFile, fakeDirectory, verticesMap, graphEdges));
                 }
             }
         });

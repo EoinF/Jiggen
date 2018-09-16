@@ -1,14 +1,47 @@
 import React, {Component} from 'react';
+import { connect } from 'react-redux';
+
+import { 
+  generatedTemplatesActions,
+} from '../../actions';
+
+import gwtAdapter from '../../gwtAdapter';
 
 class GameContainer extends Component {
 
   constructor(props) {
     super(props);
     this.gameContainerRef = React.createRef();
+    document.addEventListener('webkitfullscreenchange', this.onFullscreenChange, false);
+    document.addEventListener('mozfullscreenchange', this.onFullscreenChange, false);
+    document.addEventListener('fullscreenchange', this.onFullscreenChange, false);
+    document.addEventListener('MSFullscreenChange', this.onFullscreenChange, false);
+  }
+
+  onFullscreenChange = () => {
+    const isFullScreen = document.fullscreen || document.webkitIsFullScreen || document.mozFullScreen;
+    if (!isFullScreen) {
+      this.updateContainerSize();
+    }
+  }
+
+  setOrFetchTemplate = (generatedTemplate) => {
+    if ('vertices' in generatedTemplate) {
+      gwtAdapter.setTemplate(generatedTemplate);
+    } else {
+      this.props.fetchGeneratedTemplateById(generatedTemplate.id);
+    }
   }
 
   componentDidMount() {
-    this.gameContainerRef.current.appendChild(document.getElementById('embed-html'))
+    this.gameContainerRef.current.appendChild(document.getElementById('embed-html'));
+
+    if (this.props.generatedTemplate != null) {
+      this.setOrFetchTemplate(this.props.generatedTemplate);
+    }
+    if (this.props.background != null) {
+      gwtAdapter.setBackground(this.props.background);
+    }
   };
 
   componentWillUnmount() {
@@ -17,13 +50,21 @@ class GameContainer extends Component {
     originalGameContainer.appendChild(document.getElementById('embed-html'));
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.generatedTemplate !== this.props.generatedTemplate && this.props.generatedTemplate != null) {
+      this.setOrFetchTemplate(this.props.generatedTemplate);
+    }
+    if (prevProps.background !== this.props.background && this.props.background != null) {
+      gwtAdapter.setBackground(this.props.background);
+    }
+    this.updateContainerSize();
+  }
+
+  updateContainerSize = () => {
     const {
-      width, 
+      width,
       height
     } = this.gameContainerRef.current.getBoundingClientRect();
-
-    console.log('game container size:', {width, height});
 
     const canvasElement = document.querySelector('#embed-html canvas');
     if (canvasElement) {
@@ -46,4 +87,25 @@ class GameContainer extends Component {
   }
 }
 
-export default GameContainer;
+
+const mapStateToProps = state => {
+  return {
+    background: state.backgrounds.backgroundsMap[state.backgrounds.selectedId],
+    generatedTemplate: state.generatedTemplates.generatedTemplatesMap[state.generatedTemplates.selectedId]
+  };
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchGeneratedTemplateById: id => {
+      dispatch(generatedTemplatesActions.fetchGeneratedTemplateById(id))
+    }
+  }
+}
+
+const ConnectedGameContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(GameContainer);
+
+export default ConnectedGameContainer;

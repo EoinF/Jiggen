@@ -1,6 +1,7 @@
 import React from 'react';
-import PlainLink from '../../../widgets/PlainLink';
+import {PlainLink, ResponsiveImage} from '../../../../widgets';
 import './SelectionWidget.css';
+
 
 const SelectionWidget = ({selection, fallbackImageSrc, notSelectedCaption, selectedCaption, href}) => {
 	let imageSrc = fallbackImageSrc;
@@ -13,9 +14,7 @@ const SelectionWidget = ({selection, fallbackImageSrc, notSelectedCaption, selec
 			<div className="description">
 				{selection != null ? selectedCaption : notSelectedCaption}
 			</div>
-			<div className="imageSection">
-				<img src={imageSrc} alt="" />
-			</div>
+			<ResponsiveImage src={imageSrc} alt=""/>
 		</PlainLink>
 	);
 }

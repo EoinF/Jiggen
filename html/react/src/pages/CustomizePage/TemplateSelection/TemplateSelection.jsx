@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import PlainLink from '../../widgets/PlainLink';
-import { templatesActions } from '../../actions';
+import PlainLink from '../../../widgets/PlainLink';
+import { templatesActions } from '../../../actions';
 
 import { JiggenHeader } from '../OverviewScreen'
 import TemplateWidget from './TemplateWidget';

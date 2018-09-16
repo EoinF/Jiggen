@@ -85,8 +85,8 @@ public class PuzzleSolverScreen implements Screen {
         });
     }
 
-    public void setPuzzleGraph(PuzzleGraphTemplate puzzleGraphTemplate, Texture backgroundImage) {
-        puzzleViewController.startPuzzle(puzzleGraphTemplate, backgroundImage);
+    public void setTemplate(PuzzleGraphTemplate puzzleGraphTemplate) {
+        puzzleViewController.setTemplate(puzzleGraphTemplate);
     }
 
     @Override
@@ -130,5 +130,9 @@ public class PuzzleSolverScreen implements Screen {
 
     public void shuffle() {
         puzzleViewController.shuffle();
+    }
+
+    public void setBackground(Texture background) {
+        puzzleViewController.setBackground(background);
     }
 }

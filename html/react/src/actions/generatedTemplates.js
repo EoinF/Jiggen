@@ -29,15 +29,12 @@ function addGeneratedTemplates(generatedTemplates) {
 
 const fetchGeneratedTemplateById = (id, onFetchLinksResolver = () => {}) => {
 	console.log("fetchGeneratedTemplate");
-	return (dispatch, getState) => {
-		getOrFetchResourceLinks(dispatch, getState).then(resourceLinks => {
-			dispatch(startFetchingGeneratedTemplate());
-			axios.get(resourceLinks.generatedTemplates + '/' + id)
-				.then((result) => {
-					onFetchLinksResolver(result.data);
-					dispatch(setGeneratedTemplate(id, result.data));
-				});
-		});
+	return async (dispatch, getState) => {
+		const resourceLinks = await getOrFetchResourceLinks(dispatch, getState);
+		dispatch(startFetchingGeneratedTemplate());
+		const result = await axios.get(resourceLinks.generatedTemplates + '/' + id);
+		onFetchLinksResolver(result.data);
+		dispatch(setGeneratedTemplate(id, result.data));
 	};
 }
 

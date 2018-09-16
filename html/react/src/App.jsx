@@ -2,12 +2,10 @@ import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux'
 
-import './index.scss';
+import './index.css';
 
-import OverviewScreen from './pages/OverviewScreen';
-import TemplateSelection from './pages/TemplateSelection';
-import BackgroundSelection from './pages/BackgroundSelection';
-import PuzzleSolver from './pages/PuzzleSolver';
+import CustomizePage from './pages/CustomizePage';
+
 
 class App extends Component {
 	render() {
@@ -16,11 +14,7 @@ class App extends Component {
   			<Provider store={store}>
 				<BrowserRouter basename={process.env.REACT_APP_PUBLIC_URL || ''}>
 					<Switch>
-						<Route exact path='/' component={OverviewScreen}/>
-						<Route exact path='/templates' component={TemplateSelection}/>
-						<Route exact path='/backgrounds' component={BackgroundSelection}/>
-						<Route path='/puzzle/:id' component={PuzzleSolver}/>
-						<Route path='/' component={OverviewScreen}/>
+						<Route path='/' component={CustomizePage}/>
 					</Switch>
 				</BrowserRouter>
   			</Provider>

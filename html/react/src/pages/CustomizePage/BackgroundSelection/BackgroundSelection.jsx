@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { JiggenHeader } from '../OverviewScreen';
-import PlainLink from '../../widgets/PlainLink';
-import CardContainer from '../../widgets/CardContainer';
+import PlainLink from '../../../widgets/PlainLink';
+import CardContainer from '../../../widgets/CardContainer';
 import SelectedBackgroundDisplay from './SelectedBackgroundDisplay';
 import ImageDisplayReel from './ImageDisplayReel';
 
 import { 
 	backgroundsActions
-} from '../../actions';
+} from '../../../actions';
 
 import './backgroundSelection.css';
 

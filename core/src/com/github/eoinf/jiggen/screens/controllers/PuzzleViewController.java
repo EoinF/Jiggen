@@ -103,12 +103,13 @@ public class PuzzleViewController {
         puzzleViewModel.setConnectedPiecesList(connectedPiecesList);
     }
 
-    public void startPuzzle(PuzzleGraphTemplate puzzleGraphTemplate, Texture backgroundImage) {
-        // Clear the old puzzle first so all the UI is flushed out
-        puzzleViewModel.reset();
 
-        puzzleViewModel.setPuzzleGraphTemplate(puzzleGraphTemplate);
+    public void setBackground(Texture backgroundImage) {
         puzzleViewModel.setBackgroundImage(backgroundImage);
+    }
+
+    public void setTemplate(PuzzleGraphTemplate puzzleGraphTemplate) {
+        puzzleViewModel.setPuzzleGraphTemplate(puzzleGraphTemplate);
     }
 
     public void resizeScreen(int width, int height) {
