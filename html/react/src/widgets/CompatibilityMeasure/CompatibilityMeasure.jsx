@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 
-import interpolate from 'color-interpolate';
+import generateColourMap from '../../utils/colorInterpolate';
 
 class CompatibilityMeasure extends Component {
 
 	constructor(props) {
 		super(props);
-		const colourMap = interpolate(['#f26', '#f38', '#f4b','#e4b', '#e5a', '#eb2', '#ec0', '#ec0', '#5e5']);
+		const colourMap = generateColourMap(['#f26', '#f38', '#f4b','#e4b', '#e5a', '#eb2', '#ec0', '#ec0', '#5e5']);
 		this.state = {
 			compatibility: null,
 			colour: null,
@@ -17,22 +17,14 @@ class CompatibilityMeasure extends Component {
 	componentDidMount() {
 		this.calculateCompatibility();
 		this.calculateColours();
-
-		document.addEventListener("keypress", (e) => {
-			if (e.keyCode == '119') {
-				this.setState({compatibility: this.state.compatibility - 1});
-			} else if (e.keyCode == '115') {
-				this.setState({compatibility: this.state.compatibility + 1});
-			}
-		});
 	}
 
 	componentDidUpdate(prevProps, prevState) {
 		if(prevProps.background !== this.props.background
-			|| prevProps.generatedTemplate != this.props.generatedTemplate) {
+			|| prevProps.generatedTemplate !== this.props.generatedTemplate) {
 			this.calculateCompatibility();
 		}
-		if (prevState.compatibility != this.state.compatibility) {
+		if (prevState.compatibility !== this.state.compatibility) {
 			this.calculateColours();
 		}
 	}
@@ -110,7 +102,6 @@ class CompatibilityMeasure extends Component {
 			};
 			const text = this.state.compatibility.toString().split('.')[0] + '%';
 
-			console.log(style);
 			return (
 				<div className={this.props.className} style={style}>{text}</div>
 			);

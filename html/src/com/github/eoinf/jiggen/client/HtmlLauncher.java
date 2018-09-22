@@ -2,7 +2,6 @@ package com.github.eoinf.jiggen.client;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.LifecycleListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
 import com.badlogic.gdx.backends.gwt.preloader.Preloader;
@@ -94,11 +93,6 @@ public class HtmlLauncher extends GwtApplication {
         GwtAdapter.setJiggen(jiggen);
         GwtAdapter.setApp(this);
         return jiggen;
-    }
-
-    @Override
-    public void addLifecycleListener(LifecycleListener listener) {
-        super.addLifecycleListener(listener);
     }
 
 }

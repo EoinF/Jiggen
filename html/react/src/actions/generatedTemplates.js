@@ -28,7 +28,6 @@ function addGeneratedTemplates(generatedTemplates) {
 }
 
 const fetchGeneratedTemplateById = (id, onFetchLinksResolver = () => {}) => {
-	console.log("fetchGeneratedTemplate");
 	return async (dispatch, getState) => {
 		const resourceLinks = await getOrFetchResourceLinks(dispatch, getState);
 		dispatch(startFetchingGeneratedTemplate());

@@ -1,26 +1,28 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 
-import { 
+import {
   generatedTemplatesActions,
 } from '../../actions/generatedTemplates';
 
 import gwtAdapter from '../../gwtAdapter';
+
+import { 
+  setFullScreen,
+  onFullScreenChange,
+  isFullScreen
+} from '../../utils/fullScreen';
 
 class GameContainer extends Component {
 
   constructor(props) {
     super(props);
     this.gameContainerRef = React.createRef();
-    document.addEventListener('webkitfullscreenchange', this.onFullscreenChange, false);
-    document.addEventListener('mozfullscreenchange', this.onFullscreenChange, false);
-    document.addEventListener('fullscreenchange', this.onFullscreenChange, false);
-    document.addEventListener('MSFullscreenChange', this.onFullscreenChange, false);
+    onFullScreenChange(this.onFullScreenChange);
   }
 
-  onFullscreenChange = () => {
-    const isFullScreen = document.fullscreen || document.webkitIsFullScreen || document.mozFullScreen;
-    if (!isFullScreen) {
+  onFullScreenChange = () => {
+    if (!isFullScreen()) {
       this.updateContainerSize();
     }
   }

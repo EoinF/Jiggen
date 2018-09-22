@@ -1,3 +1,5 @@
+import {setFullScreen} from './utils/fullScreen';
+
 const onGwtLoadedPromise = new Promise((resolve, reject) => {
 	// Used by the gwt application to notify that the gwt app has been instantiated
 	// (important because we need to wait for window.gwtAdapter to become available)
@@ -25,39 +27,14 @@ function startDemo() {
 	});
 }
 
-function setFullScreen(isFullScreen) {
-	const el = document.querySelector('canvas');
-
-	if (el) {
-		if (isFullScreen) {
-			// for newer Webkit and Firefox
-			const requestFullScreen = el.requestFullscreen
-				|| el.webkitRequestFullscreen // Chrome, Safari and Edge
-				|| el.mozRequestFullScreen // Firefox
-				|| el.msRequestFullscreen; // IE 11
-			if (requestFullScreen != null) {
-				requestFullScreen.call(el);
-			}
-		} else {
-			const cancelFullScreen = document.exitFullScreen
-				|| document.webkitExitFullscreen // Edge and Safari
-				|| document.webkitCancelFullScreen // Chrome
-				|| document.mozCancelFullScreen // Firefox
-				|| document.msExitFullscreen; // IE 11
-			if (cancelFullScreen != null) {
-				cancelFullScreen.call(document);
-			}
-		}
-	}
-}
-
 onGwtLoadedPromise.then(() => {
-	window.gwtAdapter.setFullScreen = setFullScreen;
+	window.gwtAdapter.setFullScreen = (isFullScreen) => {
+		setFullScreen(document.querySelector('canvas'), isFullScreen);
+	};
 });
 
 export default {
 	setBackground,
 	setTemplate,
-	startDemo,
-	setFullScreen
+	startDemo
 };

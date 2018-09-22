@@ -17,10 +17,11 @@ import backgroundLogo from './Background-icon.png';
 class OverviewScreen extends Component {
   
   componentDidMount() {
-    const { 
+    const {
       selectedTemplate
     } = this.props;
     if (selectedTemplate) {
+      // Clear out the existing generated templates in the store, and refetch them all
       this.props.fetchGeneratedTemplatesByLink(selectedTemplate.links.generatedTemplates);
     }
   };
@@ -28,7 +29,6 @@ class OverviewScreen extends Component {
   render() {
     const {
       selectedTemplate,
-      selectedGeneratedTemplate,
       selectedBackground
     } = this.props;
 

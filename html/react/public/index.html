@@ -55,14 +55,14 @@
     <script>
                   function handleMouseDown(evt) {
                     //evt.preventDefault();
-                    evt.stopPropagation();
+                    //evt.stopPropagation();
                     evt.target.style.cursor = 'default';
                     window.focus();
                   }
 
                   function handleMouseUp(evt) {
                     //evt.preventDefault();
-                    evt.stopPropagation();
+                    //evt.stopPropagation();
                     evt.target.style.cursor = '';
                   }
                   document.getElementById('embed-html').addEventListener('mousedown', handleMouseDown, false);

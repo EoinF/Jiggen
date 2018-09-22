@@ -135,6 +135,10 @@ public class PuzzleViewController {
         puzzleViewModel.setFullScreen(!puzzleViewModel.getFullScreenObservable().getValue());
     }
 
+    public void setFullScreen(boolean isFullScreen) {
+        puzzleViewModel.setFullScreen(isFullScreen);
+    }
+
     public void setGroupPosition(ConnectedPuzzlePieces connectedPieces, Vector2 nextPosition) {
         connectedPieces.setPosition(nextPosition);
 
