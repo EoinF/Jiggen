@@ -11,7 +11,7 @@ public class PuzzleGestureListener implements EnhancedGestureListener {
 
     private PuzzleViewController puzzleViewController;
     private Stage stage;
-    private static float ZOOM_MULTIPLIER = 0.005f;
+    private static float ZOOM_MULTIPLIER = 0.004f;
     private int numPointersTouchedDown = 0;
 
     public PuzzleGestureListener(PuzzleViewController puzzleViewController, Stage stage) {
@@ -84,6 +84,9 @@ public class PuzzleGestureListener implements EnhancedGestureListener {
 
     @Override
     public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
+        // Drop any piece we are holding so the user can focus on zooming in and out
+        puzzleViewController.dropPiece();
+
         float initialDistanceBetweenPivots = initialPointer1.dst(initialPointer2);
         float currentDistanceBetweenPivots = pointer1.dst(pointer2);
 

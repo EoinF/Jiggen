@@ -56,7 +56,7 @@ class OverviewScreen extends Component {
           <div className="overviewBody">
               <PuzzleStats/>
           </div>
-          <div className="overviewBody gameContainer">
+          <div className='overviewBody gameContainer'>
             <GameContainer/>
           </div>
         </div>

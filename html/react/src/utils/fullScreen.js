@@ -1,3 +1,5 @@
+import store from '../store';
+import { displayOptionsActions } from '../actions/displayOptions';
 
 function isFullScreen() {
 	 return document.fullscreen || document.webkitIsFullScreen || document.mozFullScreen;
@@ -19,6 +21,9 @@ function setFullScreen(element, isFullScreen) {
 			|| element.msRequestFullscreen; // IE 11
 		if (requestFullScreen != null) {
 			requestFullScreen.call(element);
+		} else {
+			// Special fallback if no full screen api available (iOs safari and iOs chrome)
+			store.dispatch(displayOptionsActions.enableFullScreenFallback());
 		}
 	} else {
 		const cancelFullScreen = document.exitFullScreen
@@ -28,6 +33,9 @@ function setFullScreen(element, isFullScreen) {
 			|| document.msExitFullscreen; // IE 11
 		if (cancelFullScreen != null) {
 			cancelFullScreen.call(document);
+		} else {
+			// Special fallback if no full screen api available (iOs safari and iOs chrome)
+			store.dispatch(displayOptionsActions.disableFullScreenFallback());
 		}
 	}
 }

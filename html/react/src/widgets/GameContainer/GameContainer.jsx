@@ -7,11 +7,12 @@ import {
 
 import gwtAdapter from '../../gwtAdapter';
 
-import { 
-  setFullScreen,
+import {
   onFullScreenChange,
   isFullScreen
 } from '../../utils/fullScreen';
+
+import './GameContainer.css';
 
 class GameContainer extends Component {
 
@@ -81,8 +82,12 @@ class GameContainer extends Component {
   }
 
   render() {
+    let classAttribute = '';
+    if (this.props.showFullScreenFallback) {
+      classAttribute = 'fullScreenFallback';
+    }
     return (
-      <div ref={this.gameContainerRef} className="gameContainer">
+      <div ref={this.gameContainerRef} className={classAttribute}>
         { /*Game canvas will be moved into here using javascript */ }
       </div>
     );
@@ -93,7 +98,8 @@ class GameContainer extends Component {
 const mapStateToProps = state => {
   return {
     background: state.backgrounds.backgroundsMap[state.backgrounds.selectedId],
-    generatedTemplate: state.generatedTemplates.generatedTemplatesMap[state.generatedTemplates.selectedId]
+    generatedTemplate: state.generatedTemplates.generatedTemplatesMap[state.generatedTemplates.selectedId],
+    showFullScreenFallback: state.displayOptions.showFullScreenFallback
   };
 }
 
