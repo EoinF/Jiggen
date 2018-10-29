@@ -1,12 +1,13 @@
 import org.wisepersist.gradle.plugins.gwt.GwtSuperDev
+import org.gradle.internal.os.OperatingSystem
 
 apply plugin: "java"
 apply plugin: "jetty"
 
 gwt {
-    gwtVersion='2.8.0' // Should match the gwt version used for building the gwt backend
-    maxHeapSize="1G" // Default 256m is not enough for gwt compiler. GWT is HUNGRY
-    minHeapSize="1G"
+    gwtVersion = '2.8.0' // Should match the gwt version used for building the gwt backend
+    maxHeapSize = "1G" // Default 256m is not enough for gwt compiler. GWT is HUNGRY
+    minHeapSize = "1G"
 
     src = files(file("src/")) // Needs to be in front of "modules" below.
     modules 'com.github.eoinf.jiggen.GdxDefinition'
@@ -24,8 +25,8 @@ gwt {
 task draftRun(dependsOn: ':desktop:buildAssets', type: JettyRunWar) {
     dependsOn draftWar
     dependsOn.remove('war')
-    webApp=draftWar.archivePath
-    daemon=true
+    webApp = draftWar.archivePath
+    daemon = true
 }
 
 
@@ -39,11 +40,14 @@ task compileReactDev(type: Exec) {
 }
 
 task compileReactProd(type: Exec) {
-    environment 'REACT_APP_PUBLIC_URL', '/jiggen'
-    environment 'PUBLIC_URL', '/jiggen'
     environment 'REACT_APP_API_URL', '/jiggen-backend'
     workingDir = 'react'
-    commandLine 'cmd', '/c', 'npm run build'
+
+    if (OperatingSystem.current().isWindows()) {
+        commandLine 'cmd', '/c', 'npm run build'
+    } else {
+        commandLine 'npm run build'
+    }
 }
 
 task superDev(type: GwtSuperDev, dependsOn: [draftRun, compileReactDev]) {
@@ -77,22 +81,26 @@ task generateDist(dependsOn: [clean, compileGwt, compileReactProd]) {
 
 task dist(type: Exec, dependsOn: [generateDist]) {
     workingDir = 'build/dist'
-    commandLine 'cmd', '/c', 'jar cvf ../jiggen.war .'
+    if (OperatingSystem.current().isWindows()) {
+        commandLine 'cmd', '/c', 'jar cvf ../jiggen.war .'
+    } else {
+        commandLine 'jar cvf ../jiggen.war .'
+    }
 }
 
 draftWar {
-   from "war"
+    from "war"
 }
 
 task addSource << {
-	sourceSets.main.compileClasspath += files(project(':core').sourceSets.main.allJava.srcDirs)
+    sourceSets.main.compileClasspath += files(project(':core').sourceSets.main.allJava.srcDirs)
 }
 
 tasks.compileGwt.dependsOn(':desktop:buildAssets', addSource)
 tasks.draftCompileGwt.dependsOn(addSource)
 
 sourceCompatibility = 1.8
-sourceSets.main.java.srcDirs = [ "src/" ]
+sourceSets.main.java.srcDirs = ["src/"]
 
 
 eclipse.project {
