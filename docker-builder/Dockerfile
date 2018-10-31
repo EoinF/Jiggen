@@ -6,9 +6,10 @@ RUN apk -v --update add \
         git \
         python \
         py-pip \
-        nodejs \
+        npm \
         && \
     pip install --upgrade awscli && \
+    npm install npm@6 -g && \
     rm -rf /var/cache/apk/*
 
 WORKDIR /build

@@ -46,7 +46,8 @@ task compileReactProd(type: Exec) {
     if (OperatingSystem.current().isWindows()) {
         commandLine 'cmd', '/c', 'npm run build'
     } else {
-        commandLine 'npm run build'
+        executable = 'npm'
+        arguments = ['run', 'build']
     }
 }
 

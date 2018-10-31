@@ -3,7 +3,9 @@ set -x
 
 git clone https://github.com/EoinF/Jiggen.git
 
-cd Jiggen
+cd Jiggen/html/react
+npm install
+cd ../..
 ./gradlew html:dist
 
 # Push war file to s3
