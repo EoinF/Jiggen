@@ -47,7 +47,7 @@ task compileReactProd(type: Exec) {
         commandLine 'cmd', '/c', 'npm run build'
     } else {
         executable = 'npm'
-        arguments = ['run', 'build']
+        args = ['run', 'build']
     }
 }
 
