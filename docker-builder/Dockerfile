@@ -16,6 +16,7 @@ WORKDIR /build
 
 COPY . /build
 
-RUN dos2unix /build/build.sh
+RUN dos2unix /build/build.sh && \
+    apk del dos2unix
 
 CMD ["sh", "/build/build.sh"]

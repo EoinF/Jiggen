@@ -8,5 +8,9 @@ npm install
 cd ../..
 ./gradlew html:dist
 
-# Push war file to s3
-aws s3 cp /html/build/jiggen.war s3://jiggen/artifacts/html
+mv html/build/jiggen.war ./docker-deploy/
+cd docker-deploy
+
+docker build -t jiggen:deploy-ui
+docker tag jiggen:deploy-ui 025171290744.dkr.ecr.eu-west-1.amazonaws.com/jiggen:deploy-ui
+docker push 025171290744.dkr.ecr.eu-west-1.amazonaws.com/jiggen:deploy-ui
