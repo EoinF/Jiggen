@@ -7,6 +7,7 @@ RUN apk -v --update add \
         python \
         py-pip \
         npm \
+        docker \
         && \
     pip install --upgrade awscli && \
     npm install npm@6 -g && \

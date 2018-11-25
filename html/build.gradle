@@ -86,7 +86,7 @@ task dist(type: Exec, dependsOn: [generateDist]) {
         commandLine 'cmd', '/c', 'jar cvf ../jiggen.war .'
     } else {
         executable = 'jar'
-        args = ['cvf', '../jiggen.war .']
+        args = ['cvf', '../jiggen.war', '.']
     }
 }
 
