@@ -1,5 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 set -x
 
 git clone https://github.com/EoinF/Jiggen.git
-./Jiggen/ci/build-task.sh
+chmod +x Jiggen/ci/build-task.sh
+cd Jiggen/ci
+./build-task.sh

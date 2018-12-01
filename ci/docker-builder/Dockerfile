@@ -6,6 +6,7 @@ RUN apk -v --update add \
         python \
         py-pip \
         npm \
+        bash \
         docker \
         && \
     pip install --upgrade awscli && \
@@ -19,4 +20,4 @@ COPY . /build
 RUN dos2unix /build/build.sh && \
     apk del dos2unix
 
-CMD ["sh", "/build/build.sh"]
+CMD ["bash", "/build/build.sh"]

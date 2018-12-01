@@ -1,6 +1,5 @@
-#!/bin/sh
+#!/bin/bash
 set -x
-
 
 cd ../html/react
 npm install
