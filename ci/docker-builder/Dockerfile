@@ -1,7 +1,6 @@
 FROM openjdk:8u181-jdk-alpine3.8
 
 RUN apk -v --update add \
-        bash \
         dos2unix \
         git \
         python \
