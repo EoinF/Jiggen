@@ -1,3 +1,5 @@
+import org.gradle.api.artifacts.maven.MavenDeployment
+
 buildscript {
     repositories {
         mavenLocal()
@@ -69,7 +71,30 @@ project(":html") {
 project(":core") {
     apply plugin: "java"
     apply plugin: 'org.junit.platform.gradle.plugin'
-    apply plugin: 'maven-publish'
+    apply plugin: 'maven'
+    apply plugin: 'signing'
+
+    sourceSets.main.java.srcDirs = [ "src/" ]
+
+    dependencies {
+        compile gradleApi()
+        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+
+        // JUnit Jupiter API and TestEngine implementation
+        testCompile("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
+        testRuntime("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
+
+        // To avoid compiler warnings about @API annotations in JUnit code
+        testCompileOnly('org.apiguardian:apiguardian-api:1.0.0')
+
+        // To use Log4J's LogManager
+        testRuntime("org.apache.logging.log4j:log4j-core:${log4jVersion}")
+        testRuntime("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
+
+        // Only needed to run tests in an (IntelliJ) IDE(A) that bundles an older version
+        testRuntime("org.junit.platform:junit-platform-launcher:${junitPlatformVersion}")
+    }
 
     junitPlatform {
         // platformVersion '1.0.2'
@@ -89,35 +114,86 @@ project(":core") {
         logManager 'org.apache.logging.log4j.jul.LogManager'
     }
 
-    artifacts {
-        archives jar
+    javadoc {
+        source = sourceSets.main.allJava
+        classpath = configurations.compile
     }
 
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                from components.java
+    task ('sourcesJar', type: Jar) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    task ('javadocJar', type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from tasks.javadoc.destinationDir
+    }
+
+    task('dist', type: Jar, dependsOn: 'classes') {
+        from files(sourceSets.main.output.classesDir)
+        from files(sourceSets.main.output.resourcesDir)
+
+        // Skip the creation of the default jar artifact
+        jar.enabled = false
+    }
+
+    signing {
+        sign project.configurations.archives
+    }
+
+    task('archiveAll') {
+        dependsOn 'dist'
+        dependsOn 'sourcesJar'
+        dependsOn 'javadocJar'
+        doLast {
+            project.artifacts {
+                archives dist
+                archives sourcesJar
+                archives javadocJar
             }
         }
     }
 
-    dependencies {
-        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+    task('publishStaging', type: Upload, dependsOn: 'archiveAll') {
+        repositories {
+            configuration = project.configurations.archives
+            mavenDeployer {
+                //def ascPom = addFilter('asc') {artifact, file -> artifact.ext == "asc" }
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-        // JUnit Jupiter API and TestEngine implementation
-        testCompile("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
-        testRuntime("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                    authentication(userName: sonatypeUsername, password: sonatypePassword)
+                }
 
-        // To avoid compiler warnings about @API annotations in JUnit code
-        testCompileOnly('org.apiguardian:apiguardian-api:1.0.0')
+                pom.project {
+                    name 'Jiggen'
+                    packaging 'jar'
+                    description 'Core code for jiggen'
+                    url 'https://github.com/EoinF/jiggen'
 
-        // To use Log4J's LogManager
-        testRuntime("org.apache.logging.log4j:log4j-core:${log4jVersion}")
-        testRuntime("org.apache.logging.log4j:log4j-jul:${log4jVersion}")
+                    scm {
+                        url 'scm:git@github.com:EoinF/jiggen.git'
+                        connection 'scm:git@github.com:EoinF/jiggen.git'
+                        developerConnection 'scm:git@github.com:EoinF/jiggen.git'
+                    }
 
-        // Only needed to run tests in an (IntelliJ) IDE(A) that bundles an older version
-        testRuntime("org.junit.platform:junit-platform-launcher:${junitPlatformVersion}")
+                    licenses {
+                        license {
+                            name 'The Apache Software License, Version 2.0'
+                            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                            distribution 'repo'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id 'outterest'
+                            name 'Eoin Flanagan'
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
