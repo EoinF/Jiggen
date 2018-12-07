@@ -40,7 +40,7 @@ task compileReactDev(type: Exec) {
 }
 
 task compileReactProd(type: Exec) {
-    environment 'REACT_APP_API_URL', '/jiggen-backend'
+    environment 'REACT_APP_API_URL', 'https://api.jiggen.app'
     workingDir = 'react'
 
     if (OperatingSystem.current().isWindows()) {
@@ -58,7 +58,7 @@ task superDev(type: GwtSuperDev, dependsOn: [draftRun, compileReactDev]) {
     }
 }
 
-task generateDist(dependsOn: [clean, compileGwt, compileReactProd]) {
+task dist(dependsOn: [clean, compileGwt, compileReactProd]) {
     doLast {
         file("build/dist").mkdirs()
         copy {
@@ -78,20 +78,6 @@ task generateDist(dependsOn: [clean, compileGwt, compileReactProd]) {
             into "build/dist"
         }
     }
-}
-
-task dist(type: Exec, dependsOn: [generateDist]) {
-    workingDir = 'build/dist'
-    if (OperatingSystem.current().isWindows()) {
-        commandLine 'cmd', '/c', 'jar cvf ../jiggen.war .'
-    } else {
-        executable = 'jar'
-        args = ['cvf', '../jiggen.war', '.']
-    }
-}
-
-draftWar {
-    from "war"
 }
 
 task addSource << {

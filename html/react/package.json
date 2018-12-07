@@ -23,7 +23,7 @@
   "scripts": {
     "build-css": "node-sass-chokidar src/ -o src/",
     "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive",
-    "start": "set REACT_APP_API_URL=http://outterest.com/jiggen-backend && npm-run-all -p watch-css start-js",
+    "start": "set REACT_APP_API_URL=http://outterest.com/jiggen-backend && npm run start-js",
     "build": "npm run build-css && npm run build-js",
     "start-js": "react-scripts start",
     "build-js": "react-scripts build",

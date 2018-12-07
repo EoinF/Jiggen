@@ -22,7 +22,7 @@ public class HtmlLauncher extends GwtApplication {
 
     private static native String getHostPageBaseURL() /*-{
         var pathnameParts = $doc.location.pathname.split('/');
-        return $doc.location.origin + '/' + pathnameParts[1] + '/';
+        return $doc.location.origin + '/' + pathnameParts[1] ? pathnameParts[1] + '/' : '';
     }-*/;
 
     @Override
