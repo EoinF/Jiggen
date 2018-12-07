@@ -6,4 +6,4 @@ npm install -q
 cd ../..
 ./gradlew html:dist -q
 
-aws s3 cp html/build s3://jiggen-frontend/ --recursive
+aws s3 cp html/build/dist s3://jiggen-frontend/ --recursive
