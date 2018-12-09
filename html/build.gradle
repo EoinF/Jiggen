@@ -1,8 +1,8 @@
 import org.wisepersist.gradle.plugins.gwt.GwtSuperDev
 import org.gradle.internal.os.OperatingSystem
 
-apply plugin: "java"
-apply plugin: "jetty"
+def HttpFileServer server = null
+def httpFilePort = 8080
 
 gwt {
     gwtVersion = '2.8.0' // Should match the gwt version used for building the gwt backend
@@ -14,7 +14,9 @@ gwt {
     devModules 'com.github.eoinf.jiggen.GdxDefinitionSuperdev'
     project.webAppDirName = 'react/build'
 
-    generateJsInteropExports = true;
+    jsInteropExports {
+        shouldGenerate = true
+    }
 
     compiler {
         strict = true;
@@ -22,18 +24,36 @@ gwt {
     }
 }
 
-task draftRun(dependsOn: ':desktop:buildAssets', type: JettyRunWar) {
-    dependsOn draftWar
-    dependsOn.remove('war')
-    webApp = draftWar.archivePath
-    daemon = true
+task startHttpServer(dependsOn: ':desktop:buildAssets') {
+    dependsOn draftCompileGwt
+
+    String output = project.buildDir.path + "/gwt/draftOut"
+    doLast {
+        copy {
+            from project.webAppDirName
+            into output
+        }
+
+        copy {
+            from "war"
+            into output
+        }
+
+        server = new SimpleHttpFileServerFactory().start(new File(output), httpFilePort)
+
+        println "Server started in directory " + server.getContentRoot() + ", http://localhost:" + server.getPort()
+    }
 }
 
-
 task compileReactDev(type: Exec) {
-    environment 'REACT_APP_PUBLIC_URL', '/html'
-    environment 'PUBLIC_URL', '/html'
-    environment 'REACT_APP_API_URL', 'http://outterest.com/jiggen-backend'
+    environment 'REACT_APP_API_URL', 'https://api.jiggen.app'
+    environment 'REACT_APP_SHOW_SUPERDEV', 'false'
+    workingDir = 'react'
+    commandLine 'cmd', '/c', 'npm run build'
+}
+
+task compileReactDevLocal(type: Exec) {
+    environment 'REACT_APP_API_URL', 'http://localhost:4567'
     environment 'REACT_APP_SHOW_SUPERDEV', 'false'
     workingDir = 'react'
     commandLine 'cmd', '/c', 'npm run build'
@@ -51,10 +71,23 @@ task compileReactProd(type: Exec) {
     }
 }
 
-task superDev(type: GwtSuperDev, dependsOn: [draftRun, compileReactDev]) {
+task superDevLocal(type: GwtSuperDev, dependsOn: [compileReactDevLocal]) {
+    dependsOn startHttpServer
     doFirst {
         gwt.modules = gwt.devModules
-        generateJsInteropExports = true;
+        gwt.jsInteropExports {
+            shouldGenerate = true
+        }
+    }
+}
+
+task superDev(type: GwtSuperDev, dependsOn: [compileReactDev]) {
+    dependsOn startHttpServer
+    doFirst {
+        gwt.modules = gwt.devModules
+        gwt.jsInteropExports {
+            shouldGenerate = true
+        }
     }
 }
 
@@ -80,8 +113,10 @@ task dist(dependsOn: [clean, compileGwt, compileReactProd]) {
     }
 }
 
-task addSource << {
-    sourceSets.main.compileClasspath += files(project(':core').sourceSets.main.allJava.srcDirs)
+task addSource {
+    doLast {
+        sourceSets.main.compileClasspath += files(project(':core').sourceSets.main.allJava.srcDirs)
+    }
 }
 
 tasks.compileGwt.dependsOn(':desktop:buildAssets', addSource)

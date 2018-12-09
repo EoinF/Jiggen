@@ -16,16 +16,6 @@ import java.util.function.Consumer;
 public class HtmlLauncher extends GwtApplication {
 
     @Override
-    public String getPreloaderBaseURL() {
-        return getHostPageBaseURL() + "assets/";
-    }
-
-    private static native String getHostPageBaseURL() /*-{
-        var pathnameParts = $doc.location.pathname.split('/');
-        return $doc.location.origin + '/' + pathnameParts[1] ? pathnameParts[1] + '/' : '';
-    }-*/;
-
-    @Override
     public Preloader createPreloader() {
         return new DynamicPreloader(getPreloaderBaseURL());
     }
