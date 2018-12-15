@@ -6,6 +6,7 @@
     "@types/node": "^10.12.15",
     "@types/react": "^16.7.17",
     "@types/react-dom": "^16.0.11",
+    "@types/react-redux": "^6.0.11",
     "@types/redux-actions": "^2.3.1",
     "@types/redux-thunk": "^2.1.0",
     "axios": "^0.18.0",

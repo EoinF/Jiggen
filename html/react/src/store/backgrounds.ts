@@ -2,11 +2,12 @@ import axios from 'axios';
 import { ThunkAction } from 'redux-thunk';
 import { handleActions, createActions, Action, BaseAction } from 'redux-actions';
 
-import { Resource, ReducersRoot, BaseState, JiggenThunkAction } from './models';
+import { Resource, ReducersRoot, BaseState, JiggenThunkAction } from '../models';
 import { getOrFetchResourceLinks } from '../actions/resourceLinks';
 import base from './base';
 
-interface Background extends Resource {}
+export interface Background extends Resource {}
+export interface BackgroundsState extends BaseState<Background> {}
 
 const initialState = {
 	...base.initialState

@@ -13,7 +13,7 @@ import {
 	playablePuzzlesReducers
 } from '../reducers';
 
-import { ReducersRoot } from './models';
+import { ReducersRoot } from '../models';
 
 import generatedTemplates from './generatedTemplates';
 import backgrounds from './backgrounds';

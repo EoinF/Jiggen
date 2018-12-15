@@ -2,20 +2,32 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { playablePuzzlesActions } from '../../actions/playablePuzzles';
-import { generatedTemplatesActions } from '../../store/generatedTemplates';
-import { backgroundsActions } from '../../store/backgrounds';
+import { generatedTemplatesActions, GeneratedTemplate } from '../../store/generatedTemplates';
+import { backgroundsActions, Background } from '../../store/backgrounds';
 
 import styles from './PuzzleOfTheDayPage.module.scss';
 
 import GameContainer from '../../widgets/GameContainer';
+import { StateRoot } from '../../models';
 
-class PuzzleOfTheDayPage extends Component {
+interface PuzzleOfTheDayPageProps {
+  selectPuzzle(id: string): void;
+  fetchPuzzlesOfTheDay(): void;
+  selectGeneratedTemplateByLink(link: string): void;
+  selectBackgroundByLink(link: string): void;
+  background: Background,
+  generatedTemplate: GeneratedTemplate,
+  playablePuzzles: any[];
+  selectedPuzzle: any;
+}
+
+class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps> {
 
   componentDidMount() {
     this.props.fetchPuzzlesOfTheDay();
   };
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
+  componentDidUpdate(prevProps: PuzzleOfTheDayPageProps, prevState: any) {
     if (this.props.playablePuzzles !== prevProps.playablePuzzles && this.props.playablePuzzles != null) {
       this.props.selectPuzzle(this.props.playablePuzzles[0].id);
     }
@@ -28,34 +40,37 @@ class PuzzleOfTheDayPage extends Component {
 
   render() {
     const {
-      selectedPuzzle
+      selectedPuzzle,
+      background,
+      generatedTemplate,
     } = this.props;
 
     return (
         <React.Fragment>
           <h1>Today's Puzzles</h1>
           <div className={styles.gameContainer}>
-            <GameContainer/>
+            <GameContainer background={background} generatedTemplate={generatedTemplate}/>
           </div>
         </React.Fragment>
     );
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: StateRoot) => {
   return {
+    background: state.backgrounds.resourceMap[state.backgrounds.selectedId!],
     playablePuzzles: state.playablePuzzles.playablePuzzles,
     selectedPuzzle: state.playablePuzzles.playablePuzzlesMap[state.playablePuzzles.selectedId],
-  };
+  } as PuzzleOfTheDayPageProps;
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: Function) => {
   return {
-    selectPuzzle: id => dispatch(playablePuzzlesActions.selectPlayablePuzzle(id)),
+    selectPuzzle: (id: string) => dispatch(playablePuzzlesActions.selectPlayablePuzzle(id)),
     fetchPuzzlesOfTheDay: () => dispatch(playablePuzzlesActions.fetchPuzzlesOfTheDay()),
-    selectGeneratedTemplateByLink: id => dispatch(generatedTemplatesActions.selectByLink(id)),
-    selectBackgroundByLink: id => dispatch(backgroundsActions.selectByLink(id))
-  }
+    selectGeneratedTemplateByLink: (id: string) => dispatch(generatedTemplatesActions.selectByLink(id)),
+    selectBackgroundByLink: (id: string) => dispatch(backgroundsActions.selectByLink(id))
+  } as PuzzleOfTheDayPageProps;
 }
 
 const ConnectedPuzzleOfTheDayPage = connect(

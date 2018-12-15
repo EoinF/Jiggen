@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { handleActions, createActions, Action } from 'redux-actions';
 
-import { Resource, ReducersRoot, BaseState, JiggenThunkAction } from './models';
+import { Resource, ReducersRoot, BaseState, JiggenThunkAction } from '../models';
 import base from './base';
 
-interface GeneratedTemplate extends Resource {}
+export interface GeneratedTemplate extends Resource {}
 interface GeneratedTemplateState extends BaseState<GeneratedTemplate> {}
 
 const initialState: GeneratedTemplateState = {

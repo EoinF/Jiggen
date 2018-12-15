@@ -1,5 +1,5 @@
 import store from '../store.js';
-import { BaseState, StringMap, Resource } from './models';
+import { BaseState, StringMap, Resource } from '../models';
 
 const initialState: BaseState<Resource> = {
 	selectedId: null,

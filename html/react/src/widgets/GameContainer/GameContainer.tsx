@@ -1,11 +1,12 @@
-import React, {Component} from 'react';
+import * as React from 'react';
 import { connect } from 'react-redux';
 
 import {
-  generatedTemplatesActions,
+  GeneratedTemplate,
+  generatedTemplatesActions
 } from '../../store/generatedTemplates';
-
 import gwtAdapter from '../../gwtAdapter';
+
 
 import {
   onFullScreenChange,
@@ -13,10 +14,19 @@ import {
 } from '../../utils/fullScreen';
 
 import styles from './GameContainer.module.scss';
+import { ReducersRoot } from '../../models';
 
-class GameContainer extends Component {
+interface GameContainerProps {
+  fetchGeneratedTemplateByLink: Function;
+  generatedTemplate: GeneratedTemplate;
+  background: any;
+  showFullScreenFallback: Boolean;
+};
 
-  constructor(props) {
+class GameContainer extends React.Component<GameContainerProps> {
+  gameContainerRef: any;
+
+  constructor(props: GameContainerProps) {
     super(props);
     this.gameContainerRef = React.createRef();
     onFullScreenChange(this.onFullScreenChange);
@@ -28,7 +38,7 @@ class GameContainer extends Component {
     }
   }
 
-  setOrFetchTemplate = (generatedTemplate) => {
+  setOrFetchTemplate = (generatedTemplate: GeneratedTemplate) => {
     if ('vertices' in generatedTemplate) {
       gwtAdapter.setTemplate(generatedTemplate);
     } else {
@@ -50,10 +60,10 @@ class GameContainer extends Component {
   componentWillUnmount() {
     // Put it back in the old container so it doesn't get discarded from the DOM
     const originalGameContainer = document.getElementById('jiggen-puzzle-solver');
-    originalGameContainer.appendChild(document.getElementById('embed-html'));
+    originalGameContainer!.appendChild(document.getElementById('embed-html')!);
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps: GameContainerProps, prevState: any) {
     if (prevProps.generatedTemplate !== this.props.generatedTemplate && this.props.generatedTemplate != null) {
       this.setOrFetchTemplate(this.props.generatedTemplate);
     }
@@ -69,12 +79,12 @@ class GameContainer extends Component {
       height
     } = this.gameContainerRef.current.getBoundingClientRect();
 
-    const canvasElement = document.querySelector('#embed-html canvas');
+    const canvasElement: HTMLImageElement = document.querySelector('#embed-html canvas') as HTMLImageElement;
     if (canvasElement) {
       canvasElement.width = width;
       canvasElement.height = height;
     }
-    const tableElement = document.querySelector('#embed-html table');
+    const tableElement = document.querySelector('#embed-html table') as HTMLTableElement;
     if (tableElement) {
       tableElement.style['width'] = width + 'px';
       tableElement.style['height'] = height + 'px';
@@ -95,16 +105,16 @@ class GameContainer extends Component {
 }
 
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: ReducersRoot) => {
   return {
     showFullScreenFallback: state.displayOptions.showFullScreenFallback
   };
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: Function) => {
   return {
-    fetchGeneratedTemplateByLink: id => {
-      dispatch(generatedTemplatesActions.fetchGeneratedTemplateByLink(id))
+    fetchGeneratedTemplateByLink: (link: string) => {
+      dispatch(generatedTemplatesActions.fetchByLink(link))
     }
   }
 }
