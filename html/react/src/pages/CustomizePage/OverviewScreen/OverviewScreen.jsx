@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import './OverviewScreen.css';
 import JiggenHeader from './JiggenHeader';
-import { generatedTemplatesActions } from '../../../actions/generatedTemplates';
+import { generatedTemplatesActions } from '../../../store/generatedTemplates';
 
 import SelectionWidget from './SelectionWidget';
 import PuzzleStats from './PuzzleStats';
@@ -28,6 +28,7 @@ class OverviewScreen extends Component {
 
   render() {
     const {
+      generatedTemplate,
       selectedTemplate,
       selectedBackground
     } = this.props;
@@ -39,7 +40,7 @@ class OverviewScreen extends Component {
           </JiggenHeader>
           <div className="overviewBody">
               <SelectionWidget
-                selection={selectedTemplate} 
+                selection={selectedTemplate}
                 fallbackImageSrc={templateLogo}
                 notSelectedCaption='Select a Template'
                 selectedCaption='Template'
@@ -57,7 +58,10 @@ class OverviewScreen extends Component {
               <PuzzleStats/>
           </div>
           <div className='overviewBody gameContainer'>
-            <GameContainer/>
+            <GameContainer
+              generatedTemplate={generatedTemplate}
+              background={selectedBackground}
+            />
           </div>
         </div>
     );
@@ -66,8 +70,9 @@ class OverviewScreen extends Component {
 
 const mapStateToProps = state => {
   return {
-    selectedBackground: state.backgrounds.backgroundsMap[state.backgrounds.selectedId],
+    selectedBackground: state.backgrounds.resourceMap[state.backgrounds.selectedId],
     selectedTemplate: state.templates.templatesMap[state.templates.selectedId],
+    generatedTemplate: state.generatedTemplates.resourceMap[state.generatedTemplates.selectedId],
   };
 }
 

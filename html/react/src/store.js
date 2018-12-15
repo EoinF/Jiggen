@@ -1,17 +1,19 @@
 import { 
-	createStore, 
-	applyMiddleware, 
-	combineReducers, 
-	compose 
+	createStore,
+	applyMiddleware,
+	combineReducers,
+	compose
 } from 'redux';
 
 import {
 	templateReducers,
-	backgroundReducers,
-	generatedTemplateReducers,
 	resourceLinkReducers,
-	displayOptionsReducers
+	displayOptionsReducers,
+	playablePuzzlesReducers
 } from './reducers';
+
+import generatedTemplates from './store/generatedTemplates';
+import backgrounds from './store/backgrounds';
 
 import thunk from 'redux-thunk';
 
@@ -20,10 +22,11 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
 	combineReducers({
 		templates: templateReducers,
-		backgrounds: backgroundReducers,
-		generatedTemplates: generatedTemplateReducers,
+		backgrounds,
+		generatedTemplates,
 		resourceLinks: resourceLinkReducers,
-		displayOptions: displayOptionsReducers
+		displayOptions: displayOptionsReducers,
+		playablePuzzles: playablePuzzlesReducers
 	}),
 	composeEnhancers(
 		applyMiddleware(thunk)

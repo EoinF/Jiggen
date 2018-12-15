@@ -17,6 +17,7 @@
     "react-router-dom": "^4.2.2",
     "react-scripts": "^1.1.5",
     "redux": "^4.0.0",
+    "redux-actions": "^2.6.4",
     "redux-thunk": "^2.2.0",
     "rxjs": "^6.1.0"
   },
@@ -24,6 +25,7 @@
     "build-css": "node-sass-chokidar src/ -o src/",
     "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive",
     "start": "set REACT_APP_API_URL=https://api.jiggen.app && npm run start-js",
+    "start-local": "npm run start-js",
     "build": "npm run build-css && npm run build-js",
     "start-js": "react-scripts start",
     "build-js": "react-scripts build",

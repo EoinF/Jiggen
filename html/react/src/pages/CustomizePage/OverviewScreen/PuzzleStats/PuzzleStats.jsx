@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 
-import { backgroundsActions } from '../../../../actions/backgrounds';
+import { backgroundsActions } from '../../../../store/backgrounds';
 import { CompatibilityMeasure } from '../../../../widgets';
 import './puzzleStats.css'
 
@@ -62,9 +62,9 @@ class PuzzleStats extends Component {
 
 const mapStateToProps = state => {
   return {
-    background: state.backgrounds.backgroundsMap[state.backgrounds.selectedId],
+    background: state.backgrounds.resourceMap[state.backgrounds.selectedId],
     template: state.templates.templatesMap[state.templates.selectedId],
-    generatedTemplate: state.generatedTemplates.generatedTemplatesMap[state.generatedTemplates.selectedId]
+    generatedTemplate: state.generatedTemplates.resourceMap[state.generatedTemplates.selectedId]
   };
 }
 

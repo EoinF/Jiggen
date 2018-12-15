@@ -1,0 +1,19 @@
+@import '../../theming.scss';
+
+.PuzzleOfTheDayPage {
+	h1 {
+		margin: 0;
+		text-align: center;
+	}
+	height: 100%;
+
+	//display: flex;
+
+
+	#embed-html {
+		background: $yellow100;
+		width: 100%;
+		height: 100%;
+	}
+}
+

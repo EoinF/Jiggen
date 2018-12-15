@@ -9,7 +9,7 @@ import ImageDisplayReel from './ImageDisplayReel';
 
 import { 
 	backgroundsActions
-} from '../../../actions/backgrounds';
+} from '../../../store/backgrounds';
 
 import './backgroundSelection.css';
 

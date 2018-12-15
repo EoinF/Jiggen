@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import {
   generatedTemplatesActions,
-} from '../../actions/generatedTemplates';
+} from '../../store/generatedTemplates';
 
 import gwtAdapter from '../../gwtAdapter';
 
@@ -32,7 +32,7 @@ class GameContainer extends Component {
     if ('vertices' in generatedTemplate) {
       gwtAdapter.setTemplate(generatedTemplate);
     } else {
-      this.props.fetchGeneratedTemplateById(generatedTemplate.id);
+      this.props.fetchGeneratedTemplateByLink(generatedTemplate.links.self);
     }
   }
 
@@ -97,16 +97,14 @@ class GameContainer extends Component {
 
 const mapStateToProps = state => {
   return {
-    background: state.backgrounds.backgroundsMap[state.backgrounds.selectedId],
-    generatedTemplate: state.generatedTemplates.generatedTemplatesMap[state.generatedTemplates.selectedId],
     showFullScreenFallback: state.displayOptions.showFullScreenFallback
   };
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchGeneratedTemplateById: id => {
-      dispatch(generatedTemplatesActions.fetchGeneratedTemplateById(id))
+    fetchGeneratedTemplateByLink: id => {
+      dispatch(generatedTemplatesActions.fetchGeneratedTemplateByLink(id))
     }
   }
 }
