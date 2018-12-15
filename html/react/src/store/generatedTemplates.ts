@@ -1,12 +1,13 @@
 import axios from 'axios';
-import { handleActions, createActions, Action, BaseAction } from 'redux-actions';
+import { handleActions, createActions, Action } from 'redux-actions';
+
+import { Resource, ReducersRoot, BaseState, JiggenThunkAction } from './models';
 import base from './base';
-import { ThunkAction } from 'redux-thunk';
-import { Resource, ReducersRoot } from './models';
 
 interface GeneratedTemplate extends Resource {}
+interface GeneratedTemplateState extends BaseState<GeneratedTemplate> {}
 
-const initialState = {
+const initialState: GeneratedTemplateState = {
 	...base.initialState
 };
 
@@ -22,7 +23,7 @@ const {
 	SELECT_GENERATED_TEMPLATE: (generatedTemplateId: string) => ({ selectedId: generatedTemplateId})
 });
 
-function fetchGeneratedTemplateByLink (link: string): ThunkAction<any, ReducersRoot, any, BaseAction> {
+function fetchGeneratedTemplateByLink (link: string): JiggenThunkAction {
 	return async (dispatch, getState) => {
 		dispatch(startFetchingGeneratedTemplates());
 		const result = await axios.get(link);
@@ -30,7 +31,7 @@ function fetchGeneratedTemplateByLink (link: string): ThunkAction<any, ReducersR
 	};
 }
 
-function fetchGeneratedTemplatesByLink(link: string): ThunkAction<any, ReducersRoot, any, BaseAction> {
+function fetchGeneratedTemplatesByLink(link: string): JiggenThunkAction {
 	return (dispatch, getState) => {
 		dispatch(startFetchingGeneratedTemplates());
 		axios.get(link)
@@ -40,7 +41,7 @@ function fetchGeneratedTemplatesByLink(link: string): ThunkAction<any, ReducersR
 	};
 };
 
-function selectGeneratedTemplateByLink (link: string): ThunkAction<any, ReducersRoot, any, BaseAction> {
+function selectGeneratedTemplateByLink (link: string): JiggenThunkAction {
 	return async (dispatch, getState) => {
 		const generatedTemplate = await base.getOrFetchResourceByLink(
 			link,

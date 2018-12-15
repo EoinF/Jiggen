@@ -1,3 +1,5 @@
+import { BaseAction } from 'redux-actions';
+import { ThunkAction } from 'redux-thunk';
 
 export interface StringMap<T> {
 	[key: string]: T
@@ -8,10 +10,10 @@ export interface Resource {
 	links: any;
 }
 
-export interface BaseState {
+export interface BaseState<T extends Resource> {
 	selectedId: string | null;
-	resourceMap: StringMap<Resource>;
-	linkMap:  StringMap<Resource>;
+	resourceMap: StringMap<T>;
+	linkMap:  StringMap<T>;
 	isFetching: boolean;
 }
 
@@ -22,4 +24,8 @@ export interface ReducersRoot {
     resourceLinks: any,
     displayOptions: any,
     playablePuzzles: any
+}
+
+export interface JiggenThunkAction extends ThunkAction<any, ReducersRoot, any, BaseAction> {
+
 }

@@ -1,7 +1,7 @@
 import store from '../store.js';
 import { BaseState, StringMap, Resource } from './models';
 
-const initialState: BaseState = {
+const initialState: BaseState<Resource> = {
 	selectedId: null,
 	resourceMap: {
 		// map of resource ids to resource
@@ -14,7 +14,7 @@ const initialState: BaseState = {
   
 const BROKEN_LINK = 'BROKEN_LINK';
 
-function setResources(state: BaseState, {resourceList}: {resourceList: Resource[]}): BaseState {
+function setResources(state: BaseState<Resource>, {resourceList}: {resourceList: Resource[]}): BaseState<Resource> {
 	let resourceMap: StringMap<Resource> = {};
 	let linkMap: StringMap<Resource> = {};
 
@@ -31,7 +31,7 @@ function setResources(state: BaseState, {resourceList}: {resourceList: Resource[
 	};
 }
 
-function addResources(state: BaseState, {resourceList}: {resourceList: Resource[]}): BaseState {
+function addResources(state: BaseState<Resource>, {resourceList}: {resourceList: Resource[]}): BaseState<Resource> {
 	let {
 		resourceMap, 
 		linkMap
@@ -59,7 +59,7 @@ function addResources(state: BaseState, {resourceList}: {resourceList: Resource[
 	};
 }
 
-function setOrUpdateResource(state: BaseState, {resource}: {resource: Resource}) {
+function setOrUpdateResource(state: BaseState<Resource>, {resource}: {resource: Resource}) {
 	let {
 		resourceMap,
 		linkMap
@@ -79,14 +79,14 @@ function setOrUpdateResource(state: BaseState, {resource}: {resource: Resource})
 	};
 }
 
-function selectResource(state: BaseState, {selectedId}: {selectedId: string}) {
+function selectResource(state: BaseState<Resource>, {selectedId}: {selectedId: string}) {
 	return {
 		...state,
 		selectedId
 	};
 }
 
-function setIsFetching(state: BaseState, {isFetching}: {isFetching: Boolean}) {
+function setIsFetching(state: BaseState<Resource>, {isFetching}: {isFetching: Boolean}) {
 	return {
 		...state,
 		isFetching
