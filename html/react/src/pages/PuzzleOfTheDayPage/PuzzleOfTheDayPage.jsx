@@ -5,7 +5,7 @@ import { playablePuzzlesActions } from '../../actions/playablePuzzles';
 import { generatedTemplatesActions } from '../../store/generatedTemplates';
 import { backgroundsActions } from '../../store/backgrounds';
 
-import './PuzzleOfTheDayPage.css';
+import styles from './PuzzleOfTheDayPage.module.scss';
 
 import GameContainer from '../../widgets/GameContainer';
 
@@ -32,12 +32,12 @@ class PuzzleOfTheDayPage extends Component {
     } = this.props;
 
     return (
-        <div className="PuzzleOfTheDayPage">
+        <React.Fragment>
           <h1>Today's Puzzles</h1>
-          <div >
+          <div className={styles.gameContainer}>
             <GameContainer/>
           </div>
-        </div>
+        </React.Fragment>
     );
   }
 }

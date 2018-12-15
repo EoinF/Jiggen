@@ -65,7 +65,7 @@ class BackgroundSelection extends Component {
 }
 const mapStateToProps = state => {
   return {
-    background: state.backgrounds.backgroundsMap[state.backgrounds.selectedId] || null
+    background: state.backgrounds.resourceMap[state.backgrounds.selectedId] || null
   };
 }
 

@@ -7,9 +7,9 @@ import BackgroundSelection from './BackgroundSelection';
 
 const CustomizePage = () => {
 	return (<Switch>
-		<Route exact path='/templates' component={TemplateSelection}/>
-		<Route exact path='/backgrounds' component={BackgroundSelection}/>
-		<Route path='' component={OverviewScreen}/> 
+		<Route exact path='/custom/templates' component={TemplateSelection}/>
+		<Route exact path='/custom/backgrounds' component={BackgroundSelection}/>
+		<Route component={OverviewScreen}/> 
 	</Switch>);
 }
 

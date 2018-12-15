@@ -12,7 +12,7 @@ import {
   isFullScreen
 } from '../../utils/fullScreen';
 
-import './GameContainer.css';
+import styles from './GameContainer.module.scss';
 
 class GameContainer extends Component {
 
@@ -82,9 +82,9 @@ class GameContainer extends Component {
   }
 
   render() {
-    let classAttribute = '';
+    let classAttribute = styles.container;
     if (this.props.showFullScreenFallback) {
-      classAttribute = 'fullScreenFallback';
+      classAttribute += ` ${styles.fullScreenFallback}`;
     }
     return (
       <div ref={this.gameContainerRef} className={classAttribute}>

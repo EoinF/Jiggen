@@ -1,15 +1,8 @@
 @import '../../theming.scss';
 
-.PuzzleOfTheDayPage {
-	h1 {
-		margin: 0;
-		text-align: center;
-	}
+.container {
 	height: 100%;
-
-	//display: flex;
-
-
+	
 	#embed-html {
 		background: $yellow100;
 		width: 100%;
@@ -17,3 +10,11 @@
 	}
 }
 
+.fullScreenFallback {
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	z-index: 9999;
+}

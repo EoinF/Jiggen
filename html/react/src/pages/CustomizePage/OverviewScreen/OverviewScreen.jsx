@@ -44,14 +44,14 @@ class OverviewScreen extends Component {
                 fallbackImageSrc={templateLogo}
                 notSelectedCaption='Select a Template'
                 selectedCaption='Template'
-                href='/templates'
+                href='/custom/templates'
               />
               <SelectionWidget
                 selection={selectedBackground}
                 fallbackImageSrc={backgroundLogo}
                 notSelectedCaption='Select a Background' 
                 selectedCaption='Background'
-                href='/backgrounds'
+                href='/custom/backgrounds'
                />
           </div>
           <div className="overviewBody">
