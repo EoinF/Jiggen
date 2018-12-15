@@ -5,6 +5,8 @@ import {
   GeneratedTemplate,
   generatedTemplatesActions
 } from '../../store/generatedTemplates';
+
+import { Background } from '../../store/backgrounds';
 import gwtAdapter from '../../gwtAdapter';
 
 
@@ -14,17 +16,25 @@ import {
 } from '../../utils/fullScreen';
 
 import styles from './GameContainer.module.scss';
-import { ReducersRoot } from '../../models';
+import { ReducersRoot, StateRoot } from '../../models';
 
-interface GameContainerProps {
-  fetchGeneratedTemplateByLink: Function;
-  generatedTemplate: GeneratedTemplate;
-  background: any;
+interface DispatchProps {
+  fetchGeneratedTemplateByLink(link: string): void;
+}
+
+interface StateProps {
   showFullScreenFallback: Boolean;
-};
+}
+
+interface OwnProps {
+  generatedTemplate: GeneratedTemplate;
+  background: Background;
+}
+
+type GameContainerProps = StateProps & DispatchProps & OwnProps;
 
 class GameContainer extends React.Component<GameContainerProps> {
-  gameContainerRef: any;
+  gameContainerRef: React.RefObject<any>;
 
   constructor(props: GameContainerProps) {
     super(props);
@@ -104,24 +114,22 @@ class GameContainer extends React.Component<GameContainerProps> {
   }
 }
 
-
-const mapStateToProps = (state: ReducersRoot) => {
+const mapStateToProps = (_state: any, ownProps: OwnProps): StateProps => {
+  const state = (_state as StateRoot); // Required because we can't change type of _state
   return {
     showFullScreenFallback: state.displayOptions.showFullScreenFallback
   };
 }
 
-const mapDispatchToProps = (dispatch: Function) => {
+const mapDispatchToProps = (dispatch: Function): DispatchProps => {
   return {
     fetchGeneratedTemplateByLink: (link: string) => {
       dispatch(generatedTemplatesActions.fetchByLink(link))
     }
-  }
+  };
 }
 
-const ConnectedGameContainer = connect(
+export default connect<StateProps, DispatchProps, OwnProps>(
   mapStateToProps,
   mapDispatchToProps
 )(GameContainer);
-
-export default ConnectedGameContainer;

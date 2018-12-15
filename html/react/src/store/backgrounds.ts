@@ -9,7 +9,7 @@ import base from './base';
 export interface Background extends Resource {}
 export interface BackgroundsState extends BaseState<Background> {}
 
-const initialState = {
+const initialState: BackgroundsState = {
 	...base.initialState
 };
 

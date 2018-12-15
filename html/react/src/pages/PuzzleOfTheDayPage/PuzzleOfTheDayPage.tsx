@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import { connect, MapStateToPropsParam } from 'react-redux';
 
 import { playablePuzzlesActions } from '../../actions/playablePuzzles';
 import { generatedTemplatesActions, GeneratedTemplate } from '../../store/generatedTemplates';
@@ -10,18 +10,24 @@ import styles from './PuzzleOfTheDayPage.module.scss';
 import GameContainer from '../../widgets/GameContainer';
 import { StateRoot } from '../../models';
 
-interface PuzzleOfTheDayPageProps {
+interface DispatchProps {
   selectPuzzle(id: string): void;
   fetchPuzzlesOfTheDay(): void;
   selectGeneratedTemplateByLink(link: string): void;
   selectBackgroundByLink(link: string): void;
+}
+
+interface StateProps {
   background: Background,
   generatedTemplate: GeneratedTemplate,
   playablePuzzles: any[];
   selectedPuzzle: any;
 }
 
-class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps> {
+type PuzzleOfTheDayPageProps = DispatchProps & StateProps;
+
+
+class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps, any> {
 
   componentDidMount() {
     this.props.fetchPuzzlesOfTheDay();
@@ -56,12 +62,14 @@ class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps> {
   }
 }
 
-const mapStateToProps = (state: StateRoot) => {
+function mapStateToProps(_state: any, ownProps: any): StateProps {
+  const state = (_state as StateRoot); // Required because we can't change type of _state
   return {
     background: state.backgrounds.resourceMap[state.backgrounds.selectedId!],
+    generatedTemplate: state.generatedTemplates.resourceMap[state.generatedTemplates.selectedId],
     playablePuzzles: state.playablePuzzles.playablePuzzles,
     selectedPuzzle: state.playablePuzzles.playablePuzzlesMap[state.playablePuzzles.selectedId],
-  } as PuzzleOfTheDayPageProps;
+  };
 }
 
 const mapDispatchToProps = (dispatch: Function) => {
@@ -70,10 +78,10 @@ const mapDispatchToProps = (dispatch: Function) => {
     fetchPuzzlesOfTheDay: () => dispatch(playablePuzzlesActions.fetchPuzzlesOfTheDay()),
     selectGeneratedTemplateByLink: (id: string) => dispatch(generatedTemplatesActions.selectByLink(id)),
     selectBackgroundByLink: (id: string) => dispatch(backgroundsActions.selectByLink(id))
-  } as PuzzleOfTheDayPageProps;
+  };
 }
 
-const ConnectedPuzzleOfTheDayPage = connect(
+const ConnectedPuzzleOfTheDayPage = connect<StateProps, DispatchProps, any> (
   mapStateToProps,
   mapDispatchToProps
 )(PuzzleOfTheDayPage);
