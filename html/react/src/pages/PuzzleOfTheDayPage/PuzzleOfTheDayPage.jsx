@@ -34,7 +34,7 @@ class PuzzleOfTheDayPage extends Component {
     return (
         <div className="PuzzleOfTheDayPage">
           <h1>Today's Puzzles</h1>
-          <div>
+          <div >
             <GameContainer/>
           </div>
         </div>
@@ -54,8 +54,7 @@ const mapDispatchToProps = dispatch => {
     selectPuzzle: id => dispatch(playablePuzzlesActions.selectPlayablePuzzle(id)),
     fetchPuzzlesOfTheDay: () => dispatch(playablePuzzlesActions.fetchPuzzlesOfTheDay()),
     selectGeneratedTemplateByLink: id => dispatch(generatedTemplatesActions.selectByLink(id)),
-    selectBackgroundByLink: id => dispatch(backgroundsActions.selectByLink(id)),
-    fetchPuzzlesOfTheDay: () => dispatch(playablePuzzlesActions.fetchPuzzlesOfTheDay())
+    selectBackgroundByLink: id => dispatch(backgroundsActions.selectByLink(id))
   }
 }
 

@@ -1,45 +1,46 @@
-import store from '../store';
+import store from '../store.js';
+import { BaseState, StringMap, Resource } from './models';
 
+const initialState: BaseState = {
+	selectedId: null,
+	resourceMap: {
+		// map of resource ids to resource
+	},
+	linkMap: {
+		// map of unique links to resources
+	},
+	isFetching: false,
+  }
+  
 const BROKEN_LINK = 'BROKEN_LINK';
 
-const initialState = {
-  selectedId: null,
-  resourceMap: {
-  	// map of resource ids to resource
-  },
-  linkMap: {
-  	// map of unique links to resources
-  },
-  isFetching: false,
-}
+function setResources(state: BaseState, {resourceList}: {resourceList: Resource[]}): BaseState {
+	let resourceMap: StringMap<Resource> = {};
+	let linkMap: StringMap<Resource> = {};
 
-function setResources(state, {resourceList}) {
-	let resourceMap = {};
-	let linksMap = {};
-
-	resourceList.forEach(resource => {
+	resourceList.forEach((resource: Resource) => {
 		resourceMap[resource.id] = resource;
-		linksMap[resource.links.self] = resource;
+		linkMap[resource.links.self] = resource;
 	});
 
 	return {
 		...state,
 		resourceMap,
-		linksMap,
+		linkMap,
 		isFetching: false
 	};
 }
 
-function addResources(state, {resourceList}) {
+function addResources(state: BaseState, {resourceList}: {resourceList: Resource[]}): BaseState {
 	let {
 		resourceMap, 
-		linksMap
+		linkMap
 	} = state;
 
-	const newEntries = {};
-	const newLinks = {};
+	const newEntries: StringMap<Resource> = {};
+	const newLinks: StringMap<Resource> = {};
 
-	resourceList.forEach(resource => {
+	resourceList.forEach((resource: Resource) => {
 		newEntries[resource.id] = resource;
 		newLinks[resource.links.self] = resource;
 	});
@@ -50,22 +51,19 @@ function addResources(state, {resourceList}) {
 			...resourceMap,
 			...newEntries
 		},
-		linksMap: {
-			...linksMap,
+		linkMap: {
+			...linkMap,
 			...newLinks
 		},
 		isFetching: false
-	}
+	};
 }
 
-function setOrUpdateResource(state, {resource}) {
+function setOrUpdateResource(state: BaseState, {resource}: {resource: Resource}) {
 	let {
 		resourceMap,
-		linksMap
+		linkMap
 	} = state;
-
-	console.log(state);
-	console.log(resource);
 
 	return {
 		...state,
@@ -74,21 +72,21 @@ function setOrUpdateResource(state, {resource}) {
 			[resource.id]: resource
 		},
 		linksMap: {
-			...linksMap,
+			...linkMap,
 			[resource.links.self]: resource
 		},
 		isFetching: false
 	};
 }
 
-function selectResource(state, {selectedId}) {
+function selectResource(state: BaseState, {selectedId}: {selectedId: string}) {
 	return {
 		...state,
 		selectedId
 	};
 }
 
-function setIsFetching(state, {isFetching}) {
+function setIsFetching(state: BaseState, {isFetching}: {isFetching: Boolean}) {
 	return {
 		...state,
 		isFetching
@@ -96,7 +94,7 @@ function setIsFetching(state, {isFetching}) {
 }
 
 
-const getOrFetchResourceByLink = (link, fetchResourceWithLink, getResourceFromState) => {
+function getOrFetchResourceByLink(link: string, fetchResourceWithLink: Function, getResourceFromState: Function): Promise<Resource> {
 	return new Promise((resolve, reject) => {
 		const existingResource = getResourceFromState().linkMap[link];
 		if (existingResource != null) {

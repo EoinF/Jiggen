@@ -3,27 +3,32 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@types/node": "^10.12.15",
+    "@types/react": "^16.7.17",
+    "@types/react-dom": "^16.0.11",
+    "@types/redux-actions": "^2.3.1",
+    "@types/redux-thunk": "^2.1.0",
     "axios": "^0.18.0",
     "color-parse": "^1.3.7",
     "color-space": "^1.16.0",
     "lerp": "^1.0.3",
     "mumath": "^3.3.4",
-    "node-sass-chokidar": "^1.3.3",
-    "normalize.css": "^8.0.0",
+    "node-sass": "^4.11.0",
+    "normalize.css": "^8.0.1",
     "query-string": "^5.1.1",
-    "react": "^16.3.2",
-    "react-dom": "^16.3.2",
-    "react-redux": "^5.0.7",
-    "react-router-dom": "^4.2.2",
-    "react-scripts": "^1.1.5",
-    "redux": "^4.0.0",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3",
+    "react-redux": "^5.1.1",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "^2.1.1",
+    "redux": "^4.0.1",
     "redux-actions": "^2.6.4",
-    "redux-thunk": "^2.2.0",
-    "rxjs": "^6.1.0"
+    "rxjs": "^6.3.3",
+    "typescript": "^3.2.2"
   },
   "scripts": {
-    "build-css": "node-sass-chokidar src/ -o src/",
-    "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch --recursive",
+    "build-css": "node-sass src/ -o src/",
+    "watch-css": "npm run build-css && node-sass src/ -o src/ --watch --recursive",
     "start": "set REACT_APP_API_URL=https://api.jiggen.app && npm run start-js",
     "start-local": "npm run start-js",
     "build": "npm run build-css && npm run build-js",
@@ -31,5 +36,11 @@
     "build-js": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }

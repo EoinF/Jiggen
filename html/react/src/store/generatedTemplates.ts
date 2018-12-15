@@ -1,6 +1,10 @@
 import axios from 'axios';
-import { handleActions, createActions } from 'redux-actions';
+import { handleActions, createActions, Action, BaseAction } from 'redux-actions';
 import base from './base';
+import { ThunkAction } from 'redux-thunk';
+import { Resource, ReducersRoot } from './models';
+
+interface GeneratedTemplate extends Resource {}
 
 const initialState = {
 	...base.initialState
@@ -13,12 +17,12 @@ const {
 	selectGeneratedTemplate
 } = createActions({
 	START_FETCHING_GENERATED_TEMPLATES: () => ({isFetching: true}),
-	SET_GENERATED_TEMPLATE: (generatedTemplate) => ({ resource: generatedTemplate }),
-	ADD_GENERATED_TEMPLATES: (generatedTemplates) => ({ resourceList: generatedTemplates}),
-	SELECT_GENERATED_TEMPLATE: (generatedTemplateId) => ({ selectedId: generatedTemplateId})
+	SET_GENERATED_TEMPLATE: (generatedTemplate: GeneratedTemplate) => ({ resource: generatedTemplate }),
+	ADD_GENERATED_TEMPLATES: (generatedTemplates: GeneratedTemplate[]) => ({ resourceList: generatedTemplates}),
+	SELECT_GENERATED_TEMPLATE: (generatedTemplateId: string) => ({ selectedId: generatedTemplateId})
 });
 
-const fetchGeneratedTemplateByLink = (link) => {
+function fetchGeneratedTemplateByLink (link: string): ThunkAction<any, ReducersRoot, any, BaseAction> {
 	return async (dispatch, getState) => {
 		dispatch(startFetchingGeneratedTemplates());
 		const result = await axios.get(link);
@@ -26,7 +30,7 @@ const fetchGeneratedTemplateByLink = (link) => {
 	};
 }
 
-const fetchGeneratedTemplatesByLink = link => {
+function fetchGeneratedTemplatesByLink(link: string): ThunkAction<any, ReducersRoot, any, BaseAction> {
 	return (dispatch, getState) => {
 		dispatch(startFetchingGeneratedTemplates());
 		axios.get(link)
@@ -36,9 +40,8 @@ const fetchGeneratedTemplatesByLink = link => {
 	};
 };
 
-const selectGeneratedTemplateByLink = (link) => {
+function selectGeneratedTemplateByLink (link: string): ThunkAction<any, ReducersRoot, any, BaseAction> {
 	return async (dispatch, getState) => {
-		console.log(getState());
 		const generatedTemplate = await base.getOrFetchResourceByLink(
 			link,
 			() => dispatch(fetchGeneratedTemplateByLink(link)),
@@ -49,10 +52,10 @@ const selectGeneratedTemplateByLink = (link) => {
 }
 
 const reducers = handleActions({
-	 	FETCH_GENERATED_TEMPLATES: (state, {payload}) => base.setIsFetching(state, payload),
-		SET_GENERATED_TEMPLATE: (state, {payload}) => base.setOrUpdateResource(state, payload),
-		ADD_GENERATED_TEMPLATES: (state, {payload}) => base.addResources(state, payload),
-		SELECT_GENERATED_TEMPLATE: (state, {payload}) => base.selectResource(state, payload)
+	 	FETCH_GENERATED_TEMPLATES: (state, {payload}: Action<any>) => base.setIsFetching(state, payload),
+		SET_GENERATED_TEMPLATE: (state, {payload}: Action<any>) => base.setOrUpdateResource(state, payload),
+		ADD_GENERATED_TEMPLATES: (state, {payload}: Action<any>) => base.addResources(state, payload),
+		SELECT_GENERATED_TEMPLATE: (state, {payload}: Action<any>) => base.selectResource(state, payload)
 	}, initialState
 );
 

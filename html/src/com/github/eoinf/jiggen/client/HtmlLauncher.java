@@ -84,5 +84,4 @@ public class HtmlLauncher extends GwtApplication {
         GwtAdapter.setApp(this);
         return jiggen;
     }
-
 }
