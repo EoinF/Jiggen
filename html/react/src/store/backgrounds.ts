@@ -82,6 +82,7 @@ const reducers = handleActions({
 
 const backgroundsActions = {
 	fetchBackgrounds,
+	fetchByLink: fetchBackgroundByLink,
 	setBackground,
 	setBackgrounds,
 	selectBackground,

@@ -1,8 +1,9 @@
-import store from '../store.js';
+import store from '.';
 import { BaseState, StringMap, Resource } from '../models';
 
 const initialState: BaseState<Resource> = {
 	selectedId: null,
+	resourceList: [],
 	resourceMap: {
 		// map of resource ids to resource
 	},
@@ -25,6 +26,7 @@ function setResources(state: BaseState<Resource>, {resourceList}: {resourceList:
 
 	return {
 		...state,
+		resourceList,
 		resourceMap,
 		linkMap,
 		isFetching: false
@@ -47,6 +49,7 @@ function addResources(state: BaseState<Resource>, {resourceList}: {resourceList:
 
 	return {
 		...state,
+		resourceList,
 		resourceMap: {
 			...resourceMap,
 			...newEntries
@@ -59,19 +62,31 @@ function addResources(state: BaseState<Resource>, {resourceList}: {resourceList:
 	};
 }
 
-function setOrUpdateResource(state: BaseState<Resource>, {resource}: {resource: Resource}) {
+function setOrUpdateResource(state: BaseState<Resource>, {resource}: {resource: Resource}): BaseState<Resource> {
 	let {
+		resourceList,
 		resourceMap,
 		linkMap
 	} = state;
 
+	const resourceListUpdated = [...resourceList];
+	const index = resourceList.findIndex((r: Resource) => {
+		return r.id == resource.id
+	});
+	if (index != -1) {
+		resourceListUpdated[index] = resource;
+	} else {
+		resourceListUpdated.push(resource);
+	}
+
 	return {
 		...state,
+		resourceList: resourceListUpdated,
 		resourceMap: {
 			...resourceMap,
 			[resource.id]: resource
 		},
-		linksMap: {
+		linkMap: {
 			...linkMap,
 			[resource.links.self]: resource
 		},
@@ -79,14 +94,14 @@ function setOrUpdateResource(state: BaseState<Resource>, {resource}: {resource: 
 	};
 }
 
-function selectResource(state: BaseState<Resource>, {selectedId}: {selectedId: string}) {
+function selectResource(state: BaseState<Resource>, {selectedId}: {selectedId: string}): BaseState<Resource> {
 	return {
 		...state,
 		selectedId
 	};
 }
 
-function setIsFetching(state: BaseState<Resource>, {isFetching}: {isFetching: Boolean}) {
+function setIsFetching(state: BaseState<Resource>, {isFetching}: {isFetching: boolean}): BaseState<Resource> {
 	return {
 		...state,
 		isFetching

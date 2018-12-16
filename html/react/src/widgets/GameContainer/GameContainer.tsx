@@ -49,7 +49,7 @@ class GameContainer extends React.Component<GameContainerProps> {
   }
 
   setOrFetchTemplate = (generatedTemplate: GeneratedTemplate) => {
-    if ('vertices' in generatedTemplate) {
+    if (generatedTemplate.vertices != null) {
       gwtAdapter.setTemplate(generatedTemplate);
     } else {
       this.props.fetchGeneratedTemplateByLink(generatedTemplate.links.self);

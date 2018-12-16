@@ -1,6 +1,7 @@
 import { BaseAction } from 'redux-actions';
 import { ThunkAction } from 'redux-thunk';
 import { BackgroundsState } from '../store/backgrounds';
+import { PlayablePuzzlesState } from '../store/playablePuzzles';
 
 export interface StringMap<T> {
 	[key: string]: T
@@ -12,7 +13,8 @@ export interface Resource {
 }
 
 export interface BaseState<T extends Resource> {
-	selectedId: string | null;
+    selectedId: string | null;
+    resourceList: T[];
 	resourceMap: StringMap<T>;
 	linkMap:  StringMap<T>;
 	isFetching: boolean;
@@ -24,7 +26,7 @@ export interface StateRoot {
     generatedTemplates: any,
     resourceLinks: any,
     displayOptions: any,
-    playablePuzzles: any
+    playablePuzzles: PlayablePuzzlesState
 }
 
 export interface ReducersRoot {

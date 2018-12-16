@@ -9,14 +9,14 @@ import {
 import {
 	templateReducers,
 	resourceLinkReducers,
-	displayOptionsReducers,
-	playablePuzzlesReducers
+	displayOptionsReducers
 } from '../reducers';
 
 import { ReducersRoot } from '../models';
 
 import generatedTemplates from './generatedTemplates';
 import backgrounds from './backgrounds';
+import playablePuzzles from './playablePuzzles';
 
 import thunk from 'redux-thunk';
 
@@ -31,7 +31,7 @@ const reducersMap: ReducersRoot = {
     generatedTemplates,
     resourceLinks: resourceLinkReducers,
     displayOptions: displayOptionsReducers,
-    playablePuzzles: playablePuzzlesReducers
+    playablePuzzles
 };
 
 const store = createStore(
