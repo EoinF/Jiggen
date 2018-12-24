@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { Observable, Subject, from, combineLatest } from 'rxjs';
 
 import {
   GeneratedTemplate,
@@ -35,16 +36,21 @@ type GameContainerProps = StateProps & DispatchProps & OwnProps;
 
 class GameContainer extends React.Component<GameContainerProps> {
   gameContainerRef: React.RefObject<any>;
+  updateContainerSize$: Subject<void>;
 
   constructor(props: GameContainerProps) {
     super(props);
     this.gameContainerRef = React.createRef();
+    this.updateContainerSize$ = new Subject();
+
+    const onGwtLoaded$ = from(gwtAdapter.onGwtLoadedPromise);
+    combineLatest(this.updateContainerSize$, onGwtLoaded$).subscribe(this.updateContainerSize);
     onFullScreenChange(this.onFullScreenChange);
   }
 
   onFullScreenChange = () => {
     if (!isFullScreen()) {
-      this.updateContainerSize();
+      this.updateContainerSize$.next();
     }
   }
 
@@ -65,6 +71,7 @@ class GameContainer extends React.Component<GameContainerProps> {
     if (this.props.background != null) {
       gwtAdapter.setBackground(this.props.background);
     }
+    this.updateContainerSize$.next();
   };
 
   componentWillUnmount() {
@@ -80,7 +87,7 @@ class GameContainer extends React.Component<GameContainerProps> {
     if (prevProps.background !== this.props.background && this.props.background != null) {
       gwtAdapter.setBackground(this.props.background);
     }
-    this.updateContainerSize();
+    this.updateContainerSize$.next();
   }
 
   updateContainerSize = () => {
@@ -90,11 +97,13 @@ class GameContainer extends React.Component<GameContainerProps> {
     } = this.gameContainerRef.current.getBoundingClientRect();
 
     const canvasElement: HTMLImageElement = document.querySelector('#embed-html canvas') as HTMLImageElement;
+    console.log(canvasElement);
     if (canvasElement) {
       canvasElement.width = width;
       canvasElement.height = height;
     }
     const tableElement = document.querySelector('#embed-html table') as HTMLTableElement;
+    console.log(tableElement);
     if (tableElement) {
       tableElement.style['width'] = width + 'px';
       tableElement.style['height'] = height + 'px';

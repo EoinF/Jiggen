@@ -34,6 +34,7 @@ onGwtLoadedPromise.then(() => {
 });
 
 export default {
+	onGwtLoadedPromise,
 	setBackground,
 	setTemplate,
 	startDemo
