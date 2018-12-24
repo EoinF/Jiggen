@@ -8,8 +8,6 @@ import { Background } from './backgrounds';
 import { GeneratedTemplate } from './generatedTemplates';
 
 export interface PlayablePuzzle extends Resource {
-	background: Background;
-	generatedTemplate: GeneratedTemplate;
 }
 export interface PlayablePuzzlesState extends BaseState<PlayablePuzzle> {}
 

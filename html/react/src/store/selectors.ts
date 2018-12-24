@@ -11,21 +11,18 @@ const getGeneratedTemplateLinkMap = (state: StateRoot) => state.generatedTemplat
 export const getPlayablePuzzleList = createSelector(
     [getBasePlayablePuzzleList, getBackgroundLinkMap, getGeneratedTemplateLinkMap],
     (playablePuzzleList: PlayablePuzzle[], backgroundLinkMap: StringMap<Background>, generatedTemplateLinkMap: StringMap<GeneratedTemplate> ) => {
-      return playablePuzzleList.map((puzzle: PlayablePuzzle): PlayablePuzzle => ({
-          background: backgroundLinkMap[puzzle.links.background],
-          generatedTemplate: generatedTemplateLinkMap[puzzle.links.generatedTemplate],
-          ...puzzle
-      }));
+      return playablePuzzleList;
     }
 );
 
 export const getPieceCountMap = createSelector(
-    [getPlayablePuzzleList],
-    (playablePuzzleList) => {
+    [getPlayablePuzzleList, getGeneratedTemplateLinkMap],
+    (playablePuzzleList, generatedTemplateLinkMap) => {
         const pieceCountMap: StringMap<number> = {};
         playablePuzzleList.forEach((puzzle: PlayablePuzzle): any => {
-            if (puzzle.generatedTemplate != null) {
-                pieceCountMap[puzzle.generatedTemplate.id] = Object.keys(puzzle.generatedTemplate.vertices).length;
+            const generatedTemplate = generatedTemplateLinkMap[puzzle.links.generatedTemplate];
+            if (generatedTemplate != null) {
+                pieceCountMap[puzzle.id] = Object.keys(generatedTemplate.vertices).length;
             }
           }
         );

@@ -23,6 +23,8 @@ interface StateProps {
   playablePuzzles: PlayablePuzzle[];
   selectedPuzzle: PlayablePuzzle;
   pieceCountMap: StringMap<number>;
+  background: Background;
+  generatedTemplate: GeneratedTemplate;
 }
 
 type PuzzleOfTheDayPageProps = DispatchProps & StateProps;
@@ -34,41 +36,40 @@ class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps, any> {
   };
 
   componentDidUpdate(prevProps: PuzzleOfTheDayPageProps, prevState: any) {
-    if ((this.props.playablePuzzles !== prevProps.playablePuzzles) && this.props.playablePuzzles != null && this.props.playablePuzzles.length > 0) {
+    if ((this.props.playablePuzzles !== prevProps.playablePuzzles)
+      && this.props.playablePuzzles != null 
+      && this.props.playablePuzzles.length > 0) {
       this.props.selectPuzzle(this.props.playablePuzzles[0].id);
 
       this.props.playablePuzzles.forEach((playablePuzzle) => {
-        if (playablePuzzle.background == null) { 
-          this.props.fetchBackgroundByLink(playablePuzzle.links.background);
-        } else if (playablePuzzle.generatedTemplate == null) {
-          this.props.fetchGeneratedTemplateByLink(playablePuzzle.links.generatedTemplate);
-        }
+        this.props.fetchBackgroundByLink(playablePuzzle.links.background);
+        this.props.fetchGeneratedTemplateByLink(playablePuzzle.links.generatedTemplate);
       });
     }
   };
 
-  onClickPiece(id: string) {
-    console.log('selected '+ id);
+  onSelectPieceCount = (id: string) => {
+    console.log('selected id ', id);
+    this.props.selectPuzzle(id);
   }
 
   render() {
     const {
-      selectedPuzzle
+      selectedPuzzle,
+      background,
+      generatedTemplate
     } = this.props;
 
     return (
         <React.Fragment>
           <h1>Today's Puzzles</h1>
           <div className={styles.gameContainer}>
-          { selectedPuzzle &&
-            <GameContainer background={selectedPuzzle.background} generatedTemplate={selectedPuzzle.generatedTemplate}/>
-          }
-            </div>
-          { 
-            <PieceCountSelection 
-              pieceCountMap={this.props.pieceCountMap} 
-              onClick={this.onClickPiece} />
-          }
+            <GameContainer background={background} generatedTemplate={generatedTemplate}/>
+          </div>
+          <PieceCountSelection
+            selectedId={selectedPuzzle ? selectedPuzzle.id : null}
+            pieceCountMap={this.props.pieceCountMap} 
+            onClick={this.onSelectPieceCount} />
         </React.Fragment>
     );
   }
@@ -77,10 +78,14 @@ class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps, any> {
 
 function mapStateToProps(_state: any, ownProps: any): StateProps {
   const state = (_state as StateRoot); // Required because we can't change type of _state
+
+  const selectedPuzzle = state.playablePuzzles.resourceMap[state.playablePuzzles.selectedId!];
   return {
     pieceCountMap: getPieceCountMap(state),
     playablePuzzles: getPlayablePuzzleList(state),
-    selectedPuzzle: state.playablePuzzles.resourceMap[state.playablePuzzles.selectedId!],
+    selectedPuzzle,
+    background: selectedPuzzle && state.backgrounds.linkMap[selectedPuzzle.links.background],
+    generatedTemplate: selectedPuzzle && state.generatedTemplates.linkMap[selectedPuzzle.links.generatedTemplate]
   };
 }
 

@@ -36,7 +36,7 @@ public class GwtAdapter {
         assets.add(new Preloader.Asset(backgroundLink, AssetFilter.AssetType.Image, Integer.MAX_VALUE,
                 "application/unknown"));
 
-        GWT.log("Loading assets");
+        GWT.log("Loading background assets");
 
         preloader.preload(assets, new Preloader.PreloaderCallback() {
             @Override
@@ -70,7 +70,7 @@ public class GwtAdapter {
         assets.add(new Preloader.Asset(templateLink, AssetFilter.AssetType.Image, Integer.MAX_VALUE,
                         "image/" + generatedTemplate.extension));
 
-        GWT.log("Loading assets");
+        GWT.log("Loading generated template assets");
 
         preloader.preload(assets, new Preloader.PreloaderCallback() {
             @Override
