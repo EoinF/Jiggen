@@ -1,7 +1,7 @@
 @import '../../../theming.scss';
 
 .OverviewScreen {
-  height: 100%;
+  flex: 1;
 
   display: flex;
   flex-flow: column nowrap;

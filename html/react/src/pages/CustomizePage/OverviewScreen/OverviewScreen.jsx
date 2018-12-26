@@ -49,7 +49,7 @@ class OverviewScreen extends Component {
               <SelectionWidget
                 selection={selectedBackground}
                 fallbackImageSrc={backgroundLogo}
-                notSelectedCaption='Select a Background' 
+                notSelectedCaption='Select a Background'
                 selectedCaption='Background'
                 href='/custom/backgrounds'
                />
@@ -78,7 +78,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchGeneratedTemplatesByLink: link => dispatch(generatedTemplatesActions.fetchGeneratedTemplatesByLink(link))
+    fetchGeneratedTemplatesByLink: link => dispatch(generatedTemplatesActions.fetchByLink(link))
   }
 }
 

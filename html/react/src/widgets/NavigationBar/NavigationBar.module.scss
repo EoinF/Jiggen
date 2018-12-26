@@ -1,0 +1,23 @@
+@import '../../theming.scss';
+
+.mainContainer {
+    padding: 0.2rem 0;
+    background: $purple400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    > a {
+        display: flex;
+        height: fit-content;
+        // background: white;
+        border: 1px solid black;
+        border-radius: 10px;
+        padding: 1px;
+        margin: 0 1px;
+    }
+}
+
+.selected {
+    background: $pink100;
+}

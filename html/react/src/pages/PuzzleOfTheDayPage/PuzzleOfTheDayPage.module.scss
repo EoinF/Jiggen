@@ -7,6 +7,10 @@ h1 {
 	text-align: center;
 }
 
+.pageContainer {
+	flex: 1;
+}
+
 .gameContainer {
 	margin: 0 1rem 0.5rem;
 	height: calc(75vw);

@@ -37,3 +37,13 @@ body, html, #react-root {
 .overflow-hidden {
 	overflow: hidden;
 }
+
+.flexContainer {
+	height: 100%;
+	display: flex;
+	flex-flow: column nowrap;
+}
+
+* {
+	box-sizing: border-box;
+}

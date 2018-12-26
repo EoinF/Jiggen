@@ -61,7 +61,7 @@ class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps, any> {
     } = this.props;
 
     return (
-        <React.Fragment>
+        <div className={styles.pageContainer}>
           <h1>Today's Puzzles</h1>
           <div className={styles.gameContainer}>
             <GameContainer background={background} generatedTemplate={generatedTemplate}/>
@@ -70,7 +70,7 @@ class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps, any> {
             selectedId={selectedPuzzle ? selectedPuzzle.id : null}
             pieceCountMap={this.props.pieceCountMap} 
             onClick={this.onSelectPieceCount} />
-        </React.Fragment>
+        </div>
     );
   }
 }

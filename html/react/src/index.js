@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'normalize.css';
-import './index.css';
 //import registerServiceWorker, {unregister} from './registerServiceWorker';
 
 import store from './store';
