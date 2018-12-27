@@ -1,5 +1,5 @@
 import React from 'react';
-import './jiggenHeader.css';
+import './jiggenHeader.scss';
 
 const JiggenHeader = ({className, children}) => {
 	return (

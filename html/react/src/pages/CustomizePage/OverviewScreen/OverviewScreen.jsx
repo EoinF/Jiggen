@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import './OverviewScreen.css';
+import './OverviewScreen.scss';
 import JiggenHeader from './JiggenHeader';
 import { generatedTemplatesActions } from '../../../store/generatedTemplates';
 

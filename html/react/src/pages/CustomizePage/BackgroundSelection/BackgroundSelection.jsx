@@ -11,7 +11,7 @@ import {
 	backgroundsActions
 } from '../../../store/backgrounds';
 
-import './backgroundSelection.css';
+import './backgroundSelection.scss';
 
 class BackgroundSelection extends Component {
 	constructor(props) {

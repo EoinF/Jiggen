@@ -29,11 +29,9 @@
     "typescript": "^3.2.2"
   },
   "scripts": {
-    "build-css": "node-sass src/ -o src/",
-    "watch-css": "npm run build-css && node-sass src/ -o src/ --watch --recursive",
     "start": "set REACT_APP_API_URL=https://api.jiggen.app && npm run start-js",
     "start-local": "npm run start-js",
-    "build": "npm run build-css && npm run build-js",
+    "build": "npm run build-js",
     "start-js": "react-scripts start",
     "build-js": "react-scripts build",
     "test": "react-scripts test --env=jsdom",

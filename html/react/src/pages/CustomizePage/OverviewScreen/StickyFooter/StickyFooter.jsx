@@ -1,5 +1,5 @@
 import React from 'react';
-import './stickyFooter.css';
+import './stickyFooter.scss';
 
 const StickyFooter = ({className, children}) => {
 	return (

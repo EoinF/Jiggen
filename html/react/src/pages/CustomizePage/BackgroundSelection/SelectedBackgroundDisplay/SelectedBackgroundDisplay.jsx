@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom';
 import { Subject } from 'rxjs';
 import { debounceTime, throttleTime, distinctUntilChanged } from 'rxjs/operators'
 
-import './selectedBackgroundDisplay.css';
+import './selectedBackgroundDisplay.scss';
 
 
 class SelectedBackgroundDisplay extends Component {

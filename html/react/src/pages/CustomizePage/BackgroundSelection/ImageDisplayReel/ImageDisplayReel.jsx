@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PlainLink from '../../../../widgets/PlainLink';
 
-import './imageDisplayReel.css';
+import './imageDisplayReel.scss';
 
 class ImageDisplayReel extends Component {
 	render() {

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './templateWidget.css';
+import './templateWidget.scss';
 
 const TemplateWidget = ({template, isSelected, onClick}) => {
 	const {

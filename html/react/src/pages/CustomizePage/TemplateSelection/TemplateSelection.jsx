@@ -6,7 +6,7 @@ import { templatesActions } from '../../../actions/templates';
 import { JiggenHeader } from '../OverviewScreen'
 import TemplateWidget from './TemplateWidget';
 
-import './templateSelection.css';
+import './templateSelection.scss';
  
 class TemplateSelection extends Component {
 	componentDidMount() {

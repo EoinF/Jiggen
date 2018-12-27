@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { backgroundsActions } from '../../../../store/backgrounds';
 import { CompatibilityMeasure } from '../../../../widgets';
-import './puzzleStats.css'
+import './puzzleStats.scss'
 
 
 class PuzzleStats extends Component {

@@ -1,5 +1,5 @@
 import React from 'react';
-import './cardContainer.css';
+import './cardContainer.scss';
 
 const CardContainer = ({className, children}) => {
 	return (

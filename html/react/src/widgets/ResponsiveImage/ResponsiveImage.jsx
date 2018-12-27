@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import './ResponsiveImage.css';
+import './ResponsiveImage.scss';
 
 class ResponsiveImage extends Component {
 
