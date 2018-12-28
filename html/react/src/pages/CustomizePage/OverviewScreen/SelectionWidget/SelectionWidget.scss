@@ -1,13 +1,13 @@
 @import '../../../../theming.scss';
 
 .SelectionWidget {
-	box-sizing: border-box;
 	width: 100%;
 	border: solid 2px $white;
 	background: $purple400;
 	display: flex;
 	flex-flow: column nowrap;
 	padding: 5px 0;
+	margin: 0 0.1rem;
 
 	.description {
 		padding-bottom: 5px;

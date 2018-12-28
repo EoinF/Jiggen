@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, Dispatch } from 'react';
 import { connect } from 'react-redux';
 
-import './OverviewScreen.scss';
-import JiggenHeader from './JiggenHeader';
-import { generatedTemplatesActions } from '../../../store/generatedTemplates';
+import styles from './OverviewScreen.module.scss';
+import { generatedTemplatesActions, GeneratedTemplate } from '../../../store/generatedTemplates';
 
 import SelectionWidget from './SelectionWidget';
 import PuzzleStats from './PuzzleStats';
@@ -13,16 +12,26 @@ import GameContainer from '../../../widgets/GameContainer';
 
 import templateLogo from './Template-icon-simple.png';
 import backgroundLogo from './Background-icon.png';
+import { Background } from '../../../store/backgrounds';
+import { BaseState, StateRoot } from '../../../models';
 
-class OverviewScreen extends Component {
+interface OverviewScreenProps {
+  selectedTemplate: any;
+  selectedBackground: Background;
+  generatedTemplate: GeneratedTemplate
+  fetchGeneratedTemplatesByLink(link: string): void;
+}
+
+class OverviewScreen extends Component<OverviewScreenProps> {
   
   componentDidMount() {
     const {
-      selectedTemplate
+      selectedTemplate,
+      fetchGeneratedTemplatesByLink
     } = this.props;
-    if (selectedTemplate) {
+    if (selectedTemplate != null) {
       // Clear out the existing generated templates in the store, and refetch them all
-      this.props.fetchGeneratedTemplatesByLink(selectedTemplate.links.generatedTemplates);
+      fetchGeneratedTemplatesByLink(selectedTemplate.links.generatedTemplates);
     }
   };
 
@@ -34,11 +43,15 @@ class OverviewScreen extends Component {
     } = this.props;
 
     return (
-        <div className="OverviewScreen">
-          <JiggenHeader>
-            <h1>Jiggen</h1>
-          </JiggenHeader>
-          <div className="overviewBody">
+        <div className={styles.mainContainer}>
+          <h1>Custom Puzzle</h1>
+          <div className={styles.gameContainer}>
+            <GameContainer
+              generatedTemplate={generatedTemplate}
+              background={selectedBackground}
+            />
+          </div>
+          <div className={styles.selectionContainer}>
               <SelectionWidget
                 selection={selectedTemplate}
                 fallbackImageSrc={templateLogo}
@@ -54,31 +67,26 @@ class OverviewScreen extends Component {
                 href='/custom/backgrounds'
                />
           </div>
-          <div className="overviewBody">
+          <div className={styles.overviewBody}>
               <PuzzleStats/>
-          </div>
-          <div className='overviewBody gameContainer'>
-            <GameContainer
-              generatedTemplate={generatedTemplate}
-              background={selectedBackground}
-            />
           </div>
         </div>
     );
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (_state: any) => {
+  const state = _state as StateRoot;
   return {
-    selectedBackground: state.backgrounds.resourceMap[state.backgrounds.selectedId],
+    selectedBackground: state.backgrounds.resourceMap[state.backgrounds.selectedId!],
     selectedTemplate: state.templates.templatesMap[state.templates.selectedId],
     generatedTemplate: state.generatedTemplates.resourceMap[state.generatedTemplates.selectedId],
   };
 }
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: Function) => {
   return {
-    fetchGeneratedTemplatesByLink: link => dispatch(generatedTemplatesActions.fetchByLink(link))
+    fetchGeneratedTemplatesByLink: (link: string) => dispatch(generatedTemplatesActions.fetchAllByLink(link))
   }
 }
 
