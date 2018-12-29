@@ -31,12 +31,10 @@ public class PuzzleSolverScreen implements Screen {
     public PuzzleSolverScreen(Jiggen game, PuzzleOverlayBatch batch, TextureAtlas uiTextureAtlas, Skin skin) {
         WorldBoundedCamera camera = new WorldBoundedCamera();
 
-        puzzleViewModel = new PuzzleViewModel(false);
+        puzzleViewModel = new PuzzleViewModel();
         puzzleViewController = new PuzzleViewController(puzzleViewModel, camera);
         this.puzzleView = new PuzzleView(camera, batch, skin, puzzleViewModel, puzzleViewController);
         this.toolbar = new PuzzleToolbar(uiTextureAtlas, puzzleViewModel, puzzleViewController);
-
-        this.puzzleViewModel.getFullScreenObservable().subscribe(game.onSetFullScreen);
 
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(toolbar.stage);
@@ -46,7 +44,7 @@ public class PuzzleSolverScreen implements Screen {
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
                 if (Gdx.app.getType() == Application.ApplicationType.WebGL) {
-                    puzzleViewController.setFullScreen(true);
+                    game.onSetFullScreen.accept(true);
                 }
                 return false;
             }

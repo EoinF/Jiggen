@@ -92,6 +92,10 @@ public class Jiggen extends Game {
 		screen.setTemplate(graph);
 	}
 
+	public void shuffle() {
+    	screen.shuffle();
+	}
+
 	private GridPoint2 getPuzzleSize(Map<Integer, IntRectangle> vertices) {
 		int width = 0; int height = 0;
 		for (IntRectangle v: vertices.values()) {

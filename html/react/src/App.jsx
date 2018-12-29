@@ -26,10 +26,10 @@ const AppContents = () => {
 	return <div className='flexContainer'>
 		<Switch>
 			<Route path='/custom' component={CustomizePage}/>
-			<Route path='/puzzlesOfTheDay' component={PuzzleOfTheDayPage}/>
-			<Route path='/'>
+			<Route path='/' component={PuzzleOfTheDayPage}/>
+			{/* <Route path='/'>
 				<Redirect to="/puzzlesOfTheDay"/>
-			</Route>
+			</Route> */}
 		</Switch>
 		<Route path='/' component={NavigationBar}/>
 	</div>

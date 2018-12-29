@@ -20,17 +20,15 @@ public class PuzzleViewModel {
     private SimpleSubject<HeldPuzzlePiece> heldPuzzlePieceSubject;
     private SimpleSubject<Vector2> scalesSubject;
     private SimpleSubject<GridPoint2> worldBoundsSubject;
-    private SimpleSubject<Boolean> fullScreenSubject;
 
     //
     // Constructor
     //
-    public PuzzleViewModel(boolean isFullScreen) {
+    public PuzzleViewModel() {
         resizeScreenSubject = SimpleSubject.create();
         heldPuzzlePieceSubject = SimpleSubject.createDefault(HeldPuzzlePiece.NONE);
         scalesSubject = SimpleSubject.createDefault(new Vector2(1, 1));
         worldBoundsSubject = SimpleSubject.createDefault(new GridPoint2());
-        fullScreenSubject = SimpleSubject.createDefault(isFullScreen);
 
         updateConnectedPiecesSubject = SimpleSubject.create();
 
@@ -77,17 +75,6 @@ public class PuzzleViewModel {
 
     public boolean isHoldingPiece() {
         return heldPuzzlePieceSubject.getValue().isHoldingPiece();
-    }
-
-    //
-    // On set full screen
-    //
-    public SimpleObservable<Boolean> getFullScreenObservable() {
-        return fullScreenSubject;
-    }
-
-    void setFullScreen(boolean isFullScreen) {
-        fullScreenSubject.onNext(isFullScreen);
     }
 
     void reset() {

@@ -1,7 +1,6 @@
 package com.github.eoinf.jiggen.client;
 
 import com.badlogic.gdx.Files;
-import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtFileHandle;
 import com.badlogic.gdx.backends.gwt.preloader.AssetFilter;
 import com.badlogic.gdx.backends.gwt.preloader.Preloader;
@@ -23,8 +22,16 @@ import java.util.Map;
 public class GwtAdapter {
 
     private static Jiggen jiggen;
-    private static GwtApplication gdxApp;
+    private static HtmlLauncher gdxApp;
 
+    public static void resizeGameContainer(int width, int height) {
+        gdxApp.resizeGameContainer(width, height);
+    }
+
+    public static void shuffle() {
+        GWT.log("Shuffle jiggen");
+        jiggen.shuffle();
+    }
 
     public static void setBackground(Background background) {
         String backgroundLink = background.links.image;
@@ -104,7 +111,7 @@ public class GwtAdapter {
         jiggen = _jiggen;
     }
 
-    static void setApp(GwtApplication _gdxApp) {
+    static void setApp(HtmlLauncher _gdxApp) {
         gdxApp = _gdxApp;
     }
 

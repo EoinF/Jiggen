@@ -2,11 +2,9 @@ package com.github.eoinf.jiggen.screens.views;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.GridPoint2;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -57,13 +55,6 @@ public class PuzzleToolbar {
                 .pad(5)
                 .right();
 
-        resizeButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                puzzleViewController.toggleFullScreen();
-                super.clicked(event, x, y);
-            }
-        });
 
         puzzleViewModel.getResizeScreenObservable().subscribe(new Consumer<GridPoint2>() {
             @Override

@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { Observable, Subject, from, combineLatest } from 'rxjs';
+import { Observable, Subject, from, combineLatest, Subscription } from 'rxjs';
 
 import {
   GeneratedTemplate,
@@ -34,24 +34,38 @@ interface OwnProps {
 
 type GameContainerProps = StateProps & DispatchProps & OwnProps;
 
-class GameContainer extends React.Component<GameContainerProps> {
+interface GameContainerState {
+  shouldShuffleOnFullscreen: Boolean;
+}
+
+class GameContainer extends React.Component<GameContainerProps, GameContainerState> {
   gameContainerRef: React.RefObject<any>;
   updateContainerSize$: Subject<void>;
+  updateContainerSubscription: Subscription;
 
   constructor(props: GameContainerProps) {
     super(props);
+    this.state = {
+      shouldShuffleOnFullscreen: true
+    };
     this.gameContainerRef = React.createRef();
     this.updateContainerSize$ = new Subject();
 
     const onGwtLoaded$ = from(gwtAdapter.onGwtLoadedPromise);
-    combineLatest(this.updateContainerSize$, onGwtLoaded$).subscribe(this.updateContainerSize);
+    this.updateContainerSubscription = combineLatest(this.updateContainerSize$, onGwtLoaded$).subscribe(this.updateContainerSize);
     onFullScreenChange(this.onFullScreenChange);
+    window.onresize = () => {
+      this.updateContainerSize$.next();
+    }
   }
 
   onFullScreenChange = () => {
-    if (!isFullScreen()) {
-      this.updateContainerSize$.next();
+    if (this.state.shouldShuffleOnFullscreen && isFullScreen()) {
+      gwtAdapter.shuffle();
+      this.setState({shouldShuffleOnFullscreen: false});
     }
+    
+    this.updateContainerSize$.next();
   }
 
   setOrFetchTemplate = (generatedTemplate: GeneratedTemplate) => {
@@ -60,6 +74,24 @@ class GameContainer extends React.Component<GameContainerProps> {
     } else {
       this.props.fetchGeneratedTemplateByLink(generatedTemplate.links.self);
     }
+  }
+  
+  updateContainerSize = () => {
+    let boundingRect;
+    if (isFullScreen()) {
+      boundingRect = document.getElementById('embed-html')!.getBoundingClientRect();
+    } else {
+      // Remove the gdx app so the GameContainer can resize to its parents intended size
+      // (canvas seems to override flex properties of its parents)
+      const originalGameContainer = document.getElementById('jiggen-puzzle-solver');
+      originalGameContainer!.appendChild(document.getElementById('embed-html')!);
+      // Get the resized width and height of the container
+      boundingRect = this.gameContainerRef.current.getBoundingClientRect();
+      // Add the gdx app back right before we resize it to match the container
+      this.gameContainerRef.current.appendChild(document.getElementById('embed-html'));
+    }
+    
+    gwtAdapter.resizeGameContainer(boundingRect.width, boundingRect.height);
   }
 
   componentDidMount() {
@@ -78,36 +110,26 @@ class GameContainer extends React.Component<GameContainerProps> {
     // Put it back in the old container so it doesn't get discarded from the DOM
     const originalGameContainer = document.getElementById('jiggen-puzzle-solver');
     originalGameContainer!.appendChild(document.getElementById('embed-html')!);
+
+    this.updateContainerSubscription.unsubscribe();
   }
 
   componentDidUpdate(prevProps: GameContainerProps, prevState: any) {
+    let isUpdated = false;
     if (prevProps.generatedTemplate !== this.props.generatedTemplate && this.props.generatedTemplate != null) {
       this.setOrFetchTemplate(this.props.generatedTemplate);
+      isUpdated = true;
     }
     if (prevProps.background !== this.props.background && this.props.background != null) {
       gwtAdapter.setBackground(this.props.background);
+      isUpdated = true;
+    }
+    if (isUpdated) {
+      this.setState({
+        shouldShuffleOnFullscreen: true
+      });
     }
     this.updateContainerSize$.next();
-  }
-
-  updateContainerSize = () => {
-    const {
-      width,
-      height
-    } = this.gameContainerRef.current.getBoundingClientRect();
-
-    const canvasElement: HTMLImageElement = document.querySelector('#embed-html canvas') as HTMLImageElement;
-    console.log(canvasElement);
-    if (canvasElement) {
-      canvasElement.width = width;
-      canvasElement.height = height;
-    }
-    const tableElement = document.querySelector('#embed-html table') as HTMLTableElement;
-    console.log(tableElement);
-    if (tableElement) {
-      tableElement.style['width'] = width + 'px';
-      tableElement.style['height'] = height + 'px';
-    }
   }
 
   render() {

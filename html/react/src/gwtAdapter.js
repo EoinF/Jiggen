@@ -27,9 +27,22 @@ function startDemo() {
 	});
 }
 
+function shuffle() {
+	onGwtLoadedPromise.then(() => {
+		// The gwtAdapter object is exported from java gwt code using JsInterop
+		window.gwtAdapter.shuffle();
+	});
+}
+
+function resizeGameContainer(width, height) {
+	onGwtLoadedPromise.then(() => {
+		window.gwtAdapter.resizeGameContainer(width, height);
+	});
+}
+
 onGwtLoadedPromise.then(() => {
 	window.gwtAdapter.setFullScreen = (isFullScreen) => {
-		setFullScreen(document.querySelector('canvas'), isFullScreen);
+		setFullScreen(document.getElementById('embed-html'), isFullScreen);
 	};
 });
 
@@ -37,5 +50,7 @@ export default {
 	onGwtLoadedPromise,
 	setBackground,
 	setTemplate,
-	startDemo
+	startDemo,
+	shuffle,
+	resizeGameContainer
 };
