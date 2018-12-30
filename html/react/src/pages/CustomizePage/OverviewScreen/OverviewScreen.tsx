@@ -15,16 +15,21 @@ import backgroundLogo from './Background-icon.png';
 import { Background } from '../../../store/backgrounds';
 import { BaseState, StateRoot } from '../../../models';
 import { getSelectedTemplate, getGeneratedTemplatesForTemplate } from '../../../store/selectors';
+import BackgroundSelectionModal from '../../BackgroundSelectionModal';
+import TemplateSelection from '../../TemplateSelectionModal';
+import { displayOptionsActions } from '../../../actions/displayOptions';
 
 interface OverviewScreenProps {
   selectedTemplate: any;
   selectedBackground: Background;
   generatedTemplates: GeneratedTemplate[]
   fetchGeneratedTemplatesByLink(link: string): void;
+  showBackgroundsModal(): void;
+  showTemplatesModal(): void;
 }
 
 class OverviewScreen extends Component<OverviewScreenProps> {
-  
+
   componentDidMount() {
     const {
       selectedTemplate,
@@ -43,7 +48,6 @@ class OverviewScreen extends Component<OverviewScreenProps> {
     } = this.props;
 
     const generatedTemplate = this.props.generatedTemplates[0];
-
     return (
         <div className={styles.mainContainer}>
           <h1>Custom Puzzle</h1>
@@ -59,14 +63,14 @@ class OverviewScreen extends Component<OverviewScreenProps> {
                 fallbackImageSrc={templateLogo}
                 notSelectedCaption='Select Template'
                 selectedCaption='Template'
-                href='/custom/templates'
+                onClick={this.props.showTemplatesModal}
               />
               <SelectionWidget
                 selection={selectedBackground}
                 fallbackImageSrc={backgroundLogo}
                 notSelectedCaption='Select Background'
                 selectedCaption='Background'
-                href='/custom/backgrounds'
+                onClick={this.props.showBackgroundsModal}
                />
           </div>
           <div className={styles.overviewBody}>
@@ -91,7 +95,8 @@ const mapStateToProps = (_state: any) => {
 
 const mapDispatchToProps = (dispatch: Function) => {
   return {
-    fetchGeneratedTemplatesByLink: (link: string) => dispatch(generatedTemplatesActions.fetchAllByLink(link))
+    fetchGeneratedTemplatesByLink: (link: string) => dispatch(generatedTemplatesActions.fetchAllByLink(link)),
+    showBackgroundsModal: () => dispatch(displayOptionsActions.showBackgroundsModal())
   }
 }
 

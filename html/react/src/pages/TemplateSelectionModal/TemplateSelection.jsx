@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import PlainLink from '../../../widgets/PlainLink';
-import { templatesActions } from '../../../actions/templates';
+import PlainLink from '../../widgets/PlainLink';
+import { templatesActions } from '../../actions/templates';
 
-import { JiggenHeader } from '../OverviewScreen'
 import TemplateWidget from './TemplateWidget';
 
 import './TemplateSelection.scss';
@@ -33,12 +32,10 @@ class TemplateSelection extends Component {
 		return (
 			<div className="templateSelection">
 	            <PlainLink to={`/`} >
-					<JiggenHeader>
-						<h1>
-							<span>{"◄ "}</span>
-							<span>Choose a Template</span>
-						</h1>
-					</JiggenHeader>
+					<h1>
+						<span>{"◄ "}</span>
+						<span>Choose a Template</span>
+					</h1>
 				</PlainLink>
 				<div className="templateTable">
 				{ templates && templates.map(template => { return (

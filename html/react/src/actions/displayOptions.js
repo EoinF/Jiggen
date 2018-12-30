@@ -1,4 +1,7 @@
-const SET_FULLSCREEN_FALLBACK = 'SET_FULLSCREEN_FALLBACK'; 
+const SET_FULLSCREEN_FALLBACK = 'SET_FULLSCREEN_FALLBACK';
+const SHOW_MODAL = 'SHOW_MODAL';
+
+const MODAL_TYPE_BACKGROUND_SELECTION = 'BACKGROUND_SELECTION';
 
 const enableFullScreenFallback = () => {
 	return setFullScreenFallback(true);
@@ -14,12 +17,21 @@ const setFullScreenFallback = (isFullScreen) => {
 	}
 }
 
+const showBackgroundsModal = () => {
+	return {
+		type: SHOW_MODAL,
+		modalType: MODAL_TYPE_BACKGROUND_SELECTION
+	}
+}
+
 const displayOptionsActions = {
+	showBackgroundsModal,
 	disableFullScreenFallback,
 	enableFullScreenFallback
 }
 
 export {
 	displayOptionsActions,
-	SET_FULLSCREEN_FALLBACK
+	SET_FULLSCREEN_FALLBACK,
+	SHOW_MODAL
 }

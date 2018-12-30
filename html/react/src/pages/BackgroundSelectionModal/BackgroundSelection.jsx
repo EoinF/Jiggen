@@ -1,19 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { JiggenHeader } from '../OverviewScreen';
-import PlainLink from '../../../widgets/PlainLink';
-import CardContainer from '../../../widgets/CardContainer';
+import PlainLink from '../../widgets/PlainLink';
+import CardContainer from '../../widgets/CardContainer';
 import SelectedBackgroundDisplay from './SelectedBackgroundDisplay';
 import ImageDisplayReel from './ImageDisplayReel';
 
 import { 
 	backgroundsActions
-} from '../../../store/backgrounds';
+} from '../../store/backgrounds';
 
-import './backgroundSelection.scss';
+import './BackgroundSelection.module.scss';
 
-class BackgroundSelection extends Component {
+class BackgroundSelectionModal extends Component {
 	constructor(props) {
 		super(props);
 
@@ -34,14 +33,12 @@ class BackgroundSelection extends Component {
 
 		return (
 			<div className="backgroundSelection">
-	            <div>
-	            	<PlainLink to={`/`} >
-					<JiggenHeader>
-						<h1>
-							<span>{"◄ "}</span>
-							<span>Choose a Background</span>
-						</h1>
-					</JiggenHeader>
+				<div>
+					<PlainLink to={`/`} >
+					<h1>
+						<span>{"◄ "}</span>
+						<span>Choose a Background</span>
+					</h1>
 					</PlainLink>
 				</div>
 				<div className="mainBackgroundContent">
@@ -78,6 +75,6 @@ const mapDispatchToProps = dispatch => {
 const ConnectedBackgroundSelection = connect(
   mapStateToProps,
   mapDispatchToProps
-)(BackgroundSelection);
+)(BackgroundSelectionModal);
 
 export default ConnectedBackgroundSelection;

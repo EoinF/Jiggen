@@ -4,7 +4,7 @@ import { Subject, Subscription } from 'rxjs';
 import { debounceTime, throttleTime, distinctUntilChanged } from 'rxjs/operators'
 
 import './selectedBackgroundDisplay.scss';
-import ImageFileInput from '../../../../widgets/ImageFileInput/ImageFileInput';
+import ImageFileInput from '../../../widgets/ImageFileInput/ImageFileInput';
 
 interface SelectedBackgroundDisplayProps {
 	onSelectBackground(link: string): void;

@@ -3,19 +3,19 @@ import {PlainLink, ResponsiveImage} from '../../../../widgets';
 import './SelectionWidget.scss';
 
 
-const SelectionWidget = ({selection, fallbackImageSrc, notSelectedCaption, selectedCaption, href}) => {
+const SelectionWidget = ({selection, fallbackImageSrc, notSelectedCaption, selectedCaption, onClick}) => {
 	let imageSrc = fallbackImageSrc;
 
 	if (selection != null) {
 		imageSrc = selection.links.image;
 	}
 	return (
-		<PlainLink className="SelectionWidget" to={href}>
+		<div className="SelectionWidget" onClick={onClick}>
 			<div className="description">
 				{selection != null ? selectedCaption : notSelectedCaption}
 			</div>
 			<ResponsiveImage src={imageSrc} alt=""/>
-		</PlainLink>
+		</div>
 	);
 }
 

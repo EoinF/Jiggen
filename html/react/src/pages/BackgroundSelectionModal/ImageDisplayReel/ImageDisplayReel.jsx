@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PlainLink from '../../../../widgets/PlainLink';
+import PlainLink from '../../../widgets/PlainLink';
 
 import './imageDisplayReel.scss';
 
