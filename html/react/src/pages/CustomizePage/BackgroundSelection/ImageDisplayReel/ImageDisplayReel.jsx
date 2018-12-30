@@ -15,7 +15,7 @@ class ImageDisplayReel extends Component {
 				{ 
 					imageLinks.map(link => (
 						<li>
-							<PlainLink onClick={() => onSelectBackground(link)} to="/">
+							<PlainLink onClick={() => onSelectBackground(link)} to="/custom">
 								<img src={link} alt=""/>
 							</PlainLink>
 						</li>

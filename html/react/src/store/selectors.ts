@@ -4,9 +4,13 @@ import { PlayablePuzzle } from './playablePuzzles';
 import { GeneratedTemplate } from './generatedTemplates';
 import { Background } from './backgrounds';
 
+export const getSelectedTemplate = (state: StateRoot) => state.templates.templatesMap[state.templates.selectedId]
+
 const getBasePlayablePuzzleList = (state: StateRoot) => state.playablePuzzles.resourceList;
 const getBackgroundLinkMap = (state: StateRoot) => state.backgrounds.linkMap
-const getGeneratedTemplateLinkMap = (state: StateRoot) => state.generatedTemplates.linkMap
+
+const getGeneratedTemplateList = (state: StateRoot) => state.generatedTemplates.resourceList;
+const getGeneratedTemplateLinkMap = (state: StateRoot) => state.generatedTemplates.linkMap;
 
 export const getPlayablePuzzleList = createSelector(
     [getBasePlayablePuzzleList, getBackgroundLinkMap, getGeneratedTemplateLinkMap],
@@ -29,3 +33,14 @@ export const getPieceCountMap = createSelector(
         return pieceCountMap;
     }
 )
+
+export const getGeneratedTemplatesForTemplate = createSelector(
+    [getSelectedTemplate, getGeneratedTemplateList],
+    (selectedTemplate, generatedTemplates) => {
+        return generatedTemplates
+            .filter(
+                (generatedTemplate: GeneratedTemplate) => 
+                    generatedTemplates.some(
+                        (g: GeneratedTemplate) => g.links.templateFile == selectedTemplate.links.self)
+            )
+    })

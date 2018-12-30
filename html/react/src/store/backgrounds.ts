@@ -6,19 +6,22 @@ import { Resource, ReducersRoot, BaseState, JiggenThunkAction } from '../models'
 import { getOrFetchResourceLinks } from '../actions/resourceLinks';
 import base from './base';
 
-export interface Background extends Resource {}
+export interface Background extends Resource {
+	width: number;
+	height: number;
+}
 export interface BackgroundsState extends BaseState<Background> {}
 
 const initialState: BackgroundsState = {
-	...base.initialState
+	...base.initialState as BackgroundsState
 };
 
-const {startFetchingBackgrounds, setBackgrounds, setBackground, updateBackgroundById, selectBackground} = createActions({	
+const {startFetchingBackgrounds, setBackgrounds, setBackground, updateBackground, selectBackground} = createActions({	
 	START_FETCHING_BACKGROUNDS: () => ({isFetching: true}),
-	SET_BACKGROUNDS: (backgrounds) => ({resourceList: backgrounds}),
-	SET_BACKGROUND: (background) => ({resource: background}),
-	UPDATE_BACKGROUND_BY_ID: (backgroundId, updatedAttributes) => ({resourceId: backgroundId, updatedAttributes}),
-	SELECT_BACKGROUND: (backgroundId) => ({selectedId: backgroundId})
+	SET_BACKGROUNDS: (backgrounds: Background[]) => ({resourceList: backgrounds}),
+	SET_BACKGROUND: (background: Background) => ({resource: background}),
+	UPDATE_BACKGROUND: (backgroundId: string, updatedAttributes: Background) => ({resourceId: backgroundId, updatedAttributes}),
+	SELECT_BACKGROUND: (backgroundId: string) => ({selectedId: backgroundId})
 });
 
 function fetchBackgrounds (): JiggenThunkAction {
@@ -47,8 +50,21 @@ function loadBackgroundImageData(background: Background): JiggenThunkAction {
 			image.src = background.links.image;
 		});
 		const {width, height} = await imageLoadingPromise;
-		dispatch(updateBackgroundById(background.id, {width, height}));
+		dispatch(updateBackground(background.id, {width, height}));
 	}
+}
+
+function selectBackgroundByImageLink (imageLink: string): JiggenThunkAction {
+	return async (dispatch, getState) => {
+		dispatch(setBackground({
+			id: imageLink,
+			links: {
+				self: imageLink,
+				image: imageLink
+			}
+		} as Background));
+		dispatch(selectBackground(imageLink));
+	};
 }
 
 function selectBackgroundByLink (link: string): JiggenThunkAction {
@@ -62,19 +78,19 @@ function selectBackgroundByLink (link: string): JiggenThunkAction {
 	};
 }
 
-const reducers = handleActions({
-		FETCH_BACKGROUNDS: (state, {payload}: Action<any>) => base.setIsFetching(state, payload),
-		SET_BACKGROUND: (state, {payload}: Action<any>) => base.setOrUpdateResource(state, payload),
-		SET_BACKGROUNDS: (state, {payload}: Action<any>) => base.setResources(state, payload),
-		SELECT_BACKGROUND: (state, {payload}: Action<any>) => base.selectResource(state, payload),
+const reducers = handleActions<BackgroundsState>({
+		FETCH_BACKGROUNDS: (state, {payload}: Action<any>) => base.setIsFetching(state, payload) as BackgroundsState,
+		SET_BACKGROUND: (state, {payload}: Action<any>) => base.setOrUpdateResource(state, payload) as BackgroundsState,
+		SET_BACKGROUNDS: (state, {payload}: Action<any>) => base.setResources(state, payload) as BackgroundsState,
+		SELECT_BACKGROUND: (state, {payload}: Action<any>) => base.selectResource(state, payload) as BackgroundsState,
 		UPDATE_BACKGROUND: (state, {
-			payload: {id, updatedAttributes}
-		}) => {
+			payload: {resourceId, updatedAttributes}
+		}: any) => {
 			const updatedBackground = {
-				...state.backgroundsMap[id],
+				...state.resourceMap[resourceId],
 				...updatedAttributes
 			} as Background;
-			return base.setOrUpdateResource(state, {resource: updatedBackground});
+			return base.setOrUpdateResource(state, {resource: updatedBackground}) as BackgroundsState;
 		}
 	},
 	initialState
@@ -86,6 +102,7 @@ const backgroundsActions = {
 	setBackground,
 	setBackgrounds,
 	selectBackground,
+	selectBackgroundByImageLink,
 	selectByLink: selectBackgroundByLink,
 	loadBackgroundImageData
 }

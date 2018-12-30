@@ -49,7 +49,6 @@ class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps, any> {
   };
 
   onSelectPieceCount = (id: string) => {
-    console.log('selected id ', id);
     this.props.selectPuzzle(id);
   }
 

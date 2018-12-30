@@ -5,7 +5,12 @@ import { Resource, ReducersRoot, BaseState, JiggenThunkAction, StringMap } from 
 import base from './base';
 
 export interface GeneratedTemplate extends Resource {
+	edges: any[];
 	vertices: StringMap<any>;
+	width: number;
+	height: number;
+	templateFile: any;
+	extension: string;
 }
 interface GeneratedTemplateState extends BaseState<GeneratedTemplate> {}
 

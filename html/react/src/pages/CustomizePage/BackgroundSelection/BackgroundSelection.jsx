@@ -71,7 +71,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onSelectBackground: link => dispatch(backgroundsActions.setBackgroundFromUrl(link))
+    onSelectBackground: link => dispatch(backgroundsActions.selectBackgroundByImageLink(link))
   }
 }
 

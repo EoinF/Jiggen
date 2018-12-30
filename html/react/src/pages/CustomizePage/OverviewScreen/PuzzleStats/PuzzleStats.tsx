@@ -1,26 +1,33 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 
-import { backgroundsActions } from '../../../../store/backgrounds';
+import { backgroundsActions, Background } from '../../../../store/backgrounds';
 import { CompatibilityMeasure } from '../../../../widgets';
 import './puzzleStats.scss'
+import { GeneratedTemplate } from '../../../../store/generatedTemplates';
+import { StateRoot } from '../../../../models';
 
+interface PuzzleStatsProps {
+	generatedTemplate: GeneratedTemplate;
+	background: Background;
+	loadBackgroundImageDataById(background: Background): void;
+}
 
-class PuzzleStats extends Component {
+class PuzzleStats extends Component<PuzzleStatsProps> {
 
 	componentDidMount() {
 		this.ensureBackgroundStats(this.props.background);
 	}
 
-	componentDidUpdate(prevProps, prevState) {
+	componentDidUpdate(prevProps: PuzzleStatsProps, prevState: any) {
 		if (prevProps.background !== this.props.background) {
 			this.ensureBackgroundStats(this.props.background);
 		}
 	}
 
-	ensureBackgroundStats(background) {
-		if (background != null && !('width' in background)) {
-			this.props.loadBackgroundImageDataById(background.id, background.links.image);
+	ensureBackgroundStats(background: Background) {
+		if (background != null && background.width == null) {
+			this.props.loadBackgroundImageDataById(background);
 		}
 	}
 
@@ -47,10 +54,10 @@ class PuzzleStats extends Component {
 				<div className="puzzleStats">
 					<div className="compatibilitySection">
 						<span className="description">Compatibility:&nbsp;</span>
-						<CompatibilityMeasure 
+						<CompatibilityMeasure
 							className={'compatibilityMeasure'}
-							generatedTemplate={generatedTemplate} 
-							background={background} 
+							generatedTemplate={generatedTemplate}
+							background={background}
 						/>
 					</div>
 					<span>{`Pieces: ${numPieces}`}</span>
@@ -60,22 +67,14 @@ class PuzzleStats extends Component {
 	}
 }
 
-const mapStateToProps = state => {
+const mapDispatchToProps = (dispatch: Function) => {
   return {
-    background: state.backgrounds.resourceMap[state.backgrounds.selectedId],
-    template: state.templates.templatesMap[state.templates.selectedId],
-    generatedTemplate: state.generatedTemplates.resourceMap[state.generatedTemplates.selectedId]
-  };
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    loadBackgroundImageDataById: (id, link) => dispatch(backgroundsActions.loadBackgroundImageDataById(id, link))
+    loadBackgroundImageDataById: (background: Background) => dispatch(backgroundsActions.loadBackgroundImageData(background))
   }
 }
 
 const ConnectedPuzzleStats = connect(
-  mapStateToProps,
+	null,
   mapDispatchToProps
 )(PuzzleStats);
 

@@ -1,38 +1,7 @@
 
 .backgroundDisplay {
-
 	display: flex;
 	flex-flow: column nowrap;
 	margin: auto;
 	padding: 0.5rem;
-
-	img {
-		// Impose image size limits
-		max-width:100%;
-
-		@media (min-width: 768px) {
-			max-height:15rem;
-			max-width:40rem;
-		}
-
-		// Maintain aspect ratio
-		height:auto;
-		width:auto;
-	}
-
-	.imageContainer {
-		padding-top: 1rem;
-	}
-
-	input {
-		font-size: 1rem;
-	}
-
-	.imageButton {
-		padding: 0;
-		margin: auto;
-		border: none;
-		display: flex;
-		cursor: pointer;
-	}
 }

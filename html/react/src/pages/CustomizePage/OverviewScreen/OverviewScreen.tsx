@@ -14,11 +14,12 @@ import templateLogo from './Template-icon-simple.png';
 import backgroundLogo from './Background-icon.png';
 import { Background } from '../../../store/backgrounds';
 import { BaseState, StateRoot } from '../../../models';
+import { getSelectedTemplate, getGeneratedTemplatesForTemplate } from '../../../store/selectors';
 
 interface OverviewScreenProps {
   selectedTemplate: any;
   selectedBackground: Background;
-  generatedTemplate: GeneratedTemplate
+  generatedTemplates: GeneratedTemplate[]
   fetchGeneratedTemplatesByLink(link: string): void;
 }
 
@@ -37,10 +38,11 @@ class OverviewScreen extends Component<OverviewScreenProps> {
 
   render() {
     const {
-      generatedTemplate,
       selectedTemplate,
       selectedBackground
     } = this.props;
+
+    const generatedTemplate = this.props.generatedTemplates[0];
 
     return (
         <div className={styles.mainContainer}>
@@ -55,20 +57,23 @@ class OverviewScreen extends Component<OverviewScreenProps> {
               <SelectionWidget
                 selection={selectedTemplate}
                 fallbackImageSrc={templateLogo}
-                notSelectedCaption='Select a Template'
+                notSelectedCaption='Select Template'
                 selectedCaption='Template'
                 href='/custom/templates'
               />
               <SelectionWidget
                 selection={selectedBackground}
                 fallbackImageSrc={backgroundLogo}
-                notSelectedCaption='Select a Background'
+                notSelectedCaption='Select Background'
                 selectedCaption='Background'
                 href='/custom/backgrounds'
                />
           </div>
           <div className={styles.overviewBody}>
-              <PuzzleStats/>
+              <PuzzleStats
+                background={selectedBackground}
+                generatedTemplate={generatedTemplate}
+              />
           </div>
         </div>
     );
@@ -79,8 +84,8 @@ const mapStateToProps = (_state: any) => {
   const state = _state as StateRoot;
   return {
     selectedBackground: state.backgrounds.resourceMap[state.backgrounds.selectedId!],
-    selectedTemplate: state.templates.templatesMap[state.templates.selectedId],
-    generatedTemplate: state.generatedTemplates.resourceMap[state.generatedTemplates.selectedId],
+    selectedTemplate: getSelectedTemplate(state),
+    generatedTemplates: getGeneratedTemplatesForTemplate(state),
   };
 }
 
