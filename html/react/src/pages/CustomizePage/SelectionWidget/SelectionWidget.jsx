@@ -1,5 +1,5 @@
 import React from 'react';
-import {PlainLink, ResponsiveImage} from '../../../../widgets';
+import {ResponsiveImage} from '../../../widgets';
 import './SelectionWidget.scss';
 
 

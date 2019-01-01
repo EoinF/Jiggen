@@ -1,25 +1,22 @@
 import React, { Component, Dispatch } from 'react';
 import { connect } from 'react-redux';
 
-import styles from './OverviewScreen.module.scss';
-import { generatedTemplatesActions, GeneratedTemplate } from '../../../store/generatedTemplates';
+import styles from './CustomizePage.module.scss';
+import { generatedTemplatesActions, GeneratedTemplate } from '../../store/generatedTemplates';
 
 import SelectionWidget from './SelectionWidget';
 import PuzzleStats from './PuzzleStats';
 
-import GameContainer from '../../../widgets/GameContainer';
-
+import GameContainer from '../../widgets/GameContainer';
 
 import templateLogo from './Template-icon-simple.png';
 import backgroundLogo from './Background-icon.png';
-import { Background } from '../../../store/backgrounds';
-import { BaseState, StateRoot } from '../../../models';
-import { getSelectedTemplate, getGeneratedTemplatesForTemplate } from '../../../store/selectors';
-import BackgroundSelectionModal from '../../BackgroundSelectionModal';
-import TemplateSelection from '../../TemplateSelectionModal';
-import { displayOptionsActions } from '../../../actions/displayOptions';
+import { Background } from '../../store/backgrounds';
+import { StateRoot } from '../../models';
+import { getSelectedTemplate, getGeneratedTemplatesForTemplate } from '../../store/selectors';
+import { displayOptionsActions } from '../../actions/displayOptions';
 
-interface OverviewScreenProps {
+interface CustomizePageProps {
   selectedTemplate: any;
   selectedBackground: Background;
   generatedTemplates: GeneratedTemplate[]
@@ -28,7 +25,7 @@ interface OverviewScreenProps {
   showTemplatesModal(): void;
 }
 
-class OverviewScreen extends Component<OverviewScreenProps> {
+class CustomizePage extends Component<CustomizePageProps> {
 
   componentDidMount() {
     const {
@@ -84,8 +81,7 @@ class OverviewScreen extends Component<OverviewScreenProps> {
   }
 }
 
-const mapStateToProps = (_state: any) => {
-  const state = _state as StateRoot;
+const mapStateToProps = (state: StateRoot) => {
   return {
     selectedBackground: state.backgrounds.resourceMap[state.backgrounds.selectedId!],
     selectedTemplate: getSelectedTemplate(state),
@@ -100,9 +96,9 @@ const mapDispatchToProps = (dispatch: Function) => {
   }
 }
 
-const ConnectedOverviewScreen = connect(
+const ConnectedCustomizePage = connect(
   mapStateToProps,
   mapDispatchToProps
-)(OverviewScreen);
+)(CustomizePage);
 
-export default ConnectedOverviewScreen;
+export default ConnectedCustomizePage;
