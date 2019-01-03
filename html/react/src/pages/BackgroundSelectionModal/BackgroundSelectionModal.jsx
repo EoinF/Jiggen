@@ -46,9 +46,9 @@ class BackgroundSelectionModal extends Component {
 		} = this.state;
 
 		return <div className={styles.contentContainer}>
-			<div className="backgroundTable">
-				<div className="backgroundCard">
-					<CardContainer className="cardContainer">
+			<div className={styles.backgroundTable}>
+				<div className={styles.backgroundCard}>
+					<CardContainer className={styles.cardContainer}>
 						<SelectedBackgroundDisplay
 							onSelectBackground={onSelectBackground}
 							initialLink={background && background.links.image} />
@@ -64,7 +64,7 @@ class BackgroundSelectionModal extends Component {
 }
 const mapStateToProps = state => {
   return {
-    background: state.backgrounds.resourceMap[state.backgrounds.selectedId] || null
+    background: state.backgrounds.resourceMap[state.backgrounds.selectedId]
   };
 }
 

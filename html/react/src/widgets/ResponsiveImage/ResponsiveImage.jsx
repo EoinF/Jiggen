@@ -28,14 +28,14 @@ class ResponsiveImage extends Component {
 
 	updateSize = () => {
 		if (this.state.isCalculating) {
-		const {width, height} = this.containerRef.current.getBoundingClientRect();
+			const {width, height} = this.containerRef.current.getBoundingClientRect();
 
-			this.setState({
-				width,
-				height,
-				isCalculating: false
-			});
-		}
+				this.setState({
+					width,
+					height,
+					isCalculating: false
+				});
+			}
 	};
 
 	render() {

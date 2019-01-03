@@ -1,12 +1,9 @@
+@import '../../../theming';
 
 .imageDisplayReel {
 	display: flex;
 	flex-flow: row wrap;
-
-	@media (min-width: 768px) {
-		display: grid;
-		grid-template-columns: 33% 33% 33%;
-	}
+	justify-content: center;
 
 	width: 100%;
 	
@@ -17,8 +14,12 @@
 
 	img {
 		max-width: 100%;
+		max-height: 35vh;
 	}
 	a {
 		display: grid;
+		margin: 0 0.1rem 0.4rem;
+		box-shadow: 1px 1px 9px $purple400;
+		// box-shadow: 0px 1px 15px $black;
 	}
 }

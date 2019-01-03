@@ -37,11 +37,26 @@ class CustomizePage extends Component<CustomizePageProps> {
       selectedTemplate,
       fetchGeneratedTemplatesByLink
     } = this.props;
+
+    this.updateGeneratedTemplate();
+  };
+
+  componentDidUpdate(prevProps: CustomizePageProps) {
+    if (this.props.selectedTemplate != prevProps.selectedTemplate) {
+      this.updateGeneratedTemplate();
+    }
+  }
+  
+  updateGeneratedTemplate = () => {
+    const {
+      selectedTemplate,
+      fetchGeneratedTemplatesByLink
+    } = this.props;
     if (selectedTemplate != null) {
-      // Clear out the existing generated templates in the store, and refetch them all
       fetchGeneratedTemplatesByLink(selectedTemplate.links.generatedTemplates);
     }
-  };
+  }
+
 
   render() {
     const {

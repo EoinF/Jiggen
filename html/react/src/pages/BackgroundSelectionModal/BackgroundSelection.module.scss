@@ -15,14 +15,14 @@
 	}
 }
 
-.conentContainer {
+.contentContainer {
 	flex: 1 1 100%;
 	display: flex;
 }
 
 .backgroundTable {
 	width: 100%;
-	padding: 1.5rem;
+	padding: 0 1rem 1rem;
 
 	@media(max-width: 768px) {
 		@media (orientation: portrait) {

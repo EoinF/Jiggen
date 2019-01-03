@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PlainLink from '../../../widgets/PlainLink';
 
-import './imageDisplayReel.scss';
+import styles from './ImageDisplayReel.module.scss';
 
 class ImageDisplayReel extends Component {
 	render() {
@@ -11,7 +11,7 @@ class ImageDisplayReel extends Component {
 		} = this.props;
 
 		return (
-			<ul className="imageDisplayReel">
+			<ul className={styles.imageDisplayReel}>
 				{ 
 					imageLinks.map(link => (
 						<li>
