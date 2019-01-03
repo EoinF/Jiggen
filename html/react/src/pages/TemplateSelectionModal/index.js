@@ -1,4 +1,4 @@
-import TemplateSelection from './TemplateSelection';
+import TemplateSelection from './TemplateSelectionModal';
 import TemplateWidget from './TemplateWidget';
 
 export { TemplateWidget, TemplateSelection };

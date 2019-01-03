@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { StateRoot } from '../../models';
-import { MODAL_TYPE_BACKGROUND_SELECTION, displayOptionsActions } from '../../store/displayOptions';
+import { ModalType, displayOptionsActions, modalTypeFromValue } from '../../store/displayOptions';
 import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router';
 import ModalSwitcher from './ModalSwitcher';
@@ -12,7 +12,7 @@ interface StateProps {
 
 interface DispatchProps {
     hideModal(): void;
-    showModal(modalType: string): void;
+    showModal(modalType: ModalType): void;
 }
 
 type ModalManagerProps = StateProps & DispatchProps & RouteComponentProps;
@@ -33,8 +33,9 @@ class ModalManager extends Component<ModalManagerProps> {
     }
 
     updateFromHash(hash: string) {
-        if (hash === '#background') {
-            this.props.showModal(MODAL_TYPE_BACKGROUND_SELECTION);
+        const modalType = modalTypeFromValue(hash);
+        if (modalType != null) {
+            this.props.showModal(modalType);
         } else {
             this.props.hideModal();
         }
@@ -42,8 +43,9 @@ class ModalManager extends Component<ModalManagerProps> {
 
     updateFromProps() {
         if (this.props.isModalVisible) {
-            if (this.props.location.hash !== '#background') {
-                this.props.history.push({...this.props.location, hash: 'background'});
+            const modalTypeFromHash = modalTypeFromValue(this.props.location.hash);
+            if (modalTypeFromHash == null) {
+                this.props.history.push({...this.props.location, hash: this.props.modalType});
             }
         }
     }
@@ -64,10 +66,10 @@ const mapStateToProps = (state: StateRoot) => {
     } as ModalManagerProps
 }
 
-const mapDispatchToProps = (dispatch: Function) => {
+const mapDispatchToProps = (dispatch: Function): DispatchProps => {
     return {
         hideModal: () => dispatch(displayOptionsActions.hideModal()),
-        showModal: (modalType: string) => dispatch(displayOptionsActions.showModal(modalType))
+        showModal: (modalType: ModalType) => dispatch(displayOptionsActions.showModal(modalType))
     }
 }
 

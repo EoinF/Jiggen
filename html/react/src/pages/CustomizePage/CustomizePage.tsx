@@ -1,4 +1,4 @@
-import React, { Component, Dispatch } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import styles from './CustomizePage.module.scss';
@@ -16,14 +16,19 @@ import { StateRoot } from '../../models';
 import { getSelectedTemplate, getGeneratedTemplatesForTemplate } from '../../store/selectors';
 import { displayOptionsActions } from '../../store/displayOptions';
 
-interface CustomizePageProps {
+interface StateProps {
   selectedTemplate: any;
   selectedBackground: Background;
   generatedTemplates: GeneratedTemplate[]
+}
+
+interface DispatchProps {
   fetchGeneratedTemplatesByLink(link: string): void;
   showBackgroundsModal(): void;
   showTemplatesModal(): void;
 }
+
+type CustomizePageProps = StateProps & DispatchProps;
 
 class CustomizePage extends Component<CustomizePageProps> {
 
@@ -81,18 +86,19 @@ class CustomizePage extends Component<CustomizePageProps> {
   }
 }
 
-const mapStateToProps = (state: StateRoot) => {
+const mapStateToProps = (state: StateRoot): StateProps => {
   return {
     selectedBackground: state.backgrounds.resourceMap[state.backgrounds.selectedId!],
     selectedTemplate: getSelectedTemplate(state),
-    generatedTemplates: getGeneratedTemplatesForTemplate(state),
+    generatedTemplates: getGeneratedTemplatesForTemplate(state)
   };
 }
 
-const mapDispatchToProps = (dispatch: Function) => {
+const mapDispatchToProps = (dispatch: Function): DispatchProps => {
   return {
     fetchGeneratedTemplatesByLink: (link: string) => dispatch(generatedTemplatesActions.fetchAllByLink(link)),
-    showBackgroundsModal: () => dispatch(displayOptionsActions.showBackgroundsModal())
+    showBackgroundsModal: () => dispatch(displayOptionsActions.showBackgroundsModal()),
+    showTemplatesModal: () => dispatch(displayOptionsActions.showTemplatesModal())
   }
 }
 

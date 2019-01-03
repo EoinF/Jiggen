@@ -1,10 +1,18 @@
 import { createActions, handleActions, Action } from "redux-actions";
 
-const MODAL_TYPE_BACKGROUND_SELECTION = 'BACKGROUND_SELECTION';
+export enum ModalType {
+    BACKGROUND_SELECT = '#backgrounds',
+    TEMPLATE_SELECT = '#templates'
+}
+
+const modalTypeFromValue = (value: string): (ModalType | undefined) => {
+    return Object.values(ModalType)
+        .find((v: ModalType) => v === value);
+}
 
 export interface DisplayOptionsState {
     showFullScreenFallback: boolean,
-	modalType?: string,
+	modalType?: ModalType,
 	isModalVisible: boolean
 }
 
@@ -20,12 +28,15 @@ const {
     hideModal
 } = createActions({
     SET_FULLSCREEN_FALLBACK: (showFullScreenFallback) => ({showFullScreenFallback}),
-    SHOW_MODAL: (modalType) => ({modalType}),
+    SHOW_MODAL: (modalType: ModalType) => ({modalType}),
     HIDE_MODAL: () => {}
 });
 
 const showBackgroundsModal = () => {
-	return showModal(MODAL_TYPE_BACKGROUND_SELECTION);
+	return showModal(ModalType.BACKGROUND_SELECT);
+}
+const showTemplatesModal = () => {
+	return showModal(ModalType.TEMPLATE_SELECT);
 }
 
 const enableFullScreenFallback = () => {
@@ -56,6 +67,7 @@ const reducers = handleActions({
 
 const displayOptionsActions = {
     showBackgroundsModal,
+    showTemplatesModal,
     showModal,
     hideModal,
 	disableFullScreenFallback,
@@ -63,7 +75,7 @@ const displayOptionsActions = {
 }
 
 export {
-	displayOptionsActions,
-	MODAL_TYPE_BACKGROUND_SELECTION
+    displayOptionsActions,
+    modalTypeFromValue
 }
 export default reducers;
