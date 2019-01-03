@@ -2,6 +2,8 @@ import { BaseAction } from 'redux-actions';
 import { ThunkAction } from 'redux-thunk';
 import { BackgroundsState } from '../store/backgrounds';
 import { PlayablePuzzlesState } from '../store/playablePuzzles';
+import { GeneratedTemplatesState } from '../store/generatedTemplates';
+import { DisplayOptionsState } from '../store/displayOptions';
 
 export interface StringMap<T> {
 	[key: string]: T
@@ -23,9 +25,9 @@ export interface BaseState<T extends Resource> {
 export interface StateRoot {
 	templates: any,
     backgrounds: BackgroundsState,
-    generatedTemplates: any,
+    generatedTemplates: GeneratedTemplatesState,
     resourceLinks: any,
-    displayOptions: any,
+    displayOptions: DisplayOptionsState,
     playablePuzzles: PlayablePuzzlesState
 }
 

@@ -1,2 +1,2 @@
-import BackgroundSelection from './BackgroundSelection';
+import BackgroundSelection from './BackgroundSelectionModal';
 export default BackgroundSelection;

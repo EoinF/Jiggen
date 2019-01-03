@@ -8,8 +8,7 @@ import {
 
 import {
 	templateReducers,
-	resourceLinkReducers,
-	displayOptionsReducers
+	resourceLinkReducers
 } from '../reducers';
 
 import { ReducersRoot } from '../models';
@@ -17,6 +16,7 @@ import { ReducersRoot } from '../models';
 import generatedTemplates from './generatedTemplates';
 import backgrounds from './backgrounds';
 import playablePuzzles from './playablePuzzles';
+import displayOptions from './displayOptions';
 
 import thunk from 'redux-thunk';
 
@@ -30,7 +30,7 @@ const reducersMap: ReducersRoot = {
     backgrounds,
     generatedTemplates,
     resourceLinks: resourceLinkReducers,
-    displayOptions: displayOptionsReducers,
+    displayOptions,
     playablePuzzles
 };
 

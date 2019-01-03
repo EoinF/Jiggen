@@ -12,10 +12,10 @@ export interface GeneratedTemplate extends Resource {
 	templateFile: any;
 	extension: string;
 }
-interface GeneratedTemplateState extends BaseState<GeneratedTemplate> {}
+export interface GeneratedTemplatesState extends BaseState<GeneratedTemplate> {}
 
-const initialState: GeneratedTemplateState = {
-	...base.initialState as GeneratedTemplateState
+const initialState: GeneratedTemplatesState = {
+	...base.initialState as GeneratedTemplatesState
 };
 
 const {

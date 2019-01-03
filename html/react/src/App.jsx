@@ -7,6 +7,7 @@ import './index.scss';
 import CustomizePage from './pages/CustomizePage';
 import PuzzleOfTheDayPage from './pages/PuzzleOfTheDayPage';
 import NavigationBar from './widgets/NavigationBar/NavigationBar';
+import ModalManager from './pages/ModalManager/ModalManager';
 
 
 class App extends Component {
@@ -32,6 +33,7 @@ const AppContents = () => {
 			</Route> */}
 		</Switch>
 		<Route path='/' component={NavigationBar}/>
+		<ModalManager/>
 	</div>
 };
 

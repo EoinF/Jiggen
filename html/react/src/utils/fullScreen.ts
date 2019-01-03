@@ -1,5 +1,5 @@
 import store from '../store';
-import { displayOptionsActions } from '../actions/displayOptions';
+import { displayOptionsActions } from '../store/displayOptions';
 
 declare global {
     interface Document { 

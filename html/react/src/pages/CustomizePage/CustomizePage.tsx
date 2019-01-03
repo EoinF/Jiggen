@@ -14,7 +14,7 @@ import backgroundLogo from './Background-icon.png';
 import { Background } from '../../store/backgrounds';
 import { StateRoot } from '../../models';
 import { getSelectedTemplate, getGeneratedTemplatesForTemplate } from '../../store/selectors';
-import { displayOptionsActions } from '../../actions/displayOptions';
+import { displayOptionsActions } from '../../store/displayOptions';
 
 interface CustomizePageProps {
   selectedTemplate: any;

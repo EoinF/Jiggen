@@ -10,7 +10,8 @@ import {
 	backgroundsActions
 } from '../../store/backgrounds';
 
-import './BackgroundSelection.module.scss';
+import styles from './BackgroundSelection.module.scss';
+import ModalWrapper from '../ModalManager/ModalWrapper';
 
 class BackgroundSelectionModal extends Component {
 	constructor(props) {
@@ -22,6 +23,19 @@ class BackgroundSelectionModal extends Component {
 	}
 
 	render () {
+		return (
+			<ModalWrapper>
+				<div className={styles.backgroundSelection}>
+					<h1>
+						<span>Choose a Background</span>
+					</h1>
+					<this.MainContent/>
+				</div>
+			</ModalWrapper>
+		);
+	}
+
+	MainContent = () => {
 		const {
 			background,
 			onSelectBackground
@@ -31,33 +45,21 @@ class BackgroundSelectionModal extends Component {
 			suggestedInputs
 		} = this.state;
 
-		return (
-			<div className="backgroundSelection">
-				<div>
-					<PlainLink to={`/`} >
-					<h1>
-						<span>{"◄ "}</span>
-						<span>Choose a Background</span>
-					</h1>
-					</PlainLink>
-				</div>
-				<div className="mainBackgroundContent">
-					<div className="backgroundTable">
-						<div className="backgroundCard">
-							<CardContainer className="cardContainer">
-								<SelectedBackgroundDisplay
-									onSelectBackground={onSelectBackground}
-									initialLink={background && background.links.image} />
-							</CardContainer>
-						</div>
-						<ImageDisplayReel
-							imageLinks={suggestedInputs} 
+		return <div className={styles.contentContainer}>
+			<div className="backgroundTable">
+				<div className="backgroundCard">
+					<CardContainer className="cardContainer">
+						<SelectedBackgroundDisplay
 							onSelectBackground={onSelectBackground}
-						/>
-					</div>
+							initialLink={background && background.links.image} />
+					</CardContainer>
 				</div>
+				<ImageDisplayReel
+					imageLinks={suggestedInputs} 
+					onSelectBackground={onSelectBackground}
+				/>
 			</div>
-		);
+		</div>
 	}
 }
 const mapStateToProps = state => {
