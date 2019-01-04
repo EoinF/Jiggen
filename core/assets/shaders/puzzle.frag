@@ -18,7 +18,7 @@ void main()
 
     // If the colour is black, then use gray (so the background is visible when combined)
     if (template_colour == vec4(0, 0, 0, 1)) {
-        template_colour = vec4(0.3, 0.3, 0.3, 1);
+        template_colour = vec4(0.1, 0.1, 0.1, 1);
     }
     vec4 combined_colour = vec4(template_colour.r * background_colour.r,
     template_colour.g * background_colour.g, template_colour.b * background_colour.b, template_colour.a);

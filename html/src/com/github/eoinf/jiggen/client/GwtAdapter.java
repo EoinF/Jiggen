@@ -25,7 +25,7 @@ public class GwtAdapter {
     private static HtmlLauncher gdxApp;
 
     public static void resizeGameContainer(int width, int height) {
-        gdxApp.resizeGameContainer(width, height);
+        gdxApp.postRunnable(() -> gdxApp.resizeGameContainer(width, height));
     }
 
     public static void shuffle() {

@@ -121,6 +121,9 @@ public class TextureOverlayImage extends Widget {
     }
 
     public void setOverlay(TextureRegionDrawable overlay) {
+        overlay.getRegion()
+                .getTexture()
+                .setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         this.overlay = overlay;
     }
 
@@ -132,6 +135,10 @@ public class TextureOverlayImage extends Widget {
      * @param drawable May be null.
      */
     public void setDrawable(TextureRegionDrawable drawable) {
+        drawable.getRegion()
+                .getTexture()
+                .setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+
         if (this.drawable == drawable) return;
         if (drawable != null) {
             if (getPrefWidth() != drawable.getMinWidth() || getPrefHeight() != drawable.getMinHeight())
