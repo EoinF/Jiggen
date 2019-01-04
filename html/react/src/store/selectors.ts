@@ -37,10 +37,12 @@ export const getPieceCountMap = createSelector(
 export const getGeneratedTemplatesForTemplate = createSelector(
     [getSelectedTemplate, getGeneratedTemplateList],
     (selectedTemplate, generatedTemplates) => {
-        return generatedTemplates
-            .filter(
-                (generatedTemplate: GeneratedTemplate) => 
-                    generatedTemplates.some(
-                        (g: GeneratedTemplate) => g.links.templateFile == selectedTemplate.links.self)
-            )
+        console.log(generatedTemplates);
+        if (selectedTemplate != null) {
+            return generatedTemplates
+                .filter((generatedTemplate: GeneratedTemplate) => 
+                    generatedTemplate.links.templateFile == selectedTemplate.links.self);
+        } else {
+            return [];
+        }
     })

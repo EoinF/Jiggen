@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import PlainLink from '../../widgets/PlainLink';
 import CardContainer from '../../widgets/CardContainer';
-import SelectedBackgroundDisplay from './SelectedBackgroundDisplay';
 import ImageDisplayReel from './ImageDisplayReel';
 
 import { 
 	backgroundsActions
 } from '../../store/backgrounds';
 
-import styles from './BackgroundSelection.module.scss';
+import styles from './BackgroundSelectionModal.module.scss';
 import ModalWrapper from '../ModalManager/ModalWrapper';
+import BackgroundSelectionForm from './BackgroundSelectionForm';
 
 class BackgroundSelectionModal extends Component {
 	constructor(props) {
@@ -48,10 +47,10 @@ class BackgroundSelectionModal extends Component {
 		return <div className={styles.contentContainer}>
 			<div className={styles.backgroundTable}>
 				<CardContainer className={styles.cardContainer}>
-					<SelectedBackgroundDisplay
-						onSelectBackground={onSelectBackground}
-						initialLink={background && background.links.image} />
-				</CardContainer>
+					<BackgroundSelectionForm
+							onSelectBackground={onSelectBackground}
+							initialLink={background && background.links.image} />
+					</CardContainer>
 				<ImageDisplayReel
 					imageLinks={suggestedInputs} 
 					onClickLink={onSelectBackground}
@@ -72,9 +71,9 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-const ConnectedBackgroundSelection = connect(
+const ConnectedBackgroundSelectionModal = connect(
   mapStateToProps,
   mapDispatchToProps
 )(BackgroundSelectionModal);
 
-export default ConnectedBackgroundSelection;
+export default ConnectedBackgroundSelectionModal;

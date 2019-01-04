@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import { debounceTime, throttleTime, distinctUntilChanged } from 'rxjs/operators'
 import { Subject, Subscription } from 'rxjs';
 
+import styles from './ImageLinkInput.module.scss';
+
 interface ImageLinkInputProps {
     onValidImage(image: HTMLImageElement): void;
 }
@@ -74,12 +76,13 @@ class ImageLinkInput extends Component<ImageLinkInputProps, ImageLinkInputState>
         } = this.state;
         
         return <input
-                value={inputText}
-                placeholder="Paste a link here"
-                onChange={this.onChangeInputText}
-                name="background"
-                type="text"
-            />
+            className={styles.mainContainer}
+            value={inputText}
+            placeholder="Paste a link here"
+            onChange={this.onChangeInputText}
+            name="background"
+            type="text"
+        />
     }
 }
 

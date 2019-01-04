@@ -1,25 +1,26 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import { Subject, Subscription } from 'rxjs';
 
-import './selectedBackgroundDisplay.scss';
+import styles from './BackgroundSelectionForm.module.scss';
 import ImageFileInput from '../../../widgets/ImageFileInput/ImageFileInput';
 import { Background } from '../../../store/backgrounds';
 import ImageLinkInput from '../../../widgets/ImageLinkInput/ImageLinkInput';
 
-interface SelectedBackgroundDisplayProps {
+import upArrow from './up-arrow.png';
+
+interface BackgroundSelectionFormProps {
 	onSelectBackground(link: string): void;
 }
 
-interface SelectedBackgroundDisplayState {
+interface BackgroundSelectionFormState {
 	validBackgroundImage?: Background;
 	isSubmitted: boolean;
 }
 
-class SelectedBackgroundDisplay extends Component<SelectedBackgroundDisplayProps, SelectedBackgroundDisplayState> {
+class BackgroundSelectionForm extends Component<BackgroundSelectionFormProps, BackgroundSelectionFormState> {
 	formRef: React.RefObject<HTMLFormElement>;
 	
-	constructor(props: SelectedBackgroundDisplayProps) {
+	constructor(props: BackgroundSelectionFormProps) {
 		super(props);
 		this.state = {
 			isSubmitted: false
@@ -71,16 +72,23 @@ class SelectedBackgroundDisplay extends Component<SelectedBackgroundDisplayProps
 		} else {
 			return (
 				<form
-					className="backgroundDisplay"
 					onSubmit={this.onSubmit}
 					ref={this.formRef}
 				>
-					<ImageLinkInput onValidImage={this.onValidImage} />
-					<ImageFileInput />
+					<div className={styles.linkInputContainer}>
+						<ImageLinkInput onValidImage={this.onValidImage} />
+					</div>
+					<ImageFileInput>
+						<img
+							className={styles.uploadIcon}
+							 src={upArrow}
+							 alt="Upload a file..."
+						 />
+					</ImageFileInput>
 				</form>
 			);
 		}
 	}
 }
 
-export default SelectedBackgroundDisplay;
+export default BackgroundSelectionForm;

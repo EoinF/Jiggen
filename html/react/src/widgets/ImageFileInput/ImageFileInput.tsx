@@ -10,8 +10,8 @@ class ImageFileInput extends Component {
 
     render() {
         return <div className={styles.mainContainer}>
-            <button className={styles.inputDisplay}>
-                ^
+            <button className={styles.inputDisplayButton}>
+                {this.props.children}
             </button>
             <input className={styles.hiddenInput}
                 type="file" 
