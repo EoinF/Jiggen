@@ -78,7 +78,7 @@ class BackgroundSelectionForm extends Component<BackgroundSelectionFormProps, Ba
 					<div className={styles.linkInputContainer}>
 						<ImageLinkInput onValidImage={this.onValidImage} />
 					</div>
-					<ImageFileInput>
+					<ImageFileInput onValidImage={this.onValidImage}>
 						<img
 							className={styles.uploadIcon}
 							 src={upArrow}

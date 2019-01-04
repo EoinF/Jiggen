@@ -1,11 +1,22 @@
 import React, {Component, ChangeEvent} from 'react';
 import styles from './ImageFileInput.module.scss';
 
-class ImageFileInput extends Component {
+interface ImageFileInputProps {
+    onValidImage(image: HTMLImageElement): void;
+}
+
+class ImageFileInput extends Component<ImageFileInputProps> {
 
     onChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-        var files = e.target.files;
-        console.log(files);
+        const files = e.target.files;
+
+        const image = new Image();
+        if (files != null && files.length === 1) {
+            image.src = URL.createObjectURL(files[0]);
+            image.onload = () => {
+                this.props.onValidImage(image)
+            }
+        }
     }
 
     render() {
