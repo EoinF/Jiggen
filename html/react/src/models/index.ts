@@ -9,9 +9,14 @@ export interface StringMap<T> {
 	[key: string]: T
 }
 
-export interface Resource {
+export class Resource {
 	id: string;
-	links: any;
+    links: any;
+    
+    constructor(id: string, links: any) {
+        this.id = id;
+        this.links = links;
+    }
 }
 
 export interface BaseState<T extends Resource> {

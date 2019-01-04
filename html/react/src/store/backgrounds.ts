@@ -6,9 +6,18 @@ import { Resource, ReducersRoot, BaseState, JiggenThunkAction } from '../models'
 import { getOrFetchResourceLinks } from '../actions/resourceLinks';
 import base from './base';
 
-export interface Background extends Resource {
+export class Background extends Resource {
 	width: number;
 	height: number;
+
+	constructor(image: HTMLImageElement) {
+		super(image.src, {
+			self: image.src,
+			image: image.src
+		})
+		this.width = image.width;
+		this.height = image.height;
+	}
 }
 export interface BackgroundsState extends BaseState<Background> {}
 

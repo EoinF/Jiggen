@@ -47,16 +47,14 @@ class BackgroundSelectionModal extends Component {
 
 		return <div className={styles.contentContainer}>
 			<div className={styles.backgroundTable}>
-				<div className={styles.backgroundCard}>
-					<CardContainer className={styles.cardContainer}>
-						<SelectedBackgroundDisplay
-							onSelectBackground={onSelectBackground}
-							initialLink={background && background.links.image} />
-					</CardContainer>
-				</div>
+				<CardContainer className={styles.cardContainer}>
+					<SelectedBackgroundDisplay
+						onSelectBackground={onSelectBackground}
+						initialLink={background && background.links.image} />
+				</CardContainer>
 				<ImageDisplayReel
 					imageLinks={suggestedInputs} 
-					onSelectBackground={onSelectBackground}
+					onClickLink={onSelectBackground}
 				/>
 			</div>
 		</div>

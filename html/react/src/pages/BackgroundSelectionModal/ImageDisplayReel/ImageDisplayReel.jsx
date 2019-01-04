@@ -7,7 +7,7 @@ class ImageDisplayReel extends Component {
 	render() {
 		const {
 			imageLinks,
-			onSelectBackground
+			onClickLink
 		} = this.props;
 
 		return (
@@ -15,7 +15,7 @@ class ImageDisplayReel extends Component {
 				{ 
 					imageLinks.map(link => (
 						<li>
-							<PlainLink onClick={() => onSelectBackground(link)} to="/custom">
+							<PlainLink onClick={() => onClickLink(link)} to="/custom">
 								<img src={link} alt=""/>
 							</PlainLink>
 						</li>
