@@ -87,20 +87,20 @@ public class PuzzleViewController {
         Random random = new Random();
         GridPoint2 worldBounds = puzzleViewModel.getWorldBoundsObservable().getValue();
         List<ConnectedPuzzlePieces> connectedPiecesList = puzzleViewModel.getConnectedPiecesListObservable().getValue();
+        List<ConnectedPuzzlePieces> shuffledConnectedPiecesList = new ArrayList<>();
 
         for (ConnectedPuzzlePieces connectedPieces : connectedPiecesList) {
-            float r1 = random.nextFloat();
-            float r2 = random.nextFloat();
-
-            int x = (int) (r1 * (worldBounds.x - connectedPieces.getWidth()));
-            int y = (int) (r2 * (worldBounds.y - connectedPieces.getHeight()));
-
             for (PuzzlePiece piece: connectedPieces.getConnectedPieces()) {
+                float r1 = random.nextFloat();
+                float r2 = random.nextFloat();
+
+                int x = (int) (r1 * (worldBounds.x - piece.getWidth()));
+                int y = (int) (r2 * (worldBounds.y - piece.getHeight()));
                 piece.setPosition(new Vector2(x, y));
+                shuffledConnectedPiecesList.add(new ConnectedPuzzlePieces(piece));
             }
         }
-
-        puzzleViewModel.setConnectedPiecesList(connectedPiecesList);
+        puzzleViewModel.setConnectedPiecesList(shuffledConnectedPiecesList);
     }
 
 
@@ -126,7 +126,6 @@ public class PuzzleViewController {
 
     public void panBy(float deltaX, float deltaY) {
         if (!puzzleViewModel.isHoldingPiece()) {
-            // Assume only one pointer is being used (Panning is only possible with a single pointer)
             camera.translate(-deltaX * camera.zoom, deltaY * camera.zoom);
         }
     }

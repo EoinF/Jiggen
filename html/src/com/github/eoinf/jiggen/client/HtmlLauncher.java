@@ -43,7 +43,6 @@ public class HtmlLauncher extends GwtApplication {
         getApplicationListener().resize(width, height);
     }
 
-
     @Override
     public ApplicationListener createApplicationListener() {
         GWT.log("Initializing GWT Adapter");
