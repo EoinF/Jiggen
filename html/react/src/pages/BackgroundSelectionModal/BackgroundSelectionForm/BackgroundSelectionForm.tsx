@@ -9,7 +9,7 @@ import ImageLinkInput from '../../../widgets/ImageLinkInput/ImageLinkInput';
 import upArrow from './up-arrow.png';
 
 interface BackgroundSelectionFormProps {
-	onSelectBackground(link: string): void;
+	onSelectBackground(background: Background): void;
 }
 
 interface BackgroundSelectionFormState {
@@ -50,8 +50,7 @@ class BackgroundSelectionForm extends Component<BackgroundSelectionFormProps, Ba
 				localStorage.setItem('suggestedInputs', JSON.stringify(suggestedInputs));
 			}
 			
-			this.props.onSelectBackground(this.state.validBackgroundImage.links.image);
-
+			this.props.onSelectBackground(this.state.validBackgroundImage);
 			this.setState({isSubmitted: true});
 		}
 	}

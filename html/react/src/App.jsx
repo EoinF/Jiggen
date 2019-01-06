@@ -16,7 +16,9 @@ class App extends Component {
 		return (
   			<Provider store={store}>
 				<BrowserRouter basename={process.env.REACT_APP_PUBLIC_URL || ''}>
-					<AppContents/>
+					<ModalManager>
+						<AppContents/>
+					</ModalManager>
 				</BrowserRouter>
   			</Provider>
 		);
@@ -24,18 +26,16 @@ class App extends Component {
 }
 
 const AppContents = () => {
-	return <ModalManager>
-		<div className='flexContainer'>
-			<Switch>
-				<Route path='/custom' component={CustomizePage}/>
-				<Route path='/' component={PuzzleOfTheDayPage}/>
-				{/* <Route path='/'>
-					<Redirect to="/puzzlesOfTheDay"/>
-				</Route> */}
-			</Switch>
-			<Route path='/' component={NavigationBar}/>
-		</div>
-	</ModalManager>
+	return <div className='flexContainer'>
+		<Switch>
+			<Route path='/custom' component={CustomizePage}/>
+			<Route path='/' component={PuzzleOfTheDayPage}/>
+			{/* <Route path='/'>
+				<Redirect to="/puzzlesOfTheDay"/>
+			</Route> */}
+		</Switch>
+		<Route path='/' component={NavigationBar}/>
+	</div>
 };
 
 export default App;

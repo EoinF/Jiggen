@@ -6,17 +6,17 @@ import styles from './ImageDisplayReel.module.scss';
 class ImageDisplayReel extends Component {
 	render() {
 		const {
-			imageLinks,
+			resourceList,
 			onClickLink
 		} = this.props;
 
 		return (
 			<ul className={styles.imageDisplayReel}>
 				{ 
-					imageLinks.map(link => (
+					resourceList.map(resource => (
 						<li>
-							<PlainLink onClick={() => onClickLink(link)} to="/custom">
-								<img src={link} alt=""/>
+							<PlainLink onClick={() => onClickLink(resource.id)} to="/custom">
+								<img src={resource.links.image} alt=""/>
 							</PlainLink>
 						</li>
 					))
