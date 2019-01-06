@@ -24,17 +24,18 @@ class App extends Component {
 }
 
 const AppContents = () => {
-	return <div className='flexContainer'>
-		<Switch>
-			<Route path='/custom' component={CustomizePage}/>
-			<Route path='/' component={PuzzleOfTheDayPage}/>
-			{/* <Route path='/'>
-				<Redirect to="/puzzlesOfTheDay"/>
-			</Route> */}
-		</Switch>
-		<Route path='/' component={NavigationBar}/>
-		<ModalManager/>
-	</div>
+	return <ModalManager>
+		<div className='flexContainer'>
+			<Switch>
+				<Route path='/custom' component={CustomizePage}/>
+				<Route path='/' component={PuzzleOfTheDayPage}/>
+				{/* <Route path='/'>
+					<Redirect to="/puzzlesOfTheDay"/>
+				</Route> */}
+			</Switch>
+			<Route path='/' component={NavigationBar}/>
+		</div>
+	</ModalManager>
 };
 
 export default App;

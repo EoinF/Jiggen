@@ -1,4 +1,7 @@
 
+/*
+    Theming
+*/
 $white: white;
 $black: black;
 
@@ -17,3 +20,9 @@ $grey200: #c0c0c0;
 $red100: #b74c4c;
 $yellow100: #d4d400;
 $yellow200: yellow;
+
+/*
+    Layout breakpoints
+*/
+$breakpoint-width-tablet: 768px;
+$breakpoint-width-mobile: 400px;

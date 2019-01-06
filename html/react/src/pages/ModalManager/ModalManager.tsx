@@ -53,9 +53,18 @@ class ModalManager extends Component<ModalManagerProps> {
     render() {
         const {
             modalType,
-            isModalVisible
+            isModalVisible,
+            children
         } = this.props;
-        return <ModalSwitcher modalType={modalType} isModalVisible={isModalVisible} />
+        // Hide the background content if on mobile
+        let backgroundContentClassName = isModalVisible ? 'hiddenIfMobile expandToFit': 'expandToFit';
+
+        return <React.Fragment>
+            <div className={backgroundContentClassName}>
+                {children}
+            </div>
+            <ModalSwitcher modalType={modalType} isModalVisible={isModalVisible} />
+        </React.Fragment>
     }
 }
 
