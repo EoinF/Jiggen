@@ -21,6 +21,7 @@ interface DispatchProps {
 	selectBackgroundById(id: string): void;
 	addBackground(background: Background): void;
 	addBackgrounds(background: Background[]): void;
+	fetchBackgrounds(): void;
 }
 
 type BackgroundSelectionModalProps = StateProps & DispatchProps;
@@ -35,6 +36,7 @@ class BackgroundSelectionModal extends Component<BackgroundSelectionModalProps> 
 		this.props.addBackgrounds(suggestedInputs
 			.map(suggestedInput => new Background(suggestedInput))
 		);
+		this.props.fetchBackgrounds();
 	}
 
 	render () {
@@ -83,7 +85,8 @@ const mapDispatchToProps = (dispatch: Function): DispatchProps => {
   return {
 		selectBackgroundById: (id: string) => dispatch(backgroundsActions.selectById(id)),
 		addBackground: (background: Background) => dispatch(backgroundsActions.setBackground(background)),
-		addBackgrounds: (backgrounds: Background[]) => dispatch(backgroundsActions.addBackgrounds(backgrounds))
+		addBackgrounds: (backgrounds: Background[]) => dispatch(backgroundsActions.addBackgrounds(backgrounds)),
+		fetchBackgrounds: () => dispatch(backgroundsActions.fetchBackgrounds())
   }
 }
 
