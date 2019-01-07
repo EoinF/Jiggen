@@ -34,7 +34,14 @@ const initialState: BackgroundsState = {
 	...base.initialState as BackgroundsState
 };
 
-const {startFetchingBackgrounds, setBackgrounds, addBackgrounds, setBackground, updateBackground, selectBackground} = createActions({	
+const {
+	startFetchingBackgrounds, 
+	setBackgrounds,
+	addBackgrounds,
+	setBackground,
+	updateBackground,
+	selectBackground
+} = createActions({	
 	START_FETCHING_BACKGROUNDS: () => ({isFetching: true}),
 	SET_BACKGROUNDS: (backgrounds: Background[]) => ({resourceList: backgrounds}),
 	ADD_BACKGROUNDS: (backgrounds: Background[]) => ({ resourceList: backgrounds}),

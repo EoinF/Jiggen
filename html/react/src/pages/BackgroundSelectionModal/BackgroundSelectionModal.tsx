@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import CardContainer from '../../widgets/CardContainer';
-import ImageDisplayReel from './ImageDisplayReel';
+import ImageDisplayReel from '../../widgets/ImageDisplayReel';
 
 import { 
 	backgroundsActions, Background
