@@ -1,6 +1,6 @@
 import React from 'react';
 import {ResponsiveImage} from '../../../widgets';
-import './SelectionWidget.scss';
+import styles from './SelectionWidget.module.scss';
 
 
 const SelectionWidget = ({selection, fallbackImageSrc, notSelectedCaption, selectedCaption, onClick}) => {
@@ -10,8 +10,8 @@ const SelectionWidget = ({selection, fallbackImageSrc, notSelectedCaption, selec
 		imageSrc = selection.links.image;
 	}
 	return (
-		<div className="SelectionWidget" onClick={onClick}>
-			<div className="description">
+		<div className={styles.mainContainer} onClick={onClick}>
+			<div className={styles.caption}>
 				{selection != null ? selectedCaption : notSelectedCaption}
 			</div>
 			<ResponsiveImage src={imageSrc} alt=""/>

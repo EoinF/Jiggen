@@ -1,0 +1,25 @@
+@import '../../../vars';
+
+.mainContainer {
+	width: 100%;
+	border: solid 2px $white;
+	background: $purple400;
+	display: flex;
+	flex-flow: column nowrap;
+	padding: 5px 0;
+	margin: 0 0.1rem;
+
+}
+.caption {
+	padding-bottom: 5px;
+	text-align: center;
+}
+
+// .imageContainer {
+// 	flex: 1;
+
+// 	img {
+// 		max-width: 100%;
+// 		max-height: 100%;
+// 	}
+// }

@@ -1,15 +1,25 @@
-import React, {Component} from 'react';
+import React, {Component, RefObject} from 'react';
 
 import './ResponsiveImage.scss';
 
-class ResponsiveImage extends Component {
+interface ResponsiveImageProps {
+	src: string;
+	alt: string;
+}
 
-	constructor(props) {
+interface ResponsiveImageState {
+	width?: number;
+	height?: number;
+	isCalculating: boolean;
+}
+
+class ResponsiveImage extends Component<ResponsiveImageProps, ResponsiveImageState> {
+	containerRef: RefObject<HTMLDivElement>
+
+	constructor(props: ResponsiveImageProps) {
 		super(props);
 
 		this.state = {
-			width: null,
-			height: null,
 			isCalculating: true
 		}
 		this.containerRef = React.createRef();
@@ -22,20 +32,29 @@ class ResponsiveImage extends Component {
 		this.updateSize();
 	}
 
-	componentDidUpdate() {
-		this.updateSize();
+	componentDidUpdate(nextProps: ResponsiveImageProps) {
+		if (this.props.src != nextProps.src || this.state.isCalculating) {
+			this.updateSize();
+		}
 	}
 
 	updateSize = () => {
-		if (this.state.isCalculating) {
+		if (this.containerRef.current != null) {
 			const {width, height} = this.containerRef.current.getBoundingClientRect();
 
+			// Rendering isn't done yet, try again
+			if (width === 0 && height === 0) {
+				this.setState({
+					isCalculating: true
+				});
+			} else {
 				this.setState({
 					width,
 					height,
 					isCalculating: false
 				});
 			}
+		}
 	};
 
 	render() {
@@ -44,7 +63,7 @@ class ResponsiveImage extends Component {
 			alt
 		} = this.props;
 		const {
-			width, 
+			width,
 			height,
 			isCalculating
 		} = this.state;

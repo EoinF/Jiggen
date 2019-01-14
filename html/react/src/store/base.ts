@@ -35,21 +35,36 @@ function setResources(state: BaseState<Resource>, {resourceList}: {resourceList:
 
 function addResources(state: BaseState<Resource>, {resourceList}: {resourceList: Resource[]}): BaseState<Resource> {
 	let {
+		resourceList: oldResourceList,
 		resourceMap, 
 		linkMap
 	} = state;
 
 	const newEntries: StringMap<Resource> = {};
 	const newLinks: StringMap<Resource> = {};
+	const newResourceList: Resource[] = [...oldResourceList];
 
 	resourceList.forEach((resource: Resource) => {
 		newEntries[resource.id] = resource;
 		newLinks[resource.links.self] = resource;
+
+		// Check if the resource is already in the list
+		let i = 0;
+		for (i = 0; i < newResourceList.length; i++) {
+			if (newResourceList[i].id === resource.id) {
+				newResourceList[i] = resource;
+				break;
+			}
+		}
+		// If the resource doesn't already exist, add it
+		if (i === newResourceList.length) {
+			newResourceList.push(resource);
+		}
 	});
 
 	return {
 		...state,
-		resourceList,
+		resourceList: newResourceList,
 		resourceMap: {
 			...resourceMap,
 			...newEntries

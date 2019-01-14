@@ -7,11 +7,6 @@
             "type": "npm",
             "script": "start-local",
             "problemMatcher": []
-        },
-        {
-            "type": "npm",
-            "script": "watch-css",
-            "problemMatcher": []
         }
     ]
 }

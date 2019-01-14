@@ -55,7 +55,7 @@ function fetchBackgrounds (): JiggenThunkAction {
 		const resourceLinks = await getOrFetchResourceLinks(dispatch, getState);
 		dispatch(startFetchingBackgrounds());
 		const result = await axios.get(resourceLinks.backgrounds);
-		dispatch(setBackgrounds(result.data));
+		dispatch(addBackgrounds(result.data));
 	};
 }
 
