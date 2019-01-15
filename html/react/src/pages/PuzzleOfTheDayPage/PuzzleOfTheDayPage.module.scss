@@ -7,11 +7,28 @@ h1 {
 	text-align: center;
 }
 
-.pageContainer {
+.mainContainer {
 	flex: 1;
+	display: flex;
+	flex-flow: column nowrap;
+}
+
+.contentContainer {
+	flex: 1;
+	display: flex;
+	flex-flow: column nowrap;
+
+	> * {
+		flex: 1;
+	}
 }
 
 .gameContainer {
 	margin: 0 1rem 0.5rem;
-	height: calc(75vw);
+}
+
+@media (orientation: landscape) {
+	.contentContainer {
+		flex-flow: row nowrap;
+	}
 }

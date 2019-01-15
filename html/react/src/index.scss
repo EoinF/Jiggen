@@ -51,6 +51,10 @@ html {
 	@media (max-width: $breakpoint-width-mobile) {
 		display: none;
 	}
+		
+	@media (orientation: landscape) and (max-height: $breakpoint-height-mobile) {
+		display: none;
+	}
 }
 
 .flexContainer {

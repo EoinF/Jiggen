@@ -35,7 +35,7 @@ class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps, any> {
     this.props.fetchPuzzlesOfTheDay();
   };
 
-  componentDidUpdate(prevProps: PuzzleOfTheDayPageProps, prevState: any) {
+  componentDidUpdate(prevProps: PuzzleOfTheDayPageProps) {
     if ((this.props.playablePuzzles !== prevProps.playablePuzzles)
       && this.props.playablePuzzles != null 
       && this.props.playablePuzzles.length > 0) {
@@ -60,15 +60,17 @@ class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps, any> {
     } = this.props;
 
     return (
-        <div className={styles.pageContainer}>
+        <div className={styles.mainContainer}>
           <h1>Today's Puzzles</h1>
-          <div className={styles.gameContainer}>
-            <GameContainer background={background} generatedTemplate={generatedTemplate}/>
+          <div className={styles.contentContainer}>
+            <div className={styles.gameContainer}>
+              <GameContainer background={background} generatedTemplate={generatedTemplate}/>
+            </div>
+            <PieceCountSelection
+              selectedId={selectedPuzzle ? selectedPuzzle.id : null}
+              pieceCountMap={this.props.pieceCountMap} 
+              onClick={this.onSelectPieceCount} />
           </div>
-          <PieceCountSelection
-            selectedId={selectedPuzzle ? selectedPuzzle.id : null}
-            pieceCountMap={this.props.pieceCountMap} 
-            onClick={this.onSelectPieceCount} />
         </div>
     );
   }

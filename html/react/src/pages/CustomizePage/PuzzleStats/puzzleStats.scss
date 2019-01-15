@@ -7,7 +7,7 @@
 
 	.compatibilitySection {
 		display: flex;
-		flex-flow: row nowrap;
+		flex-flow: row wrap;
 		.description {
 			align-self: center;
 		}

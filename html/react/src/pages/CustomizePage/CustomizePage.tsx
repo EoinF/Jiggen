@@ -33,11 +33,6 @@ type CustomizePageProps = StateProps & DispatchProps;
 class CustomizePage extends Component<CustomizePageProps> {
 
   componentDidMount() {
-    const {
-      selectedTemplate,
-      fetchGeneratedTemplatesByLink
-    } = this.props;
-
     this.updateGeneratedTemplate();
   };
 
@@ -68,33 +63,35 @@ class CustomizePage extends Component<CustomizePageProps> {
     return (
         <div className={styles.mainContainer}>
           <h1>Custom Puzzle</h1>
-          <div className={styles.gameContainer}>
-            <GameContainer
-              generatedTemplate={generatedTemplate}
-              background={selectedBackground}
-            />
-          </div>
-          <div className={styles.selectionContainer}>
-              <SelectionWidget
-                selection={selectedTemplate}
-                fallbackImageSrc={templateLogo}
-                notSelectedCaption='Select Template'
-                selectedCaption='Template'
-                onClick={this.props.showTemplatesModal}
-              />
-              <SelectionWidget
-                selection={selectedBackground}
-                fallbackImageSrc={backgroundLogo}
-                notSelectedCaption='Select Background'
-                selectedCaption='Background'
-                onClick={this.props.showBackgroundsModal}
-               />
-          </div>
-          <div className={styles.overviewBody}>
-              <PuzzleStats
-                background={selectedBackground}
+          <div className={styles.contentContainer}>
+            <div className={styles.gameContainer}>
+              <GameContainer
                 generatedTemplate={generatedTemplate}
+                background={selectedBackground}
               />
+            </div>
+            <div className={styles.selectionContainer}>
+                <SelectionWidget
+                  selection={selectedTemplate}
+                  fallbackImageSrc={templateLogo}
+                  notSelectedCaption='Select Template'
+                  selectedCaption='Template'
+                  onClick={this.props.showTemplatesModal}
+                />
+                <SelectionWidget
+                  selection={selectedBackground}
+                  fallbackImageSrc={backgroundLogo}
+                  notSelectedCaption='Select Background'
+                  selectedCaption='Background'
+                  onClick={this.props.showBackgroundsModal}
+                />
+            </div>
+            <div className={styles.statsContainer}>
+                <PuzzleStats
+                  background={selectedBackground}
+                  generatedTemplate={generatedTemplate}
+                />
+            </div>
           </div>
         </div>
     );

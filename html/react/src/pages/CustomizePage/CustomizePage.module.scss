@@ -7,6 +7,12 @@
   flex-flow: column nowrap;
 }
 
+.contentContainer {
+  flex: 1;
+  display: flex;
+  flex-flow: column nowrap;
+}
+
 h1, h2 {
   font-size: 2.5rem;
   margin: 0;
@@ -14,8 +20,9 @@ h1, h2 {
   text-align: center;
 }
 
-.overviewBody {
-  flex: 1
+.statsContainer {
+  flex: 1;
+  margin: 0.25rem;
 }
 
 .gameContainer {
@@ -25,7 +32,23 @@ h1, h2 {
 
 .selectionContainer {
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: row wrap;
+  flex: 1;
+}
 
-  height: 20vh;
+@media (orientation: landscape) and (max-height: $breakpoint-height-mobile) {
+	.contentContainer {
+		flex-flow: row nowrap;
+  }
+  
+  .selectionContainer {
+    flex-flow: column nowrap;
+    height: initial;
+    order: 2;
+  }
+
+  .gameContainer {
+    order: 1;
+    flex: 1.5;
+  }
 }

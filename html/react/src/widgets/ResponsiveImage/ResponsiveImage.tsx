@@ -11,7 +11,10 @@ interface ResponsiveImageState {
 	width?: number;
 	height?: number;
 	isCalculating: boolean;
+	renderAttempts: number;
 }
+
+const MAX_RENDER_ATTEMPTS = 2;
 
 class ResponsiveImage extends Component<ResponsiveImageProps, ResponsiveImageState> {
 	containerRef: RefObject<HTMLDivElement>
@@ -20,12 +23,13 @@ class ResponsiveImage extends Component<ResponsiveImageProps, ResponsiveImageSta
 		super(props);
 
 		this.state = {
+			renderAttempts: 0,
 			isCalculating: true
 		}
 		this.containerRef = React.createRef();
 
 		window.addEventListener("resize", () => {
-			this.setState({isCalculating: true});
+			this.setState({isCalculating: true, renderAttempts: 0});
 		});
 	}
 	componentDidMount() {
@@ -33,7 +37,13 @@ class ResponsiveImage extends Component<ResponsiveImageProps, ResponsiveImageSta
 	}
 
 	componentDidUpdate(nextProps: ResponsiveImageProps) {
-		if (this.props.src != nextProps.src || this.state.isCalculating) {
+		if (this.props.src != nextProps.src) {
+			this.setState({
+				isCalculating: true,
+				renderAttempts: 0
+			})
+		}
+		if (this.state.isCalculating) {
 			this.updateSize();
 		}
 	}
@@ -42,11 +52,16 @@ class ResponsiveImage extends Component<ResponsiveImageProps, ResponsiveImageSta
 		if (this.containerRef.current != null) {
 			const {width, height} = this.containerRef.current.getBoundingClientRect();
 
+			console.log({width, height});
+
 			// Rendering isn't done yet, try again
 			if (width === 0 && height === 0) {
-				this.setState({
-					isCalculating: true
-				});
+				if (this.state.renderAttempts < MAX_RENDER_ATTEMPTS) {
+					this.setState({
+						isCalculating: true,
+						renderAttempts: this.state.renderAttempts + 1
+					});
+				}
 			} else {
 				this.setState({
 					width,
