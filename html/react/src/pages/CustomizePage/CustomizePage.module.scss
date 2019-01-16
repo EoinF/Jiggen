@@ -34,6 +34,7 @@ h1, h2 {
   display: flex;
   flex-flow: row wrap;
   flex: 1;
+  justify-content: center;
 }
 
 @media (orientation: landscape) and (max-height: $breakpoint-height-mobile) {

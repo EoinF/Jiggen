@@ -133,13 +133,15 @@ class GameContainer extends React.Component<GameContainerProps, GameContainerSta
   }
 
   render() {
-    let classAttribute = styles.container;
+    let classAttribute = styles.innerContainer;
     if (this.props.showFullScreenFallback) {
       classAttribute += ` ${styles.fullScreenFallback}`;
     }
     return (
-      <div ref={this.gameContainerRef} className={classAttribute}>
-        { /*Game canvas will be moved into here using javascript */ }
+      <div className={styles.mainContainer}>
+        <div ref={this.gameContainerRef} className={classAttribute}>
+          { /*Game canvas will be moved into here using javascript */ }
+        </div>
       </div>
     );
   }

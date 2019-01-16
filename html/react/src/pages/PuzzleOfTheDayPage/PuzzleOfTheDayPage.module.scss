@@ -27,7 +27,7 @@ h1 {
 	margin: 0 1rem 0.5rem;
 }
 
-@media (orientation: landscape) {
+@media (orientation: landscape) and (max-height: $breakpoint-height-mobile) {
 	.contentContainer {
 		flex-flow: row nowrap;
 	}
