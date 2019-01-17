@@ -52,8 +52,6 @@ class ResponsiveImage extends Component<ResponsiveImageProps, ResponsiveImageSta
 		if (this.containerRef.current != null) {
 			const {width, height} = this.containerRef.current.getBoundingClientRect();
 
-			console.log({width, height});
-
 			// Rendering isn't done yet, try again
 			if (width === 0 && height === 0) {
 				if (this.state.renderAttempts < MAX_RENDER_ATTEMPTS) {

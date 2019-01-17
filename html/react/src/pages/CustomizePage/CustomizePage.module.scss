@@ -37,7 +37,7 @@ h1, h2 {
   justify-content: center;
 }
 
-@media (orientation: landscape) and (max-height: $breakpoint-height-mobile) {
+@media (orientation: landscape) and (max-height: 520px) {
 	.contentContainer {
 		flex-flow: row nowrap;
   }
