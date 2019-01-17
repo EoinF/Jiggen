@@ -64,15 +64,16 @@ public class PuzzleViewController {
             int worldWidth = (int) Math.max(puzzleGraphTemplate.getWidth() * scales.x + WORLD_PADDING, viewportWidth);
             int worldHeight = (int) Math.max(puzzleGraphTemplate.getHeight() * scales.y + WORLD_PADDING, viewportHeight);
 
+            // Ensure all the puzzle pieces will remain within the world bounds
             for (ConnectedPuzzlePieces connectedPieces: puzzleViewModel.getConnectedPiecesListObservable().getValue()) {
-                int minX = (int)(connectedPieces.getPosition().x + connectedPieces.getWidth());
-                int minY = (int)(connectedPieces.getPosition().y + connectedPieces.getHeight());
+                int maxX = (int)(connectedPieces.getPosition().x + connectedPieces.getWidth());
+                int maxY = (int)(connectedPieces.getPosition().y + connectedPieces.getHeight());
 
-                if (worldWidth < minX) {
-                    worldWidth = minX;
+                if (worldWidth < maxX) {
+                    worldWidth = maxX;
                 }
-                if (worldHeight < minY) {
-                    worldHeight = minY;
+                if (worldHeight < maxY) {
+                    worldHeight = maxY;
                 }
             }
             puzzleViewModel.setWorldBounds(new GridPoint2(worldWidth, worldHeight));

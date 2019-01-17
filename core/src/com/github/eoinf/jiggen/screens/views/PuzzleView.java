@@ -118,7 +118,7 @@ public class PuzzleView {
         puzzleViewModel.getCameraZoomObservable().subscribe(new Consumer<Float>() {
             @Override
             public void accept(Float zoom) {
-                camera.zoom = zoom;
+                camera.setZoom(zoom);
             }
         });
     }

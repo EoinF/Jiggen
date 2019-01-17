@@ -81,7 +81,7 @@ public class PuzzleSolverScreen implements Screen {
                 float maxZoomX = worldBounds.x / camera.viewportWidth;
                 float maxZoomY = worldBounds.y / camera.viewportHeight;
 
-                float maxZoom = Math.min(maxZoomX, maxZoomY);
+                float maxZoom = Math.max(maxZoomX, maxZoomY);
                 camera.setCameraBounds(worldBounds.x, worldBounds.y, maxZoom);
             }
         });
