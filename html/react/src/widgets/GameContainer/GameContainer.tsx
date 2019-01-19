@@ -13,7 +13,8 @@ import gwtAdapter from '../../gwtAdapter';
 
 import {
   onFullScreenChange,
-  isFullScreen
+  isFullScreen,
+  unsetOnFullScreenChange
 } from '../../utils/fullScreen';
 
 import styles from './GameContainer.module.scss';
@@ -53,7 +54,9 @@ class GameContainer extends React.Component<GameContainerProps, GameContainerSta
 
     const onGwtLoaded$ = from(gwtAdapter.onGwtLoadedPromise);
     this.updateContainerSubscription = combineLatest(this.updateContainerSize$, onGwtLoaded$).subscribe(this.updateContainerSize);
+    
     onFullScreenChange(this.onFullScreenChange);
+    
     window.onresize = () => {
       this.updateContainerSize$.next();
     }
@@ -107,6 +110,7 @@ class GameContainer extends React.Component<GameContainerProps, GameContainerSta
   };
 
   componentWillUnmount() {
+    unsetOnFullScreenChange(this.onFullScreenChange);
     // Put it back in the old container so it doesn't get discarded from the DOM
     const originalGameContainer = document.getElementById('jiggen-puzzle-solver');
     originalGameContainer!.appendChild(document.getElementById('embed-html')!);
@@ -114,7 +118,7 @@ class GameContainer extends React.Component<GameContainerProps, GameContainerSta
     this.updateContainerSubscription.unsubscribe();
   }
 
-  componentDidUpdate(prevProps: GameContainerProps, prevState: any) {
+  componentDidUpdate(prevProps: GameContainerProps) {
     let isUpdated = false;
     if (prevProps.generatedTemplate !== this.props.generatedTemplate && this.props.generatedTemplate != null) {
       this.setOrFetchTemplate(this.props.generatedTemplate);
@@ -129,7 +133,6 @@ class GameContainer extends React.Component<GameContainerProps, GameContainerSta
         shouldShuffleOnFullscreen: true
       });
     }
-    this.updateContainerSize$.next();
   }
 
   render() {

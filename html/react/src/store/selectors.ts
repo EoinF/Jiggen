@@ -37,7 +37,6 @@ export const getPieceCountMap = createSelector(
 export const getGeneratedTemplatesForTemplate = createSelector(
     [getSelectedTemplate, getGeneratedTemplateList],
     (selectedTemplate, generatedTemplates) => {
-        console.log(generatedTemplates);
         if (selectedTemplate != null) {
             return generatedTemplates
                 .filter((generatedTemplate: GeneratedTemplate) => 

@@ -31,6 +31,13 @@ function onFullScreenChange(callback: EventListenerOrEventListenerObject) {
     document.addEventListener('MSFullscreenChange', callback, false);
 }
 
+function unsetOnFullScreenChange(callback: EventListenerOrEventListenerObject) {
+    document.removeEventListener('webkitfullscreenchange', callback, false);
+	document.removeEventListener('mozfullscreenchange', callback, false);
+    document.removeEventListener('fullscreenchange', callback, false);
+    document.removeEventListener('MSFullscreenChange', callback, false);
+}
+
 function setFullScreen(element: Element, isFullScreen: Boolean) {
 	if (isFullScreen) {
 		// for newer Webkit and Firefox
@@ -59,4 +66,4 @@ function setFullScreen(element: Element, isFullScreen: Boolean) {
 	}
 }
 
-export {setFullScreen, onFullScreenChange, isFullScreen};
+export {setFullScreen, onFullScreenChange, unsetOnFullScreenChange, isFullScreen};
