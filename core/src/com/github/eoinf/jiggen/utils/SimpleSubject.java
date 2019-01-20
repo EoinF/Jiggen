@@ -1,23 +1,17 @@
 package com.github.eoinf.jiggen.utils;
 
-import java.util.function.Consumer;
+public class SimpleSubject<T> extends SimpleObservable<T>{
 
-public final class SimpleSubject<T> extends SimpleObservable<T> {
-
-    private SimpleSubject(T defaultValue) {
-        super();
-        this.value = defaultValue;
+    protected SimpleSubject(T defaultValue) {
+        super(defaultValue);
     }
 
     public void onNext(T t) {
-        value = t;
-        for (Consumer<T> s: subscribers) {
-            s.accept(t);
-        }
+        this.setValue(t);
     }
 
     public static <T> SimpleSubject<T> create() {
-        return new SimpleSubject<T>(null);
+        return new SimpleSubject<>(null);
     }
 
     public static <T> SimpleSubject<T> createDefault(T defaultValue) {

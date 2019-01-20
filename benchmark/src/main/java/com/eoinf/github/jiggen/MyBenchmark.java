@@ -28,8 +28,9 @@ package com.eoinf.github.jiggen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.utils.GdxNativesLoader;
-import com.github.eoinf.jiggen.PuzzleExtractor.PixelSearcher;
+import com.github.eoinf.jiggen.PuzzleExtractor.Decoder.PixelSearcher;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
@@ -39,8 +40,6 @@ import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
-
-import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 

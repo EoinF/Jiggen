@@ -6,10 +6,18 @@ import java.util.function.Consumer;
 
 public abstract class SimpleObservable<T> {
 
-    T value;
+    private T value;
+
+    public T getValue() {
+        return this.value;
+    }
+    protected void setValue(T value) {
+        this.value = value;
+    }
     final List<Consumer<T>> subscribers;
 
-    SimpleObservable() {
+    SimpleObservable(T value) {
+        this.value = value;
         subscribers = new ArrayList<>();
     }
 
@@ -22,7 +30,4 @@ public abstract class SimpleObservable<T> {
     }
 
 
-    public T getValue() {
-        return this.value;
-    }
 }

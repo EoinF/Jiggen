@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.GridPoint2;
@@ -17,6 +18,7 @@ import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleGraphTemplate;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzlePieceTemplate;
 import com.github.eoinf.jiggen.graphics.PuzzleOverlayBatch;
 import com.github.eoinf.jiggen.screens.PuzzleSolverScreen;
+import com.github.eoinf.jiggen.screens.TemplateCreatorScreen;
 
 import java.util.Map;
 import java.util.function.Consumer;
@@ -28,7 +30,7 @@ public class Jiggen extends Game {
 
     private PuzzleOverlayBatch batch;
 	private Skin skin;
-	private PuzzleSolverScreen screen;
+	private PuzzleSolverScreen puzzleSolverScreen;
     private TextureAtlas atlas = null;
 
     public Consumer<Boolean> onSetFullScreen;
@@ -40,13 +42,16 @@ public class Jiggen extends Game {
 	@Override
 	public void create () {
 		batch = new PuzzleOverlayBatch();
+		SpriteBatch spriteBatch = new SpriteBatch();
 		FileHandle f = Gdx.files.internal("skin/Holo-dark-hdpi.json");
 		skin = new Skin(f);
 
 		TextureAtlas uiTextureAtlas = new TextureAtlas("ui/ui.atlas");
 
-		screen = new PuzzleSolverScreen(this, batch, uiTextureAtlas, skin);
-		setScreen(screen);
+		puzzleSolverScreen = new PuzzleSolverScreen(this, batch, uiTextureAtlas, skin);
+		TemplateCreatorScreen templateCreatorScreen = new TemplateCreatorScreen(this, spriteBatch, uiTextureAtlas, skin);
+
+		setScreen(puzzleSolverScreen);
 	}
 
 	public void loadDefaultPuzzle() {
@@ -58,12 +63,12 @@ public class Jiggen extends Game {
 		DecodedTemplate t = new DecodedTemplate(tex);
 
 		PuzzleGraphTemplate puzzle = PuzzleFactory.generateTexturePuzzleFromTemplate(t);
-		screen.setTemplate(puzzle);
-		screen.setBackground(new Texture(getRandomBackground()));
+		puzzleSolverScreen.setTemplate(puzzle);
+		puzzleSolverScreen.setBackground(new Texture(getRandomBackground()));
 	}
 
 	public void setBackground(FileHandle backgroundFile) {
-		screen.setBackground(new Texture(backgroundFile));
+		puzzleSolverScreen.setBackground(new Texture(backgroundFile));
 	}
 
 	public void setTemplateFromAtlas(FileHandle atlasFile, FileHandle atlasImageFolder,
@@ -89,11 +94,11 @@ public class Jiggen extends Game {
 			graph.addEdge(edge.v0, edge.v1);
 		}
 
-		screen.setTemplate(graph);
+		puzzleSolverScreen.setTemplate(graph);
 	}
 
 	public void shuffle() {
-    	screen.shuffle();
+    	puzzleSolverScreen.shuffle();
 	}
 
 	private GridPoint2 getPuzzleSize(Map<Integer, IntRectangle> vertices) {

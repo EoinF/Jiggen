@@ -230,4 +230,9 @@ public abstract class PixmapUtils {
                 && rect1.y <= rect2.y + rect2.height);
     }
 
+    public static Pixmap copyPixmap(Pixmap srcPixmap) {
+        Pixmap dstPixmap = new Pixmap(srcPixmap.getWidth(), srcPixmap.getHeight(), Pixmap.Format.RGBA8888);
+        dstPixmap.drawPixmap(srcPixmap, 0, 0);
+        return dstPixmap;
+    }
 }
