@@ -17,8 +17,8 @@ public class TemplateCreator {
     private TemplateLine[] linesHorizontal;
     private TemplateLine[] linesVertical;
 
-    private TemplateCreatorViewController templateCreatorViewController;
     private GridPoint2 maxSize;
+    private WaveDistortionData waveDistortionData = new WaveDistortionData(0,0,0);
 
     private void createNewPixmap() {
         float ratio = aspectRatio.x / aspectRatio.y;
@@ -36,21 +36,25 @@ public class TemplateCreator {
         this.pixmap.fill();
     }
 
-    private void addPixmapLines() {
+    private void generateLineData() {
         linesHorizontal = new TemplateLine[dimensions.y - 1];
         linesVertical = new TemplateLine[dimensions.x - 1];
 
         for (int i = 0; i < linesHorizontal.length; i++) {
             int y = (int)((i + 1) * ((float)pixmap.getHeight() / dimensions.y));
             int x2 = pixmap.getWidth();
-            linesHorizontal[i] = new TemplateLine(new GridPoint2(0, y), new GridPoint2(x2, y));
+            linesHorizontal[i] = new TemplateLine(0, x2, y, false);
         }
         for (int i = 0; i < linesVertical.length; i++) {
             int x = (int)((i + 1) * ((float)pixmap.getWidth() / dimensions.x));
             int y2 = pixmap.getHeight();
-            linesVertical[i] = new TemplateLine(new GridPoint2(x, 0), new GridPoint2(x, y2));
+            linesVertical[i] = new TemplateLine(0, y2, x, true);
         }
+    }
 
+
+
+    private void addPixmapLines() {
         pixmap.setColor(Color.BLACK);
         for (TemplateLine line: linesHorizontal) {
             drawLine(line);
@@ -61,19 +65,26 @@ public class TemplateCreator {
     }
 
     private void drawLine(TemplateLine line) {
-        for (int x = line.from.x; x <= line.to.x; x++) {
-            for (int y = line.from.y; y <= line.to.y; y++) {
-                pixmap.drawPixel(x, y);
+        if (line.isVertical) {
+            for (int y = line.from; y <= line.to; y++) {
+                int distortion = waveDistortionData.getDistortion(y);
+                pixmap.drawPixel(line.staticPoint + distortion, y);
+            }
+        } else {
+            for (int x = line.from; x <= line.to; x++) {
+                int distortion = waveDistortionData.getDistortion(x);
+                pixmap.drawPixel(x, line.staticPoint + distortion);
             }
         }
+
     }
 
 
     public TemplateCreator(TemplateCreatorViewController templateCreatorViewController,
                            TemplateCreatorViewModel templateCreatorViewModel, GridPoint2 maxSize) {
-        this.templateCreatorViewController = templateCreatorViewController;
         this.maxSize = maxSize;
         createNewPixmap();
+        generateLineData();
         addPixmapLines();
 
         templateCreatorViewModel.getTemplateAspectRatioObservable().subscribe(new Consumer<Vector2>() {
@@ -99,11 +110,27 @@ public class TemplateCreator {
                 templateCreatorViewController.setPixmap(pixmap);
             }
         });
+
+        templateCreatorViewModel.getWaveDistortionObservable().subscribe(new Consumer<WaveDistortionData>() {
+            @Override
+            public void accept(WaveDistortionData waveDistortionData) {
+                setWaveDistortion(waveDistortionData);
+                templateCreatorViewController.setPixmap(pixmap);
+            }
+        });
     }
+
+    private void setWaveDistortion(WaveDistortionData waveDistortionData) {
+        this.waveDistortionData = waveDistortionData;
+        createNewPixmap();
+        addPixmapLines();
+    }
+
 
     public void setMaxSize(GridPoint2 maxSize) {
         this.maxSize = maxSize;
         createNewPixmap();
+        generateLineData();
         addPixmapLines();
     }
 
@@ -111,11 +138,13 @@ public class TemplateCreator {
         this.aspectRatio = aspectRatio;
         this.pixmap.dispose();
         createNewPixmap();
+        addPixmapLines();
     }
 
     public void setDimensions(GridPoint2 dimensions) {
         this.dimensions = dimensions;
         createNewPixmap();
+        generateLineData();
         addPixmapLines();
     }
 

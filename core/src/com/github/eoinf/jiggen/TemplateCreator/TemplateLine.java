@@ -1,14 +1,16 @@
 package com.github.eoinf.jiggen.TemplateCreator;
 
-import com.badlogic.gdx.math.GridPoint2;
-
 public class TemplateLine {
-    public final GridPoint2 from;
-    public final GridPoint2 to;
+    public final int from;
+    public final int to;
+    public final int staticPoint;
+    public final boolean isVertical;
 
-    public TemplateLine(GridPoint2 from, GridPoint2 to) {
+    public TemplateLine(int from, int to, int staticPoint, boolean isVertical) {
         this.from = from;
         this.to = to;
+        this.staticPoint = staticPoint;
+        this.isVertical = isVertical;
     }
 }
 

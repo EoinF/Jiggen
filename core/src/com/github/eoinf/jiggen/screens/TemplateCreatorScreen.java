@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.github.eoinf.jiggen.Jiggen;
+import com.github.eoinf.jiggen.TemplateCreator.WaveDistortionData;
 import com.github.eoinf.jiggen.screens.controllers.TemplateCreatorViewController;
 import com.github.eoinf.jiggen.screens.controllers.TemplateCreatorViewModel;
 import com.github.eoinf.jiggen.screens.views.TemplateCreatorView;
@@ -24,8 +25,9 @@ public class TemplateCreatorScreen implements Screen {
         OrthographicCamera camera = new OrthographicCamera();
 
         TemplateCreatorViewModel templateCreatorViewModel = new TemplateCreatorViewModel(
-                new GridPoint2(50, 50),
-                new Vector2(4, 3)
+                new GridPoint2(7, 5),
+                new Vector2(4, 3),
+                new WaveDistortionData(8f, 1, 0.02f)
         );
         TemplateCreatorViewController templateCreatorViewController = new TemplateCreatorViewController(templateCreatorViewModel);
         templateCreatorView = new TemplateCreatorView(camera, batch, skin, templateCreatorViewModel,

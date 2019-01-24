@@ -40,8 +40,11 @@ public class TemplateCreatorView {
         this.stage = new Stage(viewport, batch);
         this.root = new Table(skin);
 
-        TemplateCreator templateCreator = new TemplateCreator(templateCreatorViewController, templateCreatorViewModel,
-                new GridPoint2(viewport.getScreenWidth(), viewport.getScreenHeight()));
+        TemplateCreator templateCreator = new TemplateCreator(
+                templateCreatorViewController,
+                templateCreatorViewModel,
+                new GridPoint2(viewport.getScreenWidth(), viewport.getScreenHeight())
+        );
 
         Texture texture = new Texture(templateCreator.getGeneratedPixmap());
         templateImage = new Image(texture);
