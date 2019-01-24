@@ -1,11 +1,11 @@
 package com.github.eoinf.jiggen.screens.views;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.GridPoint2;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -25,50 +25,45 @@ public class TemplateCreatorView {
     private OrthographicCamera camera;
     private Stage stage;
     private Table root;
-    private TemplateCreator templateCreator;
     private Image templateImage;
+    private TemplateCreatorViewController templateCreatorViewController;
 
+    private static final int IMAGE_PADDING = 10;
 
     public TemplateCreatorView(OrthographicCamera camera, SpriteBatch batch, Skin skin,
                                TemplateCreatorViewModel templateCreatorViewModel,
                                TemplateCreatorViewController templateCreatorViewController) {
 
         this.camera = camera;
+        this.templateCreatorViewController = templateCreatorViewController;
         Viewport viewport = new ScreenViewport(camera);
         this.stage = new Stage(viewport, batch);
         this.root = new Table(skin);
 
-        templateCreator = new TemplateCreator();
+        TemplateCreator templateCreator = new TemplateCreator(templateCreatorViewController, templateCreatorViewModel,
+                new GridPoint2(viewport.getScreenWidth(), viewport.getScreenHeight()));
 
-        templateImage = new Image(new Texture(templateCreator.getGeneratedPixmap()));
+        Texture texture = new Texture(templateCreator.getGeneratedPixmap());
+        templateImage = new Image(texture);
         templateImage.setScaling(Scaling.fit);
 
         root.setFillParent(true);
-        root.add(templateImage).align(Align.center).pad(10);
+        root.add(templateImage).align(Align.center).pad(IMAGE_PADDING);
         stage.addActor(root);
 
-        templateCreatorViewModel.getTemplateAspectRatio().subscribe(new Consumer<Vector2>() {
+        templateCreatorViewModel.getTemplatePixmapObservable().subscribe(new Consumer<Pixmap>() {
             @Override
-            public void accept(Vector2 aspectRatio) {
-                templateCreator.setAspectRatio(aspectRatio);
-                redrawTemplate();
-            }
-        });
-
-        templateCreatorViewModel.getTemplateDimensions().subscribe(new Consumer<GridPoint2>() {
-            @Override
-            public void accept(GridPoint2 dimensions) {
-                templateCreator.setDimensions(dimensions);
-                redrawTemplate();
+            public void accept(Pixmap pixmap) {
+                redrawTemplate(pixmap);
             }
         });
     }
 
-    private void redrawTemplate() {
+    private void redrawTemplate(Pixmap pixmap) {
         templateImage.setDrawable(
                 new TextureRegionDrawable(
                         new TextureRegion(
-                                new Texture(templateCreator.getGeneratedPixmap())
+                                new Texture(pixmap)
                         )
                 )
         );
@@ -86,6 +81,8 @@ public class TemplateCreatorView {
 
     public void resize(int width, int height) {
         stage.getViewport().update(width, height);
+        templateCreatorViewController.setMaxSize(
+                new GridPoint2(width - (IMAGE_PADDING * 2), height - (IMAGE_PADDING * 2)));
         camera.setToOrtho(true, width, height);
     }
 }

@@ -51,7 +51,7 @@ public class Jiggen extends Game {
 		puzzleSolverScreen = new PuzzleSolverScreen(this, batch, uiTextureAtlas, skin);
 		TemplateCreatorScreen templateCreatorScreen = new TemplateCreatorScreen(this, spriteBatch, uiTextureAtlas, skin);
 
-		setScreen(puzzleSolverScreen);
+		setScreen(templateCreatorScreen);
 	}
 
 	public void loadDefaultPuzzle() {

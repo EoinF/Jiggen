@@ -5,16 +5,18 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public abstract class SimpleObservable<T> {
-
     private T value;
 
     public T getValue() {
         return this.value;
     }
-    protected void setValue(T value) {
+    void setValue(T value) {
         this.value = value;
+        for (Consumer<T> subscriber: subscribers) {
+            subscriber.accept(value);
+        }
     }
-    final List<Consumer<T>> subscribers;
+    private final List<Consumer<T>> subscribers;
 
     SimpleObservable(T value) {
         this.value = value;

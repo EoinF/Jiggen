@@ -1,6 +1,6 @@
 package com.github.eoinf.jiggen.utils;
 
-public class SimpleSubject<T> extends SimpleObservable<T>{
+public final class SimpleSubject<T> extends SimpleObservable<T>{
 
     protected SimpleSubject(T defaultValue) {
         super(defaultValue);
