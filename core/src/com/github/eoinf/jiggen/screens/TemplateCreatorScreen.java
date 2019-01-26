@@ -25,7 +25,7 @@ public class TemplateCreatorScreen implements Screen {
         OrthographicCamera camera = new OrthographicCamera();
 
         TemplateCreatorViewModel templateCreatorViewModel = new TemplateCreatorViewModel(
-                new GridPoint2(7, 5),
+                new GridPoint2(10, 10),
                 new Vector2(4, 3),
                 new WaveDistortionData(8f, 1, 0.02f)
         );

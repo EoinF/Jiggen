@@ -7,6 +7,7 @@ public class TemplateLine {
     public final boolean isVertical;
 
     public TemplateLine(int from, int to, int staticPoint, boolean isVertical) {
+        assert from < to;
         this.from = from;
         this.to = to;
         this.staticPoint = staticPoint;
