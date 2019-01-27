@@ -260,16 +260,4 @@ public class TemplateCreator {
     public Pixmap getGeneratedPixmap() {
         return pixmap;
     }
-
-    public GridPoint2 getDimensions() {
-        return this.dimensions;
-    }
-
-    public Vector2 getAspectRatio() {
-        return this.aspectRatio;
-    }
-
-    public WaveDistortionData getWaveDistortion() {
-        return this.waveDistortionData;
-    }
 }

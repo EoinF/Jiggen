@@ -3,6 +3,7 @@ package com.github.eoinf.jiggen.screens.controllers;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
+import com.github.eoinf.jiggen.TemplateCreator.WaveDistortionData;
 
 import java.io.File;
 
@@ -36,5 +37,9 @@ public class TemplateCreatorViewController {
 
     public void saveTemplateToFile(File file) {
         templateCreatorViewModel.saveTemplateToFile(file);
+    }
+
+    public void setWaveDistortionData(WaveDistortionData newValue) {
+        templateCreatorViewModel.setWaveDistortion(newValue);
     }
 }

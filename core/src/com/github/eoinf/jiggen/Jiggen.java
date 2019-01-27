@@ -43,7 +43,7 @@ public class Jiggen extends Game {
 	public void create () {
 		batch = new PuzzleOverlayBatch();
 		SpriteBatch spriteBatch = new SpriteBatch();
-		FileHandle f = Gdx.files.internal("skin/Holo-dark-hdpi.json");
+		FileHandle f = Gdx.files.internal("skin/cloud-form-ui.json");
 		skin = new Skin(f);
 
 		TextureAtlas uiTextureAtlas = new TextureAtlas("ui/ui.atlas");
