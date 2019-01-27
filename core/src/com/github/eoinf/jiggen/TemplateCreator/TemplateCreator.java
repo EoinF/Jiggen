@@ -36,6 +36,9 @@ public class TemplateCreator {
             x = maxSize.x;
             y = (int)((maxSize.x * aspectRatio.y) / aspectRatio.x);
         }
+        if (this.pixmap != null) {
+            this.pixmap.dispose();
+        }
         this.pixmap = new Pixmap(x, y, Pixmap.Format.RGBA8888);
 
         this.pixmap.setColor(Color.WHITE);
@@ -260,7 +263,6 @@ public class TemplateCreator {
 
     public void setAspectRatio(Vector2 aspectRatio) {
         this.aspectRatio = aspectRatio;
-        this.pixmap.dispose();
         createNewPixmap();
         addPixmapLines();
         addPieceConnectors();

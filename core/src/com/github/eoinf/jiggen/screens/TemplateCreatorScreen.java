@@ -49,7 +49,9 @@ public class TemplateCreatorScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        templateCreatorView.resize(width, height);
+        // Force the width and height to be integers
+        // There is a bug with GWT where it is putting real numbers in here
+        templateCreatorView.resize((int)Math.floor(width), (int)Math.floor(height));
     }
 
     @Override
