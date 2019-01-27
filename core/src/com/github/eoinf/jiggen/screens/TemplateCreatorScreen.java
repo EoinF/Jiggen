@@ -36,14 +36,12 @@ public class TemplateCreatorScreen implements Screen {
         TemplateCreatorViewModel templateCreatorViewModel = new TemplateCreatorViewModel(
                 new GridPoint2(10, 10),
                 new Vector2(4, 3),
-                new WaveDistortionData(8f, 1, 0.02f)
+                new WaveDistortionData(1f, 1, 0.02f)
         );
         templateCreatorViewController = new TemplateCreatorViewController(templateCreatorViewModel);
         view = new TemplateCreatorView(camera, batch, skin, templateCreatorViewModel,
                 templateCreatorViewController);
-        toolbar = new TemplateCreatorToolbar(camera, batch, skin, templateCreatorViewModel,
-                templateCreatorViewController
-        );
+        toolbar = new TemplateCreatorToolbar(camera, skin, templateCreatorViewModel, templateCreatorViewController);
 
         TemplateCreatorFileSaver fileSaver = new TemplateCreatorFileSaver(100);
 

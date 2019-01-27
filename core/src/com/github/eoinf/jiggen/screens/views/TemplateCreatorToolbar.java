@@ -2,7 +2,6 @@ package com.github.eoinf.jiggen.screens.views;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -32,7 +31,6 @@ public class TemplateCreatorToolbar implements ScreenView {
     public static final int TOOLBAR_HEIGHT = 50;
 
     public TemplateCreatorToolbar(OrthographicCamera camera,
-                                  SpriteBatch batch,
                                   Skin skin,
                                   TemplateCreatorViewModel templateCreatorViewModel,
                                   TemplateCreatorViewController templateCreatorViewController) {
@@ -44,7 +42,6 @@ public class TemplateCreatorToolbar implements ScreenView {
         //
         Table mainTable = new Table();
         mainTable.setFillParent(true);
-//        PixmapUtils.setBackgroundColour(mainTable, Color.GREEN);
 
         Table toolbarTable = new Table();
         PixmapUtils.setBackgroundColour(toolbarTable, new Color(0.3f, 0.6f, 1f, 1f));
@@ -53,7 +50,6 @@ public class TemplateCreatorToolbar implements ScreenView {
                 .expand()
                 .fillX()
                 .bottom();
-
 
         stage.addActor(mainTable);
 
@@ -153,11 +149,11 @@ public class TemplateCreatorToolbar implements ScreenView {
          * ----------
          */
         TextField sinAmplitude = new TextField("", skin);
-        TextField sinPhase = new TextField("", skin);
         TextField sinPeriod = new TextField("", skin);
-        sinAmplitude.setMaxLength(4);
-        sinPhase.setMaxLength(4);
-        sinPeriod.setMaxLength(4);
+        TextField sinPhase = new TextField("", skin);
+        sinAmplitude.setMaxLength(7);
+        sinPeriod.setMaxLength(7);
+        sinPhase.setMaxLength(7);
 
         FocusListener waveDistortionChangeListener = new FocusListener() {
             @Override
@@ -178,22 +174,22 @@ public class TemplateCreatorToolbar implements ScreenView {
         };
 
         sinAmplitude.addListener(waveDistortionChangeListener);
-        sinPhase.addListener(waveDistortionChangeListener);
         sinPeriod.addListener(waveDistortionChangeListener);
+        sinPhase.addListener(waveDistortionChangeListener);
 
         templateCreatorViewModel.getWaveDistortionObservable().subscribe(new Consumer<WaveDistortionData>() {
             @Override
             public void accept(WaveDistortionData waveDistortionData) {
                 sinAmplitude.setText(String.valueOf(waveDistortionData.sinAmplitude));
-                sinPhase.setText(String.valueOf(waveDistortionData.sinPhase));
                 sinPeriod.setText(String.valueOf(waveDistortionData.sinPeriod));
+                sinPhase.setText(String.valueOf(waveDistortionData.sinPhase));
             }
         });
 
         toolbarTable.add(new Label("p*Sin(q*A+r)", skin)).padLeft(2);
         toolbarTable.add(sinAmplitude).width(40);
-        toolbarTable.add(sinPhase).width(40);
         toolbarTable.add(sinPeriod).width(40);
+        toolbarTable.add(sinPhase).width(40);
 
 
         /*
