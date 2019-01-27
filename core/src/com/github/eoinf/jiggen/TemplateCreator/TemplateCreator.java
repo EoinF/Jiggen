@@ -4,18 +4,15 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
-import com.github.eoinf.jiggen.screens.controllers.TemplateCreatorViewController;
-import com.github.eoinf.jiggen.screens.controllers.TemplateCreatorViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class TemplateCreator {
     private Pixmap pixmap;
-    private Vector2 aspectRatio = new Vector2(1, 1);
-    private GridPoint2 dimensions = new GridPoint2(5, 5);
+    private Vector2 aspectRatio;
+    private GridPoint2 dimensions;
 
     private TemplateLine[] linesHorizontal;
     private TemplateLine[] linesVertical;
@@ -24,25 +21,28 @@ public class TemplateCreator {
     private TemplateLineWithDistortion[] distortedLinesVertical;
 
     private GridPoint2 maxSize;
-    private WaveDistortionData waveDistortionData = new WaveDistortionData(0,0,0);
+    private WaveDistortionData waveDistortionData;
 
     private void createNewPixmap() {
         float ratio = aspectRatio.x / aspectRatio.y;
-        int x, y;
+        int width, height;
         if (maxSize.y * ratio < maxSize.x) {
-            x = (int) ((maxSize.y * aspectRatio.x) / aspectRatio.y);
-            y = maxSize.y;
+            width = (int) ((maxSize.y * aspectRatio.x) / aspectRatio.y);
+            height = maxSize.y;
         } else {
-            x = maxSize.x;
-            y = (int)((maxSize.x * aspectRatio.y) / aspectRatio.x);
+            width = maxSize.x;
+            height = (int)((maxSize.x * aspectRatio.y) / aspectRatio.x);
         }
         if (this.pixmap != null) {
             this.pixmap.dispose();
         }
-        this.pixmap = new Pixmap(x, y, Pixmap.Format.RGBA8888);
+        this.pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
 
         this.pixmap.setColor(Color.WHITE);
         this.pixmap.fill();
+
+        this.pixmap.setColor(Color.BLACK);
+        this.pixmap.drawRectangle(0, 0, width, height);
     }
 
     private void generateLineData() {
@@ -200,51 +200,30 @@ public class TemplateCreator {
         }
     }
 
+    public TemplateCreator() {
+        this(
+                new GridPoint2(50, 50),
+                new Vector2(1, 1),
+                new GridPoint2(2, 2),
+                new WaveDistortionData(0,0,0));
+    }
 
-    public TemplateCreator(TemplateCreatorViewController templateCreatorViewController,
-                           TemplateCreatorViewModel templateCreatorViewModel, GridPoint2 maxSize) {
+    public TemplateCreator(GridPoint2 maxSize,
+                           Vector2 aspectRatio,
+                           GridPoint2 dimensions,
+                           WaveDistortionData waveDistortionData) {
         this.maxSize = maxSize;
+        this.aspectRatio = aspectRatio;
+        this.dimensions = dimensions;
+        this.waveDistortionData = waveDistortionData;
         createNewPixmap();
         generateLineData();
         generateDistortedLineData();
         addPixmapLines();
         addPieceConnectors();
-
-        templateCreatorViewModel.getTemplateAspectRatioObservable().subscribe(new Consumer<Vector2>() {
-            @Override
-            public void accept(Vector2 aspectRatio) {
-                setAspectRatio(aspectRatio);
-                templateCreatorViewController.setPixmap(pixmap);
-            }
-        });
-
-        templateCreatorViewModel.getTemplateDimensionsObservable().subscribe(new Consumer<GridPoint2>() {
-            @Override
-            public void accept(GridPoint2 dimensions) {
-                setDimensions(dimensions);
-                templateCreatorViewController.setPixmap(pixmap);
-            }
-        });
-
-
-        templateCreatorViewModel.getTemplateMaxSizeObservable().subscribe(new Consumer<GridPoint2>() {
-            @Override
-            public void accept(GridPoint2 maxSize) {
-                setMaxSize(maxSize);
-                templateCreatorViewController.setPixmap(pixmap);
-            }
-        });
-
-        templateCreatorViewModel.getWaveDistortionObservable().subscribe(new Consumer<WaveDistortionData>() {
-            @Override
-            public void accept(WaveDistortionData waveDistortionData) {
-                setWaveDistortion(waveDistortionData);
-                templateCreatorViewController.setPixmap(pixmap);
-            }
-        });
     }
 
-    private void setWaveDistortion(WaveDistortionData waveDistortionData) {
+    public void setWaveDistortion(WaveDistortionData waveDistortionData) {
         this.waveDistortionData = waveDistortionData;
         createNewPixmap();
         generateDistortedLineData();
@@ -280,5 +259,17 @@ public class TemplateCreator {
 
     public Pixmap getGeneratedPixmap() {
         return pixmap;
+    }
+
+    public GridPoint2 getDimensions() {
+        return this.dimensions;
+    }
+
+    public Vector2 getAspectRatio() {
+        return this.aspectRatio;
+    }
+
+    public WaveDistortionData getWaveDistortion() {
+        return this.waveDistortionData;
     }
 }

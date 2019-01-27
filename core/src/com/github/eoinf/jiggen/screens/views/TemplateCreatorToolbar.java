@@ -4,10 +4,12 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -15,6 +17,8 @@ import com.github.eoinf.jiggen.screens.controllers.TemplateCreatorViewController
 import com.github.eoinf.jiggen.screens.controllers.TemplateCreatorViewModel;
 import com.github.eoinf.jiggen.utils.PixmapUtils;
 
+import javax.swing.JFileChooser;
+import java.io.File;
 import java.util.function.Consumer;
 
 public class TemplateCreatorToolbar implements ScreenView {
@@ -59,6 +63,21 @@ public class TemplateCreatorToolbar implements ScreenView {
             @Override
             public void accept(GridPoint2 screenBounds) {
                 viewport.update(screenBounds.x, screenBounds.y, true);
+            }
+        });
+
+        saveButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                JFileChooser chooser = new JFileChooser();
+                chooser.setApproveButtonText("Save");
+                chooser.setDialogType(JFileChooser.SAVE_DIALOG);
+                chooser.showDialog(null, "Select a file");
+                File file = chooser.getSelectedFile();
+
+                if (file != null) {
+                    templateCreatorViewController.saveTemplateToFile(file);
+                }
             }
         });
     }

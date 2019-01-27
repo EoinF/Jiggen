@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -16,6 +17,7 @@ import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.eoinf.jiggen.TemplateCreator.TemplateCreator;
+import com.github.eoinf.jiggen.TemplateCreator.WaveDistortionData;
 import com.github.eoinf.jiggen.screens.controllers.TemplateCreatorViewController;
 import com.github.eoinf.jiggen.screens.controllers.TemplateCreatorViewModel;
 
@@ -26,7 +28,6 @@ public class TemplateCreatorView implements ScreenView {
     public Stage stage;
     private Table root;
     private Image templateImage;
-    private TemplateCreatorViewController templateCreatorViewController;
 
     private static final int IMAGE_PADDING = 10;
 
@@ -35,16 +36,11 @@ public class TemplateCreatorView implements ScreenView {
                                TemplateCreatorViewController templateCreatorViewController) {
 
         this.camera = camera;
-        this.templateCreatorViewController = templateCreatorViewController;
         Viewport viewport = new ScreenViewport(camera);
         this.stage = new Stage(viewport, batch);
         this.root = new Table(skin);
 
-        TemplateCreator templateCreator = new TemplateCreator(
-                templateCreatorViewController,
-                templateCreatorViewModel,
-                new GridPoint2(viewport.getScreenWidth(), viewport.getScreenHeight())
-        );
+        TemplateCreator templateCreator = new TemplateCreator();
 
         Texture texture = new Texture(templateCreator.getGeneratedPixmap());
         templateImage = new Image(texture);
@@ -73,6 +69,38 @@ public class TemplateCreatorView implements ScreenView {
                 templateCreatorViewController.setMaxSize(
                         new GridPoint2(width - (IMAGE_PADDING * 2), height - (IMAGE_PADDING * 2) - TemplateCreatorToolbar.TOOLBAR_HEIGHT));
                 camera.setToOrtho(true, width, height);
+            }
+        });
+
+        templateCreatorViewModel.getTemplateAspectRatioObservable().subscribe(new Consumer<Vector2>() {
+            @Override
+            public void accept(Vector2 aspectRatio) {
+                templateCreator.setAspectRatio(aspectRatio);
+                templateCreatorViewController.setPixmap(templateCreator.getGeneratedPixmap());
+            }
+        });
+
+        templateCreatorViewModel.getTemplateDimensionsObservable().subscribe(new Consumer<GridPoint2>() {
+            @Override
+            public void accept(GridPoint2 dimensions) {
+                templateCreator.setDimensions(dimensions);
+                templateCreatorViewController.setPixmap(templateCreator.getGeneratedPixmap());
+            }
+        });
+
+        templateCreatorViewModel.getTemplateMaxSizeObservable().subscribe(new Consumer<GridPoint2>() {
+            @Override
+            public void accept(GridPoint2 maxSize) {
+                templateCreator.setMaxSize(maxSize);
+                templateCreatorViewController.setPixmap(templateCreator.getGeneratedPixmap());
+            }
+        });
+
+        templateCreatorViewModel.getWaveDistortionObservable().subscribe(new Consumer<WaveDistortionData>() {
+            @Override
+            public void accept(WaveDistortionData waveDistortionData) {
+                templateCreator.setWaveDistortion(waveDistortionData);
+                templateCreatorViewController.setPixmap(templateCreator.getGeneratedPixmap());
             }
         });
     }

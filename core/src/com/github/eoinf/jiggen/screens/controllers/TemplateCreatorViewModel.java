@@ -8,6 +8,8 @@ import com.github.eoinf.jiggen.utils.ReplaySubject;
 import com.github.eoinf.jiggen.utils.SimpleObservable;
 import com.github.eoinf.jiggen.utils.SimpleSubject;
 
+import java.io.File;
+
 public class TemplateCreatorViewModel {
 
     public TemplateCreatorViewModel(GridPoint2 defaultDimensions, Vector2 defaultAspectRatio,
@@ -18,6 +20,7 @@ public class TemplateCreatorViewModel {
         templatePixmapSubject = SimpleSubject.create();
         templateMaxSizeSubject = SimpleSubject.create();
         resizeScreenSubject = SimpleSubject.create();
+        saveToFileSubject = SimpleSubject.create();
     }
 
     //
@@ -102,5 +105,18 @@ public class TemplateCreatorViewModel {
 
     void resizeScreen(int width, int height) {
         resizeScreenSubject.onNext(new GridPoint2(width, height));
+    }
+
+    //
+    // Save template to file
+    //
+    private SimpleSubject<File> saveToFileSubject;
+
+    public SimpleObservable<File> getSaveToFileSubject() {
+        return this.saveToFileSubject;
+    }
+
+    public void saveTemplateToFile(File file) {
+        saveToFileSubject.onNext(file);
     }
 }

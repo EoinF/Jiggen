@@ -10,11 +10,15 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.github.eoinf.jiggen.Jiggen;
+import com.github.eoinf.jiggen.TemplateCreator.TemplateCreatorFileSaver;
 import com.github.eoinf.jiggen.TemplateCreator.WaveDistortionData;
 import com.github.eoinf.jiggen.screens.controllers.TemplateCreatorViewController;
 import com.github.eoinf.jiggen.screens.controllers.TemplateCreatorViewModel;
 import com.github.eoinf.jiggen.screens.views.TemplateCreatorToolbar;
 import com.github.eoinf.jiggen.screens.views.TemplateCreatorView;
+
+import java.io.File;
+import java.util.function.Consumer;
 
 public class TemplateCreatorScreen implements Screen {
 
@@ -41,11 +45,25 @@ public class TemplateCreatorScreen implements Screen {
                 templateCreatorViewController
         );
 
+        TemplateCreatorFileSaver fileSaver = new TemplateCreatorFileSaver(100);
 
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(toolbar.stage);
         multiplexer.addProcessor(view.stage);
         Gdx.input.setInputProcessor(multiplexer);
+
+
+        templateCreatorViewModel.getSaveToFileSubject().subscribe(new Consumer<File>() {
+            @Override
+            public void accept(File file) {
+                fileSaver.saveTemplateToFile(
+                        templateCreatorViewModel.getTemplateDimensionsObservable().getValue(),
+                        templateCreatorViewModel.getTemplateAspectRatioObservable().getValue(),
+                        templateCreatorViewModel.getWaveDistortionObservable().getValue(),
+                        file
+                );
+            }
+        });
     }
 
     @Override
