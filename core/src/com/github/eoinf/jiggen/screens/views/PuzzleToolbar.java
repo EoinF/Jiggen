@@ -12,7 +12,7 @@ import com.github.eoinf.jiggen.screens.controllers.PuzzleViewModel;
 
 import java.util.function.Consumer;
 
-public class PuzzleToolbar {
+public class PuzzleToolbar implements ScreenView {
     public Stage stage;
 
 

@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class PuzzleView {
+public class PuzzleView implements ScreenView {
     private final EnhancedGestureDetector gestureDetector;
     private final PuzzleOverlayBatch batch;
     public Stage stage;

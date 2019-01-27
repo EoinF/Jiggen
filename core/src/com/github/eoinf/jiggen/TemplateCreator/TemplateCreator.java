@@ -226,6 +226,7 @@ public class TemplateCreator {
             }
         });
 
+
         templateCreatorViewModel.getTemplateMaxSizeObservable().subscribe(new Consumer<GridPoint2>() {
             @Override
             public void accept(GridPoint2 maxSize) {

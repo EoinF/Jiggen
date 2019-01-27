@@ -17,11 +17,14 @@ public class TemplateCreatorViewModel {
         waveDistortionSubject = ReplaySubject.createDefault(defaultWaveDistortion);
         templatePixmapSubject = SimpleSubject.create();
         templateMaxSizeSubject = SimpleSubject.create();
+        resizeScreenSubject = SimpleSubject.create();
     }
 
+    //
+    // The number of horizontal and vertical lines respectively to use in making the template
+    //
+
     private ReplaySubject<GridPoint2> templateDimensionsSubject;
-    private ReplaySubject<Vector2> templateAspectRatioSubject;
-    private ReplaySubject<WaveDistortionData> waveDistortionSubject;
 
     void setTemplateDimensions(GridPoint2 dimensions) {
         this.templateDimensionsSubject.onNext(dimensions);
@@ -32,6 +35,11 @@ public class TemplateCreatorViewModel {
     }
 
 
+    //
+    // The aspect ratio of the template
+    //
+    private ReplaySubject<Vector2> templateAspectRatioSubject;
+
     void setTemplateAspectRatio(Vector2 aspectRatio) {
         this.templateAspectRatioSubject.onNext(aspectRatio);
     }
@@ -39,6 +47,12 @@ public class TemplateCreatorViewModel {
     public SimpleObservable<Vector2> getTemplateAspectRatioObservable() {
         return this.templateAspectRatioSubject;
     }
+
+
+    //
+    // The data used for distorting the template lines
+    //
+    private ReplaySubject<WaveDistortionData> waveDistortionSubject;
 
     void setWaveDistortion(WaveDistortionData waveDistortion) {
         this.waveDistortionSubject.onNext(waveDistortion);
@@ -48,7 +62,9 @@ public class TemplateCreatorViewModel {
         return this.waveDistortionSubject;
     }
 
-
+    //
+    // The texture data for rendering the pixmap
+    //
     private SimpleSubject<Pixmap> templatePixmapSubject;
 
     void setTemplatePixmap(Pixmap pixmap) {
@@ -60,6 +76,10 @@ public class TemplateCreatorViewModel {
     }
 
 
+    //
+    // Max size of a created template image
+    //
+
     private SimpleSubject<GridPoint2> templateMaxSizeSubject;
 
     public void setTemplateMaxSize(GridPoint2 maxSize) {
@@ -68,5 +88,19 @@ public class TemplateCreatorViewModel {
 
     public SimpleObservable<GridPoint2> getTemplateMaxSizeObservable() {
         return this.templateMaxSizeSubject;
+    }
+
+
+    //
+    // Resize screen
+    //
+    private SimpleSubject<GridPoint2> resizeScreenSubject;
+
+    public SimpleObservable<GridPoint2> getResizeScreenObservable() {
+        return resizeScreenSubject;
+    }
+
+    void resizeScreen(int width, int height) {
+        resizeScreenSubject.onNext(new GridPoint2(width, height));
     }
 }

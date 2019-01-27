@@ -16,6 +16,10 @@ public class TemplateCreatorViewController {
         templateCreatorViewModel.setTemplatePixmap(pixmap);
     }
 
+    public void resizeScreen(int width, int height) {
+        templateCreatorViewModel.resizeScreen(width, height);
+    }
+
     public void setDimensions(GridPoint2 dimensions) {
         templateCreatorViewModel.setTemplateDimensions(dimensions);
     }

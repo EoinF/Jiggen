@@ -77,16 +77,6 @@ public class PuzzleViewModel {
         return heldPuzzlePieceSubject.getValue().isHoldingPiece();
     }
 
-    void reset() {
-        connectedPiecesListSubject.onNext(new ArrayList<>());
-        puzzleGraphTemplateSubject.onNext(null);
-        backgroundImageSubject.onNext(null);
-    }
-
-    public void setViewportSize(int viewportWidth, int viewportHeight) {
-        Vector2 scales = scalesSubject.getValue();
-    }
-
     //
     // Resize screen
     //

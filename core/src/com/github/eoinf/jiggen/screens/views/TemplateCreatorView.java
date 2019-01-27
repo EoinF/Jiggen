@@ -21,9 +21,9 @@ import com.github.eoinf.jiggen.screens.controllers.TemplateCreatorViewModel;
 
 import java.util.function.Consumer;
 
-public class TemplateCreatorView {
+public class TemplateCreatorView implements ScreenView {
     private OrthographicCamera camera;
-    private Stage stage;
+    public Stage stage;
     private Table root;
     private Image templateImage;
     private TemplateCreatorViewController templateCreatorViewController;
@@ -51,13 +51,28 @@ public class TemplateCreatorView {
         templateImage.setScaling(Scaling.fit);
 
         root.setFillParent(true);
-        root.add(templateImage).align(Align.center).pad(IMAGE_PADDING);
+        root.add(templateImage)
+                .align(Align.center)
+                .pad(IMAGE_PADDING)
+                .padTop(TemplateCreatorToolbar.TOOLBAR_HEIGHT);
         stage.addActor(root);
 
         templateCreatorViewModel.getTemplatePixmapObservable().subscribe(new Consumer<Pixmap>() {
             @Override
             public void accept(Pixmap pixmap) {
                 redrawTemplate(pixmap);
+            }
+        });
+
+        templateCreatorViewModel.getResizeScreenObservable().subscribe(new Consumer<GridPoint2>() {
+            @Override
+            public void accept(GridPoint2 size) {
+                int width = size.x;
+                int height = size.y;
+                stage.getViewport().update(width, height);
+                templateCreatorViewController.setMaxSize(
+                        new GridPoint2(width - (IMAGE_PADDING * 2), height - (IMAGE_PADDING * 2) - TemplateCreatorToolbar.TOOLBAR_HEIGHT));
+                camera.setToOrtho(true, width, height);
             }
         });
     }
@@ -80,12 +95,5 @@ public class TemplateCreatorView {
 
     public void draw() {
         stage.draw();
-    }
-
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height);
-        templateCreatorViewController.setMaxSize(
-                new GridPoint2(width - (IMAGE_PADDING * 2), height - (IMAGE_PADDING * 2)));
-        camera.setToOrtho(true, width, height);
     }
 }
