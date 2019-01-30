@@ -11,8 +11,8 @@ public class WaveDistortionData {
         this.sinPeriod = sinPeriod;
     }
 
-    public int getDistortion(int x, int scale) {
-        float amplitude = (sinAmplitude * scale) / 100f;
-        return (int)(amplitude * Math.sin(sinPhase + (sinPeriod * x)));
+    public int getDistortion(int x, double scale) {
+        double amplitude = (sinAmplitude * scale) / 100f;
+        return (int)(amplitude * Math.sin(sinPhase + ((sinPeriod * x * 100) / scale)));
     }
 }

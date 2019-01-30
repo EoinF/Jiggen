@@ -18,10 +18,10 @@ public class TemplateLineWithDistortion {
         for (int i = 0; i < points.length; i++) {
             int current = line.from + i;
             if (line.isVertical) {
-                int pivot = line.staticPoint + distortionData.getDistortion(i, imageSize.y);
+                int pivot = line.staticPoint + distortionData.getDistortion(i, (double)imageSize.y);
                 this.points[i] = new GridPoint2(pivot, current);
             } else {
-                int pivot = line.staticPoint + distortionData.getDistortion(i, imageSize.x);
+                int pivot = line.staticPoint + distortionData.getDistortion(i, (double)imageSize.x);
                 this.points[i] = new GridPoint2(current, pivot);
             }
         }

@@ -127,8 +127,6 @@ public class TemplateCreator {
                     GridPoint2 previous = vertical.getIntersectionPoint(previousHorizontal);
 
                     int connectorY = (current.y + previous.y) / 2;
-                    pixmap.setColor(Color.RED);
-                    pixmap.fillCircle(vertical.getX(current.y), current.y, 3);
                     addHorizontalConnectorAt(connectorY, vertical, (current.y - previous.y) / 3f);
                 }
 
@@ -137,8 +135,6 @@ public class TemplateCreator {
                     GridPoint2 previous = horizontal.getIntersectionPoint(previousVertical);
 
                     int connectorX = (current.x + previous.x) / 2;
-                    pixmap.setColor(Color.GREEN);
-                    pixmap.fillCircle(previous.x, horizontal.getY(previous.x), 3);
                     addVerticalConnectorAt(connectorX, horizontal, (current.x - previous.x) / 3f);
                 }
                 previousVertical = vertical;
@@ -187,11 +183,18 @@ public class TemplateCreator {
         int previousX = firstX;
         int previousY = firstY;
 
-        for (int i = 0; i < connectorSize; i++) {
-            float offset = i - connectorSize / 2f;
-            int y = connectorY + (int) offset;
+        int distanceY = lastY - firstY;
+        int distanceX = lastX - firstX;
 
-            int x = verticalLine.getX(y) + (int) ((connectorSize / 2f) * Math.sin((i * Math.PI) / connectorSize));
+        double sinAmplitude = (distanceY / 2f) + Math.abs(distanceX);
+
+        double sinPhase = 0;
+        double offset = Math.asin(distanceX / sinAmplitude);
+        double sinPeriod = (Math.PI - offset) / (distanceY);
+
+        for (int i = 0; i < distanceY; i++) {
+            int y = firstY + i;
+            int x = firstX + (int) (sinAmplitude * Math.sin(sinPhase + i * sinPeriod));
 
             // Draw all the x pixels on this line so there are no gaps
             pixmap.drawLine(previousX, previousY, x, y);
