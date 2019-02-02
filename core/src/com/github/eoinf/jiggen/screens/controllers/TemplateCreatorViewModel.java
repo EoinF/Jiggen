@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.github.eoinf.jiggen.TemplateCreator.WaveDistortionData;
-import com.github.eoinf.jiggen.utils.ReplaySubject;
 import com.github.eoinf.jiggen.utils.SimpleObservable;
 import com.github.eoinf.jiggen.utils.SimpleSubject;
 
@@ -14,9 +13,9 @@ public class TemplateCreatorViewModel {
 
     public TemplateCreatorViewModel(GridPoint2 defaultDimensions, Vector2 defaultAspectRatio,
                                     WaveDistortionData defaultWaveDistortion) {
-        templateDimensionsSubject = ReplaySubject.createDefault(defaultDimensions);
-        templateAspectRatioSubject = ReplaySubject.createDefault(defaultAspectRatio);
-        waveDistortionSubject = ReplaySubject.createDefault(defaultWaveDistortion);
+        templateDimensionsSubject = SimpleSubject.createDefault(defaultDimensions);
+        templateAspectRatioSubject = SimpleSubject.createDefault(defaultAspectRatio);
+        waveDistortionSubject = SimpleSubject.createDefault(defaultWaveDistortion);
         templatePixmapSubject = SimpleSubject.create();
         templateMaxSizeSubject = SimpleSubject.create();
         resizeScreenSubject = SimpleSubject.create();
@@ -27,7 +26,7 @@ public class TemplateCreatorViewModel {
     // The number of horizontal and vertical lines respectively to use in making the template
     //
 
-    private ReplaySubject<GridPoint2> templateDimensionsSubject;
+    private SimpleSubject<GridPoint2> templateDimensionsSubject;
 
     void setTemplateDimensions(GridPoint2 dimensions) {
         this.templateDimensionsSubject.onNext(dimensions);
@@ -41,7 +40,7 @@ public class TemplateCreatorViewModel {
     //
     // The aspect ratio of the template
     //
-    private ReplaySubject<Vector2> templateAspectRatioSubject;
+    private SimpleSubject<Vector2> templateAspectRatioSubject;
 
     void setTemplateAspectRatio(Vector2 aspectRatio) {
         this.templateAspectRatioSubject.onNext(aspectRatio);
@@ -55,7 +54,7 @@ public class TemplateCreatorViewModel {
     //
     // The data used for distorting the template lines
     //
-    private ReplaySubject<WaveDistortionData> waveDistortionSubject;
+    private SimpleSubject<WaveDistortionData> waveDistortionSubject;
 
     void setWaveDistortion(WaveDistortionData waveDistortion) {
         this.waveDistortionSubject.onNext(waveDistortion);

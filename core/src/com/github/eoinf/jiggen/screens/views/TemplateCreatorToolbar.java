@@ -59,8 +59,9 @@ public class TemplateCreatorToolbar implements ScreenView {
          * Dimensions
          * ----------
          */
-        TextField dimensionsX = new TextField("", skin);
-        TextField dimensionsY = new TextField("", skin);
+        GridPoint2 dimensions = templateCreatorViewModel.getTemplateDimensionsObservable().getValue();
+        TextField dimensionsX = new TextField(String.valueOf(dimensions.x), skin);
+        TextField dimensionsY = new TextField(String.valueOf(dimensions.y), skin);
         dimensionsX.setMaxLength(3);
         dimensionsY.setMaxLength(3);
 
@@ -104,8 +105,9 @@ public class TemplateCreatorToolbar implements ScreenView {
          * Aspect Ratio
          * ----------
          */
-        TextField aspectRatioX = new TextField("", skin);
-        TextField aspectRatioY = new TextField("", skin);
+        Vector2 aspectRatio = templateCreatorViewModel.getTemplateAspectRatioObservable().getValue();
+        TextField aspectRatioX = new TextField(String.valueOf(aspectRatio.x), skin);
+        TextField aspectRatioY = new TextField(String.valueOf(aspectRatio.y), skin);
         dimensionsX.setMaxLength(4);
         dimensionsY.setMaxLength(4);
 
@@ -149,9 +151,10 @@ public class TemplateCreatorToolbar implements ScreenView {
          * Wave distortion data
          * ----------
          */
-        TextField sinAmplitude = new TextField("", skin);
-        TextField sinPeriod = new TextField("", skin);
-        TextField sinPhase = new TextField("", skin);
+        SinWave sinWave = (SinWave)(templateCreatorViewModel.getWaveDistortionObservable().getValue().distortionLine);
+        TextField sinAmplitude = new TextField(String.valueOf(sinWave.sinAmplitude), skin);
+        TextField sinPeriod = new TextField(String.valueOf(sinWave.sinPeriod), skin);
+        TextField sinPhase = new TextField(String.valueOf(sinWave.sinPhase), skin);
         sinAmplitude.setMaxLength(7);
         sinPeriod.setMaxLength(7);
         sinPhase.setMaxLength(7);

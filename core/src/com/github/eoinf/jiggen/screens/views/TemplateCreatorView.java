@@ -40,7 +40,12 @@ public class TemplateCreatorView implements ScreenView {
         this.stage = new Stage(viewport, batch);
         this.root = new Table(skin);
 
-        TemplateCreator templateCreator = new TemplateCreator();
+        TemplateCreator templateCreator = new TemplateCreator(
+                new GridPoint2(viewport.getScreenWidth(), viewport.getScreenHeight()),
+                templateCreatorViewModel.getTemplateAspectRatioObservable().getValue(),
+                templateCreatorViewModel.getTemplateDimensionsObservable().getValue(),
+                templateCreatorViewModel.getWaveDistortionObservable().getValue()
+        );
 
         Texture texture = new Texture(templateCreator.getGeneratedPixmap());
         templateImage = new Image(texture);
