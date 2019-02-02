@@ -42,4 +42,8 @@ public class TemplateCreatorViewController {
     public void setWaveDistortionData(WaveDistortionData newValue) {
         templateCreatorViewModel.setWaveDistortion(newValue);
     }
+
+    public void setRandomSeed(Long newValue) {
+        templateCreatorViewModel.setRandomSeed(newValue);
+    }
 }

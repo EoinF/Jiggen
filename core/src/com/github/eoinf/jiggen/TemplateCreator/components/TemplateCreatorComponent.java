@@ -6,7 +6,6 @@ public abstract class TemplateCreatorComponent {
     private TemplateCreatorComponent nextComponent;
 
     protected TemplateCreatorData data;
-    protected Pixmap pixmap;
 
     // Top level component
     TemplateCreatorComponent() {
@@ -32,9 +31,6 @@ public abstract class TemplateCreatorComponent {
 
         this.data = newData;
         if (nextComponent != null) {
-            if (pixmap != null) {
-                nextComponent.pixmap = pixmap;
-            }
             nextComponent.setData(newData);
         }
     }
@@ -42,23 +38,12 @@ public abstract class TemplateCreatorComponent {
     public Pixmap getPixmap() {
         if (nextComponent != null) {
             Pixmap nextPixmap = nextComponent.getPixmap();
-            return nextPixmap != null ? nextPixmap: this.pixmap;
-        } else {
-            return this.pixmap;
-        }
-    }
-
-    public void setPixmap(Pixmap pixmap) {
-        if (this.pixmap != pixmap) {
-            this.pixmap = pixmap;
-            calculate(this.data);
-
-            if (nextComponent != null) {
-                nextComponent.setPixmap(pixmap);
+            if (nextPixmap != null) {
+                return nextPixmap;
             }
         }
+        return this.data.pixmap;
     }
-
 
     public TemplateCreatorData getData() {
         if (nextComponent != null) {

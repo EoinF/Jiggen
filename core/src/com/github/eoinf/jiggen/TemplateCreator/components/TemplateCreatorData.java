@@ -1,5 +1,6 @@
 package com.github.eoinf.jiggen.TemplateCreator.components;
 
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.github.eoinf.jiggen.TemplateCreator.TemplateLine;
@@ -24,6 +25,8 @@ public class TemplateCreatorData {
     public TemplateLineWithDistortion[] distortedLinesHorizontal;
     public TemplateLineWithDistortion[] distortedLinesVertical;
 
+    public Pixmap pixmap;
+
     public TemplateCreatorData(Vector2 aspectRatio, GridPoint2 dimensions, GridPoint2 maxSize, WaveDistortionData waveDistortionData, long randomSeed) {
         // Primary data
         this.aspectRatio = aspectRatio;
@@ -38,6 +41,7 @@ public class TemplateCreatorData {
         this.linesVertical = null;
         this.distortedLinesHorizontal = null;
         this.distortedLinesVertical = null;
+        this.pixmap = null;
     }
 
     TemplateCreatorData() {
@@ -51,6 +55,7 @@ public class TemplateCreatorData {
         this.maxSize = null;
         this.waveDistortionData = null;
         this.randomSeed = null;
+        this.pixmap = null;
     }
 
     public TemplateCreatorData(TemplateCreatorData data) {
@@ -64,5 +69,6 @@ public class TemplateCreatorData {
         this.maxSize = data.maxSize;
         this.waveDistortionData = data.waveDistortionData;
         this.randomSeed = data.randomSeed;
+        this.pixmap = data.pixmap;
     }
 }

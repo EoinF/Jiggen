@@ -19,6 +19,7 @@ import com.github.eoinf.jiggen.screens.views.TemplateCreatorToolbar;
 import com.github.eoinf.jiggen.screens.views.TemplateCreatorView;
 
 import java.io.File;
+import java.util.Random;
 import java.util.function.Consumer;
 
 public class TemplateCreatorScreen implements Screen {
@@ -37,7 +38,8 @@ public class TemplateCreatorScreen implements Screen {
         TemplateCreatorViewModel templateCreatorViewModel = new TemplateCreatorViewModel(
                 new GridPoint2(5, 5),
                 new Vector2(4, 3),
-                new WaveDistortionData(new SinWave(3f, 3, 0.15f))
+                new WaveDistortionData(new SinWave(3f, 3, 0.15f)),
+                new Random().nextLong()
         );
         templateCreatorViewController = new TemplateCreatorViewController(templateCreatorViewModel);
         view = new TemplateCreatorView(camera, batch, skin, templateCreatorViewModel,
@@ -52,7 +54,7 @@ public class TemplateCreatorScreen implements Screen {
         Gdx.input.setInputProcessor(multiplexer);
 
 
-        templateCreatorViewModel.getSaveToFileSubject().subscribe(new Consumer<File>() {
+        templateCreatorViewModel.getSaveToFileObservable().subscribe(new Consumer<File>() {
             @Override
             public void accept(File file) {
                 fileSaver.saveTemplateToFile(

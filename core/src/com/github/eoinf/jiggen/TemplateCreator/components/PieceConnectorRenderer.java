@@ -1,6 +1,7 @@
 package com.github.eoinf.jiggen.TemplateCreator.components;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.GridPoint2;
 import com.github.eoinf.jiggen.TemplateCreator.TemplateLine;
 import com.github.eoinf.jiggen.TemplateCreator.TemplateLineWithDistortion;
@@ -21,38 +22,43 @@ public final class PieceConnectorRenderer extends TemplateCreatorComponent {
         return newData.distortedLinesVertical != data.distortedLinesVertical ||
                 newData.distortedLinesHorizontal != data.distortedLinesHorizontal
                 || !newData.randomSeed.equals(data.randomSeed)
-                || newData.maxSize != data.maxSize;
+                || newData.maxSize != data.maxSize
+                || newData.size != data.size
+                || newData.pixmap != data.pixmap;
     }
 
     @Override
     protected TemplateCreatorData calculate(TemplateCreatorData newData) {
         Random random = new Random(newData.randomSeed);
+        TemplateCreatorData updatedData = new TemplateCreatorData(newData);
+        Pixmap pixmap = updatedData.pixmap;
+
         List<TemplateLineWithDistortion> distortedLinesVerticalWithEdge = new ArrayList<>(Arrays.asList(newData.distortedLinesVertical));
         List<TemplateLineWithDistortion> distortedLinesHorizontalWithEdge = new ArrayList<>(Arrays.asList(newData.distortedLinesHorizontal));
 
         distortedLinesVerticalWithEdge.add(
                 new TemplateLineWithDistortion(
-                        new TemplateLine(0, pixmap.getHeight(), pixmap.getWidth(), true),
+                        new TemplateLine(0, newData.size.y, newData.size.x, true),
                         new WaveDistortionData(StraightLine.flatLine),
-                        new GridPoint2(pixmap.getWidth(), pixmap.getHeight())
+                        new GridPoint2(newData.size.x, newData.size.y)
                 )
         );
         distortedLinesHorizontalWithEdge.add(
                 new TemplateLineWithDistortion(
-                        new TemplateLine(0, pixmap.getWidth(), pixmap.getHeight(), false),
+                        new TemplateLine(0, newData.size.x, newData.size.y, false),
                         new WaveDistortionData(StraightLine.flatLine),
-                        new GridPoint2(pixmap.getWidth(), pixmap.getHeight())
+                        new GridPoint2(newData.size.x, newData.size.y)
                 )
         );
 
         TemplateLineWithDistortion previousHorizontal = new TemplateLineWithDistortion(
-                new TemplateLine(0, pixmap.getWidth(), 0, false),
+                new TemplateLine(0, newData.size.x, 0, false),
                 new WaveDistortionData(StraightLine.flatLine),
                 newData.maxSize
         );
         for (TemplateLineWithDistortion horizontal : distortedLinesHorizontalWithEdge) {
             TemplateLineWithDistortion previousVertical = new TemplateLineWithDistortion(
-                    new TemplateLine(0, pixmap.getHeight(), 0, true),
+                    new TemplateLine(0, newData.size.y, 0, true),
                     new WaveDistortionData(StraightLine.flatLine),
                     newData.maxSize
             );
@@ -64,7 +70,8 @@ public final class PieceConnectorRenderer extends TemplateCreatorComponent {
                     GridPoint2 previous = vertical.getIntersectionPoint(previousHorizontal);
 
                     int connectorY = (current.y + previous.y) / 2;
-                    addHorizontalConnectorAt(connectorY, vertical, (current.y - previous.y) / 3f, random);
+                    addHorizontalConnectorAt(connectorY, vertical, (current.y - previous.y) / 3f,
+                            random, pixmap);
                 }
 
                 // Bottom side connector
@@ -72,7 +79,8 @@ public final class PieceConnectorRenderer extends TemplateCreatorComponent {
                     GridPoint2 previous = horizontal.getIntersectionPoint(previousVertical);
 
                     int connectorX = (current.x + previous.x) / 2;
-                    addVerticalConnectorAt(connectorX, horizontal, (current.x - previous.x) / 3f, random);
+                    addVerticalConnectorAt(connectorX, horizontal, (current.x - previous.x) / 3f,
+                            random, pixmap);
                 }
                 previousVertical = vertical;
             }
@@ -83,8 +91,9 @@ public final class PieceConnectorRenderer extends TemplateCreatorComponent {
     }
 
 
-    private void addVerticalConnectorAt(int connectorX, TemplateLineWithDistortion horizontalLine, float connectorSize, Random random) {
-        drawGapForVerticalConnector(connectorX, horizontalLine, (int) connectorSize);
+    private void addVerticalConnectorAt(int connectorX, TemplateLineWithDistortion horizontalLine, float connectorSize,
+                                        Random random, Pixmap pixmap) {
+        drawGapForVerticalConnector(connectorX, horizontalLine, (int) connectorSize, pixmap);
 
         pixmap.setColor(Color.BLACK);
         int firstX = (int) (connectorX - (connectorSize / 2f));
@@ -101,8 +110,9 @@ public final class PieceConnectorRenderer extends TemplateCreatorComponent {
         new SinWaveConnector(firstX, firstY, lastX, lastY, direction).draw(pixmap);
     }
 
-    private void addHorizontalConnectorAt(int connectorY, TemplateLineWithDistortion verticalLine, float connectorSize, Random random) {
-        drawGapForHorizontalConnector(connectorY, verticalLine, (int) connectorSize);
+    private void addHorizontalConnectorAt(int connectorY, TemplateLineWithDistortion verticalLine, float connectorSize,
+                                          Random random, Pixmap pixmap) {
+        drawGapForHorizontalConnector(connectorY, verticalLine, (int) connectorSize, pixmap);
 
         pixmap.setColor(Color.BLACK);
         int firstY = (int) (connectorY - (connectorSize / 2f));
@@ -119,7 +129,8 @@ public final class PieceConnectorRenderer extends TemplateCreatorComponent {
         new SinWaveConnector(firstX, firstY, lastX, lastY, direction).draw(pixmap);
     }
 
-    private void drawGapForHorizontalConnector(int connectorY, TemplateLineWithDistortion verticalLine, int connectorSize) {
+    private void drawGapForHorizontalConnector(int connectorY, TemplateLineWithDistortion verticalLine,
+                                               int connectorSize, Pixmap pixmap) {
         pixmap.setColor(Color.WHITE);
         for (int offset = -(connectorSize / 2); offset < (connectorSize / 2); offset++) {
             int y = connectorY + offset;
@@ -128,7 +139,8 @@ public final class PieceConnectorRenderer extends TemplateCreatorComponent {
         }
     }
 
-    private void drawGapForVerticalConnector(int connectorX, TemplateLineWithDistortion horizontalLine, int connectorSize) {
+    private void drawGapForVerticalConnector(int connectorX, TemplateLineWithDistortion horizontalLine,
+                                             int connectorSize, Pixmap pixmap) {
         pixmap.setColor(Color.WHITE);
         for (int offset = -(connectorSize / 2); offset < (connectorSize / 2); offset++) {
             int x = connectorX + offset;

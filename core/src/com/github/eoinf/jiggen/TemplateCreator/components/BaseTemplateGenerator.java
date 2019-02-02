@@ -10,6 +10,8 @@ public class BaseTemplateGenerator extends TemplateCreatorComponent {
 
     @Override
     boolean shouldRecalculate(TemplateCreatorData newData) {
+        System.out.println(newData.aspectRatio);
+        System.out.println(newData.maxSize);
         return newData.aspectRatio != data.aspectRatio
                 || newData.maxSize != data.maxSize;
     }

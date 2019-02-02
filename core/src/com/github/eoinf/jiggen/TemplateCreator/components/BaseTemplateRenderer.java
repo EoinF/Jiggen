@@ -14,21 +14,24 @@ public final class BaseTemplateRenderer extends TemplateCreatorComponent {
                 data.dimensions != newData.dimensions ||
                 data.waveDistortionData != newData.waveDistortionData ||
                 data.aspectRatio != newData.aspectRatio ||
-                data.randomSeed != newData.randomSeed;
+                !data.randomSeed.equals(newData.randomSeed);
     }
 
     @Override
     protected TemplateCreatorData calculate(TemplateCreatorData newData) {
-        if (this.pixmap != null) {
-            this.pixmap.dispose();
+        Pixmap pixmap = new Pixmap(newData.size.x, newData.size.y, Pixmap.Format.RGBA8888);
+
+        pixmap.setColor(Color.WHITE);
+        pixmap.fill();
+
+        pixmap.setColor(Color.BLACK);
+        pixmap.drawRectangle(0, 0, newData.size.x, newData.size.y);
+
+        TemplateCreatorData updatedData = new TemplateCreatorData(newData);
+        if (updatedData.pixmap != null) {
+            updatedData.pixmap.dispose();
         }
-        this.pixmap = new Pixmap(newData.size.x, newData.size.y, Pixmap.Format.RGBA8888);
-
-        this.pixmap.setColor(Color.WHITE);
-        this.pixmap.fill();
-
-        this.pixmap.setColor(Color.BLACK);
-        this.pixmap.drawRectangle(0, 0, newData.size.x, newData.size.y);
-        return newData;
+        updatedData.pixmap = pixmap;
+        return updatedData;
     }
 }

@@ -44,7 +44,8 @@ public class TemplateCreatorView implements ScreenView {
                 new GridPoint2(viewport.getScreenWidth(), viewport.getScreenHeight()),
                 templateCreatorViewModel.getTemplateAspectRatioObservable().getValue(),
                 templateCreatorViewModel.getTemplateDimensionsObservable().getValue(),
-                templateCreatorViewModel.getWaveDistortionObservable().getValue()
+                templateCreatorViewModel.getWaveDistortionObservable().getValue(),
+                templateCreatorViewModel.getRandomSeedObservable().getValue()
         );
 
         Texture texture = new Texture(templateCreator.getGeneratedPixmap());
@@ -105,6 +106,14 @@ public class TemplateCreatorView implements ScreenView {
             @Override
             public void accept(WaveDistortionData waveDistortionData) {
                 templateCreator.setWaveDistortion(waveDistortionData);
+                templateCreatorViewController.setPixmap(templateCreator.getGeneratedPixmap());
+            }
+        });
+
+        templateCreatorViewModel.getRandomSeedObservable().subscribe(new Consumer<Long>() {
+            @Override
+            public void accept(Long randomSeed) {
+                templateCreator.setRandomSeed(randomSeed);
                 templateCreatorViewController.setPixmap(templateCreator.getGeneratedPixmap());
             }
         });

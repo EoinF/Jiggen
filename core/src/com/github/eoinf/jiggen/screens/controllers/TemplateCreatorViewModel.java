@@ -12,7 +12,8 @@ import java.io.File;
 public class TemplateCreatorViewModel {
 
     public TemplateCreatorViewModel(GridPoint2 defaultDimensions, Vector2 defaultAspectRatio,
-                                    WaveDistortionData defaultWaveDistortion) {
+                                    WaveDistortionData defaultWaveDistortion, Long defaultSeed) {
+        randomSeedSubject = SimpleSubject.createDefault(defaultSeed);
         templateDimensionsSubject = SimpleSubject.createDefault(defaultDimensions);
         templateAspectRatioSubject = SimpleSubject.createDefault(defaultAspectRatio);
         waveDistortionSubject = SimpleSubject.createDefault(defaultWaveDistortion);
@@ -111,11 +112,23 @@ public class TemplateCreatorViewModel {
     //
     private SimpleSubject<File> saveToFileSubject;
 
-    public SimpleObservable<File> getSaveToFileSubject() {
+    public SimpleObservable<File> getSaveToFileObservable() {
         return this.saveToFileSubject;
     }
 
     public void saveTemplateToFile(File file) {
         saveToFileSubject.onNext(file);
+    }
+
+    //
+    // Random seed
+    //
+    private SimpleSubject<Long> randomSeedSubject;
+    public SimpleObservable<Long> getRandomSeedObservable() {
+        return randomSeedSubject;
+    }
+
+    public void setRandomSeed(Long randomSeed) {
+        randomSeedSubject.onNext(randomSeed);
     }
 }

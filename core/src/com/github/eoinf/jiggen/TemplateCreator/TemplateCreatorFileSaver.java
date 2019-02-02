@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 
 import java.io.File;
+import java.util.Random;
 
 public class TemplateCreatorFileSaver {
     private int pixelsPerPiece;
@@ -23,8 +24,8 @@ public class TemplateCreatorFileSaver {
                 new GridPoint2(dimensions.x * pixelsPerPiece, dimensions.y * pixelsPerPiece),
                 aspectRatio,
                 dimensions,
-                waveDistortionData
-        ).getGeneratedPixmap();
+                waveDistortionData,
+                new Random().nextLong()).getGeneratedPixmap();
         PixmapIO.writePNG(new FileHandle(file), pixmap);
     }
 }

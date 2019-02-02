@@ -12,8 +12,6 @@ import com.github.eoinf.jiggen.TemplateCreator.components.PieceConnectorRenderer
 import com.github.eoinf.jiggen.TemplateCreator.components.TemplateCreatorComponent;
 import com.github.eoinf.jiggen.TemplateCreator.components.TemplateCreatorData;
 
-import java.util.Random;
-
 public class TemplateCreator {
 
     private TemplateCreatorComponent root;
@@ -21,13 +19,14 @@ public class TemplateCreator {
     public TemplateCreator(GridPoint2 maxSize,
                            Vector2 aspectRatio,
                            GridPoint2 dimensions,
-                           WaveDistortionData waveDistortionData) {
+                           WaveDistortionData waveDistortionData,
+                           Long value) {
         TemplateCreatorData baseData = new TemplateCreatorData(
                 aspectRatio,
                 dimensions,
                 maxSize,
                 waveDistortionData,
-                new Random().nextLong()
+                value
         );
 
         PieceConnectorRenderer pieceConnectorRenderer = new PieceConnectorRenderer();
@@ -44,7 +43,6 @@ public class TemplateCreator {
         newData.waveDistortionData = waveDistortionData;
         root.setData(newData);
     }
-
 
     public void setMaxSize(GridPoint2 maxSize) {
         TemplateCreatorData newData = new TemplateCreatorData(root.getData());
@@ -66,5 +64,11 @@ public class TemplateCreator {
 
     public Pixmap getGeneratedPixmap() {
         return root.getPixmap();
+    }
+
+    public void setRandomSeed(Long randomSeed) {
+        TemplateCreatorData newData = new TemplateCreatorData(root.getData());
+        newData.randomSeed = randomSeed;
+        root.setData(newData);
     }
 }

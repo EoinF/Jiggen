@@ -24,6 +24,7 @@ import com.github.eoinf.jiggen.utils.PixmapUtils;
 
 import javax.swing.JFileChooser;
 import java.io.File;
+import java.util.Random;
 import java.util.function.Consumer;
 
 public class TemplateCreatorToolbar implements ScreenView {
@@ -73,7 +74,7 @@ public class TemplateCreatorToolbar implements ScreenView {
                             Integer.parseInt(dimensionsX.getText()),
                             Integer.parseInt(dimensionsY.getText())
                     );
-                    if (newValue.equals(templateCreatorViewModel.getTemplateDimensionsObservable().getValue())
+                    if (!newValue.equals(templateCreatorViewModel.getTemplateDimensionsObservable().getValue())
                             && newValue.x > 0
                             && newValue.y > 0) {
                         templateCreatorViewController.setDimensions(newValue);
@@ -108,8 +109,8 @@ public class TemplateCreatorToolbar implements ScreenView {
         Vector2 aspectRatio = templateCreatorViewModel.getTemplateAspectRatioObservable().getValue();
         TextField aspectRatioX = new TextField(String.valueOf(aspectRatio.x), skin);
         TextField aspectRatioY = new TextField(String.valueOf(aspectRatio.y), skin);
-        dimensionsX.setMaxLength(4);
-        dimensionsY.setMaxLength(4);
+        aspectRatioX.setMaxLength(4);
+        aspectRatioY.setMaxLength(4);
 
         FocusListener aspectRatioChangeListener = new FocusListener() {
             @Override
@@ -197,6 +198,48 @@ public class TemplateCreatorToolbar implements ScreenView {
         toolbarTable.add(sinAmplitude).width(40);
         toolbarTable.add(sinPeriod).width(40);
         toolbarTable.add(sinPhase).width(40);
+
+
+        /*
+         * ----------
+         * Random Seed
+         * ----------
+         */
+        long randomSeed = templateCreatorViewModel.getRandomSeedObservable().getValue();
+        TextField randomSeedField = new TextField(String.valueOf(randomSeed), skin);
+        TextButton randomSeedButton = new TextButton("reroll", skin);
+
+        randomSeedField.addListener(new FocusListener() {
+            @Override
+            public void keyboardFocusChanged(FocusEvent event, Actor actor, boolean focused) {
+                try {
+                    Long newValue = Long.parseLong(randomSeedField.getText());
+                    if (!newValue.equals(templateCreatorViewModel.getRandomSeedObservable().getValue())) {
+                        templateCreatorViewController.setRandomSeed(newValue);
+                    }
+                } catch (NumberFormatException ex) {
+                    // Ignore all inputs that aren't numbers
+                }
+            }
+        });
+
+        randomSeedButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                templateCreatorViewController.setRandomSeed(new Random().nextLong());
+            }
+        });
+
+        templateCreatorViewModel.getRandomSeedObservable().subscribe(new Consumer<Long>() {
+            @Override
+            public void accept(Long randomSeed) {
+                randomSeedField.setText(String.valueOf(randomSeed));
+            }
+        });
+
+        toolbarTable.add(new Label("Seed", skin)).padLeft(2);
+        toolbarTable.add(randomSeedField);
+        toolbarTable.add(randomSeedButton).width(40);
 
 
         /*
