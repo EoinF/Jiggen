@@ -1,18 +1,11 @@
 package com.github.eoinf.jiggen.TemplateCreator;
 
+import com.github.eoinf.jiggen.TemplateCreator.lines.Line;
+
 public class WaveDistortionData {
-    public float sinAmplitude;
-    public float sinPhase;
-    public float sinPeriod;
+    public Line distortionLine;
 
-    public WaveDistortionData(float sinAmplitude, float sinPhase, float sinPeriod) {
-        this.sinAmplitude = sinAmplitude;
-        this.sinPhase = sinPhase;
-        this.sinPeriod = sinPeriod;
-    }
-
-    public int getDistortion(int x, double scale) {
-        double amplitude = (sinAmplitude * scale) / 100f;
-        return (int)(amplitude * Math.sin(sinPhase + ((sinPeriod * x * 100) / scale)));
+    public WaveDistortionData(Line distortionLine) {
+        this.distortionLine = distortionLine;
     }
 }

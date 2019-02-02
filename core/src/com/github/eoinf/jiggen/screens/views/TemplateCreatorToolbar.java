@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.eoinf.jiggen.TemplateCreator.WaveDistortionData;
+import com.github.eoinf.jiggen.TemplateCreator.lines.SinWave;
 import com.github.eoinf.jiggen.screens.controllers.TemplateCreatorViewController;
 import com.github.eoinf.jiggen.screens.controllers.TemplateCreatorViewModel;
 import com.github.eoinf.jiggen.utils.PixmapUtils;
@@ -160,9 +161,11 @@ public class TemplateCreatorToolbar implements ScreenView {
             public void keyboardFocusChanged(FocusEvent event, Actor actor, boolean focused) {
                 try {
                     WaveDistortionData newValue = new WaveDistortionData(
-                            Float.parseFloat(sinAmplitude.getText()),
-                            Float.parseFloat(sinPhase.getText()),
-                            Float.parseFloat(sinPeriod.getText())
+                            new SinWave(
+                                    Float.parseFloat(sinAmplitude.getText()),
+                                    Float.parseFloat(sinPhase.getText()),
+                                    Float.parseFloat(sinPeriod.getText())
+                            )
                     );
                     if (!newValue.equals(templateCreatorViewModel.getWaveDistortionObservable().getValue())) {
                         templateCreatorViewController.setWaveDistortionData(newValue);
@@ -180,9 +183,10 @@ public class TemplateCreatorToolbar implements ScreenView {
         templateCreatorViewModel.getWaveDistortionObservable().subscribe(new Consumer<WaveDistortionData>() {
             @Override
             public void accept(WaveDistortionData waveDistortionData) {
-                sinAmplitude.setText(String.valueOf(waveDistortionData.sinAmplitude));
-                sinPeriod.setText(String.valueOf(waveDistortionData.sinPeriod));
-                sinPhase.setText(String.valueOf(waveDistortionData.sinPhase));
+                SinWave line = (SinWave)waveDistortionData.distortionLine;
+                sinAmplitude.setText(String.valueOf(line.sinAmplitude));
+                sinPeriod.setText(String.valueOf(line.sinPeriod));
+                sinPhase.setText(String.valueOf(line.sinPhase));
             }
         });
 

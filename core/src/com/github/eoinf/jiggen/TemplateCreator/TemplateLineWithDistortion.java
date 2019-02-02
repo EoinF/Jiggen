@@ -1,16 +1,20 @@
 package com.github.eoinf.jiggen.TemplateCreator;
 
 import com.badlogic.gdx.math.GridPoint2;
+import com.github.eoinf.jiggen.TemplateCreator.lines.Line;
 
 public class TemplateLineWithDistortion {
     private GridPoint2[] points;
     private TemplateLine line;
-    private WaveDistortionData distortionData;
     private GridPoint2 imageSize;
+
+    private Line distortionDataX;
+    private Line distortionDataY;
 
     public TemplateLineWithDistortion(TemplateLine templateLine, WaveDistortionData waveDistortionData, GridPoint2 imageSize) {
         line = templateLine;
-        distortionData = waveDistortionData;
+        distortionDataX = waveDistortionData.distortionLine.scaled(imageSize.x / 100.0);
+        distortionDataY = waveDistortionData.distortionLine.scaled(imageSize.y / 100.0);
         this.imageSize = imageSize;
 
         this.points = new GridPoint2[line.to - line.from];
@@ -18,10 +22,10 @@ public class TemplateLineWithDistortion {
         for (int i = 0; i < points.length; i++) {
             int current = line.from + i;
             if (line.isVertical) {
-                int pivot = line.staticPoint + distortionData.getDistortion(i, (double)imageSize.y);
+                int pivot = line.staticPoint + distortionDataY.getY(i);
                 this.points[i] = new GridPoint2(pivot, current);
             } else {
-                int pivot = line.staticPoint + distortionData.getDistortion(i, (double)imageSize.x);
+                int pivot = line.staticPoint + distortionDataX.getY(i);
                 this.points[i] = new GridPoint2(current, pivot);
             }
         }
@@ -61,13 +65,13 @@ public class TemplateLineWithDistortion {
 
     public int getX(int y) {
         assert line.isVertical;
-        int distortion = distortionData.getDistortion(y, imageSize.y);
+        int distortion = distortionDataY.getY(y);
         return line.staticPoint + distortion;
     }
 
     public int getY(int x) {
         assert !line.isVertical;
-        int distortion = distortionData.getDistortion(x, imageSize.x);
+        int distortion = distortionDataX.getY(x);
         return line.staticPoint + distortion;
     }
 

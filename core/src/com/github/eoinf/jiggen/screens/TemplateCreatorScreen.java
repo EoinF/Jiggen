@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.github.eoinf.jiggen.Jiggen;
 import com.github.eoinf.jiggen.TemplateCreator.TemplateCreatorFileSaver;
 import com.github.eoinf.jiggen.TemplateCreator.WaveDistortionData;
+import com.github.eoinf.jiggen.TemplateCreator.lines.SinWave;
 import com.github.eoinf.jiggen.screens.controllers.TemplateCreatorViewController;
 import com.github.eoinf.jiggen.screens.controllers.TemplateCreatorViewModel;
 import com.github.eoinf.jiggen.screens.views.TemplateCreatorToolbar;
@@ -36,7 +37,7 @@ public class TemplateCreatorScreen implements Screen {
         TemplateCreatorViewModel templateCreatorViewModel = new TemplateCreatorViewModel(
                 new GridPoint2(5, 5),
                 new Vector2(4, 3),
-                new WaveDistortionData(3f, 3, 0.15f)
+                new WaveDistortionData(new SinWave(3f, 3, 0.15f))
         );
         templateCreatorViewController = new TemplateCreatorViewController(templateCreatorViewModel);
         view = new TemplateCreatorView(camera, batch, skin, templateCreatorViewModel,

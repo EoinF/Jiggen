@@ -4,10 +4,14 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
+import com.github.eoinf.jiggen.TemplateCreator.connectors.ConnectorDirection;
+import com.github.eoinf.jiggen.TemplateCreator.connectors.SinWaveConnector;
+import com.github.eoinf.jiggen.TemplateCreator.lines.StraightLine;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class TemplateCreator {
     private Pixmap pixmap;
@@ -22,6 +26,7 @@ public class TemplateCreator {
 
     private GridPoint2 maxSize;
     private WaveDistortionData waveDistortionData;
+    private Random random;
 
     private void createNewPixmap() {
         float ratio = aspectRatio.x / aspectRatio.y;
@@ -96,27 +101,27 @@ public class TemplateCreator {
         distortedLinesVerticalWithEdge.add(
                 new TemplateLineWithDistortion(
                         new TemplateLine(0, pixmap.getHeight(), pixmap.getWidth(), true),
-                        new WaveDistortionData(0, 0, 0),
+                        new WaveDistortionData(StraightLine.flatLine),
                         new GridPoint2(pixmap.getWidth(), pixmap.getHeight())
                 )
         );
         distortedLinesHorizontalWithEdge.add(
                 new TemplateLineWithDistortion(
                         new TemplateLine(0, pixmap.getWidth(), pixmap.getHeight(), false),
-                        new WaveDistortionData(0, 0, 0),
+                        new WaveDistortionData(StraightLine.flatLine),
                         new GridPoint2(pixmap.getWidth(), pixmap.getHeight())
                 )
         );
 
         TemplateLineWithDistortion previousHorizontal = new TemplateLineWithDistortion(
                 new TemplateLine(0, pixmap.getWidth(), 0, false),
-                new WaveDistortionData(0, 0, 0),
+                new WaveDistortionData(StraightLine.flatLine),
                 maxSize
         );
         for (TemplateLineWithDistortion horizontal : distortedLinesHorizontalWithEdge) {
             TemplateLineWithDistortion previousVertical = new TemplateLineWithDistortion(
                     new TemplateLine(0, pixmap.getHeight(), 0, true),
-                    new WaveDistortionData(0, 0, 0),
+                    new WaveDistortionData(StraightLine.flatLine),
                     maxSize
             );
             for (TemplateLineWithDistortion vertical : distortedLinesVerticalWithEdge) {
@@ -153,21 +158,13 @@ public class TemplateCreator {
 
         int lastX = (int) (connectorX + (connectorSize / 2f));
         int lastY = horizontalLine.getY(lastX);
-
-        int previousX = firstX;
-        int previousY = firstY;
-
-        for (int i = 0; i < connectorSize; i++) {
-            float offset = i - connectorSize / 2f;
-            int x = connectorX + (int) offset;
-            int y = horizontalLine.getY(x) + (int) ((connectorSize / 2f) * Math.sin((i * Math.PI) / connectorSize));
-
-            pixmap.drawLine(previousX, previousY, x, y);
-            previousX = x;
-            previousY = y;
+        ConnectorDirection direction;
+        if (random.nextBoolean()) {
+            direction = ConnectorDirection.DOWN;
+        } else {
+            direction = ConnectorDirection.UP;
         }
-
-        pixmap.drawLine(previousX, previousY, lastX, lastY);
+        new SinWaveConnector(firstX, firstY, lastX, lastY, direction).draw(pixmap);
     }
 
     private void addHorizontalConnectorAt(int connectorY, TemplateLineWithDistortion verticalLine, float connectorSize) {
@@ -179,30 +176,13 @@ public class TemplateCreator {
 
         int lastY = (int) (connectorY + (connectorSize / 2f));
         int lastX = verticalLine.getX(lastY);
-
-        int previousX = firstX;
-        int previousY = firstY;
-
-        int distanceY = lastY - firstY;
-        int distanceX = lastX - firstX;
-
-        double sinAmplitude = (distanceY / 2f) + Math.abs(distanceX);
-
-        double sinPhase = 0;
-        double offset = Math.asin(distanceX / sinAmplitude);
-        double sinPeriod = (Math.PI - offset) / (distanceY);
-
-        for (int i = 0; i < distanceY; i++) {
-            int y = firstY + i;
-            int x = firstX + (int) (sinAmplitude * Math.sin(sinPhase + i * sinPeriod));
-
-            // Draw all the x pixels on this line so there are no gaps
-            pixmap.drawLine(previousX, previousY, x, y);
-            previousX = x;
-            previousY = y;
+        ConnectorDirection direction;
+        if (random.nextBoolean()) {
+            direction = ConnectorDirection.LEFT;
+        } else {
+            direction = ConnectorDirection.RIGHT;
         }
-
-        pixmap.drawLine(previousX, previousY, lastX, lastY);
+        new SinWaveConnector(firstX, firstY, lastX, lastY, direction).draw(pixmap);
     }
 
     private void drawGapForHorizontalConnector(int connectorY, TemplateLineWithDistortion verticalLine, int connectorSize) {
@@ -228,13 +208,14 @@ public class TemplateCreator {
                 new GridPoint2(50, 50),
                 new Vector2(1, 1),
                 new GridPoint2(2, 2),
-                new WaveDistortionData(0, 0, 0));
+                new WaveDistortionData(StraightLine.flatLine));
     }
 
     public TemplateCreator(GridPoint2 maxSize,
                            Vector2 aspectRatio,
                            GridPoint2 dimensions,
                            WaveDistortionData waveDistortionData) {
+        this.random = new Random();
         this.maxSize = maxSize;
         this.aspectRatio = aspectRatio;
         this.dimensions = dimensions;
