@@ -10,7 +10,7 @@ public final class BaseLinesGenerator extends TemplateCreatorComponent {
 
     @Override
     boolean shouldRecalculate(TemplateCreatorData newData) {
-        return !newData.dimensions.equals(data.dimensions)
+        return newData.dimensions != data.dimensions
                 || newData.size != data.size;
     }
 

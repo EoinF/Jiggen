@@ -11,21 +11,12 @@ import com.github.eoinf.jiggen.TemplateCreator.components.DistortedLinesRenderer
 import com.github.eoinf.jiggen.TemplateCreator.components.PieceConnectorRenderer;
 import com.github.eoinf.jiggen.TemplateCreator.components.TemplateCreatorComponent;
 import com.github.eoinf.jiggen.TemplateCreator.components.TemplateCreatorData;
-import com.github.eoinf.jiggen.TemplateCreator.lines.StraightLine;
 
 import java.util.Random;
 
 public class TemplateCreator {
 
     private TemplateCreatorComponent root;
-
-    public TemplateCreator() {
-        this(
-                new GridPoint2(50, 50),
-                new Vector2(1, 1),
-                new GridPoint2(2, 2),
-                new WaveDistortionData(StraightLine.flatLine));
-    }
 
     public TemplateCreator(GridPoint2 maxSize,
                            Vector2 aspectRatio,

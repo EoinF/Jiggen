@@ -10,7 +10,11 @@ public final class BaseTemplateRenderer extends TemplateCreatorComponent {
 
     @Override
     boolean shouldRecalculate(TemplateCreatorData newData) {
-        return data.size != newData.size;
+        return data.size != newData.size ||
+                data.dimensions != newData.dimensions ||
+                data.waveDistortionData != newData.waveDistortionData ||
+                data.aspectRatio != newData.aspectRatio ||
+                data.randomSeed != newData.randomSeed;
     }
 
     @Override

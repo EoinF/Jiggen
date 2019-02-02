@@ -73,7 +73,7 @@ public class TemplateCreatorToolbar implements ScreenView {
                             Integer.parseInt(dimensionsX.getText()),
                             Integer.parseInt(dimensionsY.getText())
                     );
-                    if (newValue != templateCreatorViewModel.getTemplateDimensionsObservable().getValue()
+                    if (newValue.equals(templateCreatorViewModel.getTemplateDimensionsObservable().getValue())
                             && newValue.x > 0
                             && newValue.y > 0) {
                         templateCreatorViewController.setDimensions(newValue);
