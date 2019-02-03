@@ -15,7 +15,7 @@ public class PixelSearcher {
     private int height;
 
     // Represents each of the pixels traversed already
-    private boolean[][] pixelsTraversed;
+    private BooleanGrid pixelsTraversed;
     private int maxX;
     private int maxY;
     private GridPoint2 maxXCoord;
@@ -58,16 +58,15 @@ public class PixelSearcher {
      * @return
      */
     public DecodedPiece floodFillPiece(int startX, int startY) {
-        pixelsTraversed = new boolean[height + 2][];
+        pixelsTraversed = new BooleanGrid(width + 2);
         // Map out the implicit border of the values outside the image
-        for (int y = 0; y < pixelsTraversed.length; y++) {
-            pixelsTraversed[y] = new boolean[width + 2];
-            pixelsTraversed[y][0] = true;
-            pixelsTraversed[y][width + 1] = true;
+        for (int y = 0; y < height + 2; y++) {
+            pixelsTraversed.setValue(0, y, true);
+            pixelsTraversed.setValue(width + 1, y, true);
         }
-        for (int x = 0; x < pixelsTraversed[0].length; x++) {
-            pixelsTraversed[0][x] = true;
-            pixelsTraversed[height + 1][x] = true;
+        for (int x = 0; x < width + 2; x++) {
+            pixelsTraversed.setValue(x, 0, true);
+            pixelsTraversed.setValue(x, height + 1, true);
         }
 
         maxXCoord = new GridPoint2(0, 0);
@@ -88,10 +87,10 @@ public class PixelSearcher {
     private void fillNext(Set<GridPoint2> currentPaths) {
         Set<GridPoint2> newPaths = new HashSet<>();
         for (GridPoint2 path: currentPaths) {
-            if (pixelsTraversed[path.y + 1][path.x + 1]) {
+            if (pixelsTraversed.isTrue(path.x + 1, path.y + 1)) {
                 continue;
             }
-            pixelsTraversed[path.y + 1][path.x + 1] = true;
+            pixelsTraversed.setValue(path.x + 1, path.y + 1, true);
 
             if (!isPixelDark(templatePixmap, path.x, path.y, width, height)) {
                 newPaths.add(new GridPoint2(path.x + 1, path.y));

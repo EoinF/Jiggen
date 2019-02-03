@@ -3,7 +3,7 @@ package com.github.eoinf.jiggen.PuzzleExtractor.Decoder;
 import com.badlogic.gdx.math.GridPoint2;
 
 public class DecodedPiece {
-    private boolean[][] binaryPixelMap;
+    private BooleanGrid binaryPixelMap;
     private GridPoint2 position;
     private int width;
     private int height;
@@ -21,10 +21,10 @@ public class DecodedPiece {
     }
 
     public boolean isTraversed(int x, int y) {
-        return binaryPixelMap[y][x];
+        return binaryPixelMap.isTrue(x, y);
     }
 
-    public DecodedPiece(boolean[][] binaryPixelMap, GridPoint2 position, int maxX, int maxY) {
+    public DecodedPiece(BooleanGrid binaryPixelMap, GridPoint2 position, int maxX, int maxY) {
         this.binaryPixelMap = binaryPixelMap;
         this.position = position;
         this.width = maxX - position.x;
