@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.NumberUtils;
 
@@ -1194,7 +1195,14 @@ public class PuzzleOverlayBatch implements Batch {
 
     protected void switchTexture(Texture texture) {
         flush();
+
+        this.end();
+        shader.begin();
+        shader.setUniformf("u_texture_texel_size", new Vector2(1f / texture.getWidth(), 1f / texture.getHeight()));
+        shader.end();
+        this.begin();
         lastTexture = texture;
+
         invTexWidth = 1.0f / texture.getWidth();
         invTexHeight = 1.0f / texture.getHeight();
     }

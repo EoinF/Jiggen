@@ -48,12 +48,11 @@ public class DecodedTemplate {
 
         int amount = 0;
 
-        System.out.println("start decoding");
+        System.out.println("Starting decoding...");
         while(!isBottomLine(topLineCoordinates) && amount < 20) {
             amount++;
 
             while(x < width) {
-                System.out.println("decoding: " + x + "," + topLineCoordinates[x]);
                 DecodedPiece piece = extractNextPiece(templatePixmap, x, topLineCoordinates[x] + 1);
 
                 this.decodedPieces.add(piece);

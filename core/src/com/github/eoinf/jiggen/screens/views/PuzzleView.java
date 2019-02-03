@@ -119,6 +119,9 @@ public class PuzzleView implements ScreenView {
             @Override
             public void accept(Float zoom) {
                 camera.setZoom(zoom);
+                batch.getShader().begin();
+                batch.getShader().setUniformf("u_camera_zoom", camera.zoom);
+                batch.getShader().end();
             }
         });
     }

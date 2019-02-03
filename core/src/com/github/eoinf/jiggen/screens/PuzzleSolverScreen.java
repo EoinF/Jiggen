@@ -83,6 +83,10 @@ public class PuzzleSolverScreen implements Screen {
 
                 float maxZoom = Math.max(maxZoomX, maxZoomY);
                 camera.setCameraBounds(worldBounds.x, worldBounds.y, maxZoom);
+
+                batch.getShader().begin();
+                batch.getShader().setUniformf("u_camera_zoom", camera.zoom);
+                batch.getShader().end();
             }
         });
 
