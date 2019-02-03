@@ -23,12 +23,14 @@ import com.github.eoinf.jiggen.screens.controllers.TemplateCreatorViewModel;
 import com.github.eoinf.jiggen.utils.PixmapUtils;
 
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.util.Random;
 import java.util.function.Consumer;
 
 public class TemplateCreatorToolbar implements ScreenView {
     public Stage stage;
+    File saveDirectory;
 
     public static final int TOOLBAR_HEIGHT = 50;
 
@@ -166,9 +168,9 @@ public class TemplateCreatorToolbar implements ScreenView {
                 try {
                     WaveDistortionData newValue = new WaveDistortionData(
                             new SinWave(
-                                    Float.parseFloat(sinAmplitude.getText()),
-                                    Float.parseFloat(sinPhase.getText()),
-                                    Float.parseFloat(sinPeriod.getText())
+                                    Double.parseDouble(sinAmplitude.getText()),
+                                    Double.parseDouble(sinPhase.getText()),
+                                    Double.parseDouble(sinPeriod.getText())
                             )
                     );
                     if (!newValue.equals(templateCreatorViewModel.getWaveDistortionObservable().getValue())) {
@@ -188,9 +190,9 @@ public class TemplateCreatorToolbar implements ScreenView {
             @Override
             public void accept(WaveDistortionData waveDistortionData) {
                 SinWave line = (SinWave)waveDistortionData.distortionLine;
-                sinAmplitude.setText(String.valueOf(line.sinAmplitude));
-                sinPeriod.setText(String.valueOf(line.sinPeriod));
-                sinPhase.setText(String.valueOf(line.sinPhase));
+                sinAmplitude.setText(String.format("%.3f", line.sinAmplitude));
+                sinPeriod.setText(String.format("%.3f", line.sinPeriod));
+                sinPhase.setText(String.format("%.3f", line.sinPhase));
             }
         });
 
@@ -260,12 +262,27 @@ public class TemplateCreatorToolbar implements ScreenView {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 JFileChooser chooser = new JFileChooser();
-                chooser.setApproveButtonText("Save");
                 chooser.setDialogType(JFileChooser.SAVE_DIALOG);
-                chooser.showDialog(null, "Select a file");
+                chooser.setCurrentDirectory(saveDirectory);
+
+                GridPoint2 dimensions = templateCreatorViewModel.getTemplateDimensionsObservable().getValue();
+                Vector2 aspectRatio = templateCreatorViewModel.getTemplateAspectRatioObservable().getValue();
+
+                chooser.setSelectedFile(new File(
+                        String.format("%s/%dx%d-%.1f_%.1f.png", chooser.getCurrentDirectory().getPath(),
+                                dimensions.x, dimensions.y, aspectRatio.x, aspectRatio.y)
+                ));
+
+                chooser.setFileFilter(new FileNameExtensionFilter("png images", "png"));
+                chooser.showDialog(null, "Save as PNG");
                 File file = chooser.getSelectedFile();
 
+                saveDirectory = chooser.getCurrentDirectory();
+
                 if (file != null) {
+                    if (!file.getPath().endsWith(".png")) {
+                        file = new File(file.getPath() + ".png");
+                    }
                     templateCreatorViewController.saveTemplateToFile(file);
                 }
             }
