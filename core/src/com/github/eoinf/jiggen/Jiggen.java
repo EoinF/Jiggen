@@ -18,7 +18,6 @@ import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleGraphTemplate;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzlePieceTemplate;
 import com.github.eoinf.jiggen.graphics.PuzzleOverlayBatch;
 import com.github.eoinf.jiggen.screens.PuzzleSolverScreen;
-import com.github.eoinf.jiggen.screens.TemplateCreatorScreen;
 
 import java.util.Map;
 import java.util.function.Consumer;
@@ -49,9 +48,9 @@ public class Jiggen extends Game {
 		TextureAtlas uiTextureAtlas = new TextureAtlas("ui/ui.atlas");
 
 		puzzleSolverScreen = new PuzzleSolverScreen(this, batch, uiTextureAtlas, skin);
-		TemplateCreatorScreen templateCreatorScreen = new TemplateCreatorScreen(this, spriteBatch, uiTextureAtlas, skin);
+//		TemplateCreatorScreen templateCreatorScreen = new TemplateCreatorScreen(this, spriteBatch, uiTextureAtlas, skin);
 
-		setScreen(templateCreatorScreen);
+		setScreen(puzzleSolverScreen);
 	}
 
 	public void loadDefaultPuzzle() {

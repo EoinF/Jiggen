@@ -64,7 +64,7 @@ public class GwtAdapter {
 
     public static void setTemplate(GeneratedTemplate generatedTemplate) {
         String atlasLink = generatedTemplate.links.atlas;
-        String templateLink = generatedTemplate.links.image;
+        String[] imageLinks = generatedTemplate.links.images;
 
         DynamicPreloader preloader = (DynamicPreloader) gdxApp.getPreloader();
         Map<Integer, IntRectangle> verticesMap = generatedTemplate.vertices.toMap();
@@ -74,8 +74,10 @@ public class GwtAdapter {
         assets.add(
                 new Preloader.Asset(atlasLink, AssetFilter.AssetType.Text, Integer.MAX_VALUE, "text/plain"));
 
-        assets.add(new Preloader.Asset(templateLink, AssetFilter.AssetType.Image, Integer.MAX_VALUE,
-                        "image/" + generatedTemplate.extension));
+        for (int i = 0; i < imageLinks.length; i++) {
+            assets.add(new Preloader.Asset(imageLinks[i], AssetFilter.AssetType.Image, Integer.MAX_VALUE,
+                    "image/" + generatedTemplate.extension));
+        }
 
         GWT.log("Loading generated template assets");
 
@@ -89,11 +91,17 @@ public class GwtAdapter {
             public void update (Preloader.PreloaderState state) {
                 if (state.hasEnded()) {
                     FileHandle atlasFile = new GwtFileHandle(preloader, atlasLink, Files.FileType.Internal);
-                    FileHandle templateFile = new GwtFileHandle(preloader, templateLink, Files.FileType.Internal);
+                    Map<String, FileHandle> imageFileMap = new HashMap<>();
+                    for (int i = 0; i < imageLinks.length; i++) {
+                        String[] linkParts = String.valueOf(imageLinks[i]).split("/");
+                        GWT.log("Saving file as " + linkParts[linkParts.length-1]);
+                        imageFileMap.put(linkParts[linkParts.length - 1], new GwtFileHandle(preloader, imageLinks[i], Files.FileType.Internal));
+                    }
                     FileHandle fakeDirectory = new FileHandle() {
                         @Override
                         public FileHandle child(String name) {
-                            return templateFile;
+                            GWT.log("Fetching file by name: " + name);
+                            return imageFileMap.get(name);
                         }
                     };
 
@@ -145,6 +153,7 @@ class Background {
 class HateosLinks {
     String self;
     String image;
+    String[] images;
     String atlas;
 }
 

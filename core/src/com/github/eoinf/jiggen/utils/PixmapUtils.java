@@ -158,7 +158,8 @@ public abstract class PixmapUtils {
 
         List<FileHandle> templateFiles = new ArrayList<>();
         for (FileHandle f: files) {
-            if (!f.isDirectory() && f.name().endsWith(".jpg")) {
+            if (!f.isDirectory() &&
+                    (f.name().endsWith(".png") || f.name().endsWith(".jpg"))) {
                 templateFiles.add(f);
             }
         }
