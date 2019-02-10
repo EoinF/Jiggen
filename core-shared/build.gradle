@@ -4,6 +4,7 @@ apply plugin: "java"
 apply plugin: 'signing'
 apply plugin: 'maven'
 
+project.version = "1.1"
 sourceSets.main.java.srcDirs = files(project(':core').sourceSets.main.allJava.srcDirs)
 
 javadoc {
