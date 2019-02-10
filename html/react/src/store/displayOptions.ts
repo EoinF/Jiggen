@@ -23,7 +23,7 @@ const initialState: DisplayOptionsState = {
 };
 
 const {
-    setFullScreenFallback,
+    setFullscreenFallback,
     showModal,
     hideModal
 } = createActions({
@@ -40,10 +40,10 @@ const showTemplatesModal = () => {
 }
 
 const enableFullScreenFallback = () => {
-	return setFullScreenFallback(true);
+	return setFullscreenFallback(true);
 }
 const disableFullScreenFallback = () => {
-	return setFullScreenFallback(false);
+	return setFullscreenFallback(false);
 }
 
 const reducers = handleActions({

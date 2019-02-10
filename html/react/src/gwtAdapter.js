@@ -42,7 +42,7 @@ function resizeGameContainer(width, height) {
 
 onGwtLoadedPromise.then(() => {
 	window.gwtAdapter.setFullScreen = (isFullScreen) => {
-		setFullScreen(document.getElementById('embed-html'), isFullScreen);
+		setFullScreen(isFullScreen, document.getElementById('embed-html'));
 	};
 });
 

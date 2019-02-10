@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { KeyboardEventHandler } from 'react';
 import { connect } from 'react-redux';
 import { Observable, Subject, from, combineLatest, Subscription } from 'rxjs';
 
@@ -12,6 +12,7 @@ import gwtAdapter from '../../gwtAdapter';
 
 
 import {
+  setFullScreen,
   onFullScreenChange,
   isFullScreen,
   unsetOnFullScreenChange
@@ -43,6 +44,7 @@ class GameContainer extends React.Component<GameContainerProps, GameContainerSta
   gameContainerRef: React.RefObject<any>;
   updateContainerSize$: Subject<void>;
   updateContainerSubscription: Subscription;
+  onKeyDownEventListener: EventListener;
 
   constructor(props: GameContainerProps) {
     super(props);
@@ -59,6 +61,12 @@ class GameContainer extends React.Component<GameContainerProps, GameContainerSta
     
     window.onresize = () => {
       this.updateContainerSize$.next();
+    }
+    this.onKeyDownEventListener = document.onkeydown = (evt: Event) => {
+      const e = evt as KeyboardEvent
+      if (e.key === "Escape" || e.key === "Esc" || e.keyCode === 27) {
+        setFullScreen(false);
+      }
     }
   }
 
@@ -116,9 +124,18 @@ class GameContainer extends React.Component<GameContainerProps, GameContainerSta
     originalGameContainer!.appendChild(document.getElementById('embed-html')!);
 
     this.updateContainerSubscription.unsubscribe();
+    if (document.removeEventListener) {
+      document.removeEventListener('keydown', this.onKeyDownEventListener);
+    } else {
+      (document as any).detachEvent("onkeydown", this.onKeyDownEventListener);
+    }
   }
 
-  componentDidUpdate(prevProps: GameContainerProps) {
+  componentDidUpdate(prevProps: GameContainerProps, prevState: GameContainerState) {
+    if (prevProps.showFullScreenFallback != this.props.showFullScreenFallback) {
+      this.updateContainerSize$.next();
+    }
+
     let isUpdated = false;
     if (prevProps.generatedTemplate !== this.props.generatedTemplate && this.props.generatedTemplate != null) {
       this.setOrFetchTemplate(this.props.generatedTemplate);
