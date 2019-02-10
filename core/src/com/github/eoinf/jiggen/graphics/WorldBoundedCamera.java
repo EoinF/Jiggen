@@ -36,9 +36,9 @@ public class WorldBoundedCamera extends OrthographicCamera {
     private void adjustPositionToWorldBounds() {
         float x = x();
         float y = y();
-        float minX = ((this.zoom / maxZoom) * this.viewportWidth / 2f);
+        float minX = (this.zoom * this.viewportWidth / 2f);
         float maxX = worldWidth - minX;
-        float minY = ((this.zoom / maxZoom) * this.viewportHeight / 2f);
+        float minY = (this.zoom * this.viewportHeight / 2f);
         float maxY = worldHeight - minY;
 
         if (x > maxX) {

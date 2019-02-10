@@ -61,8 +61,18 @@ public class PuzzleViewController {
         Vector2 scales = puzzleViewModel.getScalesObservable().getValue();
         PuzzleGraphTemplate puzzleGraphTemplate = puzzleViewModel.getPuzzleTemplateObservable().getValue();
         if (scales != null && puzzleGraphTemplate != null) {
+            // Calculate the minimum required world width for the puzzle to be maximally visible
             int worldWidth = (int) Math.max(puzzleGraphTemplate.getWidth() * scales.x + WORLD_PADDING, viewportWidth);
             int worldHeight = (int) Math.max(puzzleGraphTemplate.getHeight() * scales.y + WORLD_PADDING, viewportHeight);
+
+            // Allocate extra space so the world bounds match the viewport when fully zoomed out
+            double heightRatio = worldHeight / viewportHeight;
+            double widthRatio = worldWidth / viewportWidth;
+            if (heightRatio > widthRatio) {
+                worldWidth = (int)(viewportWidth * heightRatio);
+            } else {
+                worldHeight = (int)(viewportHeight * widthRatio);
+            }
 
             // Ensure all the puzzle pieces will remain within the world bounds
             for (ConnectedPuzzlePieces connectedPieces: puzzleViewModel.getConnectedPiecesListObservable().getValue()) {
