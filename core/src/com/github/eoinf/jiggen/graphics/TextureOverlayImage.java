@@ -31,7 +31,7 @@ public class TextureOverlayImage extends Widget {
      * @param region May be null.
      */
     public TextureOverlayImage(TextureRegion region) {
-        this(new TextureRegionDrawable(region), Scaling.stretch, Align.center);
+        this(new TextureRegionDrawable(region), Scaling.none, Align.center);
     }
 
     /**
@@ -47,7 +47,7 @@ public class TextureOverlayImage extends Widget {
      * @param drawable May be null.
      */
     public TextureOverlayImage(TextureRegionDrawable drawable) {
-        this(drawable, Scaling.stretch, Align.center);
+        this(drawable, Scaling.none, Align.center);
     }
 
     /**
@@ -137,7 +137,7 @@ public class TextureOverlayImage extends Widget {
     public void setDrawable(TextureRegionDrawable drawable) {
         drawable.getRegion()
                 .getTexture()
-                .setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+                .setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
         if (this.drawable == drawable) return;
         if (drawable != null) {
