@@ -21,7 +21,7 @@ import static com.github.eoinf.jiggen.utils.PixmapUtils.getMinimumScaleToFixAspe
  * This is enforced with the 'protected' keyword
  */
 public class PuzzleViewController {
-    private static float WORLD_PADDING = 50;
+    private static float WORLD_BASE_PADDING = 50;
     private static float ZOOM_RATE = 0.1f;
 
     private PuzzleViewModel puzzleViewModel;
@@ -61,9 +61,13 @@ public class PuzzleViewController {
         Vector2 scales = puzzleViewModel.getScalesObservable().getValue();
         PuzzleGraphTemplate puzzleGraphTemplate = puzzleViewModel.getPuzzleTemplateObservable().getValue();
         if (scales != null && puzzleGraphTemplate != null) {
+            float padding = WORLD_BASE_PADDING +
+                    // 10% of the width + height so it scales well
+                    (puzzleGraphTemplate.getWidth() * scales.x + puzzleGraphTemplate.getHeight() * scales.y) / 10f;
+
             // Calculate the minimum required world width for the puzzle to be maximally visible
-            int worldWidth = (int) Math.max(puzzleGraphTemplate.getWidth() * scales.x + WORLD_PADDING, viewportWidth);
-            int worldHeight = (int) Math.max(puzzleGraphTemplate.getHeight() * scales.y + WORLD_PADDING, viewportHeight);
+            int worldWidth = (int) Math.max(puzzleGraphTemplate.getWidth() * scales.x + padding, viewportWidth);
+            int worldHeight = (int) Math.max(puzzleGraphTemplate.getHeight() * scales.y + padding, viewportHeight);
 
             // Allocate extra space so the world bounds match the viewport when fully zoomed out
             double heightRatio = worldHeight / viewportHeight;
