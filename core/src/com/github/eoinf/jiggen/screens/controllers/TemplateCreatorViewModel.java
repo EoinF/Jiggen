@@ -4,8 +4,8 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.github.eoinf.jiggen.TemplateCreator.WaveDistortionData;
-import com.github.eoinf.jiggen.utils.SimpleObservable;
-import com.github.eoinf.jiggen.utils.SimpleSubject;
+import com.github.eoinf.jiggen.webapp.utils.SimpleObservable;
+import com.github.eoinf.jiggen.webapp.utils.SimpleSubject;
 
 import java.io.File;
 

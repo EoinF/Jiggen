@@ -6,9 +6,9 @@ import com.badlogic.gdx.backends.gwt.preloader.AssetFilter;
 import com.badlogic.gdx.backends.gwt.preloader.Preloader;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
-import com.github.eoinf.jiggen.Jiggen;
-import com.github.eoinf.jiggen.PuzzleExtractor.GraphEdge;
-import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.IntRectangle;
+import com.github.eoinf.jiggen.webapp.Jiggen;
+import com.github.eoinf.jiggen.webapp.screens.models.GraphEdge;
+import com.github.eoinf.jiggen.webapp.screens.models.IntRectangle;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import jsinterop.annotations.JsMethod;
@@ -109,10 +109,6 @@ public class GwtAdapter {
                 }
             }
         });
-    }
-
-    public static void startDemo() {
-        gdxApp.postRunnable(() -> jiggen.loadDefaultPuzzle());
     }
 
     static void setJiggen(Jiggen _jiggen) {

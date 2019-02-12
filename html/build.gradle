@@ -53,7 +53,7 @@ task compileReactDev(type: Exec) {
 }
 
 task compileReactDevLocal(type: Exec) {
-    environment 'REACT_APP_API_URL', 'http://localhost:4567'
+    environment 'REACT_APP_API_URL', 'http://d06e0a02.ngrok.io'
     environment 'REACT_APP_SHOW_SUPERDEV', 'false'
     workingDir = 'react'
     commandLine 'cmd', '/c', 'npm run build'

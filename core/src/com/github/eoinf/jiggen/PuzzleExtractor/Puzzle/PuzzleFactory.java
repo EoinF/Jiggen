@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.GridPoint2;
 import com.github.eoinf.jiggen.PuzzleExtractor.Decoder.DecodedPiece;
 import com.github.eoinf.jiggen.PuzzleExtractor.Decoder.DecodedTemplate;
+import com.github.eoinf.jiggen.webapp.screens.models.PuzzleGraphTemplate;
+import com.github.eoinf.jiggen.webapp.screens.models.PuzzlePieceTemplate;
 
 import java.util.ArrayList;
 import java.util.List;

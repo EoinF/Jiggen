@@ -8,11 +8,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.GridPoint2;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.IntRectangle;
+import com.github.eoinf.jiggen.webapp.screens.models.IntRectangle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -196,32 +195,6 @@ public abstract class PixmapUtils {
         Drawable background = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
         table.setBackground(background);
         pixmap.dispose();
-    }
-
-    public static Vector2 getMinimumScaleToFixAspectRatio(int a, int b, int c, int d) {
-        //
-        // The variables s1 and s2 are the scales required to transform the aspect ratio
-        // The variables a and b are the width and height of the current texture
-        // The variables c and d are the width and height of the target texture
-        // s1 * a(x) + s2 * b(y) = c(x) + d(y)
-        //
-        // ad >= bc  ->  s1 = 1
-        // bc >= ad  ->  s2 = 1
-        //
-        //
-        float s1; float s2;
-        float ad = a * d;
-        float bc = b * c;
-
-        if (ad >= bc) {
-            s1 = 1;
-            s2 = ad / bc;
-        } else {
-            s2 = 1;
-            s1 = bc / ad;
-        }
-
-        return new Vector2(s1, s2);
     }
 
     public static boolean overlaps(IntRectangle rect1, IntRectangle rect2) {

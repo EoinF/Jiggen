@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
 import com.badlogic.gdx.backends.gwt.preloader.Preloader;
-import com.github.eoinf.jiggen.Jiggen;
+import com.github.eoinf.jiggen.webapp.Jiggen;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 
