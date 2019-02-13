@@ -55,7 +55,7 @@ class GameContainer extends React.Component<GameContainerProps, GameContainerSta
     this.updateContainerSize$ = new Subject();
 
     const onGwtLoaded$ = from(gwtAdapter.onGwtLoadedPromise);
-    this.updateContainerSubscription = combineLatest(this.updateContainerSize$, onGwtLoaded$).subscribe(this.updateContainerSize);
+    this.updateContainerSubscription = combineLatest(this.updateContainerSize$).subscribe(this.updateContainerSize);
     
     onFullScreenChange(this.onFullScreenChange);
     
@@ -133,7 +133,7 @@ class GameContainer extends React.Component<GameContainerProps, GameContainerSta
 
   componentDidUpdate(prevProps: GameContainerProps, prevState: GameContainerState) {
     if (prevProps.showFullScreenFallback != this.props.showFullScreenFallback) {
-      this.updateContainerSize$.next();
+      this.onFullScreenChange();
     }
 
     let isUpdated = false;

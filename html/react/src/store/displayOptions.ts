@@ -40,6 +40,7 @@ const showTemplatesModal = () => {
 }
 
 const enableFullScreenFallback = () => {
+    window.history.pushState('true', 'fullscreen');
 	return setFullscreenFallback(true);
 }
 const disableFullScreenFallback = () => {
