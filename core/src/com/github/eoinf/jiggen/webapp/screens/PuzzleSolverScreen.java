@@ -56,7 +56,6 @@ public class PuzzleSolverScreen implements Screen {
             public void accept(PuzzleGraphTemplate puzzleGraphTemplate) {
                 Texture backgroundImage = puzzleViewModel.getBackgroundImageObservable().getValue();
                 puzzleViewController.updatePuzzleGraph(puzzleGraphTemplate, backgroundImage);
-                puzzleViewController.updateWorldBounds(camera.viewportWidth, camera.viewportHeight);
             }
         });
 
@@ -72,21 +71,6 @@ public class PuzzleSolverScreen implements Screen {
             @Override
             public void accept(Vector2 scales) {
                 puzzleViewController.updateWorldBounds(camera.viewportWidth, camera.viewportHeight);
-            }
-        });
-
-        puzzleViewModel.getWorldBoundsObservable().subscribe(new Consumer<GridPoint2>() {
-            @Override
-            public void accept(GridPoint2 worldBounds) {
-                float maxZoomX = worldBounds.x / camera.viewportWidth;
-                float maxZoomY = worldBounds.y / camera.viewportHeight;
-
-                float maxZoom = Math.max(maxZoomX, maxZoomY);
-                camera.setCameraBounds(worldBounds.x, worldBounds.y, maxZoom);
-
-                batch.getShader().begin();
-                batch.getShader().setUniformf("u_camera_zoom", camera.zoom);
-                batch.getShader().end();
             }
         });
 

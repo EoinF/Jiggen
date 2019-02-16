@@ -123,6 +123,23 @@ public class PuzzleView implements ScreenView {
                 batch.getShader().end();
             }
         });
+
+        puzzleViewModel.getWorldBoundsObservable().subscribe(new Consumer<GridPoint2>() {
+            @Override
+            public void accept(GridPoint2 worldBounds) {
+                float maxZoomX = worldBounds.x / camera.viewportWidth;
+                float maxZoomY = worldBounds.y / camera.viewportHeight;
+
+                float maxZoom = Math.max(maxZoomX, maxZoomY);
+                camera.setCameraBounds(worldBounds.x, worldBounds.y, maxZoom);
+                viewport.setUnitsPerPixel(maxZoom);
+                viewport.apply(true);
+
+                batch.getShader().begin();
+                batch.getShader().setUniformf("u_camera_zoom", camera.zoom);
+                batch.getShader().end();
+            }
+        });
     }
 
     private void addOrUpdateConnectedPieces(ConnectedPuzzlePieces connectedPieces) {
