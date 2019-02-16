@@ -39,6 +39,7 @@ public class PuzzleViewController {
             Vector2 scales = getMinimumScaleToFixAspectRatio(puzzleGraphTemplate.getWidth(), puzzleGraphTemplate.getHeight(),
                     backgroundImage.getWidth(), backgroundImage.getHeight());
 
+            puzzleViewModel.setConnectedPiecesList(new ArrayList<>());
             puzzleViewModel.setScales(scales);
 
             List<ConnectedPuzzlePieces> puzzlePieces = new ArrayList<>();
