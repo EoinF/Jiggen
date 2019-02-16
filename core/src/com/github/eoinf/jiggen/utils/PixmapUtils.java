@@ -16,6 +16,8 @@ import com.github.eoinf.jiggen.webapp.screens.models.IntRectangle;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.eoinf.jiggen.webapp.utils.PixmapUtils.stretchPixmap;
+
 public abstract class PixmapUtils {
     public static final float BRIGHTNESS_THRESHOLD = 0.85f;
 
@@ -56,22 +58,6 @@ public abstract class PixmapUtils {
         return new TextureRegion(new Texture(dstMap), dstBounds.x, dstBounds.y);
     }
 
-    public static Pixmap stretchPixmap(Pixmap srcMap, GridPoint2 dstBounds) {
-        Pixmap dstMap = new Pixmap(dstBounds.x, dstBounds.y, Pixmap.Format.RGBA8888);
-        stretchPixmap(srcMap, new GridPoint2(0, 0), new GridPoint2(0, 0), dstMap, dstBounds);
-        return dstMap;
-    }
-
-    public static Pixmap stretchPixmap(Pixmap srcMap, GridPoint2 srcOffset, GridPoint2 srcBounds,
-                                       Pixmap dstMap, GridPoint2 dstBounds) {
-        dstMap.drawPixmap(srcMap,
-                srcOffset.x, srcOffset.y,
-                srcBounds.x, srcBounds.y,
-                0, 0,
-                dstBounds.x, dstBounds.y
-        );
-        return dstMap;
-    }
 
     public static TextureRegion combineTextures(TextureRegion region, Pixmap srcMap, int offsetSrcX, int offsetSrcY) {
         TextureData dstData = region.getTexture().getTextureData();

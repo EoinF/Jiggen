@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.eoinf.jiggen.webapp.graphics.PuzzleOverlayBatch;
 import com.github.eoinf.jiggen.webapp.graphics.WorldBoundedCamera;
 import com.github.eoinf.jiggen.webapp.input.EnhancedGestureDetector;
@@ -33,7 +32,7 @@ public class PuzzleView implements ScreenView {
     private final EnhancedGestureDetector gestureDetector;
     private final PuzzleOverlayBatch batch;
     public Stage stage;
-    private Viewport viewport;
+    private ScreenViewport viewport;
     private Group root;
 
     private Map<ConnectedPuzzlePieces, ConnectedPiecesGroup> connectedPiecesGroupMap;

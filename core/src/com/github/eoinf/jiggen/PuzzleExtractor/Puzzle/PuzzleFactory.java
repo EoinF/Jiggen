@@ -19,8 +19,8 @@ import static com.github.eoinf.jiggen.utils.PixmapUtils.combinePixmaps;
 import static com.github.eoinf.jiggen.utils.PixmapUtils.combineTextures;
 import static com.github.eoinf.jiggen.utils.PixmapUtils.isPixelDark;
 import static com.github.eoinf.jiggen.utils.PixmapUtils.overlaps;
-import static com.github.eoinf.jiggen.utils.PixmapUtils.stretchPixmap;
 import static com.github.eoinf.jiggen.utils.PixmapUtils.stretchTexture;
+import static com.github.eoinf.jiggen.webapp.utils.PixmapUtils.stretchPixmap;
 
 public abstract class PuzzleFactory {
 

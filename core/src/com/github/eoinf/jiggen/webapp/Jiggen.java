@@ -4,12 +4,14 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.BufferUtils;
 import com.github.eoinf.jiggen.webapp.graphics.PuzzleOverlayBatch;
 import com.github.eoinf.jiggen.webapp.screens.PuzzleSolverScreen;
 import com.github.eoinf.jiggen.webapp.screens.models.GraphEdge;
@@ -17,8 +19,11 @@ import com.github.eoinf.jiggen.webapp.screens.models.IntRectangle;
 import com.github.eoinf.jiggen.webapp.screens.models.PuzzleGraphTemplate;
 import com.github.eoinf.jiggen.webapp.screens.models.PuzzlePieceTemplate;
 
+import java.nio.IntBuffer;
 import java.util.Map;
 import java.util.function.Consumer;
+
+import static com.github.eoinf.jiggen.webapp.utils.PixmapUtils.stretchPixmap;
 
 public class Jiggen extends Game {
 
@@ -28,6 +33,7 @@ public class Jiggen extends Game {
     private TextureAtlas atlas = null;
 
     public Consumer<Boolean> onSetFullScreen;
+    private int maxTextureSize;
 
     public Jiggen(Consumer<Boolean> onSetFullScreen) {
     	this.onSetFullScreen = onSetFullScreen;
@@ -35,6 +41,10 @@ public class Jiggen extends Game {
 
 	@Override
 	public void create () {
+		IntBuffer intBuffer = BufferUtils.newIntBuffer(16);
+		Gdx.gl.glGetIntegerv(Gdx.gl.GL_MAX_TEXTURE_SIZE, intBuffer);
+		maxTextureSize = intBuffer.get();
+
 		batch = new PuzzleOverlayBatch();
 		SpriteBatch spriteBatch = new SpriteBatch();
 		FileHandle f = Gdx.files.internal("skin/cloud-form-ui.json");
@@ -49,7 +59,25 @@ public class Jiggen extends Game {
 	}
 
 	public void setBackground(FileHandle backgroundFile) {
-		puzzleSolverScreen.setBackground(new Texture(backgroundFile));
+    	Texture imageTexture = scaleTextureToSupportedSize(new Pixmap(backgroundFile));
+		puzzleSolverScreen.setBackground(imageTexture);
+	}
+
+	private Texture scaleTextureToSupportedSize(Pixmap imagePixmap) {
+		int width = imagePixmap.getWidth();
+		int height = imagePixmap.getHeight();
+
+		Pixmap pixmap = imagePixmap;
+
+		if (width > maxTextureSize || height > maxTextureSize) {
+			float scale = Math.min(maxTextureSize / (float)width, maxTextureSize / (float)height);
+			pixmap = stretchPixmap(
+					imagePixmap,
+					new GridPoint2((int)(width * scale), (int)(height * scale))
+			);
+			imagePixmap.dispose();
+		}
+		return new Texture(pixmap);
 	}
 
 	public void setTemplateFromAtlas(FileHandle atlasFile, FileHandle atlasImageFolder,

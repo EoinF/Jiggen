@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static com.github.eoinf.jiggen.webapp.utils.PixmapUtils.getMinimumScaleToFixAspectRatio;
+
 /**
  * Only the controller can submit events to the view model
  * This is enforced with the 'protected' keyword
@@ -166,32 +168,5 @@ public class PuzzleViewController {
 
         // Notify observers
         puzzleViewModel.setConnectedPiecesList(connectedPuzzlePiecesList);
-    }
-
-
-    private static Vector2 getMinimumScaleToFixAspectRatio(int a, int b, int c, int d) {
-        //
-        // The variables s1 and s2 are the scales required to transform the aspect ratio
-        // The variables a and b are the width and height of the current texture
-        // The variables c and d are the width and height of the target texture
-        // s1 * a(x) + s2 * b(y) = c(x) + d(y)
-        //
-        // ad >= bc  ->  s1 = 1
-        // bc >= ad  ->  s2 = 1
-        //
-        //
-        float s1; float s2;
-        float ad = a * d;
-        float bc = b * c;
-
-        if (ad >= bc) {
-            s1 = 1;
-            s2 = ad / bc;
-        } else {
-            s2 = 1;
-            s1 = bc / ad;
-        }
-
-        return new Vector2(s1, s2);
     }
 }
