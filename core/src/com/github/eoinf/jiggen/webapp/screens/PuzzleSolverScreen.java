@@ -8,7 +8,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.GridPoint2;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.github.eoinf.jiggen.webapp.Jiggen;
 import com.github.eoinf.jiggen.webapp.graphics.PuzzleOverlayBatch;
@@ -64,13 +63,6 @@ public class PuzzleSolverScreen implements Screen {
             public void accept(Texture backgroundImage) {
                 PuzzleGraphTemplate puzzleGraphTemplate = puzzleViewModel.getPuzzleTemplateObservable().getValue();
                 puzzleViewController.updatePuzzleGraph(puzzleGraphTemplate, backgroundImage);
-            }
-        });
-
-        puzzleViewModel.getScalesObservable().subscribe(new Consumer<Vector2>() {
-            @Override
-            public void accept(Vector2 scales) {
-                puzzleViewController.updateWorldBounds(camera.viewportWidth, camera.viewportHeight);
             }
         });
 

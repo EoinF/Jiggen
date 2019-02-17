@@ -108,6 +108,9 @@ public class PuzzleView implements ScreenView {
         puzzleViewModel.getScalesObservable().subscribe(new Consumer<Vector2>() {
             @Override
             public void accept(Vector2 scales) {
+                batch.setScales(scales);
+                puzzleViewController.updateWorldBounds(viewport.getScreenWidth(), viewport.getScreenHeight());
+
                 for (ConnectedPuzzlePieces connectedPieces : puzzleViewModel.getConnectedPiecesListObservable().getValue()) {
                     addOrUpdateConnectedPieces(connectedPieces, scales);
                 }
@@ -118,26 +121,21 @@ public class PuzzleView implements ScreenView {
             @Override
             public void accept(Float zoom) {
                 camera.setZoom(zoom);
-                batch.getShader().begin();
-                batch.getShader().setUniformf("u_camera_zoom", camera.zoom);
-                batch.getShader().end();
+                batch.setCameraZoom(camera.zoom);
             }
         });
 
         puzzleViewModel.getWorldBoundsObservable().subscribe(new Consumer<GridPoint2>() {
             @Override
             public void accept(GridPoint2 worldBounds) {
-                float maxZoomX = worldBounds.x / camera.viewportWidth;
-                float maxZoomY = worldBounds.y / camera.viewportHeight;
+                float maxZoomX = worldBounds.x / viewport.getScreenWidth();
+                float maxZoomY = worldBounds.y / viewport.getScreenHeight();
 
                 float maxZoom = Math.max(maxZoomX, maxZoomY);
                 camera.setCameraBounds(worldBounds.x, worldBounds.y, maxZoom);
-                viewport.setUnitsPerPixel(maxZoom);
                 viewport.apply(true);
 
-                batch.getShader().begin();
-                batch.getShader().setUniformf("u_camera_zoom", camera.zoom);
-                batch.getShader().end();
+                batch.setCameraZoom(camera.zoom);
             }
         });
     }

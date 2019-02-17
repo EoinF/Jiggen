@@ -71,6 +71,8 @@ public class PuzzleOverlayBatch implements Batch {
      **/
     public int maxSpritesInBatch = 0;
 
+    private Vector2 scales;
+
     /**
      * Constructs a new SpriteBatch with a size of 1000, one buffer, and the default shader.
      *
@@ -101,6 +103,8 @@ public class PuzzleOverlayBatch implements Batch {
      * @param defaultShader The default shader to use. This is not owned by the SpriteBatch and must be disposed separately.
      */
     public PuzzleOverlayBatch(int size, ShaderProgram defaultShader) {
+        this.scales = new Vector2(1, 1);
+
         // 32767 is max vertex index, so 32767 / 4 vertices per sprite = 8191 sprites max.
         if (size > 8191) throw new IllegalArgumentException("Can't have more than 8191 sprites per batch: " + size);
 
@@ -1197,14 +1201,21 @@ public class PuzzleOverlayBatch implements Batch {
         flush();
 
         this.end();
-        shader.begin();
-        shader.setUniformf("u_texture_texel_size", new Vector2(1f / texture.getWidth(), 1f / texture.getHeight()));
-        shader.end();
+        setUniformTexelSize(texture, scales);
         this.begin();
         lastTexture = texture;
 
         invTexWidth = 1.0f / texture.getWidth();
         invTexHeight = 1.0f / texture.getHeight();
+    }
+
+    private void setUniformTexelSize(Texture texture, Vector2 scales) {
+        float textureWidth = texture.getWidth() * scales.x;
+        float textureHeight = texture.getHeight() * scales.y;
+
+        shader.begin();
+        shader.setUniformf("u_texture_texel_size", new Vector2(1f / textureWidth, 1f / textureHeight));
+        shader.end();
     }
 
     @Override
@@ -1241,5 +1252,18 @@ public class PuzzleOverlayBatch implements Batch {
 
     public boolean isDrawing() {
         return drawing;
+    }
+
+    public void setScales(Vector2 scales) {
+        this.scales = scales;
+        if (lastTexture != null) {
+            setUniformTexelSize(lastTexture, scales);
+        }
+    }
+
+    public void setCameraZoom(float zoom) {
+        getShader().begin();
+        getShader().setUniformf("u_camera_zoom", zoom);
+        getShader().end();
     }
 }
