@@ -136,3 +136,8 @@ out/
 
 ## React generated css files
 html/react/src/*/*.css
+
+## Junction links for desktop assets
+desktop/assets/shaders
+desktop/assets/skin
+desktop/assets/ui

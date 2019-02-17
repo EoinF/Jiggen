@@ -6,7 +6,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.GridPoint2;
@@ -46,7 +45,7 @@ public class Jiggen extends Game {
 		maxTextureSize = intBuffer.get();
 
 		batch = new PuzzleOverlayBatch();
-		SpriteBatch spriteBatch = new SpriteBatch();
+//		SpriteBatch spriteBatch = new SpriteBatch();
 		FileHandle f = Gdx.files.internal("skin/cloud-form-ui.json");
 		skin = new Skin(f);
 
