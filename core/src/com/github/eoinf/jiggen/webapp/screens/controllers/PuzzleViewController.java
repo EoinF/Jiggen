@@ -22,7 +22,6 @@ import static com.github.eoinf.jiggen.webapp.utils.PixmapUtils.getMinimumScaleTo
  */
 public class PuzzleViewController {
     private static float WORLD_BASE_PADDING = 50;
-    private static float ZOOM_RATE = 0.1f;
 
     private PuzzleViewModel puzzleViewModel;
     private HeldPieceController heldPieceController;
@@ -100,7 +99,7 @@ public class PuzzleViewController {
     }
 
     public void zoomBy(float zoomDelta) {
-        puzzleViewModel.setCameraZoom(camera.zoom + zoomDelta * ZOOM_RATE);
+        puzzleViewModel.setCameraZoom(camera.zoom + (zoomDelta * camera.getZoomRate()));
     }
 
     public void shuffle() {

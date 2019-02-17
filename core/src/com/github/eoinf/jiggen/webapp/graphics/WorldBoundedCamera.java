@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 public class WorldBoundedCamera extends OrthographicCamera {
     private static float minZoom = 0.3f;
 
+    private static float ZOOM_RATE = 0.05f;
     private static float ZOOM_MODIFIER = 0.008f;
     private static float ZOOM_OVERFLOW = 0.2f;
     private static int ZOOM_RESET_COOLDOWN = 20;
@@ -83,5 +84,9 @@ public class WorldBoundedCamera extends OrthographicCamera {
         newZoom = Math.min(maxZoom + ZOOM_OVERFLOW, newZoom);
         this.zoom = Math.max(minZoom, newZoom);
         zoomResetCooldown = ZOOM_RESET_COOLDOWN;
+    }
+
+    public float getZoomRate() {
+        return ZOOM_RATE * this.maxZoom;
     }
 }
