@@ -21,7 +21,7 @@ export class Background extends Resource {
 		super(link, {
 			self: link,
 			image: link
-		})
+		}, "Custom image");
 		if (imageOrLink instanceof HTMLImageElement) {
 			this.width = imageOrLink.width;
 			this.height = imageOrLink.height;

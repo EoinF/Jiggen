@@ -12,10 +12,12 @@ export interface StringMap<T> {
 export class Resource {
 	id: string;
     links: any;
+    name: string;
     
-    constructor(id: string, links: any) {
+    constructor(id: string, links: any, name: string) {
         this.id = id;
         this.links = links;
+        this.name = name;
     }
 }
 

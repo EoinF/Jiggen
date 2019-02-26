@@ -22,7 +22,7 @@ class ImageDisplayReel extends Component<ImageDisplayReelProps> {
 					resourceList.map(resource => (
 						<li key={resource.id}>
 							<PlainLink onClick={() => onClickLink(resource.id)} to="/custom">
-								<img src={resource.links.image} alt=""/>
+								<img src={resource.links['image-compressed'] || resource.links.image} alt={resource.name}/>
 							</PlainLink>
 						</li>
 					))
