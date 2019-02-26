@@ -31,8 +31,10 @@ task('dist', type: Jar, dependsOn: 'classes') {
     from files(sourceSets.main.output.classesDir)
     from files(sourceSets.main.output.resourcesDir)
 
-    // Skip the creation of the default jar artifact
-    jar.enabled = false
+    doLast {
+        // Skip the creation of the default jar artifact
+        jar.enabled = false
+    }
 }
 
 signing {
@@ -53,40 +55,42 @@ task('archiveAll') {
 }
 
 task('publishStaging', type: Upload, dependsOn: 'archiveAll') {
-    repositories {
-        configuration = project.configurations.archives
-        mavenDeployer {
-            //def ascPom = addFilter('asc') {artifact, file -> artifact.ext == "asc" }
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+    doFirst {
+        this.repositories = {
+            configuration = project.configurations.archives
+            mavenDeployer {
+                //def ascPom = addFilter('asc') {artifact, file -> artifact.ext == "asc" }
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: sonatypeUsername, password: sonatypePassword)
-            }
-
-            pom.project {
-                name 'Jiggen'
-                packaging 'jar'
-                description 'Core code for jiggen'
-                url 'https://github.com/EoinF/jiggen'
-
-                scm {
-                    url 'scm:git@github.com:EoinF/jiggen.git'
-                    connection 'scm:git@github.com:EoinF/jiggen.git'
-                    developerConnection 'scm:git@github.com:EoinF/jiggen.git'
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                    authentication(userName: sonatypeUsername, password: sonatypePassword)
                 }
 
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                        distribution 'repo'
+                pom.project {
+                    name 'Jiggen'
+                    packaging 'jar'
+                    description 'Core code for jiggen'
+                    url 'https://github.com/EoinF/jiggen'
+
+                    scm {
+                        url 'scm:git@github.com:EoinF/jiggen.git'
+                        connection 'scm:git@github.com:EoinF/jiggen.git'
+                        developerConnection 'scm:git@github.com:EoinF/jiggen.git'
                     }
-                }
 
-                developers {
-                    developer {
-                        id 'outterest'
-                        name 'Eoin Flanagan'
+                    licenses {
+                        license {
+                            name 'The Apache Software License, Version 2.0'
+                            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                            distribution 'repo'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id 'outterest'
+                            name 'Eoin Flanagan'
+                        }
                     }
                 }
             }
