@@ -109,6 +109,27 @@ function setOrUpdateResource(state: BaseState<Resource>, {resource}: {resource: 
 	};
 }
 
+function removeResource(state: BaseState<Resource>, {resource}: {resource: Resource}): BaseState<Resource> {
+	let {
+		resourceList,
+		resourceMap,
+		linkMap
+	} = state;
+
+	const resourceMapUpdated = {...resourceMap};
+	const linkMapUpdated = {...linkMap};
+
+	delete resourceMapUpdated[resource.id];
+	delete linkMapUpdated[resource.links.self];
+
+	return {
+		...state,
+		resourceList: resourceList.filter(existingResource => existingResource.id !== resource.id),
+		resourceMap: resourceMapUpdated,
+		linkMap: linkMapUpdated
+	};
+}
+
 function selectResource(state: BaseState<Resource>, {selectedId}: {selectedId: string}): BaseState<Resource> {
 	return {
 		...state,
@@ -148,6 +169,7 @@ export default {
 
 	setResources,
 	addResources,
+	removeResource,
 	selectResource,
 	setOrUpdateResource,
 	setIsFetching,

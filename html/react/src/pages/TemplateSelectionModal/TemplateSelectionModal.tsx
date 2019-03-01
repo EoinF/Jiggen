@@ -9,7 +9,7 @@ import styles from './TemplateSelectionModal.module.scss';
 import ModalWrapper from '../ModalManager/ModalWrapper';
 import TemplateWidget from './TemplateWidget';
 import { Template } from '../../store/templates';
-import { StateRoot } from '../../models';
+import { StateRoot, Resource } from '../../models';
 
 interface StateProps {
 	templates: Template[];
@@ -23,6 +23,10 @@ interface DispatchProps {
 type TemplateSelectionProps = StateProps & DispatchProps;
 
 class TemplateSelectionModal extends Component<TemplateSelectionProps> {
+	onError = (resource: Template) => {
+		
+	};
+	
 	componentDidMount() {
 		const {
 			fetchTemplates,
@@ -43,7 +47,8 @@ class TemplateSelectionModal extends Component<TemplateSelectionProps> {
 					</h1>
 					<ImageDisplayReel 
 						resourceList={this.props.templates}
-						onClickLink={this.props.selectTemplate}	
+						onClickLink={this.props.selectTemplate}
+						onError={this.onError}
 					/>
 				</div>
 			</ModalWrapper>

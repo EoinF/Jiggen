@@ -30,34 +30,20 @@ class BackgroundSelectionForm extends Component<BackgroundSelectionFormProps, Ba
 
 	componentDidUpdate() {
 		if (!this.state.isSubmitted && this.state.validBackgroundImage != null) {
-			this.formRef.current!.dispatchEvent(new Event("submit"));
-		}
-	}
-
-	onSubmit = (e: React.SyntheticEvent) => {
-		e.preventDefault();
-		if (this.state.validBackgroundImage != null) {
-			let suggestedInputs;
-			const suggestedInputsRaw = localStorage.getItem('suggestedInputs');
-			if (suggestedInputsRaw == null) {
-				suggestedInputs = [];
-			} else {
-				suggestedInputs = JSON.parse(suggestedInputsRaw);
-			}
-
-			if (!suggestedInputs.includes(this.state.validBackgroundImage.links.image)) {
-				suggestedInputs.push(this.state.validBackgroundImage.links.image);
-				localStorage.setItem('suggestedInputs', JSON.stringify(suggestedInputs));
-			}
-			
 			this.props.onSelectBackground(this.state.validBackgroundImage);
 			this.setState({isSubmitted: true});
 		}
 	}
 
-	onValidImage = (image: HTMLImageElement) => {
+	onValidUploadImage = (image: HTMLImageElement) => {
 		this.setState({
-			validBackgroundImage: new Background(image)
+			validBackgroundImage: new Background(image, false, true)
+		})
+	}
+	
+	onValidCustomImage = (image: HTMLImageElement) => {
+		this.setState({
+			validBackgroundImage: new Background(image, true)
 		})
 	}
 
@@ -67,24 +53,21 @@ class BackgroundSelectionForm extends Component<BackgroundSelectionFormProps, Ba
 		} = this.state;
 
 		if (isSubmitted) {
-			return (<Redirect to="/custom" />)
+			return (<Redirect to="/custom" />);
 		} else {
 			return (
-				<form
-					onSubmit={this.onSubmit}
-					ref={this.formRef}
-				>
+				<div className={styles.mainContainer}>
 					<div className={styles.linkInputContainer}>
-						<ImageLinkInput onValidImage={this.onValidImage} />
+						<ImageLinkInput onValidImage={this.onValidCustomImage} />
 					</div>
-					<ImageFileInput onValidImage={this.onValidImage}>
+					<ImageFileInput onValidImage={this.onValidUploadImage}>
 						<img
 							className={styles.uploadIcon}
-							 src={upArrow}
-							 alt="Upload a file..."
-						 />
+								src={upArrow}
+								alt="Upload a file..."
+							/>
 					</ImageFileInput>
-				</form>
+				</div>
 			);
 		}
 	}

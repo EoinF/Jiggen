@@ -80,7 +80,6 @@ class ImageLinkInput extends Component<ImageLinkInputProps, ImageLinkInputState>
             value={inputText}
             placeholder="Paste a link here"
             onChange={this.onChangeInputText}
-            name="background"
             type="text"
         />
     }

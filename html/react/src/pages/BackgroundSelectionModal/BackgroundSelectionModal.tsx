@@ -20,8 +20,9 @@ interface StateProps {
 interface DispatchProps {
 	selectBackgroundById(id: string): void;
 	addBackground(background: Background): void;
-	addBackgrounds(background: Background[]): void;
+	addBackgrounds(backgrounds: Background[]): void;
 	fetchBackgrounds(): void;
+	removeBackground(background: Background): void;
 }
 
 type BackgroundSelectionModalProps = StateProps & DispatchProps;
@@ -32,10 +33,6 @@ class BackgroundSelectionModal extends Component<BackgroundSelectionModalProps> 
 	}
 
 	componentDidMount() {
-		const suggestedInputs: string[] = JSON.parse(localStorage.getItem('suggestedInputs') || '[]')
-		this.props.addBackgrounds(suggestedInputs
-			.map(suggestedInput => new Background(suggestedInput))
-		);
 		this.props.fetchBackgrounds();
 	}
 
@@ -55,6 +52,10 @@ class BackgroundSelectionModal extends Component<BackgroundSelectionModalProps> 
 		this.props.selectBackgroundById(background.id);
 	}
 
+	onError = (background: Background) => {
+		this.props.removeBackground(background);
+	}
+
 	MainContent = () => {
 		const {
 			backgrounds,
@@ -70,6 +71,7 @@ class BackgroundSelectionModal extends Component<BackgroundSelectionModalProps> 
 				<ImageDisplayReel
 					resourceList={backgrounds}
 					onClickLink={selectBackground}
+					onError={this.onError}
 				/>
 			</div>
 		</div>
@@ -86,7 +88,8 @@ const mapDispatchToProps = (dispatch: Function): DispatchProps => {
 		selectBackgroundById: (id: string) => dispatch(backgroundsActions.selectById(id)),
 		addBackground: (background: Background) => dispatch(backgroundsActions.setBackground(background)),
 		addBackgrounds: (backgrounds: Background[]) => dispatch(backgroundsActions.addBackgrounds(backgrounds)),
-		fetchBackgrounds: () => dispatch(backgroundsActions.fetchBackgrounds())
+		fetchBackgrounds: () => dispatch(backgroundsActions.fetchBackgrounds()),
+		removeBackground: (background: Background) => dispatch(backgroundsActions.removeBackground(background))
   }
 }
 

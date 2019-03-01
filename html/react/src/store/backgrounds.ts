@@ -8,10 +8,12 @@ import base from './base';
 export class Background extends Resource {
 	width?: number;
 	height?: number;
+	isCustom: Boolean;
+	isUpload: Boolean;
 
-	constructor(image: HTMLImageElement);
-	constructor(link: string);
-	constructor(imageOrLink: HTMLImageElement | string) {
+	constructor(image: HTMLImageElement, isCustom?: Boolean, isUpload?: Boolean);
+	constructor(link: string, isCustom?: Boolean, isUpload?: Boolean);
+	constructor(imageOrLink: HTMLImageElement | string, isCustom: Boolean = false, isUpload: Boolean = false) {
 		let link:string;
 		if (imageOrLink instanceof HTMLImageElement) {
 			link = imageOrLink.src;
@@ -26,6 +28,8 @@ export class Background extends Resource {
 			this.width = imageOrLink.width;
 			this.height = imageOrLink.height;
 		}
+		this.isCustom = isCustom;
+		this.isUpload = isUpload;
 	}
 }
 export interface BackgroundsState extends BaseState<Background> {}
@@ -40,22 +44,47 @@ const {
 	addBackgrounds,
 	setBackground,
 	updateBackground,
-	selectBackground
+	selectBackground,
+	removeBackground
 } = createActions({	
 	START_FETCHING_BACKGROUNDS: () => ({isFetching: true}),
 	SET_BACKGROUNDS: (backgrounds: Background[]) => ({resourceList: backgrounds}),
 	ADD_BACKGROUNDS: (backgrounds: Background[]) => ({ resourceList: backgrounds}),
-	SET_BACKGROUND: (background: Background) => ({resource: background}),
+	SET_BACKGROUND: (background: Background) => {
+		const savedSuggestions: Background[] = JSON.parse(localStorage.getItem('savedBackgrounds') || '[]');
+
+		if (savedSuggestions.every((existingBackground: Background) => background.id !== existingBackground.id)) {
+			savedSuggestions.push(background);
+			localStorage.setItem('savedBackgrounds', JSON.stringify(savedSuggestions));
+		}
+			
+		return {resource: background};
+	},
 	UPDATE_BACKGROUND: (backgroundId: string, updatedAttributes: Background) => ({resourceId: backgroundId, updatedAttributes}),
-	SELECT_BACKGROUND: (backgroundId: string) => ({selectedId: backgroundId})
+	SELECT_BACKGROUND: (backgroundId: string) => ({selectedId: backgroundId}),
+	REMOVE_BACKGROUND: (background: Background) => {
+		if (background.isUpload || background.isCustom) {
+			 // broken upload links can never be restored so remove them for good
+			const savedSuggestions: Background[] = JSON.parse(localStorage.getItem('savedBackgrounds') || '[]');
+			
+			localStorage.setItem('savedBackgrounds', JSON.stringify(
+				savedSuggestions.filter(existingBackground => existingBackground.id !== background.id)
+			));
+		}
+		return {resource: background};
+	},
 });
 
 function fetchBackgrounds (): JiggenThunkAction {
 	return async (dispatch, getState) => {
+		const savedSuggestions: Background[] = JSON.parse(localStorage.getItem('savedBackgrounds') || '[]');
+		dispatch(addBackgrounds(savedSuggestions));
+
 		const resourceLinks = await getOrFetchResourceLinks(dispatch, getState);
 		dispatch(startFetchingBackgrounds());
+		
 		const result = await axios.get(resourceLinks.backgrounds);
-		dispatch(addBackgrounds(result.data));
+		dispatch(addBackgrounds(result.data));	
 	};
 }
 
@@ -95,7 +124,9 @@ const reducers = handleActions<BackgroundsState>({
 		FETCH_BACKGROUNDS: (state, {payload}: Action<any>) => base.setIsFetching(state, payload) as BackgroundsState,
 		SET_BACKGROUND: (state, {payload}: Action<any>) => base.setOrUpdateResource(state, payload) as BackgroundsState,
 		SET_BACKGROUNDS: (state, {payload}: Action<any>) => base.setResources(state, payload) as BackgroundsState,
-		ADD_BACKGROUNDS: (state, {payload}: Action<any>) => base.addResources(state, payload) as BackgroundsState,
+		ADD_BACKGROUNDS: (state, {payload}: Action<any>) => {
+			return base.addResources(state, payload) as BackgroundsState
+		},
 		SELECT_BACKGROUND: (state, {payload}: Action<any>) => base.selectResource(state, payload) as BackgroundsState,
 		UPDATE_BACKGROUND: (state, {
 			payload: {resourceId, updatedAttributes}
@@ -105,7 +136,8 @@ const reducers = handleActions<BackgroundsState>({
 				...updatedAttributes
 			} as Background;
 			return base.setOrUpdateResource(state, {resource: updatedBackground}) as BackgroundsState;
-		}
+		},
+		REMOVE_BACKGROUND: (state, {payload}: Action<any>) => base.removeResource(state, payload) as BackgroundsState
 	},
 	initialState
 );
@@ -118,7 +150,8 @@ const backgroundsActions = {
 	addBackgrounds,
 	selectById: selectBackground,
 	selectByLink: selectBackgroundByLink,
-	loadBackgroundImageData
+	loadBackgroundImageData,
+	removeBackground
 }
 
 export {
