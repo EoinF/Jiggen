@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 
 import { backgroundsActions, Background } from '../../../store/backgrounds';
-import { CompatibilityMeasure } from '../../../widgets';
 import './puzzleStats.scss'
 import { GeneratedTemplate } from '../../../store/generatedTemplates';
 import { StateRoot } from '../../../models';
