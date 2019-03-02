@@ -28,12 +28,18 @@ class ResponsiveImage extends Component<ResponsiveImageProps, ResponsiveImageSta
 		}
 		this.containerRef = React.createRef();
 
-		window.addEventListener("resize", () => {
-			this.setState({isCalculating: true, renderAttempts: 0});
-		});
+		window.addEventListener("resize", this.onResize);
 	}
 	componentDidMount() {
 		this.updateSize();
+	}
+
+	componentWillUnmount() {
+		window.removeEventListener("resize", this.onResize);
+	}
+
+	onResize = () => {
+		this.setState({isCalculating: true, renderAttempts: 0});
 	}
 
 	componentDidUpdate(nextProps: ResponsiveImageProps) {
