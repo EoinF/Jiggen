@@ -1,6 +1,6 @@
 import React, { KeyboardEventHandler } from 'react';
 import { connect } from 'react-redux';
-import { Observable, Subject, from, combineLatest, Subscription } from 'rxjs';
+import { Subject, from, Subscription } from 'rxjs';
 
 import {
   GeneratedTemplate,
@@ -10,7 +10,6 @@ import {
 import { Background } from '../../store/backgrounds';
 import gwtAdapter from '../../gwtAdapter';
 
-
 import {
   setFullScreen,
   onFullScreenChange,
@@ -19,7 +18,8 @@ import {
 } from '../../utils/fullScreen';
 
 import styles from './GameContainer.module.scss';
-import { ReducersRoot, StateRoot } from '../../models';
+import { StateRoot } from '../../models';
+import withLoadingWrapper from './withLoadingDisplay';
 
 interface DispatchProps {
   fetchGeneratedTemplateByLink(link: string): void;
@@ -54,14 +54,12 @@ class GameContainer extends React.Component<GameContainerProps, GameContainerSta
     this.gameContainerRef = React.createRef();
     this.updateContainerSize$ = new Subject();
 
-    const onGwtLoaded$ = from(gwtAdapter.onGwtLoadedPromise);
-    this.updateContainerSubscription = combineLatest(this.updateContainerSize$).subscribe(this.updateContainerSize);
+    this.updateContainerSubscription = this.updateContainerSize$.subscribe(this.updateContainerSize);
     
     onFullScreenChange(this.onFullScreenChange);
     
-    window.onresize = () => {
-      this.updateContainerSize$.next();
-    }
+    window.onresize = () => this.updateContainerSize$.next();
+    
     this.onKeyDownEventListener = document.onkeydown = (evt: Event) => {
       const e = evt as KeyboardEvent
       if (e.key === "Escape" || e.key === "Esc" || e.keyCode === 27) {
@@ -115,7 +113,7 @@ class GameContainer extends React.Component<GameContainerProps, GameContainerSta
       gwtAdapter.setBackground(this.props.background);
     }
     this.updateContainerSize$.next();
-  };
+  }
 
   componentWillUnmount() {
     unsetOnFullScreenChange(this.onFullScreenChange);
@@ -182,7 +180,9 @@ const mapDispatchToProps = (dispatch: Function): DispatchProps => {
   };
 }
 
-export default connect<StateProps, DispatchProps, OwnProps>(
+const ConnectedGameContainer = connect<StateProps, DispatchProps, OwnProps>(
   mapStateToProps,
   mapDispatchToProps
 )(GameContainer);
+
+export default withLoadingWrapper(ConnectedGameContainer);

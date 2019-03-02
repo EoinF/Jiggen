@@ -5,6 +5,7 @@ import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
 import com.badlogic.gdx.backends.gwt.preloader.Preloader;
 import com.github.eoinf.jiggen.webapp.Jiggen;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 
 import java.util.function.Consumer;
@@ -21,7 +22,6 @@ public class HtmlLauncher extends GwtApplication {
         int w = 200;
         int h = 120;
         GwtApplicationConfiguration cfg = new GwtApplicationConfiguration(w, h);
-        Window.enableScrolling(false);
         Window.setMargin("0");
         cfg.preferFlash = false;
         return cfg;
@@ -39,7 +39,7 @@ public class HtmlLauncher extends GwtApplication {
 
     @Override
     public ApplicationListener createApplicationListener() {
-//        GWT.log("Initializing GWT Adapter");
+        GWT.log("Initializing GWT Adapter");
         this.setLoadingListener(new LoadingListener() {
             @Override
             public void beforeSetup() {

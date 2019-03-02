@@ -34,9 +34,6 @@ html {
     width: 100%;
 	height: 100%;
 	margin: 0;
-	// GWT sets overflow hidden so we need to counteract that
-	// to enable scrolling
-	overflow-y: auto !important;
 }
 
 #react-root {

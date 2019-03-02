@@ -29,3 +29,45 @@
     min-width: 100%;
     min-height: 100%;
 }
+
+
+.loadingContainer {
+	background: $black;
+	width: 100%;
+	height: 100%;
+	max-width: 500px;
+	font-size: 1.25rem;
+
+	table {
+		display: grid;
+	}
+    display: flex;
+    justify-content: center;
+	align-items: center;
+	flex-flow: column nowrap;
+}
+
+.loadingSpinner {
+	margin-top: 1rem;
+	border-radius: 80px;
+	background: $purple500;
+
+	animation: spinningAnimation 2s linear 0s infinite, shiningAnimation 1s ease-out 0s infinite alternate;
+}
+
+@keyframes spinningAnimation {
+	from {
+		transform: rotate(0);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+@keyframes shiningAnimation {
+	from {
+		box-shadow: $purple600 0px 0px 7px;
+	}
+	to {
+		box-shadow: $pink100 0px 0px 30px;
+	}
+}
