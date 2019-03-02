@@ -5,12 +5,17 @@ import { backgroundsActions, Background } from '../../../store/backgrounds';
 import { CompatibilityMeasure } from '../../../widgets';
 import './puzzleStats.scss'
 import { GeneratedTemplate } from '../../../store/generatedTemplates';
+import { StateRoot } from '../../../models';
 
-interface PuzzleStatsProps {
+interface StateProps {
 	generatedTemplate: GeneratedTemplate;
 	background: Background;
+}
+interface OwnProps {
 	loadBackgroundImageDataById(background: Background): void;
 }
+
+type PuzzleStatsProps = OwnProps & StateProps;
 
 class PuzzleStats extends Component<PuzzleStatsProps> {
 
@@ -66,6 +71,14 @@ class PuzzleStats extends Component<PuzzleStatsProps> {
 	}
 }
 
+
+const mapStateToProps = (state: StateRoot): StateProps => {
+	return {
+	  background: state.backgrounds.resourceMap[state.backgrounds.selectedId!],
+	  generatedTemplate: state.generatedTemplates.resourceMap[state.generatedTemplates.selectedId!]
+	};
+  }
+
 const mapDispatchToProps = (dispatch: Function) => {
   return {
     loadBackgroundImageDataById: (background: Background) => dispatch(backgroundsActions.loadBackgroundImageData(background))
@@ -73,7 +86,7 @@ const mapDispatchToProps = (dispatch: Function) => {
 }
 
 const ConnectedPuzzleStats = connect(
-	null,
+  mapStateToProps,
   mapDispatchToProps
 )(PuzzleStats);
 

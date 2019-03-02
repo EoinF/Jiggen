@@ -14,6 +14,8 @@ import { getPlayablePuzzleList, getPieceCountMap } from '../../store/selectors';
 
 interface DispatchProps {
   selectPuzzle(id: string): void;
+  selectBackground(link: string): void;
+  selectGeneratedTemplate(link: string): void;
   fetchPuzzlesOfTheDay(): void;
   fetchGeneratedTemplateByLink(link: string): void;
   fetchBackgroundByLink(link: string): void;
@@ -23,8 +25,6 @@ interface StateProps {
   playablePuzzles: PlayablePuzzle[];
   selectedPuzzle: PlayablePuzzle;
   pieceCountMap: StringMap<number>;
-  background: Background;
-  generatedTemplate: GeneratedTemplate;
 }
 
 type PuzzleOfTheDayPageProps = DispatchProps & StateProps;
@@ -46,6 +46,11 @@ class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps, any> {
         this.props.fetchGeneratedTemplateByLink(playablePuzzle.links.generatedTemplate);
       });
     }
+    if (this.props.selectedPuzzle != prevProps.selectedPuzzle) {
+      const selectedPuzzle = this.props.selectedPuzzle;
+      this.props.selectBackground(selectedPuzzle.links.background);
+      this.props.selectGeneratedTemplate(selectedPuzzle.links.generatedTemplate);
+    }
   };
 
   onSelectPieceCount = (id: string) => {
@@ -54,9 +59,7 @@ class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps, any> {
 
   render() {
     const {
-      selectedPuzzle,
-      background,
-      generatedTemplate
+      selectedPuzzle
     } = this.props;
 
     return (
@@ -64,7 +67,7 @@ class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps, any> {
           <h1>Today's Puzzles</h1>
           <div className={styles.contentContainer}>
             <div className={styles.gameContainer}>
-              <GameContainer background={background} generatedTemplate={generatedTemplate}/>
+              <GameContainer/>
             </div>
             <PieceCountSelection
               selectedId={selectedPuzzle ? selectedPuzzle.id : null}
@@ -76,23 +79,21 @@ class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps, any> {
   }
 }
 
-
 function mapStateToProps(_state: any, ownProps: any): StateProps {
   const state = (_state as StateRoot); // Required because we can't change type of _state
 
-  const selectedPuzzle = state.playablePuzzles.resourceMap[state.playablePuzzles.selectedId!];
   return {
     pieceCountMap: getPieceCountMap(state),
     playablePuzzles: getPlayablePuzzleList(state),
-    selectedPuzzle,
-    background: selectedPuzzle && state.backgrounds.linkMap[selectedPuzzle.links.background],
-    generatedTemplate: selectedPuzzle && state.generatedTemplates.linkMap[selectedPuzzle.links.generatedTemplate]
+    selectedPuzzle: state.playablePuzzles.resourceMap[state.playablePuzzles.selectedId!]
   };
 }
 
-const mapDispatchToProps = (dispatch: Function) => {
+const mapDispatchToProps = (dispatch: Function): DispatchProps => {
   return {
     selectPuzzle: (id: string) => dispatch(playablePuzzlesActions.selectPlayablePuzzle(id)),
+    selectBackground: (link: string) => dispatch(backgroundsActions.selectByLink(link)),
+    selectGeneratedTemplate: (link: string) => dispatch(generatedTemplatesActions.selectByLink(link)),
     fetchPuzzlesOfTheDay: () => dispatch(playablePuzzlesActions.fetchPuzzlesOfTheDay()),
     fetchGeneratedTemplateByLink: (link: string) => dispatch(generatedTemplatesActions.fetchByLink(link)),
     fetchBackgroundByLink: (link: string) => dispatch(backgroundsActions.fetchByLink(link))

@@ -4,6 +4,7 @@ import { BackgroundsState } from '../store/backgrounds';
 import { PlayablePuzzlesState } from '../store/playablePuzzles';
 import { GeneratedTemplatesState } from '../store/generatedTemplates';
 import { DisplayOptionsState } from '../store/displayOptions';
+import { DownloadedImagesState } from '../store/downloadedImages';
 
 export interface StringMap<T> {
 	[key: string]: T
@@ -35,7 +36,8 @@ export interface StateRoot {
     generatedTemplates: GeneratedTemplatesState,
     resourceLinks: any,
     displayOptions: DisplayOptionsState,
-    playablePuzzles: PlayablePuzzlesState
+    playablePuzzles: PlayablePuzzlesState,
+    downloadedImages: DownloadedImagesState
 }
 
 export interface ReducersRoot {
@@ -44,7 +46,8 @@ export interface ReducersRoot {
     generatedTemplates: any,
     resourceLinks: any,
     displayOptions: any,
-    playablePuzzles: any
+    playablePuzzles: any,
+    downloadedImages: any
 }
 
 export interface JiggenThunkAction extends ThunkAction<any, ReducersRoot, any, BaseAction> {

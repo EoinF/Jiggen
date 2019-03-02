@@ -20,6 +20,7 @@ import {
 import styles from './GameContainer.module.scss';
 import { StateRoot } from '../../models';
 import withLoadingWrapper from './withLoadingDisplay';
+import { DownloadedImage } from '../../store/downloadedImages';
 
 interface DispatchProps {
   fetchGeneratedTemplateByLink(link: string): void;
@@ -27,14 +28,12 @@ interface DispatchProps {
 
 interface StateProps {
   showFullScreenFallback: Boolean;
-}
-
-interface OwnProps {
   generatedTemplate: GeneratedTemplate;
   background: Background;
+  downloadedBackground: DownloadedImage;
 }
 
-type GameContainerProps = StateProps & DispatchProps & OwnProps;
+type GameContainerProps = StateProps & DispatchProps;
 
 interface GameContainerState {
   shouldShuffleOnFullscreen: Boolean;
@@ -110,7 +109,7 @@ class GameContainer extends React.Component<GameContainerProps, GameContainerSta
       this.setOrFetchTemplate(this.props.generatedTemplate);
     }
     if (this.props.background != null) {
-      gwtAdapter.setBackground(this.props.background);
+      gwtAdapter.setBackground(this.props.downloadedBackground);
     }
     this.updateContainerSize$.next();
   }
@@ -165,10 +164,13 @@ class GameContainer extends React.Component<GameContainerProps, GameContainerSta
   }
 }
 
-const mapStateToProps = (_state: any, ownProps: OwnProps): StateProps => {
+const mapStateToProps = (_state: any, ownProps: {}): StateProps => {
   const state = (_state as StateRoot); // Required because we can't change type of _state
   return {
-    showFullScreenFallback: state.displayOptions.showFullScreenFallback
+    showFullScreenFallback: state.displayOptions.showFullScreenFallback,
+    downloadedBackground: state.downloadedImages.resourceMap[state.backgrounds.selectedId!],
+    background: state.backgrounds.resourceMap[state.backgrounds.selectedId!],
+    generatedTemplate: state.generatedTemplates.resourceMap[state.generatedTemplates.selectedId!]
   };
 }
 
@@ -180,7 +182,7 @@ const mapDispatchToProps = (dispatch: Function): DispatchProps => {
   };
 }
 
-const ConnectedGameContainer = connect<StateProps, DispatchProps, OwnProps>(
+const ConnectedGameContainer = connect<StateProps, DispatchProps, {}>(
   mapStateToProps,
   mapDispatchToProps
 )(GameContainer);

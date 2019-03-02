@@ -15,15 +15,17 @@ import { Background } from '../../store/backgrounds';
 import { StateRoot } from '../../models';
 import { getSelectedTemplate, getGeneratedTemplatesForTemplate } from '../../store/selectors';
 import { displayOptionsActions } from '../../store/displayOptions';
+import { DownloadedImage } from '../../store/downloadedImages';
 
 interface StateProps {
   selectedTemplate: any;
-  selectedBackground: Background;
-  generatedTemplates: GeneratedTemplate[]
+  downloadedBackground: DownloadedImage;
+  generatedTemplates: GeneratedTemplate[];
 }
 
 interface DispatchProps {
   fetchGeneratedTemplatesByLink(link: string): void;
+  selectGeneratedTemplateByLink(link: string): void;
   showBackgroundsModal(): void;
   showTemplatesModal(): void;
 }
@@ -39,6 +41,11 @@ class CustomizePage extends Component<CustomizePageProps> {
   componentDidUpdate(prevProps: CustomizePageProps) {
     if (this.props.selectedTemplate != prevProps.selectedTemplate) {
       this.updateGeneratedTemplate();
+    }
+    if (this.props.generatedTemplates != null &&
+        this.props.generatedTemplates.length > 0 &&
+        this.props.generatedTemplates != prevProps.generatedTemplates) {
+      this.props.selectGeneratedTemplateByLink(this.props.generatedTemplates[0].links.self);
     }
   }
   
@@ -56,19 +63,15 @@ class CustomizePage extends Component<CustomizePageProps> {
   render() {
     const {
       selectedTemplate,
-      selectedBackground
+      downloadedBackground
     } = this.props;
 
-    const generatedTemplate = this.props.generatedTemplates[0];
     return (
         <div className={styles.mainContainer}>
           <h1>Custom Puzzle</h1>
           <div className={styles.contentContainer}>
             <div className={styles.gameContainer}>
-              <GameContainer
-                generatedTemplate={generatedTemplate}
-                background={selectedBackground}
-              />
+              <GameContainer />
             </div>
             <div className={styles.selectionContainer}>
                 <SelectionWidget
@@ -79,7 +82,7 @@ class CustomizePage extends Component<CustomizePageProps> {
                   onClick={this.props.showTemplatesModal}
                 />
                 <SelectionWidget
-                  selection={selectedBackground}
+                  selection={downloadedBackground}
                   fallbackImageSrc={backgroundLogo}
                   notSelectedCaption='Select Background'
                   selectedCaption='Background'
@@ -87,10 +90,7 @@ class CustomizePage extends Component<CustomizePageProps> {
                 />
             </div>
             <div className={styles.statsContainer}>
-                <PuzzleStats
-                  background={selectedBackground}
-                  generatedTemplate={generatedTemplate}
-                />
+                <PuzzleStats />
             </div>
           </div>
         </div>
@@ -100,8 +100,8 @@ class CustomizePage extends Component<CustomizePageProps> {
 
 const mapStateToProps = (state: StateRoot): StateProps => {
   return {
-    selectedBackground: state.backgrounds.resourceMap[state.backgrounds.selectedId!],
     selectedTemplate: getSelectedTemplate(state),
+    downloadedBackground: state.downloadedImages.resourceMap[state.backgrounds.selectedId!],
     generatedTemplates: getGeneratedTemplatesForTemplate(state)
   };
 }
@@ -109,6 +109,7 @@ const mapStateToProps = (state: StateRoot): StateProps => {
 const mapDispatchToProps = (dispatch: Function): DispatchProps => {
   return {
     fetchGeneratedTemplatesByLink: (link: string) => dispatch(generatedTemplatesActions.fetchAllByLink(link)),
+    selectGeneratedTemplateByLink: (link: string) => dispatch(generatedTemplatesActions.selectByLink(link)),
     showBackgroundsModal: () => dispatch(displayOptionsActions.showBackgroundsModal()),
     showTemplatesModal: () => dispatch(displayOptionsActions.showTemplatesModal())
   }

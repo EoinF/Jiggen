@@ -4,8 +4,6 @@ import { handleActions, createActions, Action } from 'redux-actions';
 import { Resource, ReducersRoot, BaseState, JiggenThunkAction } from '../models';
 import base from './base';
 import { getOrFetchResourceLinks } from '../actions/resourceLinks';
-import { Background } from './backgrounds';
-import { GeneratedTemplate } from './generatedTemplates';
 
 export interface PlayablePuzzle extends Resource {
 }
@@ -24,7 +22,6 @@ const {
 	SET_PLAYABLE_PUZZLES: (playablePuzzles: PlayablePuzzle[]) => ({resourceList: playablePuzzles}),
 	SELECT_PLAYABLE_PUZZLE: (playablePuzzleId) => ({selectedId: playablePuzzleId})
 })
-
 
 function fetchPuzzlesOfTheDay (): JiggenThunkAction {
 	return async (dispatch, getState) => {

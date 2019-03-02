@@ -77,7 +77,7 @@ function addResources(state: BaseState<Resource>, {resourceList}: {resourceList:
 	};
 }
 
-function setOrUpdateResource(state: BaseState<Resource>, {resource}: {resource: Resource}): BaseState<Resource> {
+function setOrUpdateResource<R extends Resource>(state: BaseState<R>, {resource}: {resource: R}): BaseState<R> {
 	let {
 		resourceList,
 		resourceMap,
@@ -85,7 +85,7 @@ function setOrUpdateResource(state: BaseState<Resource>, {resource}: {resource: 
 	} = state;
 
 	const resourceListUpdated = [...resourceList];
-	const index = resourceList.findIndex((r: Resource) => {
+	const index = resourceList.findIndex((r: R) => {
 		return r.id == resource.id
 	});
 	if (index != -1) {

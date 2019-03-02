@@ -7,7 +7,7 @@ const SelectionWidget = ({selection, fallbackImageSrc, notSelectedCaption, selec
 	let imageSrc = fallbackImageSrc;
 
 	if (selection != null) {
-		imageSrc = selection.links.image;
+		imageSrc = selection.links['image-compressed'] || selection.links.image;
 	}
 	return (
 		<div className={styles.mainContainer} onClick={onClick}>
