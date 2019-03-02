@@ -56,21 +56,12 @@ class PuzzleStats extends Component<PuzzleStatsProps> {
 
 			return (
 				<div className="puzzleStats">
-					<div className="compatibilitySection">
-						<span className="description">Compatibility:&nbsp;</span>
-						<CompatibilityMeasure
-							className={'compatibilityMeasure'}
-							generatedTemplate={generatedTemplate}
-							background={background}
-						/>
-					</div>
 					<span>{`Pieces: ${numPieces}`}</span>
 				</div>
 			);
 		}
 	}
 }
-
 
 const mapStateToProps = (state: StateRoot): StateProps => {
 	return {
