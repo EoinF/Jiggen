@@ -67,7 +67,7 @@ const mapStateToProps = (state: StateRoot): StateProps => {
 	  background: state.backgrounds.resourceMap[state.backgrounds.selectedId!],
 	  generatedTemplate: state.generatedTemplates.resourceMap[state.generatedTemplates.selectedId!]
 	};
-  }
+}
 
 const mapDispatchToProps = (dispatch: Function) => {
   return {

@@ -22,4 +22,9 @@
 		box-shadow: 1px 1px 9px $purple400;
 		// box-shadow: 0px 1px 15px $black;
 	}
+
+	// Bottom page marker is always the last item
+	li:last-child {
+		height: 5px;
+	}
 }
