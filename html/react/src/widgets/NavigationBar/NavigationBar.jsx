@@ -6,7 +6,7 @@ import puzzleBox from './puzzleBoxC.png';
 
 import styles from './NavigationBar.module.scss';
 
-const PUZZLE_OF_THE_DAY = '/puzzlesOfTheDay';
+const PUZZLE_OF_THE_DAY = '/daily';
 const CUSTOM = '/custom';
 
 const NavigationBar = ({location}) => {
