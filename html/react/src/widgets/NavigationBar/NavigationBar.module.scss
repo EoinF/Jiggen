@@ -2,7 +2,7 @@
 
 .mainContainer {
     padding: 0.2rem 0;
-    background: $purple400;
+    background: $purple300;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -10,14 +10,39 @@
     > a {
         display: flex;
         height: fit-content;
-        // background: white;
-        border: 1px solid black;
-        border-radius: 10px;
-        padding: 1px;
         margin: 0 1px;
+        padding: 2px;
+        border: solid 1px $purple200;
+        border-radius: 20px;
+        
+        &.selected {
+            border: solid 1px $purple150;
+            background: $purple400;
+        }
     }
 }
 
-.selected {
-    background: $pink100;
+.navButton {
+    width: 64px;
+    display: flex;
+    flex-flow: column nowrap;
+    align-content: center;
+    justify-content: center;
+
+    label {
+        padding: 0px 1px 3px;
+
+        text-align: center;
+        white-space: nowrap;
+            
+        font-size: 0.875rem;
+        font-weight: bold;
+    }
+}
+
+.imageContainer {
+    display: flex;
+    height: fit-content;
+    justify-content: center;
+
 }
