@@ -11,7 +11,7 @@ import {
 import styles from './BackgroundSelectionModal.module.scss';
 import ModalWrapper from '../ModalManager/ModalWrapper';
 import BackgroundSelectionForm from './BackgroundSelectionForm';
-import { StateRoot } from '../../models';
+import { StateRoot, Resource } from '../../models';
 
 interface StateProps {
 	backgrounds: Background[]
@@ -67,7 +67,7 @@ class BackgroundSelectionModal extends Component<BackgroundSelectionModalProps> 
 				<CardContainer className={styles.cardContainer}>
 					<BackgroundSelectionForm
 							onSelectBackground={this.onSelectBackground} />
-					</CardContainer>
+				</CardContainer>
 				<ImageDisplayReel
 					resourceList={backgrounds}
 					onClickLink={selectBackground}
@@ -79,7 +79,7 @@ class BackgroundSelectionModal extends Component<BackgroundSelectionModalProps> 
 }
 const mapStateToProps = (state: StateRoot) => {
   return {
-    backgrounds: state.backgrounds.resourceList
+    backgrounds: state.backgrounds.resourceList.filter(Resource.hasImage)
   };
 }
 

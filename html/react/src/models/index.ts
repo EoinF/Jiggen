@@ -20,6 +20,10 @@ export class Resource {
         this.links = links;
         this.name = name;
     }
+
+    static hasImage(resource: Resource): boolean {
+        return resource.links.image != null || resource.links['image-compressed'] != null;
+    }
 }
 
 export interface BaseState<T extends Resource> {
