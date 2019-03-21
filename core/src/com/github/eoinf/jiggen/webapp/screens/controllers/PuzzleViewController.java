@@ -124,11 +124,17 @@ public class PuzzleViewController {
 
 
     public void setBackground(Texture backgroundImage) {
+        Texture oldBackground = puzzleViewModel.getBackgroundImageObservable().getValue();
         puzzleViewModel.setBackgroundImage(backgroundImage);
+        oldBackground.dispose();
     }
 
     public void setTemplate(PuzzleGraphTemplate puzzleGraphTemplate) {
+        PuzzleGraphTemplate oldTemplate = puzzleViewModel.getPuzzleTemplateObservable().getValue();
         puzzleViewModel.setPuzzleGraphTemplate(puzzleGraphTemplate);
+        for (PuzzlePieceTemplate<TextureRegion> pieceTemplate: oldTemplate.getVertices().values()) {
+            pieceTemplate.getData().getTexture().dispose();
+        }
     }
 
     public void resizeScreen(int width, int height) {
