@@ -9,11 +9,13 @@ import com.badlogic.gdx.utils.Json;
 import com.github.eoinf.jiggen.PuzzleExtractor.Decoder.DecodedTemplate;
 import com.github.eoinf.jiggen.PuzzleExtractor.Puzzle.PuzzleFactory;
 import com.github.eoinf.jiggen.webapp.Jiggen;
+import com.github.eoinf.jiggen.webapp.JiggenState;
 import com.github.eoinf.jiggen.webapp.screens.models.IntRectangle;
 import com.github.eoinf.jiggen.webapp.screens.models.PuzzleGraphTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import static com.github.eoinf.jiggen.utils.PixmapUtils.getRandomBackground;
 import static com.github.eoinf.jiggen.utils.PixmapUtils.getRandomTemplate;
@@ -30,6 +32,11 @@ public class DesktopLauncher {
 				Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
 			} else {
 				Gdx.graphics.setWindowedMode(config.width, config.height);
+			}
+		}, new Consumer<JiggenState>() {
+			@Override
+			public void accept(JiggenState nextState) {
+
 			}
 		});
 		new LwjglApplication(game, config);

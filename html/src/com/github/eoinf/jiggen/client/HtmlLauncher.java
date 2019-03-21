@@ -5,6 +5,7 @@ import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
 import com.badlogic.gdx.backends.gwt.preloader.Preloader;
 import com.github.eoinf.jiggen.webapp.Jiggen;
+import com.github.eoinf.jiggen.webapp.JiggenState;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 
@@ -47,15 +48,20 @@ public class HtmlLauncher extends GwtApplication {
 
             @Override
             public void afterSetup() {
-                BrowserWindow.setGwtLoaded();
             }
         });
 
         Jiggen jiggen = new Jiggen(new Consumer<Boolean>() {
             @Override
             public void accept(Boolean isFullScreen) {
-//                GWT.log("Setting full screen" + isFullScreen);
                 GwtAdapter.setFullScreen(isFullScreen);
+            }
+        }, new Consumer<JiggenState>() {
+            @Override
+            public void accept(JiggenState nextState) {
+                if (nextState == JiggenState.LOADED) {
+                    BrowserWindow.setGwtLoaded();
+                }
             }
         });
         GwtAdapter.setJiggen(jiggen);

@@ -27,7 +27,7 @@ class LoadingDisplayWrapper extends Component<LoadingDisplayWrapperProps, Loadin
     gwtSubscription?: Subscription;
 
     state = {
-        isGWTLoading: false
+        isGWTLoading: true
     }
 
     componentDidMount() {

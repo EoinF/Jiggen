@@ -32,10 +32,12 @@ public class Jiggen extends Game {
     private TextureAtlas atlas = null;
 
     public Consumer<Boolean> onSetFullScreen;
-    private int maxTextureSize;
+	private Consumer<JiggenState> onStateChange;
+	private int maxTextureSize;
 
-    public Jiggen(Consumer<Boolean> onSetFullScreen) {
+    public Jiggen(Consumer<Boolean> onSetFullScreen, Consumer<JiggenState> onStateChange) {
     	this.onSetFullScreen = onSetFullScreen;
+		this.onStateChange = onStateChange;
 	}
 
 	@Override
@@ -55,6 +57,7 @@ public class Jiggen extends Game {
 //		TemplateCreatorScreen templateCreatorScreen = new TemplateCreatorScreen(this, spriteBatch, uiTextureAtlas, skin);
 
 		setScreen(puzzleSolverScreen);
+		onStateChange.accept(JiggenState.LOADED);
 	}
 
 	public void setBackground(FileHandle backgroundFile) {
