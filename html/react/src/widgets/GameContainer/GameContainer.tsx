@@ -7,7 +7,6 @@ import {
   generatedTemplatesActions
 } from '../../store/generatedTemplates';
 
-import { Background } from '../../store/backgrounds';
 import gwtAdapter from '../../gwtAdapter';
 
 import {
@@ -29,7 +28,6 @@ interface DispatchProps {
 interface StateProps {
   showFullScreenFallback: Boolean;
   generatedTemplate: GeneratedTemplate;
-  background: Background;
   downloadedBackground: DownloadedImage;
 }
 
@@ -108,7 +106,7 @@ class GameContainer extends React.Component<GameContainerProps, GameContainerSta
     if (this.props.generatedTemplate != null) {
       this.setOrFetchTemplate(this.props.generatedTemplate);
     }
-    if (this.props.background != null) {
+    if (this.props.downloadedBackground != null) {
       gwtAdapter.setBackground(this.props.downloadedBackground);
     }
     this.updateContainerSize$.next();
@@ -138,8 +136,9 @@ class GameContainer extends React.Component<GameContainerProps, GameContainerSta
       this.setOrFetchTemplate(this.props.generatedTemplate);
       isUpdated = true;
     }
-    if (prevProps.background !== this.props.background && this.props.background != null) {
-      gwtAdapter.setBackground(this.props.background);
+    if (prevProps.downloadedBackground !== this.props.downloadedBackground 
+      && this.props.downloadedBackground != null) {
+      gwtAdapter.setBackground(this.props.downloadedBackground);
       isUpdated = true;
     }
     if (isUpdated) {
@@ -169,7 +168,6 @@ const mapStateToProps = (_state: any, ownProps: {}): StateProps => {
   return {
     showFullScreenFallback: state.displayOptions.showFullScreenFallback,
     downloadedBackground: state.downloadedImages.resourceMap[state.backgrounds.selectedId!],
-    background: state.backgrounds.resourceMap[state.backgrounds.selectedId!],
     generatedTemplate: state.generatedTemplates.resourceMap[state.generatedTemplates.selectedId!]
   };
 }
