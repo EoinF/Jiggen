@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+set -ex
 
 cd ../html/react
 npm install -q

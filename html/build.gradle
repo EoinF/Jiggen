@@ -59,6 +59,18 @@ task compileReactDevLocal(type: Exec) {
     commandLine 'cmd', '/c', 'npm run build'
 }
 
+task buildServiceWorker(type: Exec) {
+    environment 'BUILD_PATH', '../build/dist'
+    workingDir = 'react'
+
+    if (OperatingSystem.current().isWindows()) {
+        commandLine 'cmd', '/c', 'npm run build-sw'
+    } else {
+        executable = 'npm'
+        args = ['run', 'build-sw']
+    }
+}
+
 task compileReactProd(type: Exec) {
     environment 'REACT_APP_API_URL', 'https://api.jiggen.app'
     workingDir = 'react'
@@ -91,7 +103,7 @@ task superDev(type: GwtSuperDev, dependsOn: [compileReactDev]) {
     }
 }
 
-task copyFiles(dependsOn: [clean, compileGwt, compileReactProd]) {
+task dist(dependsOn: [clean, compileGwt, compileReactProd]) {
     doLast {
         file("build/dist").mkdirs()
         copy {
@@ -113,13 +125,6 @@ task copyFiles(dependsOn: [clean, compileGwt, compileReactProd]) {
     }
 }
 
-task dist(type: Exec, dependsOn: [copyFiles]) {
-    environment 'BUILD_PATH', '../build/dist'
-    workingDir = 'react'
-    commandLine 'cmd', '/c', 'npm run build-sw'
-}
-
-
 task addSource {
     doLast {
         sourceSets.main.compileClasspath += files(project(':core').sourceSets.main.allJava.srcDirs)
@@ -128,6 +133,8 @@ task addSource {
 
 tasks.compileGwt.dependsOn(':desktop:buildAssets', addSource)
 tasks.draftCompileGwt.dependsOn(':desktop:buildAssets', addSource)
+
+tasks.dist.finalizedBy tasks.buildServiceWorker
 
 sourceCompatibility = 1.8
 sourceSets.main.java.srcDirs = ["src/"]
