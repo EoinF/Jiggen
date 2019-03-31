@@ -39,6 +39,15 @@ that the libgdx code has initialized, through the use of the promise.
 This contains functions, which are attached to the global window, that are called by the js code.
 It contains the business logic for these functions.
 
+### Service worker setup
+
+To generate the service worker for local development:
+* Start up gwt superdev as usual
+* cd to `html/react` folder
+* Open a bash terminal
+* Run `BUILD_PATH='../build/gwt/draftOut' npm run build-sw`
+
+Note: Recompiling the gdx app will not work with service worker caching. Superdev should be restarted
 
 ## Deployment on AWS
 

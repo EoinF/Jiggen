@@ -1,4 +1,5 @@
 import { handleActions, createActions, Action } from 'redux-actions';
+import cachedImageDownload from '../utils/cachedImageDownload';
 
 import { Resource, BaseState, JiggenThunkAction } from '../models';
 import base from './base';
@@ -32,55 +33,23 @@ const {
 } = createActions({
 	SET_DOWNLOADED_IMAGE: (image: DownloadedImage) => ({ resource: image }),
 	SET_DOWNLOADED_BYTES: (id: string, bytes: number) => ({ resourceId: id, bytes}),
-    SET_TOTAL_BYTES: (id: string, bytes: number) => ({ resourceId: id, bytes }),
+  SET_TOTAL_BYTES: (id: string, bytes: number) => ({ resourceId: id, bytes }),
 	DOWNLOAD_SUCCESS: (id: string, url: string) => ({ resourceId: id, url }),
-    DOWNLOAD_FAILURE: (id: string, error: string) => ({resourceId: id, error})
+  DOWNLOAD_FAILURE: (id: string, error: string) => ({resourceId: id, error})
 });
 
 function downloadImage (resource: Resource): JiggenThunkAction {
-	return async (dispatch, getState) => {
-        dispatch(setDownloadedImage(new DownloadedImage(resource)));
-        const resourceId = resource.id;
+	return (dispatch, getState) => {
+    dispatch(setDownloadedImage(new DownloadedImage(resource)));
+    const resourceId = resource.id;
 
-        const xhr = new XMLHttpRequest();
-        let notifiedNotComputable = false;
-      
-        xhr.open('GET', resource.links.image, true);
-        xhr.responseType = 'arraybuffer';
-      
-        xhr.onprogress = function (ev) {
-          if (ev.lengthComputable) {
-            dispatch(setTotalBytes(resourceId, ev.total));
-          } else {
-            if (!notifiedNotComputable) {
-              notifiedNotComputable = true;
-              dispatch(setTotalBytes(resourceId, -1));
-            }
-          }
-          dispatch(setDownloadedBytes(resourceId, ev.loaded));
-        }
-      
-        xhr.onloadend = function () {
-            console.log('onloadend');
-          if (!xhr.status.toString().match(/^2/)) {
-            dispatch(downloadFailure(resourceId, xhr));
-          } else {
-            const options: any = {};
-            var headers = xhr.getAllResponseHeaders();
-            var m = headers.match(/^Content-Type\:\s*(.*?)$/mi);
-      
-            if (m && m[1]) {
-              options.type = m[1];
-            }
-      
-            var blob = new Blob([this.response], options);
-      
-            dispatch(downloadSuccess(resourceId, window.URL.createObjectURL(blob)));
-          }
-        }
-      
-        xhr.send();
-	};
+    cachedImageDownload(resource.links.image,
+      (bytes: number) => dispatch(setTotalBytes(resourceId, bytes)),
+      (bytes: number) => dispatch(setDownloadedBytes(resourceId, bytes)),
+      (error: String) => dispatch(downloadFailure(resourceId, error)),
+      (url: String) => dispatch(downloadSuccess(resourceId, url))
+    );
+  };
 }
 
 const reducers = handleActions({
