@@ -9,6 +9,11 @@
 	height: 100%;
 }
 
+canvas {
+    cursor: default;
+    outline: none;
+}
+
 body {
 	background: $black;
 	color: $white;
@@ -64,4 +69,8 @@ html {
 
 * {
 	box-sizing: border-box;
+}
+
+.hidden {
+    display: none;
 }
