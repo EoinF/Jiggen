@@ -1,10 +1,15 @@
 import {setFullScreen} from './utils/fullScreen';
+import cachedImageDownload from './utils/cachedImageDownload';
 
 const onGwtLoadedPromise = new Promise((resolve, reject) => {
 	// Used by the gwt application to notify that the gwt app has been instantiated
 	// (important because we need to wait for window.gwtAdapter to become available)
 	window.setGwtLoaded = resolve;
 });
+
+// Set up cached image download for gdx app to use
+window.downloadImage = cachedImageDownload;
+
 
 function setTemplate(generatedTemplate) {
 	onGwtLoadedPromise.then(() => {

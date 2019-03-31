@@ -17,5 +17,9 @@
   },
   "include": [
     "src"
+  ],
+  "exclude": [
+    "src/sw.js",
+    "src/sw-build.js"
   ]
 }

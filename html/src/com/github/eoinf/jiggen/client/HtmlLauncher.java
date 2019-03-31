@@ -41,15 +41,6 @@ public class HtmlLauncher extends GwtApplication {
     @Override
     public ApplicationListener createApplicationListener() {
         GWT.log("Initializing GWT Adapter");
-        this.setLoadingListener(new LoadingListener() {
-            @Override
-            public void beforeSetup() {
-            }
-
-            @Override
-            public void afterSetup() {
-            }
-        });
 
         Jiggen jiggen = new Jiggen(new Consumer<Boolean>() {
             @Override

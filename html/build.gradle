@@ -59,6 +59,12 @@ task compileReactDevLocal(type: Exec) {
     commandLine 'cmd', '/c', 'npm run build'
 }
 
+task buildServiceWorker(type: Exec) {
+    environment 'BUILD_PATH', '../build/dist'
+    workingDir = 'react'
+    commandLine 'cmd', '/c', 'npm run build-sw'
+}
+
 task compileReactProd(type: Exec) {
     environment 'REACT_APP_API_URL', 'https://api.jiggen.app'
     workingDir = 'react'
@@ -120,7 +126,9 @@ task addSource {
 }
 
 tasks.compileGwt.dependsOn(':desktop:buildAssets', addSource)
-tasks.draftCompileGwt.dependsOn(addSource)
+tasks.draftCompileGwt.dependsOn(':desktop:buildAssets', addSource)
+
+tasks.dist.finalizedBy tasks.buildServiceWorker
 
 sourceCompatibility = 1.8
 sourceSets.main.java.srcDirs = ["src/"]

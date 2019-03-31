@@ -12,6 +12,16 @@
             "type": "npm",
             "script": "start",
             "problemMatcher": []
+        },
+        {
+            "type": "npm",
+            "script": "build",
+            "problemMatcher": []
+        },
+        {
+            "type": "npm",
+            "script": "serve",
+            "problemMatcher": []
         }
     ]
 }

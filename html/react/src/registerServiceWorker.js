@@ -1,3 +1,5 @@
+import gwtAdapter from './gwtAdapter';
+
 // In production, we register a service worker to serve assets from local cache.
 
 // This lets the app load faster on subsequent visits in production, and gives
@@ -29,8 +31,9 @@ export default function register() {
       return;
     }
 
-    window.addEventListener('load', () => {
-      const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
+    window.addEventListener('load', async () => {
+      await gwtAdapter.onGwtLoadedPromise; // Wait for gdx app to load or we end up downloading resources twice
+      const swUrl = `${process.env.PUBLIC_URL}/sw.js`;
 
       if (isLocalhost) {
         // This is running on localhost. Lets check if a service worker still exists or not.
