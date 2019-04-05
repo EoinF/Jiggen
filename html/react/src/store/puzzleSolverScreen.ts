@@ -81,8 +81,6 @@ const selectAndDownloadGeneratedTemplate = (link: string): JiggenThunkAction => 
 const puzzleSolverActions = {
     selectAndDownloadBackground,
     selectAndDownloadGeneratedTemplate,
-	selectGeneratedTemplate,
-    selectBackground,
     setPuzzleStatus
 }
 

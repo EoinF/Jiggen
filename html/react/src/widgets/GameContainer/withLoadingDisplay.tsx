@@ -20,8 +20,6 @@ interface DispatchProps {
 }
 interface StateProps {
     selectedGeneratedTemplate: GeneratedTemplate;
-    selectedBackground: Background;
-
     downloadedImage: DownloadedImage;
 }
 
@@ -40,27 +38,6 @@ class LoadingDisplayWrapper extends Component<LoadingDisplayWrapperProps, Loadin
     }
     componentWillUnmount() {
         this.gwtSubscription!.unsubscribe();
-    }
-
-    componentDidUpdate(prevProps: LoadingDisplayWrapperProps, prevState: LoadingDisplayState) {
-        if (prevProps.selectedBackground != this.props.selectedBackground &&
-            (
-                prevProps.selectedBackground == null || 
-                prevProps.selectedBackground.links.self !== this.props.selectedBackground.links.self
-            )
-         ) {
-            this.props.downloadImage(this.props.selectedBackground);
-        }
-
-        if (prevProps.selectedGeneratedTemplate != this.props.selectedGeneratedTemplate &&
-            (
-                prevProps.selectedGeneratedTemplate == null || 
-                prevProps.selectedGeneratedTemplate.links.self !== this.props.selectedGeneratedTemplate.links.self
-            )
-            && !this.isGeneratedTemplateReady(this.props.selectedGeneratedTemplate)
-         ) {
-            this.props.fetchGeneratedTemplate(this.props.selectedGeneratedTemplate);
-        }
     }
 
     isGeneratedTemplateReady = (generatedTemplate: GeneratedTemplate) => {
@@ -137,27 +114,12 @@ const mapStateToProps = (_state: any, ownProps: any): StateProps => {
     const state = (_state as StateRoot); // Required because we can't change type of _state
     return {
         selectedGeneratedTemplate: state.generatedTemplates.linkMap[state.puzzleSolverScreen.selectedGeneratedTemplate!],
-        selectedBackground: state.backgrounds.linkMap[state.puzzleSolverScreen.selectedBackground!],
         downloadedImage: state.downloadedImages.linkMap[state.puzzleSolverScreen.selectedBackground!],
     };
 }
-
-
-const mapDispatchToProps = (dispatch: Function): DispatchProps => {
-    return {
-      downloadImage: (resource: Resource) => {
-        dispatch(downloadedImagesActions.downloadImage(resource))
-      },
-      fetchGeneratedTemplate: (resource: Resource) => {
-        dispatch(generatedTemplatesActions.fetchByLink(resource.links.self))
-      }
-    };
-  }
-
   
 const ConnectedLoadingDisplayWrapper = connect<StateProps, any, any>(
-    mapStateToProps,
-    mapDispatchToProps
+    mapStateToProps
 )(LoadingDisplayWrapper);
 
 export default function withLoadingWrapper<P>(BaseComponent: React.ComponentType<P>) {

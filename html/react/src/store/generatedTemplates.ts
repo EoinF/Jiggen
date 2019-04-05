@@ -63,7 +63,7 @@ function selectGeneratedTemplateByLink (link: string): JiggenThunkAction {
 }
 
 
-const getOrDownloadGeneratedTemplate = (link: string, dispatch: Dispatch, getState: Function) => {
+const getOrDownloadGeneratedTemplate = (link: string, dispatch: Dispatch, getState: any) => {
     return new Promise(resolve => {
         const generatedTemplate = getState().generatedTemplates.linkMap[link];
         if (generatedTemplate != null && generatedTemplate.vertices != null) {
@@ -76,7 +76,8 @@ const getOrDownloadGeneratedTemplate = (link: string, dispatch: Dispatch, getSta
                     unsubscribe();
                 }
             });
-            fetchGeneratedTemplateByLink(link);
+			const fetchGeneratedTemplatesThunk = fetchGeneratedTemplateByLink(link);
+			fetchGeneratedTemplatesThunk(dispatch, getState, null);
         }
     });
 }

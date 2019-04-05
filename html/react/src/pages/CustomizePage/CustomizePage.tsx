@@ -15,12 +15,12 @@ import { Background } from '../../store/backgrounds';
 import { StateRoot } from '../../models';
 import { getSelectedTemplate, getGeneratedTemplatesForTemplate } from '../../store/selectors';
 import { displayOptionsActions } from '../../store/displayOptions';
-import { DownloadedImage } from '../../store/downloadedImages';
 import { puzzleSolverActions } from '../../store/puzzleSolverScreen';
+import { Template } from '../../store/templates';
 
 interface StateProps {
-  selectedTemplate: any;
-  downloadedBackground: DownloadedImage;
+  selectedTemplate: Template;
+  selectedBackground: Background;
   generatedTemplates: GeneratedTemplate[];
 }
 
@@ -60,7 +60,7 @@ class CustomizePage extends Component<CustomizePageProps> {
   render() {
     const {
       selectedTemplate,
-      downloadedBackground
+      selectedBackground
     } = this.props;
 
     return (
@@ -79,7 +79,7 @@ class CustomizePage extends Component<CustomizePageProps> {
                   onClick={this.props.showTemplatesModal}
                 />
                 <SelectionWidget
-                  selection={downloadedBackground}
+                  selection={selectedBackground}
                   fallbackImageSrc={backgroundLogo}
                   notSelectedCaption='Select Background'
                   selectedCaption='Background'
@@ -98,7 +98,7 @@ class CustomizePage extends Component<CustomizePageProps> {
 const mapStateToProps = (state: StateRoot): StateProps => {
   return {
     selectedTemplate: getSelectedTemplate(state),
-    downloadedBackground: state.downloadedImages.linkMap[state.puzzleSolverScreen.selectedBackground!],
+    selectedBackground: state.backgrounds.linkMap[state.puzzleSolverScreen.selectedBackground!],
     generatedTemplates: getGeneratedTemplatesForTemplate(state)
   };
 }
@@ -106,7 +106,7 @@ const mapStateToProps = (state: StateRoot): StateProps => {
 const mapDispatchToProps = (dispatch: Function): DispatchProps => {
   return {
     fetchGeneratedTemplatesByLink: (link: string) => dispatch(generatedTemplatesActions.fetchAllByLink(link)),
-    selectGeneratedTemplateByLink: (link: string) => dispatch(puzzleSolverActions.selectGeneratedTemplate(link)),
+    selectGeneratedTemplateByLink: (link: string) => dispatch(puzzleSolverActions.selectAndDownloadGeneratedTemplate(link)),
     showBackgroundsModal: () => dispatch(displayOptionsActions.showBackgroundsModal()),
     showTemplatesModal: () => dispatch(displayOptionsActions.showTemplatesModal())
   }

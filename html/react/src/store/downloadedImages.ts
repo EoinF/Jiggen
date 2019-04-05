@@ -45,15 +45,15 @@ const {
 
 function downloadImage (resource: Resource): JiggenThunkAction {
 	return (dispatch, getState) => {
-    dispatch(setDownloadedImage(new DownloadedImage(resource)));
-    const resourceId = resource.links.self;
+        dispatch(setDownloadedImage(new DownloadedImage(resource)));
+        const resourceId = resource.links.self;
 
-    cachedImageDownload(resource.links.image,
-      (bytes: number) => dispatch(setTotalBytes(resourceId, bytes)),
-      (bytes: number) => dispatch(setDownloadedBytes(resourceId, bytes)),
-      (error: String) => dispatch(downloadFailure(resourceId, error)),
-      (url: String) => dispatch(downloadSuccess(resourceId, url))
-    );
+        cachedImageDownload(resource.links.image,
+        (bytes: number) => dispatch(setTotalBytes(resourceId, bytes)),
+        (bytes: number) => dispatch(setDownloadedBytes(resourceId, bytes)),
+        (error: String) => dispatch(downloadFailure(resourceId, error)),
+        (url: String) => dispatch(downloadSuccess(resourceId, url))
+        );
   };
 }
 
@@ -83,24 +83,23 @@ const reducers = handleActions({
 	}, initialState
 );
 
-const getOrDownloadImage = (resource: Resource, dispatch: Dispatch, getState: Function): Promise<DownloadedImage> => {
+const getOrDownloadImage = (resource: Resource, dispatch: Dispatch, getState: any): Promise<DownloadedImage> => {
     return new Promise(resolve => {
         const downloadedImage = getState().downloadedImages.linkMap[resource.links.self];
         
-        console.log({downloadedImage});
         if (downloadedImage != null && !downloadedImage.isDownloading) {
             resolve(downloadedImage);
         } else {
             const unsubscribe = store.subscribe(() => {
                 const _downloadedImage = getState().downloadedImages.linkMap[resource.links.self];
                 
-                console.log('downloaded image', {_downloadedImage});
                 if (_downloadedImage != null && !_downloadedImage.isDownloading) {
                     resolve(_downloadedImage);
                     unsubscribe();
                 }
             });
-            downloadImage(resource);
+            const downloadImageThunk = downloadImage(resource);
+            downloadImageThunk(dispatch, getState, null);
         }
     });
 }

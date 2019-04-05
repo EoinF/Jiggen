@@ -98,7 +98,7 @@ function fetchBackgroundByLink(link: string): JiggenThunkAction {
 	};
 }
 
-const getOrDownloadBackground = (link: string, dispatch: Dispatch, getState: Function) => {
+const getOrDownloadBackground = (link: string, dispatch: Dispatch, getState: any) => {
     return new Promise<Background>(resolve => {
 		const background = getState().backgrounds.linkMap[link];
         if (background != null) {
@@ -111,7 +111,8 @@ const getOrDownloadBackground = (link: string, dispatch: Dispatch, getState: Fun
                     unsubscribe();
                 }
             });
-            fetchBackgroundByLink(link);
+			const fetchBackgroundThunk = fetchBackgroundByLink(link);
+			fetchBackgroundThunk(dispatch, getState, null);
         }
     });
 }

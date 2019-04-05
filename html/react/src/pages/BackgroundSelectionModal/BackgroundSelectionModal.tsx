@@ -86,7 +86,7 @@ const mapStateToProps = (state: StateRoot) => {
 
 const mapDispatchToProps = (dispatch: Function): DispatchProps => {
   return {
-		selectBackgroundByLink: (link: string) => dispatch(puzzleSolverActions.selectBackground(link)),
+		selectBackgroundByLink: (link: string) => dispatch(puzzleSolverActions.selectAndDownloadBackground(link)),
 		addBackground: (background: Background) => dispatch(backgroundsActions.setBackground(background)),
 		addBackgrounds: (backgrounds: Background[]) => dispatch(backgroundsActions.addBackgrounds(backgrounds)),
 		fetchBackgrounds: () => dispatch(backgroundsActions.fetchBackgrounds()),
