@@ -10,30 +10,10 @@ interface StateProps {
 	generatedTemplate: GeneratedTemplate;
 	background: Background;
 }
-interface OwnProps {
-	loadBackgroundImageDataById(background: Background): void;
-}
 
-type PuzzleStatsProps = OwnProps & StateProps;
+type PuzzleStatsProps = StateProps;
 
 class PuzzleStats extends Component<PuzzleStatsProps> {
-
-	componentDidMount() {
-		this.ensureBackgroundStats(this.props.background);
-	}
-
-	componentDidUpdate(prevProps: PuzzleStatsProps, prevState: any) {
-		if (prevProps.background !== this.props.background) {
-			this.ensureBackgroundStats(this.props.background);
-		}
-	}
-
-	ensureBackgroundStats(background: Background) {
-		if (background != null && background.width == null) {
-			this.props.loadBackgroundImageDataById(background);
-		}
-	}
-
 	render() {
 		const {
 			generatedTemplate,
@@ -64,20 +44,13 @@ class PuzzleStats extends Component<PuzzleStatsProps> {
 
 const mapStateToProps = (state: StateRoot): StateProps => {
 	return {
-	  background: state.backgrounds.resourceMap[state.backgrounds.selectedId!],
-	  generatedTemplate: state.generatedTemplates.resourceMap[state.generatedTemplates.selectedId!]
+	  background: state.backgrounds.linkMap[state.backgrounds.selectedId!],
+	  generatedTemplate: state.generatedTemplates.linkMap[state.generatedTemplates.selectedId!]
 	};
 }
 
-const mapDispatchToProps = (dispatch: Function) => {
-  return {
-    loadBackgroundImageDataById: (background: Background) => dispatch(backgroundsActions.loadBackgroundImageData(background))
-  }
-}
-
 const ConnectedPuzzleStats = connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
 )(PuzzleStats);
 
 export default ConnectedPuzzleStats;

@@ -19,7 +19,7 @@ const {
 } = createActions({
     START_FETCHING_TEMPLATES: () => ({isFetching: true}),
     SET_TEMPLATES: (templates: Template[]) => ({resourceList: templates}),
-    SELECT_TEMPLATE: (templateId: string) => ({selectedId: templateId})
+    SELECT_TEMPLATE: (templateLink: string) => ({selectedId: templateLink})
 })
 
 function fetchTemplates (): JiggenThunkAction {
@@ -31,11 +31,10 @@ function fetchTemplates (): JiggenThunkAction {
 	};
 }
 
-
 const reducers = handleActions<TemplatesState>({
         START_FETCHING_TEMPLATES: (state, {payload}: Action<any>) => base.setIsFetching(state, payload) as TemplatesState,
-        SET_TEMPLATES: (state, {payload}: Action<any>) => base.setOrUpdateResource(state, payload) as TemplatesState,
-        SELECT_TEMPLATE: (state, {payload}: Action<any>) => base.setResources(state, payload) as TemplatesState,
+        SET_TEMPLATES: (state, {payload}: Action<any>) => base.setResources(state, payload) as TemplatesState,
+        SELECT_TEMPLATE: (state, {payload}: Action<any>) => base.selectResource(state, payload) as TemplatesState,
     },
     initialState
 );

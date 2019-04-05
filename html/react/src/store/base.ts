@@ -4,9 +4,6 @@ import { BaseState, StringMap, Resource } from '../models';
 const initialState: BaseState<Resource> = {
 	selectedId: null,
 	resourceList: [],
-	resourceMap: {
-		// map of resource ids to resource
-	},
 	linkMap: {
 		// map of unique links to resources
 	},
@@ -16,18 +13,15 @@ const initialState: BaseState<Resource> = {
 const BROKEN_LINK = 'BROKEN_LINK';
 
 function setResources(state: BaseState<Resource>, {resourceList}: {resourceList: Resource[]}): BaseState<Resource> {
-	let resourceMap: StringMap<Resource> = {};
 	let linkMap: StringMap<Resource> = {};
 
 	resourceList.forEach((resource: Resource) => {
-		resourceMap[resource.id] = resource;
 		linkMap[resource.links.self] = resource;
 	});
 
 	return {
 		...state,
 		resourceList,
-		resourceMap,
 		linkMap,
 		isFetching: false
 	};
@@ -36,7 +30,6 @@ function setResources(state: BaseState<Resource>, {resourceList}: {resourceList:
 function addResources(state: BaseState<Resource>, {resourceList}: {resourceList: Resource[]}): BaseState<Resource> {
 	let {
 		resourceList: oldResourceList,
-		resourceMap, 
 		linkMap
 	} = state;
 
@@ -45,13 +38,12 @@ function addResources(state: BaseState<Resource>, {resourceList}: {resourceList:
 	const newResourceList: Resource[] = [...oldResourceList];
 
 	resourceList.forEach((resource: Resource) => {
-		newEntries[resource.id] = resource;
 		newLinks[resource.links.self] = resource;
 
 		// Check if the resource is already in the list
 		let i = 0;
 		for (i = 0; i < newResourceList.length; i++) {
-			if (newResourceList[i].id === resource.id) {
+			if (newResourceList[i].links.self === resource.links.self) {
 				newResourceList[i] = resource;
 				break;
 			}
@@ -65,10 +57,6 @@ function addResources(state: BaseState<Resource>, {resourceList}: {resourceList:
 	return {
 		...state,
 		resourceList: newResourceList,
-		resourceMap: {
-			...resourceMap,
-			...newEntries
-		},
 		linkMap: {
 			...linkMap,
 			...newLinks
@@ -80,13 +68,12 @@ function addResources(state: BaseState<Resource>, {resourceList}: {resourceList:
 function setOrUpdateResource<R extends Resource>(state: BaseState<R>, {resource}: {resource: R}): BaseState<R> {
 	let {
 		resourceList,
-		resourceMap,
 		linkMap
 	} = state;
 
 	const resourceListUpdated = [...resourceList];
 	const index = resourceList.findIndex((r: R) => {
-		return r.id == resource.id
+		return r.links.self == resource.links.self
 	});
 	if (index != -1) {
 		resourceListUpdated[index] = resource;
@@ -97,10 +84,6 @@ function setOrUpdateResource<R extends Resource>(state: BaseState<R>, {resource}
 	return {
 		...state,
 		resourceList: resourceListUpdated,
-		resourceMap: {
-			...resourceMap,
-			[resource.id]: resource
-		},
 		linkMap: {
 			...linkMap,
 			[resource.links.self]: resource
@@ -112,20 +95,15 @@ function setOrUpdateResource<R extends Resource>(state: BaseState<R>, {resource}
 function removeResource(state: BaseState<Resource>, {resource}: {resource: Resource}): BaseState<Resource> {
 	let {
 		resourceList,
-		resourceMap,
 		linkMap
 	} = state;
 
-	const resourceMapUpdated = {...resourceMap};
 	const linkMapUpdated = {...linkMap};
-
-	delete resourceMapUpdated[resource.id];
 	delete linkMapUpdated[resource.links.self];
 
 	return {
 		...state,
-		resourceList: resourceList.filter(existingResource => existingResource.id !== resource.id),
-		resourceMap: resourceMapUpdated,
+		resourceList: resourceList.filter(existingResource => existingResource.links.self !== resource.links.self),
 		linkMap: linkMapUpdated
 	};
 }

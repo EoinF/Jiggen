@@ -4,6 +4,8 @@ import { handleActions, createActions, Action } from 'redux-actions';
 import { Resource, ReducersRoot, BaseState, JiggenThunkAction } from '../models';
 import { getOrFetchResourceLinks } from '../actions/resourceLinks';
 import base from './base';
+import { Dispatch } from 'redux';
+import store from '.';
 
 export class Background extends Resource {
 	width?: number;
@@ -20,7 +22,7 @@ export class Background extends Resource {
 		} else {
 			link = imageOrLink;
 		}
-		super(link, {
+		super({
 			self: link,
 			image: link
 		}, "Custom image");
@@ -53,7 +55,7 @@ const {
 	SET_BACKGROUND: (background: Background) => {
 		const savedSuggestions: Background[] = JSON.parse(localStorage.getItem('savedBackgrounds') || '[]');
 
-		if (savedSuggestions.every((existingBackground: Background) => background.id !== existingBackground.id)) {
+		if (savedSuggestions.every((existingBackground: Background) => background.links.self !== existingBackground.links.self)) {
 			savedSuggestions.push(background);
 			localStorage.setItem('savedBackgrounds', JSON.stringify(savedSuggestions));
 		}
@@ -68,7 +70,7 @@ const {
 			const savedSuggestions: Background[] = JSON.parse(localStorage.getItem('savedBackgrounds') || '[]');
 			
 			localStorage.setItem('savedBackgrounds', JSON.stringify(
-				savedSuggestions.filter(existingBackground => existingBackground.id !== background.id)
+				savedSuggestions.filter(existingBackground => existingBackground.links.self !== background.links.self)
 			));
 		}
 		return {resource: background};
@@ -96,17 +98,22 @@ function fetchBackgroundByLink(link: string): JiggenThunkAction {
 	};
 }
 
-function loadBackgroundImageData(background: Background): JiggenThunkAction {
-	return async(dispatch, getState) => {
-		const imageLoadingPromise = new Promise<HTMLImageElement>((resolve, reject) => {
-			const image = new Image();
-			image.onload = data => resolve(image);
-			image.onerror = reject;
-			image.src = background.links.image;
-		});
-		const {width, height} = await imageLoadingPromise;
-		dispatch(updateBackground(background.id, {width, height}));
-	}
+const getOrDownloadBackground = (link: string, dispatch: Dispatch, getState: Function) => {
+    return new Promise<Background>(resolve => {
+		const background = getState().backgrounds.linkMap[link];
+        if (background != null) {
+            resolve(background);
+        } else {
+			const unsubscribe = store.subscribe(() => {
+                const background = getState().backgrounds.linkMap[link];
+				if (background != null) {
+					resolve(background);
+                    unsubscribe();
+                }
+            });
+            fetchBackgroundByLink(link);
+        }
+    });
 }
 
 function selectBackgroundByLink (link: string): JiggenThunkAction {
@@ -116,7 +123,7 @@ function selectBackgroundByLink (link: string): JiggenThunkAction {
 			() => dispatch(fetchBackgroundByLink(link)),
 			() => getState().backgrounds
 		);
-		dispatch(selectBackground(background.id));
+		dispatch(selectBackground(background.links.self));
 	};
 }
 
@@ -132,7 +139,7 @@ const reducers = handleActions<BackgroundsState>({
 			payload: {resourceId, updatedAttributes}
 		}: any) => {
 			const updatedBackground = {
-				...state.resourceMap[resourceId],
+				...state.linkMap[resourceId],
 				...updatedAttributes
 			} as Background;
 			return base.setOrUpdateResource(state, {resource: updatedBackground}) as BackgroundsState;
@@ -150,8 +157,8 @@ const backgroundsActions = {
 	addBackgrounds,
 	selectById: selectBackground,
 	selectByLink: selectBackgroundByLink,
-	loadBackgroundImageData,
-	removeBackground
+	removeBackground,
+	getOrDownloadBackground
 }
 
 export {

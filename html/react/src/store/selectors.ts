@@ -4,7 +4,7 @@ import { PlayablePuzzle } from './playablePuzzles';
 import { GeneratedTemplate } from './generatedTemplates';
 import { Background } from './backgrounds';
 
-export const getSelectedTemplate = (state: StateRoot) => state.templates.templatesMap[state.templates.selectedId]
+export const getSelectedTemplate = (state: StateRoot) => state.templates.linkMap[state.templates.selectedId!]
 
 const getBasePlayablePuzzleList = (state: StateRoot) => state.playablePuzzles.resourceList;
 const getBackgroundLinkMap = (state: StateRoot) => state.backgrounds.linkMap
@@ -26,7 +26,7 @@ export const getPieceCountMap = createSelector(
         playablePuzzleList.forEach((puzzle: PlayablePuzzle): any => {
             const generatedTemplate = generatedTemplateLinkMap[puzzle.links.generatedTemplate];
             if (generatedTemplate != null) {
-                pieceCountMap[puzzle.id] = Object.keys(generatedTemplate.vertices).length;
+                pieceCountMap[puzzle.links.self] = Object.keys(generatedTemplate.vertices).length;
             }
           }
         );

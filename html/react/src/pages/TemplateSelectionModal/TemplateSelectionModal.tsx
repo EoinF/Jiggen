@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import PlainLink from '../../widgets/PlainLink';
-import { templatesActions } from '../../actions/templates';
 
 import ImageDisplayReel from '../../widgets/ImageDisplayReel';
 
 import styles from './TemplateSelectionModal.module.scss';
 import ModalWrapper from '../ModalManager/ModalWrapper';
-import TemplateWidget from './TemplateWidget';
-import { Template } from '../../store/templates';
-import { StateRoot, Resource } from '../../models';
+import { Template, templatesActions } from '../../store/templates';
+import { StateRoot } from '../../models';
 
 interface StateProps {
 	templates: Template[];
@@ -17,7 +14,7 @@ interface StateProps {
 
 interface DispatchProps {
 	fetchTemplates(): void;
-	selectTemplate(id: string): void;
+	selectTemplate(link: string): void;
 }
 
 type TemplateSelectionProps = StateProps & DispatchProps;
@@ -58,14 +55,14 @@ class TemplateSelectionModal extends Component<TemplateSelectionProps> {
 
 const mapStateToProps = (state: StateRoot): StateProps => {
   return {
-    templates: state.templates.templates
+    templates: state.templates.resourceList
   }
 }
 
 const mapDispatchToProps = (dispatch: Function): DispatchProps => {
   return {
     fetchTemplates: () => dispatch(templatesActions.fetchTemplates()),
-    selectTemplate: (id: string) => dispatch(templatesActions.selectTemplate(id))
+    selectTemplate: (link: string) => dispatch(templatesActions.selectTemplate(link))
   }
 }
 

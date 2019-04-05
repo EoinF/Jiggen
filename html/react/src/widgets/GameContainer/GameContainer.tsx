@@ -20,24 +20,20 @@ import styles from './GameContainer.module.scss';
 import { StateRoot } from '../../models';
 import withLoadingWrapper from './withLoadingDisplay';
 import { DownloadedImage } from '../../store/downloadedImages';
+import { puzzleSolverActions } from '../../store/puzzleSolverScreen';
 
 interface DispatchProps {
-  fetchGeneratedTemplateByLink(link: string): void;
+  setPuzzleStatus(isFreshPuzzle: Boolean): void;
 }
 
 interface StateProps {
   showFullScreenFallback: Boolean;
-  generatedTemplate: GeneratedTemplate;
-  downloadedBackground: DownloadedImage;
+  shouldShuffleOnFullscreen: Boolean;
 }
 
 type GameContainerProps = StateProps & DispatchProps;
 
-interface GameContainerState {
-  shouldShuffleOnFullscreen: Boolean;
-}
-
-class GameContainer extends React.Component<GameContainerProps, GameContainerState> {
+class GameContainer extends React.Component<GameContainerProps> {
   gameContainerRef: React.RefObject<any>;
   updateContainerSize$: Subject<void>;
   updateContainerSubscription: Subscription;
@@ -66,20 +62,16 @@ class GameContainer extends React.Component<GameContainerProps, GameContainerSta
   }
 
   onFullScreenChange = () => {
-    if (this.state.shouldShuffleOnFullscreen && isFullScreen()) {
+    if (this.props.shouldShuffleOnFullscreen && isFullScreen()) {
       gwtAdapter.shuffle();
-      this.setState({shouldShuffleOnFullscreen: false});
+      this.props.setPuzzleStatus(false);
     }
     
     this.updateContainerSize$.next();
   }
 
   setOrFetchTemplate = (generatedTemplate: GeneratedTemplate) => {
-    if (generatedTemplate.vertices != null) {
-      gwtAdapter.setTemplate(generatedTemplate);
-    } else {
-      this.props.fetchGeneratedTemplateByLink(generatedTemplate.links.self);
-    }
+    
   }
   
   updateContainerSize = () => {
@@ -102,13 +94,6 @@ class GameContainer extends React.Component<GameContainerProps, GameContainerSta
 
   componentDidMount() {
     this.gameContainerRef.current.appendChild(document.getElementById('embed-html'));
-
-    if (this.props.generatedTemplate != null) {
-      this.setOrFetchTemplate(this.props.generatedTemplate);
-    }
-    if (this.props.downloadedBackground != null) {
-      gwtAdapter.setBackground(this.props.downloadedBackground);
-    }
     this.updateContainerSize$.next();
   }
 
@@ -126,25 +111,9 @@ class GameContainer extends React.Component<GameContainerProps, GameContainerSta
     }
   }
 
-  componentDidUpdate(prevProps: GameContainerProps, prevState: GameContainerState) {
+  componentDidUpdate(prevProps: GameContainerProps) {
     if (prevProps.showFullScreenFallback != this.props.showFullScreenFallback) {
       this.onFullScreenChange();
-    }
-
-    let isUpdated = false;
-    if (prevProps.generatedTemplate !== this.props.generatedTemplate && this.props.generatedTemplate != null) {
-      this.setOrFetchTemplate(this.props.generatedTemplate);
-      isUpdated = true;
-    }
-    if (prevProps.downloadedBackground !== this.props.downloadedBackground 
-      && this.props.downloadedBackground != null) {
-      gwtAdapter.setBackground(this.props.downloadedBackground);
-      isUpdated = true;
-    }
-    if (isUpdated) {
-      this.setState({
-        shouldShuffleOnFullscreen: true
-      });
     }
   }
 
@@ -167,15 +136,14 @@ const mapStateToProps = (_state: any, ownProps: {}): StateProps => {
   const state = (_state as StateRoot); // Required because we can't change type of _state
   return {
     showFullScreenFallback: state.displayOptions.showFullScreenFallback,
-    downloadedBackground: state.downloadedImages.resourceMap[state.backgrounds.selectedId!],
-    generatedTemplate: state.generatedTemplates.resourceMap[state.generatedTemplates.selectedId!]
+    shouldShuffleOnFullscreen: state.puzzleSolverScreen.isFreshPuzzle
   };
 }
 
 const mapDispatchToProps = (dispatch: Function): DispatchProps => {
   return {
-    fetchGeneratedTemplateByLink: (link: string) => {
-      dispatch(generatedTemplatesActions.fetchByLink(link))
+    setPuzzleStatus: (isFreshPuzzle: Boolean) => {
+      dispatch(puzzleSolverActions.setPuzzleStatus(isFreshPuzzle))
     }
   };
 }

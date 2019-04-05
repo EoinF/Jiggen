@@ -3,6 +3,8 @@ import { handleActions, createActions, Action } from 'redux-actions';
 
 import { Resource, ReducersRoot, BaseState, JiggenThunkAction, StringMap } from '../models';
 import base from './base';
+import { Dispatch } from 'redux';
+import store from '.';
 
 export interface GeneratedTemplate extends Resource {
 	edges: any[];
@@ -30,11 +32,12 @@ const {
 	SELECT_GENERATED_TEMPLATE: (generatedTemplateId: string) => ({ selectedId: generatedTemplateId})
 });
 
-function fetchGeneratedTemplateByLink (link: string): JiggenThunkAction {
+function fetchGeneratedTemplateByLink (link: string, onDownloadCompleteResolver = () => {}): JiggenThunkAction {
 	return async (dispatch, getState) => {
 		dispatch(startFetchingGeneratedTemplates());
 		const result = await axios.get(link);
 		dispatch(setGeneratedTemplate(result.data));
+		onDownloadCompleteResolver();
 	};
 }
 
@@ -55,12 +58,31 @@ function selectGeneratedTemplateByLink (link: string): JiggenThunkAction {
 			() => dispatch(fetchGeneratedTemplateByLink(link)),
 			() => getState().generatedTemplates
 		);
-		dispatch(selectGeneratedTemplate(generatedTemplate.id));
+		dispatch(selectGeneratedTemplate(generatedTemplate.links.self));
 	};
 }
 
+
+const getOrDownloadGeneratedTemplate = (link: string, dispatch: Dispatch, getState: Function) => {
+    return new Promise(resolve => {
+        const generatedTemplate = getState().generatedTemplates.linkMap[link];
+        if (generatedTemplate != null && generatedTemplate.vertices != null) {
+            resolve(generatedTemplate);
+        } else {
+			const unsubscribe = store.subscribe(() => {
+                const _generatedTemplate = getState().generatedTemplates.linkMap[link];
+				if (_generatedTemplate != null && _generatedTemplate.vertices != null) {
+					resolve(_generatedTemplate);
+                    unsubscribe();
+                }
+            });
+            fetchGeneratedTemplateByLink(link);
+        }
+    });
+}
+
 const reducers = handleActions({
-	 	FETCH_GENERATED_TEMPLATES: (state, {payload}: Action<any>) => base.setIsFetching(state, payload),
+		START_FETCHING_GENERATED_TEMPLATES: (state, {payload}: Action<any>) => base.setIsFetching(state, payload),
 		SET_GENERATED_TEMPLATE: (state, {payload}: Action<any>) => base.setOrUpdateResource(state, payload),
 		ADD_GENERATED_TEMPLATES: (state, {payload}: Action<any>) => base.addResources(state, payload),
 		SELECT_GENERATED_TEMPLATE: (state, {payload}: Action<any>) => base.selectResource(state, payload)
@@ -72,7 +94,8 @@ const generatedTemplatesActions = {
 	selectByLink: selectGeneratedTemplateByLink,
 	fetchAllByLink: fetchGeneratedTemplatesByLink,
 	setGeneratedTemplate,
-	addGeneratedTemplates
+	addGeneratedTemplates,
+	getOrDownloadGeneratedTemplate
 }
 
 export {

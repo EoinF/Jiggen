@@ -5,18 +5,18 @@ import { PlayablePuzzlesState } from '../store/playablePuzzles';
 import { GeneratedTemplatesState } from '../store/generatedTemplates';
 import { DisplayOptionsState } from '../store/displayOptions';
 import { DownloadedImagesState } from '../store/downloadedImages';
+import { PuzzleSolverScreenState } from '../store/puzzleSolverScreen';
+import { TemplatesState } from '../store/templates';
 
 export interface StringMap<T> {
 	[key: string]: T
 }
 
 export class Resource {
-	id: string;
     links: any;
     name: string;
     
-    constructor(id: string, links: any, name: string) {
-        this.id = id;
+    constructor(links: any, name: string) {
         this.links = links;
         this.name = name;
     }
@@ -29,19 +29,19 @@ export class Resource {
 export interface BaseState<T extends Resource> {
     selectedId: string | null;
     resourceList: T[];
-	resourceMap: StringMap<T>;
 	linkMap:  StringMap<T>;
 	isFetching: boolean;
 }
 
 export interface StateRoot {
-	templates: any,
+	templates: TemplatesState,
     backgrounds: BackgroundsState,
     generatedTemplates: GeneratedTemplatesState,
     resourceLinks: any,
     displayOptions: DisplayOptionsState,
     playablePuzzles: PlayablePuzzlesState,
     downloadedImages: DownloadedImagesState
+    puzzleSolverScreen: PuzzleSolverScreenState
 }
 
 export interface ReducersRoot {
@@ -51,7 +51,8 @@ export interface ReducersRoot {
     resourceLinks: any,
     displayOptions: any,
     playablePuzzles: any,
-    downloadedImages: any
+    downloadedImages: any,
+    puzzleSolverScreen: any
 }
 
 export interface JiggenThunkAction extends ThunkAction<any, ReducersRoot, any, BaseAction> {

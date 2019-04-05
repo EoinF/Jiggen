@@ -8,16 +8,20 @@ import { Background } from "../../store/backgrounds";
 import { StateRoot, Resource } from "../../models";
 import { connect } from "react-redux";
 import { DownloadedImage, downloadedImagesActions } from "../../store/downloadedImages";
+import { GeneratedTemplate, generatedTemplatesActions } from "../../store/generatedTemplates";
 
 interface LoadingDisplayState {
     isGWTLoading: Boolean;
 }
 
 interface DispatchProps {
-    downloadImage(resource: Resource): void
+    downloadImage(resource: Resource): void;
+    fetchGeneratedTemplate(resource: Resource): void;
 }
 interface StateProps {
+    selectedGeneratedTemplate: GeneratedTemplate;
     selectedBackground: Background;
+
     downloadedImage: DownloadedImage;
 }
 
@@ -39,16 +43,29 @@ class LoadingDisplayWrapper extends Component<LoadingDisplayWrapperProps, Loadin
     }
 
     componentDidUpdate(prevProps: LoadingDisplayWrapperProps, prevState: LoadingDisplayState) {
-        if (prevProps.selectedBackground != this.props.selectedBackground && 
+        if (prevProps.selectedBackground != this.props.selectedBackground &&
             (
                 prevProps.selectedBackground == null || 
-                prevProps.selectedBackground.links.image !== this.props.selectedBackground.links.image
+                prevProps.selectedBackground.links.self !== this.props.selectedBackground.links.self
             )
          ) {
             this.props.downloadImage(this.props.selectedBackground);
         }
+
+        if (prevProps.selectedGeneratedTemplate != this.props.selectedGeneratedTemplate &&
+            (
+                prevProps.selectedGeneratedTemplate == null || 
+                prevProps.selectedGeneratedTemplate.links.self !== this.props.selectedGeneratedTemplate.links.self
+            )
+            && !this.isGeneratedTemplateReady(this.props.selectedGeneratedTemplate)
+         ) {
+            this.props.fetchGeneratedTemplate(this.props.selectedGeneratedTemplate);
+        }
     }
 
+    isGeneratedTemplateReady = (generatedTemplate: GeneratedTemplate) => {
+        return generatedTemplate.vertices != null;
+    }
 
     onLoad = () => {
         this.setState({
@@ -70,18 +87,7 @@ class LoadingDisplayWrapper extends Component<LoadingDisplayWrapperProps, Loadin
     }
 
     render() {
-        if (this.state.isGWTLoading) {
-            return <div className={styles.mainContainer}>
-                <div className={styles.loadingContainer}>
-                    <div>Unpacking the box...</div>
-                    <img width='32px' height='32px'
-                        src={puzzlePieceIcon}
-                        className={styles.loadingSpinner}
-                        alt='Loading spinner'
-                    />
-                </div>
-            </div>
-        } else if (this.props.downloadedImage && this.props.downloadedImage.isDownloading) {
+        if (this.props.downloadedImage && this.props.downloadedImage.isDownloading) {
             const downloadedData = this.toDataString(this.props.downloadedImage.bytesDownloaded);
             const totalData = this.toDataString(this.props.downloadedImage.bytesTotal);
 
@@ -99,7 +105,29 @@ class LoadingDisplayWrapper extends Component<LoadingDisplayWrapperProps, Loadin
                     />
                 </div>
             </div>
-        } else {
+        } else if (this.props.selectedGeneratedTemplate && !this.isGeneratedTemplateReady(this.props.selectedGeneratedTemplate)) {
+            return <div className={styles.mainContainer}>
+                <div className={styles.loadingContainer}>
+                    Downloading template data
+                    <img width='32px' height='32px'
+                        src={puzzlePieceIcon}
+                        className={styles.loadingSpinner}
+                        alt='Loading spinner'
+                    />
+                </div>
+            </div>
+        } else if (this.state.isGWTLoading) {
+            return <div className={styles.mainContainer}>
+                <div className={styles.loadingContainer}>
+                    <div>Unpacking the box...</div>
+                    <img width='32px' height='32px'
+                        src={puzzlePieceIcon}
+                        className={styles.loadingSpinner}
+                        alt='Loading spinner'
+                    />
+                </div>
+            </div>
+        } else  {
             return this.props.children;
         }
     }
@@ -108,8 +136,9 @@ class LoadingDisplayWrapper extends Component<LoadingDisplayWrapperProps, Loadin
 const mapStateToProps = (_state: any, ownProps: any): StateProps => {
     const state = (_state as StateRoot); // Required because we can't change type of _state
     return {
-        selectedBackground: state.backgrounds.resourceMap[state.backgrounds.selectedId!],
-        downloadedImage: state.downloadedImages.resourceMap[state.backgrounds.selectedId!]
+        selectedGeneratedTemplate: state.generatedTemplates.linkMap[state.puzzleSolverScreen.selectedGeneratedTemplate!],
+        selectedBackground: state.backgrounds.linkMap[state.puzzleSolverScreen.selectedBackground!],
+        downloadedImage: state.downloadedImages.linkMap[state.puzzleSolverScreen.selectedBackground!],
     };
 }
 
@@ -118,6 +147,9 @@ const mapDispatchToProps = (dispatch: Function): DispatchProps => {
     return {
       downloadImage: (resource: Resource) => {
         dispatch(downloadedImagesActions.downloadImage(resource))
+      },
+      fetchGeneratedTemplate: (resource: Resource) => {
+        dispatch(generatedTemplatesActions.fetchByLink(resource.links.self))
       }
     };
   }

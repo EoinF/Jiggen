@@ -16,6 +16,7 @@ import { StateRoot } from '../../models';
 import { getSelectedTemplate, getGeneratedTemplatesForTemplate } from '../../store/selectors';
 import { displayOptionsActions } from '../../store/displayOptions';
 import { DownloadedImage } from '../../store/downloadedImages';
+import { puzzleSolverActions } from '../../store/puzzleSolverScreen';
 
 interface StateProps {
   selectedTemplate: any;
@@ -33,10 +34,6 @@ interface DispatchProps {
 type CustomizePageProps = StateProps & DispatchProps;
 
 class CustomizePage extends Component<CustomizePageProps> {
-
-  componentDidMount() {
-    this.updateGeneratedTemplate();
-  };
 
   componentDidUpdate(prevProps: CustomizePageProps) {
     if (this.props.selectedTemplate != prevProps.selectedTemplate) {
@@ -101,7 +98,7 @@ class CustomizePage extends Component<CustomizePageProps> {
 const mapStateToProps = (state: StateRoot): StateProps => {
   return {
     selectedTemplate: getSelectedTemplate(state),
-    downloadedBackground: state.downloadedImages.resourceMap[state.backgrounds.selectedId!],
+    downloadedBackground: state.downloadedImages.linkMap[state.puzzleSolverScreen.selectedBackground!],
     generatedTemplates: getGeneratedTemplatesForTemplate(state)
   };
 }
@@ -109,7 +106,7 @@ const mapStateToProps = (state: StateRoot): StateProps => {
 const mapDispatchToProps = (dispatch: Function): DispatchProps => {
   return {
     fetchGeneratedTemplatesByLink: (link: string) => dispatch(generatedTemplatesActions.fetchAllByLink(link)),
-    selectGeneratedTemplateByLink: (link: string) => dispatch(generatedTemplatesActions.selectByLink(link)),
+    selectGeneratedTemplateByLink: (link: string) => dispatch(puzzleSolverActions.selectGeneratedTemplate(link)),
     showBackgroundsModal: () => dispatch(displayOptionsActions.showBackgroundsModal()),
     showTemplatesModal: () => dispatch(displayOptionsActions.showTemplatesModal())
   }

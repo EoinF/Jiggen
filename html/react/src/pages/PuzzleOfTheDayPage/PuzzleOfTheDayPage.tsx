@@ -11,6 +11,7 @@ import GameContainer from '../../widgets/GameContainer';
 import { StateRoot, StringMap } from '../../models';
 import PieceCountSelection from './PieceCountSelection/PieceCountSelection';
 import { getPlayablePuzzleList, getPieceCountMap } from '../../store/selectors';
+import { puzzleSolverActions } from '../../store/puzzleSolverScreen';
 
 interface DispatchProps {
   selectPuzzle(id: string): void;
@@ -37,9 +38,9 @@ class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps, any> {
 
   componentDidUpdate(prevProps: PuzzleOfTheDayPageProps) {
     if ((this.props.playablePuzzles !== prevProps.playablePuzzles)
-      && this.props.playablePuzzles != null 
+      && this.props.playablePuzzles != null
       && this.props.playablePuzzles.length > 0) {
-      this.props.selectPuzzle(this.props.playablePuzzles[0].id);
+      this.props.selectPuzzle(this.props.playablePuzzles[0].links.self);
 
       this.props.playablePuzzles.forEach((playablePuzzle) => {
         this.props.fetchBackgroundByLink(playablePuzzle.links.background);
@@ -47,14 +48,14 @@ class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps, any> {
       });
     }
     if (this.props.selectedPuzzle != prevProps.selectedPuzzle) {
-      const selectedPuzzle = this.props.selectedPuzzle;
-      this.props.selectBackground(selectedPuzzle.links.background);
-      this.props.selectGeneratedTemplate(selectedPuzzle.links.generatedTemplate);
+      const {background, generatedTemplate} = this.props.selectedPuzzle.links;
+      this.props.selectBackground(background);
+      this.props.selectGeneratedTemplate(generatedTemplate);
     }
   };
 
-  onSelectPieceCount = (id: string) => {
-    this.props.selectPuzzle(id);
+  onSelectPieceCount = (link: string) => {
+    this.props.selectPuzzle(link);
   }
 
   render() {
@@ -70,8 +71,8 @@ class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps, any> {
               <GameContainer/>
             </div>
             <PieceCountSelection
-              selectedId={selectedPuzzle ? selectedPuzzle.id : null}
-              pieceCountMap={this.props.pieceCountMap} 
+              selectedId={selectedPuzzle ? selectedPuzzle.links.self : null}
+              pieceCountMap={this.props.pieceCountMap}
               onClick={this.onSelectPieceCount} />
           </div>
         </div>
@@ -85,15 +86,15 @@ function mapStateToProps(_state: any, ownProps: any): StateProps {
   return {
     pieceCountMap: getPieceCountMap(state),
     playablePuzzles: getPlayablePuzzleList(state),
-    selectedPuzzle: state.playablePuzzles.resourceMap[state.playablePuzzles.selectedId!]
+    selectedPuzzle: state.playablePuzzles.linkMap[state.playablePuzzles.selectedId!]
   };
 }
 
 const mapDispatchToProps = (dispatch: Function): DispatchProps => {
   return {
-    selectPuzzle: (id: string) => dispatch(playablePuzzlesActions.selectPlayablePuzzle(id)),
-    selectBackground: (link: string) => dispatch(backgroundsActions.selectByLink(link)),
-    selectGeneratedTemplate: (link: string) => dispatch(generatedTemplatesActions.selectByLink(link)),
+    selectPuzzle: (link: string) => dispatch(playablePuzzlesActions.selectPlayablePuzzle(link)),
+    selectBackground: (link: string) => dispatch(puzzleSolverActions.selectAndDownloadBackground(link)),
+    selectGeneratedTemplate: (link: string) => dispatch(puzzleSolverActions.selectAndDownloadGeneratedTemplate(link)),
     fetchPuzzlesOfTheDay: () => dispatch(playablePuzzlesActions.fetchPuzzlesOfTheDay()),
     fetchGeneratedTemplateByLink: (link: string) => dispatch(generatedTemplatesActions.fetchByLink(link)),
     fetchBackgroundByLink: (link: string) => dispatch(backgroundsActions.fetchByLink(link))

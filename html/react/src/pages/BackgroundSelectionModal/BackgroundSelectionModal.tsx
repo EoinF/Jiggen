@@ -12,13 +12,14 @@ import styles from './BackgroundSelectionModal.module.scss';
 import ModalWrapper from '../ModalManager/ModalWrapper';
 import BackgroundSelectionForm from './BackgroundSelectionForm';
 import { StateRoot, Resource } from '../../models';
+import { puzzleSolverActions } from '../../store/puzzleSolverScreen';
 
 interface StateProps {
 	backgrounds: Background[]
 }
 
 interface DispatchProps {
-	selectBackgroundById(id: string): void;
+	selectBackgroundByLink(link: string): void;
 	addBackground(background: Background): void;
 	addBackgrounds(backgrounds: Background[]): void;
 	fetchBackgrounds(): void;
@@ -49,7 +50,7 @@ class BackgroundSelectionModal extends Component<BackgroundSelectionModalProps> 
 
 	onSelectBackground = (background: Background) => {
 		this.props.addBackground(background);
-		this.props.selectBackgroundById(background.id);
+		this.props.selectBackgroundByLink(background.links.self);
 	}
 
 	onError = (background: Background) => {
@@ -59,7 +60,7 @@ class BackgroundSelectionModal extends Component<BackgroundSelectionModalProps> 
 	MainContent = () => {
 		const {
 			backgrounds,
-			selectBackgroundById: selectBackground
+			selectBackgroundByLink: selectBackground
 		} = this.props;
 
 		return <div className={styles.contentContainer}>
@@ -85,7 +86,7 @@ const mapStateToProps = (state: StateRoot) => {
 
 const mapDispatchToProps = (dispatch: Function): DispatchProps => {
   return {
-		selectBackgroundById: (id: string) => dispatch(backgroundsActions.selectById(id)),
+		selectBackgroundByLink: (link: string) => dispatch(puzzleSolverActions.selectBackground(link)),
 		addBackground: (background: Background) => dispatch(backgroundsActions.setBackground(background)),
 		addBackgrounds: (backgrounds: Background[]) => dispatch(backgroundsActions.addBackgrounds(backgrounds)),
 		fetchBackgrounds: () => dispatch(backgroundsActions.fetchBackgrounds()),
