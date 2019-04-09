@@ -6,6 +6,7 @@ npm install -q
 cd ../..
 ./gradlew html:dist -q
 
+# Remove gzip extension from each file
 find html/build/dist -type f \
     ! -name '*.gz' \
     ! -name '*.png' \
@@ -17,6 +18,7 @@ for f in `find html/build/dist -type f -name '*.gz'`; do
     mv $f ${f%.gz}
 done
 
+# Upload non gzipped files
 aws s3 sync html/build/dist s3://cdn.jiggen.app/ \
 --include "*" --acl "public-read" \
 --exclude "*.js" \
@@ -32,6 +34,7 @@ aws s3 sync html/build/dist s3://cdn.jiggen.app/ \
 --exclude "*.map" \
 --delete
 
+# Upload gzipped files with content-encoding header set to gzip
 aws s3 sync html/build/dist s3://cdn.jiggen.app/ \
 --exclude "*" \
 --include "*.js" --acl "public-read" --content-encoding gzip \
