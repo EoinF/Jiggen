@@ -1,8 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, LinkProps } from 'react-router-dom';
 import styles from './PlainLink.module.scss';
 
-const PlainLink = (props) => {
+const PlainLink = (props: LinkProps) => {
 	const {
 		children,
 		className,
@@ -10,7 +10,7 @@ const PlainLink = (props) => {
 	} = props;
 	return (
 		<Link
-			className={[styles.noTextDecoration, className].join(' ')}
+			className={styles.noTextDecoration}
 			{...otherProps}
 		>
 			{children}

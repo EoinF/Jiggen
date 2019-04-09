@@ -1,10 +1,10 @@
 import React from 'react';
-import PlainLink from '../PlainLink';
 
 import flask from './flaskC.png'
 import puzzleBox from './puzzleBoxC.png';
 
 import styles from './NavigationBar.module.scss';
+import PlainNavLink from '../PlainNavLink/PlainNavLink';
 
 const PUZZLE_OF_THE_DAY = '/daily';
 const CUSTOM = '/custom';
@@ -12,12 +12,12 @@ const CUSTOM = '/custom';
 const NavigationBar = ({location}) => {
     const path = location.pathname;
     return <div className={styles.mainContainer}>
-        <PlainLink to={PUZZLE_OF_THE_DAY} className={path === PUZZLE_OF_THE_DAY ? styles.selected: ''}>
+        <PlainNavLink to={PUZZLE_OF_THE_DAY} activeClassName={styles.selected}>
             <NavIcon imgSrc={puzzleBox} labelText="Daily" />
-        </PlainLink>
-        <PlainLink to={CUSTOM} className={path === CUSTOM ? styles.selected: ''}>
+        </PlainNavLink>
+        <PlainNavLink to={CUSTOM} activeClassName={styles.selected}>
             <NavIcon imgSrc={flask} labelText="Custom" />
-        </PlainLink>
+        </PlainNavLink>
     </div>
 };
 

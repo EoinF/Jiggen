@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import styles from './CustomizePage.module.scss';
+import styles from './CreatePuzzlePage.module.scss';
 import { generatedTemplatesActions, GeneratedTemplate } from '../../store/generatedTemplates';
 
 import SelectionWidget from './SelectionWidget';
 import PuzzleStats from './PuzzleStats';
-
-import GameContainer from '../../widgets/GameContainer';
 
 import templateLogo from './Template-icon-simple.png';
 import backgroundLogo from './Background-icon.png';
@@ -31,11 +29,11 @@ interface DispatchProps {
   showTemplatesModal(): void;
 }
 
-type CustomizePageProps = StateProps & DispatchProps;
+type CreatePuzzlePageProps = StateProps & DispatchProps;
 
-class CustomizePage extends Component<CustomizePageProps> {
+class CreatePuzzlePage extends Component<CreatePuzzlePageProps> {
 
-  componentDidUpdate(prevProps: CustomizePageProps) {
+  componentDidUpdate(prevProps: CreatePuzzlePageProps) {
     if (this.props.selectedTemplate != prevProps.selectedTemplate) {
       this.updateGeneratedTemplate();
     }
@@ -67,9 +65,6 @@ class CustomizePage extends Component<CustomizePageProps> {
         <div className={styles.mainContainer}>
           <h1>Custom Puzzle</h1>
           <div className={styles.contentContainer}>
-            <div className={styles.gameContainer}>
-              <GameContainer />
-            </div>
             <div className={styles.selectionContainer}>
                 <SelectionWidget
                   selection={selectedTemplate}
@@ -112,9 +107,7 @@ const mapDispatchToProps = (dispatch: Function): DispatchProps => {
   }
 }
 
-const ConnectedCustomizePage = connect(
+export default  connect(
   mapStateToProps,
   mapDispatchToProps
-)(CustomizePage);
-
-export default ConnectedCustomizePage;
+)(CreatePuzzlePage);

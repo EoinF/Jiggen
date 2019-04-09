@@ -4,10 +4,11 @@ import { Provider } from 'react-redux'
 
 import './index.scss';
 
-import CustomizePage from './pages/CustomizePage';
+import CustomPuzzlesPage from './pages/CustomPuzzlesPage/CustomPuzzlesPage';
 import PuzzleOfTheDayPage from './pages/PuzzleOfTheDayPage';
 import NavigationBar from './widgets/NavigationBar/NavigationBar';
 import ModalManager from './pages/ModalManager/ModalManager';
+import CreatePuzzlePage from './pages/CreatePuzzlePage/CreatePuzzlePage';
 
 
 class App extends Component {
@@ -28,7 +29,8 @@ class App extends Component {
 const AppContents = () => {
 	return <div className='flexContainer'>
 		<Switch>
-			<Route path='/custom' component={CustomizePage}/>
+			<Route exact path='/custom' component={CustomPuzzlesPage}/>
+			<Route path='/custom/new' component={CreatePuzzlePage}/>
 			<Route path='/daily' component={PuzzleOfTheDayPage}/>
 			<Route path='/'>
 				<Redirect to="/daily"/>

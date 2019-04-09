@@ -1,0 +1,25 @@
+@import '../../vars.scss';
+
+.mainContainer {
+  flex: 1;
+  padding: 2rem;
+}
+
+.puzzleCard {
+    display: flex;
+    align-items: center;
+
+    border: 2px dotted $purple500;
+    border-radius: 30px;
+    padding: 0.5rem 1rem;
+
+    .plusIcon {
+        padding-left: 0.5rem;
+        padding-right: 1rem;
+        font-size: 2rem;
+    }
+    .description {
+        // text-align: center;
+        flex: 1;
+    }
+}
