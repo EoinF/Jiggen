@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component, ChangeEvent } from 'react';
 import { connect } from 'react-redux';
 
 import styles from './CreatePuzzlePage.module.scss';
-import {GeneratedTemplate } from '../../store/generatedTemplates';
 
 import SelectionWidget from './SelectionWidget';
 
@@ -13,8 +12,10 @@ import { StateRoot } from '../../models';
 import { displayOptionsActions } from '../../store/displayOptions';
 import { Template } from '../../store/templates';
 import { PlainLink } from '../../widgets';
+import { customPuzzleActions } from '../../store/customPuzzle';
 
 interface StateProps {
+  puzzleName: string;
   selectedTemplate: Template;
   selectedBackground: Background;
 }
@@ -22,6 +23,7 @@ interface StateProps {
 interface DispatchProps {
   showBackgroundsModal(): void;
   showTemplatesModal(): void;
+  setName(name: string): void;
 }
 
 type CreatePuzzlePageProps = StateProps & DispatchProps;
@@ -32,18 +34,30 @@ class CreatePuzzlePage extends Component<CreatePuzzlePageProps> {
 
   }
 
+  onChangeName = (e: ChangeEvent<HTMLInputElement>) => {
+    this.props.setName(e.target.value)
+  }
+
   render() {
     const {
+      puzzleName,
       selectedTemplate,
       selectedBackground
     } = this.props;
+
+    const isReady = selectedTemplate != null 
+      && selectedBackground != null 
+      && puzzleName.length > 0;
 
     return (
         <div className={styles.mainContainer}>
         <div className={styles.contentContainer}>
             <div className={styles.inputField}>
               <div className={styles.inputContainer}>
-                <input value="Custom Puzzle"/>
+                <input 
+                  value={this.props.puzzleName}
+                  onChange={this.onChangeName}
+                />
               </div>
             </div>
             <div className={styles.selectionContainer}>
@@ -61,9 +75,13 @@ class CreatePuzzlePage extends Component<CreatePuzzlePageProps> {
                 />
             </div>
             <div className={styles.buttonControls}>
-              <PlainLink to="/custom">
-                <button onClick={this.onClickConfirm} className={styles.save}>✓</button>
-              </PlainLink>
+              { isReady ? ( 
+                <PlainLink to="/custom">
+                  <button onClick={this.onClickConfirm} className={styles.save}>✓</button>
+              </PlainLink> ) : (
+                <button disabled onClick={this.onClickConfirm} className={styles.save}>✓</button>
+                )
+              }
               <PlainLink to="/custom">
                 <button className={styles.cancel}>X</button>
               </PlainLink>
@@ -76,6 +94,7 @@ class CreatePuzzlePage extends Component<CreatePuzzlePageProps> {
 
 const mapStateToProps = (state: StateRoot): StateProps => {
   return {
+    puzzleName: state.customPuzzle.name,
     selectedTemplate: state.templates.linkMap[state.customPuzzle.selectedTemplate!],
     selectedBackground: state.backgrounds.linkMap[state.customPuzzle.selectedBackground!]
   };
@@ -83,6 +102,7 @@ const mapStateToProps = (state: StateRoot): StateProps => {
 
 const mapDispatchToProps = (dispatch: Function): DispatchProps => {
   return {
+    setName: (name: string) => dispatch(customPuzzleActions.setName(name)),
     showBackgroundsModal: () => dispatch(displayOptionsActions.showBackgroundsModal()),
     showTemplatesModal: () => dispatch(displayOptionsActions.showTemplatesModal())
   }

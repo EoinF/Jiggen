@@ -50,11 +50,19 @@ h1, h2 {
     border: none;
     // border: 1px solid #916c92;
     // border: solid 1px white;
+
+    &:disabled {
+      background: $purple150;
+    }
   }
 }
 
 .save {
   color: #00ff00;
+  
+  &:disabled {
+    color: green;
+  }
 }
 
 .cancel {
