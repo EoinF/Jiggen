@@ -19,9 +19,10 @@ import playablePuzzles from './playablePuzzles';
 import displayOptions from './displayOptions';
 import downloadedImages from './downloadedImages';
 import puzzleSolverScreen from './puzzleSolverScreen';
-import customPuzzle from './customPuzzle';
+import customPuzzle, { CustomPuzzleState } from './customPuzzle';
 
 import thunk from 'redux-thunk';
+import { from } from 'rxjs';
 
 declare global {
     interface Window { __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any; }

@@ -12,7 +12,7 @@ import { StateRoot } from '../../models';
 import { displayOptionsActions } from '../../store/displayOptions';
 import { Template } from '../../store/templates';
 import { PlainLink } from '../../widgets';
-import { customPuzzleActions } from '../../store/customPuzzle';
+import { customPuzzleActions, CustomPuzzle } from '../../store/customPuzzle';
 
 interface StateProps {
   puzzleName: string;
@@ -24,6 +24,7 @@ interface DispatchProps {
   showBackgroundsModal(): void;
   showTemplatesModal(): void;
   setName(name: string): void;
+  saveCustomPuzzle(puzzle: CustomPuzzle): void;
 }
 
 type CreatePuzzlePageProps = StateProps & DispatchProps;
@@ -31,7 +32,11 @@ type CreatePuzzlePageProps = StateProps & DispatchProps;
 class CreatePuzzlePage extends Component<CreatePuzzlePageProps> {
 
   onClickConfirm = () => {
-
+    this.props.saveCustomPuzzle({
+      name: this.props.puzzleName, 
+      background: this.props.selectedBackground.links.self, 
+      template: this.props.selectedTemplate.links.self
+    });
   }
 
   onChangeName = (e: ChangeEvent<HTMLInputElement>) => {
@@ -104,7 +109,8 @@ const mapDispatchToProps = (dispatch: Function): DispatchProps => {
   return {
     setName: (name: string) => dispatch(customPuzzleActions.setName(name)),
     showBackgroundsModal: () => dispatch(displayOptionsActions.showBackgroundsModal()),
-    showTemplatesModal: () => dispatch(displayOptionsActions.showTemplatesModal())
+    showTemplatesModal: () => dispatch(displayOptionsActions.showTemplatesModal()),
+    saveCustomPuzzle: (puzzle: CustomPuzzle) => dispatch(customPuzzleActions.addPuzzle(puzzle))
   }
 }
 
