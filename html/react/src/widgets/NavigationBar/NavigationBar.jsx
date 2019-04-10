@@ -10,15 +10,18 @@ const PUZZLE_OF_THE_DAY = '/daily';
 const CUSTOM = '/custom';
 
 const NavigationBar = ({location}) => {
-    const path = location.pathname;
-    return <div className={styles.mainContainer}>
-        <PlainNavLink to={PUZZLE_OF_THE_DAY} activeClassName={styles.selected}>
-            <NavIcon imgSrc={puzzleBox} labelText="Daily" />
-        </PlainNavLink>
-        <PlainNavLink to={CUSTOM} activeClassName={styles.selected}>
-            <NavIcon imgSrc={flask} labelText="Custom" />
-        </PlainNavLink>
-    </div>
+    if ([PUZZLE_OF_THE_DAY, CUSTOM].find(p => p === location.pathname) != null) {
+        return <div className={styles.mainContainer}>
+            <PlainNavLink to={PUZZLE_OF_THE_DAY} activeClassName={styles.selected}>
+                <NavIcon imgSrc={puzzleBox} labelText="Daily" />
+            </PlainNavLink>
+            <PlainNavLink to={CUSTOM} activeClassName={styles.selected}>
+                <NavIcon imgSrc={flask} labelText="Custom" />
+            </PlainNavLink>
+        </div>
+    } else {
+        return null;
+    }
 };
 
 const NavIcon = ({imgSrc, labelText}) => (

@@ -48,28 +48,20 @@ class BackgroundSelectionForm extends Component<BackgroundSelectionFormProps, Ba
 	}
 
 	render() {
-		const {
-			isSubmitted
-		} = this.state;
-
-		if (isSubmitted) {
-			return (<Redirect to="/custom" />);
-		} else {
-			return (
-				<div className={styles.mainContainer}>
-					<div className={styles.linkInputContainer}>
-						<ImageLinkInput onValidImage={this.onValidCustomImage} />
-					</div>
-					<ImageFileInput onValidImage={this.onValidUploadImage}>
-						<img
-							className={styles.uploadIcon}
-								src={upArrow}
-								alt="Upload a file..."
-							/>
-					</ImageFileInput>
+		return (
+			<div className={styles.mainContainer}>
+				<div className={styles.linkInputContainer}>
+					<ImageLinkInput onValidImage={this.onValidCustomImage} />
 				</div>
-			);
-		}
+				<ImageFileInput onValidImage={this.onValidUploadImage}>
+					<img
+						className={styles.uploadIcon}
+							src={upArrow}
+							alt="Upload a file..."
+						/>
+				</ImageFileInput>
+			</div>
+		);
 	}
 }
 

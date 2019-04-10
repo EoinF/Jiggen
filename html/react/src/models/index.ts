@@ -7,6 +7,7 @@ import { DisplayOptionsState } from '../store/displayOptions';
 import { DownloadedImagesState } from '../store/downloadedImages';
 import { PuzzleSolverScreenState } from '../store/puzzleSolverScreen';
 import { TemplatesState } from '../store/templates';
+import { CustomPuzzleState } from '../store/customPuzzle';
 
 export interface StringMap<T> {
 	[key: string]: T
@@ -42,6 +43,7 @@ export interface StateRoot {
     playablePuzzles: PlayablePuzzlesState,
     downloadedImages: DownloadedImagesState
     puzzleSolverScreen: PuzzleSolverScreenState
+    customPuzzle: CustomPuzzleState
 }
 
 export interface ReducersRoot {
@@ -52,7 +54,8 @@ export interface ReducersRoot {
     displayOptions: any,
     playablePuzzles: any,
     downloadedImages: any,
-    puzzleSolverScreen: any
+    puzzleSolverScreen: any,
+    customPuzzle: any
 }
 
 export interface JiggenThunkAction extends ThunkAction<any, ReducersRoot, any, BaseAction> {

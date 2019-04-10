@@ -1,9 +1,16 @@
 import React from 'react';
 import {ResponsiveImage} from '../../../widgets';
 import styles from './SelectionWidget.module.scss';
+import { Resource } from '../../../models';
 
+interface SelectionWidgetProps {
+	selection: Resource | null;
+	fallbackImageSrc: string
+	notSelectedCaption: string
+	onClick(): void;
+}
 
-const SelectionWidget = ({selection, fallbackImageSrc, notSelectedCaption, selectedCaption, onClick}) => {
+const SelectionWidget = ({selection, fallbackImageSrc, notSelectedCaption, onClick}: SelectionWidgetProps) => {
 	let imageSrc = fallbackImageSrc;
 
 	if (selection != null) {
@@ -11,9 +18,11 @@ const SelectionWidget = ({selection, fallbackImageSrc, notSelectedCaption, selec
 	}
 	return (
 		<div className={styles.mainContainer} onClick={onClick}>
-			<div className={styles.caption}>
-				{selection != null ? selectedCaption : notSelectedCaption}
-			</div>
+			{selection == null && 
+				<div className={styles.caption}>
+					{notSelectedCaption}
+				</div>
+			}
 			<ResponsiveImage src={imageSrc} alt=""/>
 		</div>
 	);

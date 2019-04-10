@@ -12,7 +12,12 @@ import styles from './BackgroundSelectionModal.module.scss';
 import ModalWrapper from '../ModalManager/ModalWrapper';
 import BackgroundSelectionForm from './BackgroundSelectionForm';
 import { StateRoot, Resource } from '../../models';
-import { puzzleSolverActions } from '../../store/puzzleSolverScreen';
+import { Redirect } from 'react-router';
+import { customPuzzleActions } from '../../store/customPuzzle';
+
+interface BackgroundSelectionModalState {
+	isSubmitted: Boolean;
+}
 
 interface StateProps {
 	backgrounds: Background[]
@@ -28,9 +33,12 @@ interface DispatchProps {
 
 type BackgroundSelectionModalProps = StateProps & DispatchProps;
 
-class BackgroundSelectionModal extends Component<BackgroundSelectionModalProps> {
+class BackgroundSelectionModal extends Component<BackgroundSelectionModalProps, BackgroundSelectionModalState> {
 	constructor(props: BackgroundSelectionModalProps) {
 		super(props);
+		this.state = {
+			isSubmitted: false
+		}
 	}
 
 	componentDidMount() {
@@ -51,6 +59,18 @@ class BackgroundSelectionModal extends Component<BackgroundSelectionModalProps> 
 	onSelectBackground = (background: Background) => {
 		this.props.addBackground(background);
 		this.props.selectBackgroundByLink(background.links.self);
+		this.setState({
+			isSubmitted: true
+		})
+	}
+
+	onSelectBackgroundLink = (link: string) => {
+		const selectedBackground = this.props.backgrounds.find(background => background.links.self === link);
+		if (selectedBackground != null) {
+			this.onSelectBackground(selectedBackground);
+		} else {
+			console.log("Could not find background: ", link);
+		}
 	}
 
 	onError = (background: Background) => {
@@ -59,23 +79,27 @@ class BackgroundSelectionModal extends Component<BackgroundSelectionModalProps> 
 
 	MainContent = () => {
 		const {
-			backgrounds,
-			selectBackgroundByLink: selectBackground
+			backgrounds
 		} = this.props;
 
-		return <div className={styles.contentContainer}>
-			<div className={styles.backgroundTable}>
-				<CardContainer className={styles.cardContainer}>
-					<BackgroundSelectionForm
-							onSelectBackground={this.onSelectBackground} />
-				</CardContainer>
-				<ImageDisplayReel
-					resourceList={backgrounds}
-					onClickLink={selectBackground}
-					onError={this.onError}
-				/>
+		if (this.state.isSubmitted) {
+			console.log("redirect");
+			return <Redirect to="/custom/new" push={true} />
+		} else {
+			return <div className={styles.contentContainer}>
+				<div className={styles.backgroundTable}>
+					<CardContainer className={styles.cardContainer}>
+						<BackgroundSelectionForm
+								onSelectBackground={this.onSelectBackground} />
+					</CardContainer>
+					<ImageDisplayReel
+						resourceList={backgrounds}
+						onClickLink={this.onSelectBackgroundLink}
+						onError={this.onError}
+					/>
+				</div>
 			</div>
-		</div>
+		}
 	}
 }
 const mapStateToProps = (state: StateRoot) => {
@@ -86,7 +110,7 @@ const mapStateToProps = (state: StateRoot) => {
 
 const mapDispatchToProps = (dispatch: Function): DispatchProps => {
   return {
-		selectBackgroundByLink: (link: string) => dispatch(puzzleSolverActions.selectAndDownloadBackground(link)),
+		selectBackgroundByLink: (link: string) => dispatch(customPuzzleActions.selectBackground(link)),
 		addBackground: (background: Background) => dispatch(backgroundsActions.setBackground(background)),
 		addBackgrounds: (backgrounds: Background[]) => dispatch(backgroundsActions.addBackgrounds(backgrounds)),
 		fetchBackgrounds: () => dispatch(backgroundsActions.fetchBackgrounds()),
