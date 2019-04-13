@@ -1,7 +1,12 @@
 @import '../../vars';
 
 .mainContainer {
-    padding: 0.2rem 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    height: 5rem;
     background: $purple300;
     display: flex;
     align-items: center;
@@ -20,6 +25,10 @@
             background: $purple400;
         }
     }
+}
+
+.fakeContainer {
+    height: 5rem;
 }
 
 .navButton {
@@ -44,5 +53,4 @@
     display: flex;
     height: fit-content;
     justify-content: center;
-
 }
