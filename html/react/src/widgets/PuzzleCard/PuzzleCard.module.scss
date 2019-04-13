@@ -9,7 +9,7 @@
     border: 1px solid white;
     border-radius: 30px;
     padding: 0 0.75rem;
-    height: 3.5rem;
+    height: 4rem;
     
     margin-bottom: 0.75rem;
 }
@@ -18,7 +18,6 @@
     display: flex;
     width: fit-content;
     height: fit-content;
-    // z-index: 2;
     
     img {
         width: 48px;
@@ -50,7 +49,6 @@
     position: absolute;
     top: -0.5rem;
     right: 1.5rem;
-    padding: 0 0.25rem;
 }
 
 .cardTitleBackground {
@@ -63,6 +61,7 @@
 }
 
 .cardTitle {
+    padding: 0 0.25rem;
     position: relative;
     z-index: 2;
 

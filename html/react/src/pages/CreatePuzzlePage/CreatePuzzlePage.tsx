@@ -13,6 +13,7 @@ import { displayOptionsActions } from '../../store/displayOptions';
 import { Template } from '../../store/templates';
 import { PlainLink } from '../../widgets';
 import { customPuzzleActions, CustomPuzzle } from '../../store/customPuzzle';
+import uuid from 'uuid';
 
 interface StateProps {
   puzzleName: string;
@@ -33,6 +34,7 @@ class CreatePuzzlePage extends Component<CreatePuzzlePageProps> {
 
   onClickConfirm = () => {
     this.props.saveCustomPuzzle({
+      id: uuid.v4(),
       name: this.props.puzzleName, 
       background: this.props.selectedBackground.links.self, 
       template: this.props.selectedTemplate.links.self

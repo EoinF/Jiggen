@@ -2,6 +2,7 @@ import { createActions, handleActions, Action } from "redux-actions";
 import { loadState } from "./localStorage";
 
 export interface CustomPuzzle {
+    id: string;
     background: string;
     template: string;
     name: string;
@@ -25,12 +26,14 @@ const {
     customPuzzleSetName,
 	customPuzzleSelectTemplate,
     customPuzzleSelectBackground,
-    customPuzzleAddPuzzle
+    customPuzzleAddPuzzle,
+    customPuzzleDeletePuzzle
 } = createActions({
 	CUSTOM_PUZZLE_SET_NAME: (name) => ({name}),
 	CUSTOM_PUZZLE_SELECT_TEMPLATE: (selectedLink) => ({selectedLink}),
     CUSTOM_PUZZLE_SELECT_BACKGROUND: (selectedLink) => ({selectedLink}),
-    CUSTOM_PUZZLE_ADD_PUZZLE: (customPuzzle: CustomPuzzle) => ({customPuzzle})
+    CUSTOM_PUZZLE_ADD_PUZZLE: (customPuzzle: CustomPuzzle) => ({customPuzzle}),
+    CUSTOM_PUZZLE_DELETE_PUZZLE: (customPuzzle: CustomPuzzle) => ({customPuzzle})
 });
 
 const reducers = handleActions({
@@ -58,6 +61,12 @@ const reducers = handleActions({
                 puzzleList: [...state.puzzleList, payload.customPuzzle]
             }
         },
+        CUSTOM_PUZZLE_DELETE_PUZZLE: (state, {payload}: Action<any>): Partial<CustomPuzzleState> => {
+            return {
+                ...state,
+                puzzleList: [...state.puzzleList].filter(puzzle => puzzle.id != payload.customPuzzle.id)
+            }
+        },
     },
 	initialState
 );
@@ -66,7 +75,8 @@ const customPuzzleActions = {
     selectBackground: customPuzzleSelectBackground,
     selectTemplate: customPuzzleSelectTemplate,
     setName: customPuzzleSetName,
-    addPuzzle: customPuzzleAddPuzzle
+    addPuzzle: customPuzzleAddPuzzle,
+    deletePuzzle: customPuzzleDeletePuzzle
 }
 
 export {
