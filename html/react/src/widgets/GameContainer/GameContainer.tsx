@@ -1,11 +1,6 @@
-import React, { KeyboardEventHandler } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { Subject, from, Subscription } from 'rxjs';
-
-import {
-  GeneratedTemplate,
-  generatedTemplatesActions
-} from '../../store/generatedTemplates';
+import { Subject, Subscription } from 'rxjs';
 
 import gwtAdapter from '../../gwtAdapter';
 
@@ -19,7 +14,6 @@ import {
 import styles from './GameContainer.module.scss';
 import { StateRoot } from '../../models';
 import withLoadingWrapper from './withLoadingDisplay';
-import { DownloadedImage } from '../../store/downloadedImages';
 import { puzzleSolverActions } from '../../store/puzzleSolverScreen';
 
 interface DispatchProps {
@@ -68,10 +62,6 @@ class GameContainer extends React.Component<GameContainerProps> {
     }
     
     this.updateContainerSize$.next();
-  }
-
-  setOrFetchTemplate = (generatedTemplate: GeneratedTemplate) => {
-    
   }
   
   updateContainerSize = () => {

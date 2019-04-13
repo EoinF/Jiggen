@@ -41,16 +41,6 @@ function fetchGeneratedTemplateByLink (link: string, onDownloadCompleteResolver 
 	};
 }
 
-function fetchGeneratedTemplatesByLink(link: string): JiggenThunkAction {
-	return (dispatch, getState) => {
-		dispatch(startFetchingGeneratedTemplates());
-		axios.get(link)
-			.then(result => {
-				dispatch(addGeneratedTemplates(result.data));
-			});
-	};
-};
-
 function selectGeneratedTemplateByLink (link: string): JiggenThunkAction {
 	return async (dispatch, getState) => {
 		const generatedTemplate = await base.getOrFetchResourceByLink(
@@ -61,7 +51,6 @@ function selectGeneratedTemplateByLink (link: string): JiggenThunkAction {
 		dispatch(selectGeneratedTemplate(generatedTemplate.links.self));
 	};
 }
-
 
 const getOrDownloadGeneratedTemplate = (link: string, dispatch: Dispatch, getState: any) => {
     return new Promise(resolve => {
@@ -93,7 +82,6 @@ const reducers = handleActions({
 const generatedTemplatesActions = {
 	fetchByLink: fetchGeneratedTemplateByLink,
 	selectByLink: selectGeneratedTemplateByLink,
-	fetchAllByLink: fetchGeneratedTemplatesByLink,
 	setGeneratedTemplate,
 	addGeneratedTemplates,
 	getOrDownloadGeneratedTemplate

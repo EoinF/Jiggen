@@ -4,11 +4,11 @@ import gwtAdapter from "../../gwtAdapter";
 import styles from './GameContainer.module.scss';
 
 import puzzlePieceIcon from './piece-outline-rounded.png';
-import { Background } from "../../store/backgrounds";
 import { StateRoot, Resource } from "../../models";
 import { connect } from "react-redux";
-import { DownloadedImage, downloadedImagesActions } from "../../store/downloadedImages";
-import { GeneratedTemplate, generatedTemplatesActions } from "../../store/generatedTemplates";
+import { DownloadedImage } from "../../store/downloadedImages";
+import { GeneratedTemplate } from "../../store/generatedTemplates";
+import { Template } from "../../store/templates";
 
 interface LoadingDisplayState {
     isGWTLoading: Boolean;
@@ -16,10 +16,11 @@ interface LoadingDisplayState {
 
 interface DispatchProps {
     downloadImage(resource: Resource): void;
-    fetchGeneratedTemplate(resource: Resource): void;
+    fetchTemplate(resource: Resource): void;
 }
 interface StateProps {
     selectedGeneratedTemplate: GeneratedTemplate;
+    selectedTemplate: Template;
     downloadedImage: DownloadedImage;
 }
 
@@ -112,8 +113,10 @@ class LoadingDisplayWrapper extends Component<LoadingDisplayWrapperProps, Loadin
 
 const mapStateToProps = (_state: any, ownProps: any): StateProps => {
     const state = (_state as StateRoot); // Required because we can't change type of _state
+    const selectedTemplate = state.generatedTemplates.linkMap[state.puzzleSolverScreen.selectedTemplate!]
     return {
-        selectedGeneratedTemplate: state.generatedTemplates.linkMap[state.puzzleSolverScreen.selectedGeneratedTemplate!],
+        selectedTemplate,
+        selectedGeneratedTemplate: selectedTemplate && state.generatedTemplates.linkMap[selectedTemplate.links.generatedTemplate!], 
         downloadedImage: state.downloadedImages.linkMap[state.puzzleSolverScreen.selectedBackground!],
     };
 }

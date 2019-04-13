@@ -16,7 +16,7 @@ import { puzzleSolverActions } from '../../store/puzzleSolverScreen';
 interface DispatchProps {
   selectPuzzle(id: string): void;
   selectBackground(link: string): void;
-  selectGeneratedTemplate(link: string): void;
+  selectTemplate(link: string): void;
   fetchPuzzlesOfTheDay(): void;
   fetchGeneratedTemplateByLink(link: string): void;
   fetchBackgroundByLink(link: string): void;
@@ -48,9 +48,9 @@ class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps, any> {
       });
     }
     if (this.props.selectedPuzzle != prevProps.selectedPuzzle) {
-      const {background, generatedTemplate} = this.props.selectedPuzzle.links;
+      const {background, template} = this.props.selectedPuzzle.links;
       this.props.selectBackground(background);
-      this.props.selectGeneratedTemplate(generatedTemplate);
+      this.props.selectTemplate(template);
     }
   };
 
@@ -94,7 +94,7 @@ const mapDispatchToProps = (dispatch: Function): DispatchProps => {
   return {
     selectPuzzle: (link: string) => dispatch(playablePuzzlesActions.selectPlayablePuzzle(link)),
     selectBackground: (link: string) => dispatch(puzzleSolverActions.selectAndDownloadBackground(link)),
-    selectGeneratedTemplate: (link: string) => dispatch(puzzleSolverActions.selectAndDownloadGeneratedTemplate(link)),
+    selectTemplate: (link: string) => dispatch(puzzleSolverActions.selectAndDownloadTemplate(link)),
     fetchPuzzlesOfTheDay: () => dispatch(playablePuzzlesActions.fetchPuzzlesOfTheDay()),
     fetchGeneratedTemplateByLink: (link: string) => dispatch(generatedTemplatesActions.fetchByLink(link)),
     fetchBackgroundByLink: (link: string) => dispatch(backgroundsActions.fetchByLink(link))

@@ -31,7 +31,7 @@ class CustomPuzzlePage extends Component<CustomPuzzlePageProps> {
         <div className={styles.mainContainer}>
           { this.props.customPuzzles.map(
             (customPuzzle: CustomPuzzle) => 
-              <PuzzleCard puzzle={customPuzzle}/>
+              <PuzzleCard key={customPuzzle.id} puzzle={customPuzzle}/>
             )
           }
           <PlainLink to="/custom/new">

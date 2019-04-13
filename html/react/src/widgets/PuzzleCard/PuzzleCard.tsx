@@ -6,10 +6,11 @@ import { Background } from "../../store/backgrounds";
 import templateIconSrc from './template-icon48x48.png';
 import playIconSrc from '../../assets/play-icon.png';
 import deleteIconSrc from '../../assets/delete-icon.png';
-import downloadIconSrc from '../../assets/download-icon.png';
+import editIconSrc from '../../assets/edit-icon.png';
 
 import styles from './PuzzleCard.module.scss';
 import { puzzleSolverActions } from '../../store/puzzleSolverScreen';
+import gwtAdapter from '../../gwtAdapter';
 
 interface OwnProps {
     puzzle: CustomPuzzle;
@@ -22,11 +23,12 @@ interface StateProps {
 
 interface DispatchProps {
     deleteCustomPuzzle(): void;
+    playCustomPuzzle(): void;
 }
 
 type PuzzleCardProps = OwnProps & StateProps & DispatchProps;
 
-const PuzzleCard = ({background, puzzle, deleteCustomPuzzle} : PuzzleCardProps) => {
+const PuzzleCard = ({background, puzzle, deleteCustomPuzzle, playCustomPuzzle} : PuzzleCardProps) => {
     let backgroundSrc = '';
     if (background != null) {
         backgroundSrc = background.links['image-thumbnail48x48']
@@ -48,11 +50,11 @@ const PuzzleCard = ({background, puzzle, deleteCustomPuzzle} : PuzzleCardProps) 
             <div className={styles.icon}>
                 <img src={templateIconSrc}/>
             </div>
-            <div className={styles.iconSmall}>
+            <div className={styles.iconSmall} onClick={playCustomPuzzle}>
                 <img src={playIconSrc}/>
             </div>
             <div className={styles.iconSmall}>
-                <img src={downloadIconSrc}/>
+                <img src={editIconSrc}/>
             </div>
             <div className={styles.iconSmall} onClick={deleteCustomPuzzle}>
                 <img src={deleteIconSrc}/>
@@ -70,7 +72,12 @@ const mapStateToProps = (state: any, ownProps: OwnProps) : StateProps => {
 
 const mapDispatchToProps = (dispatch: Function, ownProps: OwnProps) : DispatchProps => {
     return {
-        deleteCustomPuzzle: () => dispatch(customPuzzleActions.deletePuzzle(ownProps.puzzle))
+        deleteCustomPuzzle: () => dispatch(customPuzzleActions.deletePuzzle(ownProps.puzzle)),
+        playCustomPuzzle: () => {
+            dispatch(puzzleSolverActions.selectAndDownloadBackground(ownProps.puzzle.background));
+            dispatch(puzzleSolverActions.selectAndDownloadTemplate(ownProps.puzzle.template));
+            gwtAdapter.setGwtFullScreen(true);
+        }
     };
 }
 

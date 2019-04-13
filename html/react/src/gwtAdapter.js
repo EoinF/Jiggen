@@ -45,10 +45,12 @@ function resizeGameContainer(width, height) {
 	});
 }
 
+function setGwtFullScreen (isFullScreen) {
+	setFullScreen(isFullScreen, document.getElementById('embed-html'));
+};
+
 onGwtLoadedPromise.then(() => {
-	window.gwtAdapter.setFullScreen = (isFullScreen) => {
-		setFullScreen(isFullScreen, document.getElementById('embed-html'));
-	};
+	window.gwtAdapter.setFullScreen = setGwtFullScreen;
 });
 
 export default {
@@ -57,5 +59,6 @@ export default {
 	setTemplate,
 	startDemo,
 	shuffle,
-	resizeGameContainer
+	resizeGameContainer,
+	setGwtFullScreen
 };
