@@ -1,0 +1,71 @@
+@import '../../vars.scss';
+
+.mainContent {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+
+    border: 1px solid white;
+    border-radius: 30px;
+    padding: 0 0.75rem;
+    height: 3.5rem;
+    
+    margin-bottom: 0.75rem;
+}
+
+.icon {
+    display: flex;
+    width: fit-content;
+    height: fit-content;
+    // z-index: 2;
+    
+    img {
+        width: 48px;
+        height: 48px;
+        box-sizing: content-box;
+        border: 1px solid black;
+        border-radius: 12px;
+    }
+}
+.iconSmall {
+    display: flex;
+    width: fit-content;
+    height: fit-content;
+    border-radius: 18px;
+    padding: 2px;
+    background-image: radial-gradient($purple400, $purple300);
+    img {
+        width: 32px;
+        height: 32px;
+        box-sizing: content-box;
+    }
+}
+
+.mainContainer {
+    position: relative;
+}
+
+.cardTitleContainer {
+    position: absolute;
+    top: -0.5rem;
+    right: 1.5rem;
+    padding: 0 0.25rem;
+}
+
+.cardTitleBackground {
+    width: 100%;
+    position: relative;
+    top: -0.8rem;
+    height: 0.5rem;
+    z-index: 1;
+    background: $purple200;
+}
+
+.cardTitle {
+    position: relative;
+    z-index: 2;
+
+    white-space: nowrap;
+    font-size: 1rem;
+}

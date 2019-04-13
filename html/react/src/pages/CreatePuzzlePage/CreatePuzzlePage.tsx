@@ -5,7 +5,7 @@ import styles from './CreatePuzzlePage.module.scss';
 
 import SelectionWidget from './SelectionWidget';
 
-import templateLogo from './Template-icon-simple.png';
+import templateLogo from '../../assets/template-icon.png';
 import backgroundLogo from './Background-icon.png';
 import { Background } from '../../store/backgrounds';
 import { StateRoot } from '../../models';
@@ -60,6 +60,7 @@ class CreatePuzzlePage extends Component<CreatePuzzlePageProps> {
             <div className={styles.inputField}>
               <div className={styles.inputContainer}>
                 <input 
+                  maxLength={24}
                   value={this.props.puzzleName}
                   onChange={this.onChangeName}
                 />
