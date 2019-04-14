@@ -22,7 +22,6 @@ import puzzleSolverScreen from './puzzleSolverScreen';
 import customPuzzle, { CustomPuzzleState } from './customPuzzle';
 
 import thunk from 'redux-thunk';
-import { from } from 'rxjs';
 
 declare global {
     interface Window { __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any; }

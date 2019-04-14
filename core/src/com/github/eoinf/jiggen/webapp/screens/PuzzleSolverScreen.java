@@ -1,8 +1,6 @@
 package com.github.eoinf.jiggen.webapp.screens;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
@@ -39,15 +37,6 @@ public class PuzzleSolverScreen implements Screen {
         multiplexer.addProcessor(toolbar.stage);
         multiplexer.addProcessor(puzzleView.stage);
         multiplexer.addProcessor(puzzleView.getGestureDetector());
-        multiplexer.addProcessor(new InputAdapter() {
-            @Override
-            public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-                if (Gdx.app.getType() == Application.ApplicationType.WebGL) {
-                    game.onSetFullScreen.accept(true);
-                }
-                return false;
-            }
-        });
         Gdx.input.setInputProcessor(multiplexer);
 
         puzzleViewModel.getPuzzleTemplateObservable().subscribe(new Consumer<PuzzleGraphTemplate>() {

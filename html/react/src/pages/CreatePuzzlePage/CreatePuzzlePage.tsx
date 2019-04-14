@@ -7,38 +7,56 @@ import SelectionWidget from './SelectionWidget';
 
 import templateLogo from '../../assets/template-icon.png';
 import backgroundLogo from './Background-icon.png';
-import { Background } from '../../store/backgrounds';
+import { Background, backgroundsActions } from '../../store/backgrounds';
 import { StateRoot } from '../../models';
 import { displayOptionsActions } from '../../store/displayOptions';
-import { Template } from '../../store/templates';
+import { Template, templatesActions } from '../../store/templates';
 import { PlainLink } from '../../widgets';
-import { customPuzzleActions, CustomPuzzle } from '../../store/customPuzzle';
-import uuid from 'uuid';
+import { customPuzzleActions } from '../../store/customPuzzle';
+import { RouteComponentProps } from 'react-router';
 
 interface StateProps {
   puzzleName: string;
   selectedTemplate: Template;
   selectedBackground: Background;
+  templateLink: string | null;
+  backgroundLink: string | null;
 }
 
 interface DispatchProps {
   showBackgroundsModal(): void;
   showTemplatesModal(): void;
   setName(name: string): void;
-  saveCustomPuzzle(puzzle: CustomPuzzle): void;
+  saveCustomPuzzle(): void;
+  selectCustomPuzzle(id: string | null): void;
+  fetchBackgroundByLink(link: string): void;
+  fetchTemplateByLink(link: string): void;
 }
 
-type CreatePuzzlePageProps = StateProps & DispatchProps;
+interface CreatePuzzlePageRouteParams {
+  id: string;
+}
+
+type CreatePuzzlePageProps = StateProps & DispatchProps & RouteComponentProps<CreatePuzzlePageRouteParams>;
 
 class CreatePuzzlePage extends Component<CreatePuzzlePageProps> {
 
-  onClickConfirm = () => {
-    this.props.saveCustomPuzzle({
-      id: uuid.v4(),
-      name: this.props.puzzleName, 
-      background: this.props.selectedBackground.links.self, 
-      template: this.props.selectedTemplate.links.self
-    });
+  componentDidMount() {
+    const params = this.props.match.params;
+    if (params.id !== 'new') {
+      this.props.selectCustomPuzzle(params.id);
+    } else {
+      this.props.selectCustomPuzzle(null);
+    }
+  }
+
+  componentDidUpdate = (prevProps: CreatePuzzlePageProps) => {
+    if (this.props.templateLink != null && this.props.templateLink != prevProps.templateLink) {
+      this.props.fetchTemplateByLink(this.props.templateLink);
+    }
+    if (this.props.backgroundLink != null && this.props.backgroundLink != prevProps.backgroundLink) {
+      this.props.fetchBackgroundByLink(this.props.backgroundLink);
+    }
   }
 
   onChangeName = (e: ChangeEvent<HTMLInputElement>) => {
@@ -53,7 +71,7 @@ class CreatePuzzlePage extends Component<CreatePuzzlePageProps> {
     } = this.props;
 
     const isReady = selectedTemplate != null 
-      && selectedBackground != null 
+      && selectedBackground != null
       && puzzleName.length > 0;
 
     return (
@@ -85,9 +103,9 @@ class CreatePuzzlePage extends Component<CreatePuzzlePageProps> {
             <div className={styles.buttonControls}>
               { isReady ? ( 
                 <PlainLink to="/custom">
-                  <button onClick={this.onClickConfirm} className={styles.save}>✓</button>
+                  <button onClick={this.props.saveCustomPuzzle} className={styles.save}>✓</button>
               </PlainLink> ) : (
-                <button disabled onClick={this.onClickConfirm} className={styles.save}>✓</button>
+                <button disabled onClick={this.props.saveCustomPuzzle} className={styles.save}>✓</button>
                 )
               }
               <PlainLink to="/custom">
@@ -103,6 +121,8 @@ class CreatePuzzlePage extends Component<CreatePuzzlePageProps> {
 const mapStateToProps = (state: StateRoot): StateProps => {
   return {
     puzzleName: state.customPuzzle.name,
+    templateLink: state.customPuzzle.selectedTemplate,
+    backgroundLink: state.customPuzzle.selectedBackground,
     selectedTemplate: state.templates.linkMap[state.customPuzzle.selectedTemplate!],
     selectedBackground: state.backgrounds.linkMap[state.customPuzzle.selectedBackground!]
   };
@@ -111,9 +131,12 @@ const mapStateToProps = (state: StateRoot): StateProps => {
 const mapDispatchToProps = (dispatch: Function): DispatchProps => {
   return {
     setName: (name: string) => dispatch(customPuzzleActions.setName(name)),
+    selectCustomPuzzle: (id: string) => dispatch(customPuzzleActions.selectPuzzle(id)),
     showBackgroundsModal: () => dispatch(displayOptionsActions.showBackgroundsModal()),
     showTemplatesModal: () => dispatch(displayOptionsActions.showTemplatesModal()),
-    saveCustomPuzzle: (puzzle: CustomPuzzle) => dispatch(customPuzzleActions.addPuzzle(puzzle))
+    saveCustomPuzzle: () => dispatch(customPuzzleActions.savePuzzle()),
+    fetchBackgroundByLink: (link: string) => dispatch(backgroundsActions.fetchByLink(link)),
+    fetchTemplateByLink: (link: string) => dispatch(templatesActions.fetchByLink(link))
   }
 }
 

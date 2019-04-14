@@ -23,8 +23,12 @@ h1 {
 	}
 }
 
-.gameContainer {
+.backgroundContainer {
 	margin: 0 1rem 0.5rem;
+	img {
+		width: 100%;
+		height: auto;
+	}
 }
 
 @media (orientation: landscape) and (max-height: $breakpoint-height-mobile) {

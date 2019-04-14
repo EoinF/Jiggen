@@ -11,6 +11,7 @@ import editIconSrc from '../../assets/edit-icon.png';
 import styles from './PuzzleCard.module.scss';
 import { puzzleSolverActions } from '../../store/puzzleSolverScreen';
 import gwtAdapter from '../../gwtAdapter';
+import { PlainLink } from '..';
 
 interface OwnProps {
     puzzle: CustomPuzzle;
@@ -50,12 +51,16 @@ const PuzzleCard = ({background, puzzle, deleteCustomPuzzle, playCustomPuzzle} :
             <div className={styles.icon}>
                 <img src={templateIconSrc}/>
             </div>
-            <div className={styles.iconSmall} onClick={playCustomPuzzle}>
-                <img src={playIconSrc}/>
-            </div>
-            <div className={styles.iconSmall}>
-                <img src={editIconSrc}/>
-            </div>
+            <PlainLink to={`/play`}>
+                <div className={styles.iconSmall} onClick={playCustomPuzzle}>
+                    <img src={playIconSrc}/>
+                </div>
+            </PlainLink>
+            <PlainLink to={`/custom/${puzzle.id}`}>
+                <div className={styles.iconSmall}>
+                    <img src={editIconSrc}/>
+                </div>
+            </PlainLink>
             <div className={styles.iconSmall} onClick={deleteCustomPuzzle}>
                 <img src={deleteIconSrc}/>
             </div>
@@ -76,7 +81,6 @@ const mapDispatchToProps = (dispatch: Function, ownProps: OwnProps) : DispatchPr
         playCustomPuzzle: () => {
             dispatch(puzzleSolverActions.selectAndDownloadBackground(ownProps.puzzle.background));
             dispatch(puzzleSolverActions.selectAndDownloadTemplate(ownProps.puzzle.template));
-            gwtAdapter.setGwtFullScreen(true);
         }
     };
 }

@@ -73,7 +73,8 @@ const getOrDownloadTemplate = (link: string, dispatch: Dispatch, getState: any) 
 }
 
 const templatesActions = {
-	fetchTemplates,
+    fetchTemplates,
+    fetchByLink: fetchTemplateByLink,
 	setTemplates,
     selectTemplate,
     getOrDownloadTemplate

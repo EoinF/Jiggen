@@ -1,5 +1,7 @@
 import { createActions, handleActions, Action } from "redux-actions";
 import { loadState } from "./localStorage";
+import { StringMap } from "../models";
+import uuid from 'uuid';
 
 export interface CustomPuzzle {
     id: string;
@@ -9,14 +11,16 @@ export interface CustomPuzzle {
 }
 
 export interface CustomPuzzleState {
+    id: string;
     selectedBackground: string | null;
     selectedTemplate: string | null;
     name: string;
-    puzzleList: CustomPuzzle[];
+    puzzleMap: StringMap<CustomPuzzle>;
 }
 
 const initialState: CustomPuzzleState = {
-    puzzleList: loadState("customPuzzles") || [],
+    id: uuid.v4(),
+    puzzleMap: loadState("customPuzzles") || {},
     selectedBackground: null,
     selectedTemplate: null,
     name: "Custom Puzzle"
@@ -26,13 +30,15 @@ const {
     customPuzzleSetName,
 	customPuzzleSelectTemplate,
     customPuzzleSelectBackground,
-    customPuzzleAddPuzzle,
+    customPuzzleSelectPuzzle,
+    customPuzzleSavePuzzle,
     customPuzzleDeletePuzzle
 } = createActions({
 	CUSTOM_PUZZLE_SET_NAME: (name) => ({name}),
 	CUSTOM_PUZZLE_SELECT_TEMPLATE: (selectedLink) => ({selectedLink}),
     CUSTOM_PUZZLE_SELECT_BACKGROUND: (selectedLink) => ({selectedLink}),
-    CUSTOM_PUZZLE_ADD_PUZZLE: (customPuzzle: CustomPuzzle) => ({customPuzzle}),
+    CUSTOM_PUZZLE_SELECT_PUZZLE: (id) => ({id}),
+    CUSTOM_PUZZLE_SAVE_PUZZLE: () => ({}),
     CUSTOM_PUZZLE_DELETE_PUZZLE: (customPuzzle: CustomPuzzle) => ({customPuzzle})
 });
 
@@ -55,16 +61,37 @@ const reducers = handleActions({
                 selectedBackground: payload.selectedLink
             }
         },
-        CUSTOM_PUZZLE_ADD_PUZZLE: (state, {payload}: Action<any>): Partial<CustomPuzzleState> => {
+        CUSTOM_PUZZLE_SELECT_PUZZLE: (state, {payload}: Action<any>): Partial<CustomPuzzleState> => {
+            const selectedPuzzle = (state as CustomPuzzleState).puzzleMap[payload.id] || {} as CustomPuzzle;
             return {
                 ...state,
-                puzzleList: [...state.puzzleList, payload.customPuzzle]
+                selectedBackground: selectedPuzzle.background || null,
+                selectedTemplate: selectedPuzzle.template || null,
+                name: selectedPuzzle.name || 'Custom Puzzle',
+                id: payload.id || uuid.v4()
+            }
+        },
+        CUSTOM_PUZZLE_SAVE_PUZZLE: (state, {payload}: Action<any>): Partial<CustomPuzzleState> => {
+            const customPuzzle: CustomPuzzle = {
+                background: state.selectedBackground,
+                template: state.selectedTemplate,
+                name: state.name,
+                id: state.id
+            };
+            const updatedPuzzleMap = {...state.puzzleMap};
+            updatedPuzzleMap[customPuzzle.id] = customPuzzle;
+            
+            return {
+                ...state,
+                puzzleMap: updatedPuzzleMap
             }
         },
         CUSTOM_PUZZLE_DELETE_PUZZLE: (state, {payload}: Action<any>): Partial<CustomPuzzleState> => {
+            const updatedPuzzleMap = {...state.puzzleMap};
+            delete updatedPuzzleMap[payload.customPuzzle.id];
             return {
                 ...state,
-                puzzleList: [...state.puzzleList].filter(puzzle => puzzle.id != payload.customPuzzle.id)
+                puzzleMap: updatedPuzzleMap
             }
         },
     },
@@ -75,7 +102,8 @@ const customPuzzleActions = {
     selectBackground: customPuzzleSelectBackground,
     selectTemplate: customPuzzleSelectTemplate,
     setName: customPuzzleSetName,
-    addPuzzle: customPuzzleAddPuzzle,
+    selectPuzzle: customPuzzleSelectPuzzle,
+    savePuzzle: customPuzzleSavePuzzle,
     deletePuzzle: customPuzzleDeletePuzzle
 }
 

@@ -20,7 +20,8 @@ interface BackgroundSelectionModalState {
 }
 
 interface StateProps {
-	backgrounds: Background[]
+	backgrounds: Background[];
+	customPuzzleId: string;
 }
 
 interface DispatchProps {
@@ -61,7 +62,7 @@ class BackgroundSelectionModal extends Component<BackgroundSelectionModalProps, 
 		this.props.selectBackgroundByLink(background.links.self);
 		this.setState({
 			isSubmitted: true
-		})
+		});
 	}
 
 	onSelectBackgroundLink = (link: string) => {
@@ -79,12 +80,12 @@ class BackgroundSelectionModal extends Component<BackgroundSelectionModalProps, 
 
 	MainContent = () => {
 		const {
-			backgrounds
+			backgrounds,
+			customPuzzleId
 		} = this.props;
 
 		if (this.state.isSubmitted) {
-			console.log("redirect");
-			return <Redirect to="/custom/new" push={true} />
+			return <Redirect to={`/custom/${customPuzzleId}`} push={true} />
 		} else {
 			return <div className={styles.contentContainer}>
 				<div className={styles.backgroundTable}>
@@ -104,7 +105,8 @@ class BackgroundSelectionModal extends Component<BackgroundSelectionModalProps, 
 }
 const mapStateToProps = (state: StateRoot) => {
   return {
-    backgrounds: state.backgrounds.resourceList.filter(Resource.hasImage)
+	backgrounds: Object.values(state.backgrounds.linkMap).filter(Resource.hasImage),
+	customPuzzleId: state.customPuzzle.id
   };
 }
 

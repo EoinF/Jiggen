@@ -21,8 +21,8 @@ interface DispatchProps {
 }
 
 interface StateProps {
-  showFullScreenFallback: Boolean;
-  shouldShuffleOnFullscreen: Boolean;
+  isActive: Boolean;
+  isFreshPuzzle: Boolean;
 }
 
 type GameContainerProps = StateProps & DispatchProps;
@@ -56,11 +56,6 @@ class GameContainer extends React.Component<GameContainerProps> {
   }
 
   onFullScreenChange = () => {
-    if (this.props.shouldShuffleOnFullscreen && isFullScreen()) {
-      gwtAdapter.shuffle();
-      this.props.setPuzzleStatus(false);
-    }
-    
     this.updateContainerSize$.next();
   }
   
@@ -102,15 +97,16 @@ class GameContainer extends React.Component<GameContainerProps> {
   }
 
   componentDidUpdate(prevProps: GameContainerProps) {
-    if (prevProps.showFullScreenFallback != this.props.showFullScreenFallback) {
-      this.onFullScreenChange();
+    if (prevProps.isActive != this.props.isActive && this.props.isFreshPuzzle) {
+      gwtAdapter.shuffle();
+      this.props.setPuzzleStatus(false);
     }
   }
 
   render() {
     let classAttribute = styles.innerContainer;
-    if (this.props.showFullScreenFallback) {
-      classAttribute += ` ${styles.fullScreenFallback}`;
+    if (!this.props.isActive) {
+      classAttribute += ` ${styles.hidden}`;
     }
     return (
       <div className={styles.mainContainer}>
@@ -125,8 +121,8 @@ class GameContainer extends React.Component<GameContainerProps> {
 const mapStateToProps = (_state: any, ownProps: {}): StateProps => {
   const state = (_state as StateRoot); // Required because we can't change type of _state
   return {
-    showFullScreenFallback: state.displayOptions.showFullScreenFallback,
-    shouldShuffleOnFullscreen: state.puzzleSolverScreen.isFreshPuzzle
+    isActive: state.puzzleSolverScreen.isActive,
+    isFreshPuzzle: state.puzzleSolverScreen.isFreshPuzzle
   };
 }
 

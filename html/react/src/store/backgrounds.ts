@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { handleActions, createActions, Action } from 'redux-actions';
 
-import { Resource, ReducersRoot, BaseState, JiggenThunkAction } from '../models';
+import { Resource, BaseState, JiggenThunkAction, StateRoot, StringMap } from '../models';
 import { getOrFetchResourceLinks } from '../actions/resourceLinks';
 import base from './base';
 import { Dispatch } from 'redux';
@@ -37,26 +37,27 @@ export class Background extends Resource {
 export interface BackgroundsState extends BaseState<Background> {}
 
 const initialState: BackgroundsState = {
-	...base.initialState as BackgroundsState
+	...base.initialState as BackgroundsState,
+	linkMap: JSON.parse(localStorage.getItem('savedBackgrounds') || '{}')
 };
 
 const {
-	startFetchingBackgrounds, 
+	startFetchingBackgrounds,
 	setBackgrounds,
 	addBackgrounds,
 	setBackground,
 	updateBackground,
 	selectBackground,
 	removeBackground
-} = createActions({	
+} = createActions({
 	START_FETCHING_BACKGROUNDS: () => ({isFetching: true}),
 	SET_BACKGROUNDS: (backgrounds: Background[]) => ({resourceList: backgrounds}),
 	ADD_BACKGROUNDS: (backgrounds: Background[]) => ({ resourceList: backgrounds}),
 	SET_BACKGROUND: (background: Background) => {
-		const savedSuggestions: Background[] = JSON.parse(localStorage.getItem('savedBackgrounds') || '[]');
+		const savedSuggestions: StringMap<Background> = JSON.parse(localStorage.getItem('savedBackgrounds') || '{}');
 
-		if (savedSuggestions.every((existingBackground: Background) => background.links.self !== existingBackground.links.self)) {
-			savedSuggestions.push(background);
+		if (Object.keys(savedSuggestions).every((link: string) => background.links.self !== link)) {
+			savedSuggestions[background.links.self] = background;
 			localStorage.setItem('savedBackgrounds', JSON.stringify(savedSuggestions));
 		}
 			
@@ -67,11 +68,10 @@ const {
 	REMOVE_BACKGROUND: (background: Background) => {
 		if (background.isUpload || background.isCustom) {
 			 // broken upload links can never be restored so remove them for good
-			const savedSuggestions: Background[] = JSON.parse(localStorage.getItem('savedBackgrounds') || '[]');
-			
-			localStorage.setItem('savedBackgrounds', JSON.stringify(
-				savedSuggestions.filter(existingBackground => existingBackground.links.self !== background.links.self)
-			));
+			const savedSuggestions: Background[] = JSON.parse(localStorage.getItem('savedBackgrounds') || '{}');
+			delete savedSuggestions[background.links.self];
+
+			localStorage.setItem('savedBackgrounds', JSON.stringify(savedSuggestions));
 		}
 		return {resource: background};
 	},
@@ -79,9 +79,6 @@ const {
 
 function fetchBackgrounds (): JiggenThunkAction {
 	return async (dispatch, getState) => {
-		const savedSuggestions: Background[] = JSON.parse(localStorage.getItem('savedBackgrounds') || '[]');
-		dispatch(addBackgrounds(savedSuggestions));
-
 		const resourceLinks = await getOrFetchResourceLinks(dispatch, getState);
 		dispatch(startFetchingBackgrounds());
 		
@@ -92,9 +89,12 @@ function fetchBackgrounds (): JiggenThunkAction {
 
 function fetchBackgroundByLink(link: string): JiggenThunkAction {
 	return async (dispatch, getState) => {
-		dispatch(startFetchingBackgrounds());
-		const result = await axios.get(link);
-		dispatch(setBackground(result.data));
+		const existingBackground = (getState() as StateRoot).backgrounds.linkMap[link];
+		if (existingBackground == null) {
+			dispatch(startFetchingBackgrounds());
+			const result = await axios.get(link);
+			dispatch(setBackground(result.data));
+		}
 	};
 }
 

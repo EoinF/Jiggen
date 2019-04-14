@@ -10,7 +10,7 @@ import styles from './PuzzleOfTheDayPage.module.scss';
 import GameContainer from '../../widgets/GameContainer';
 import { StateRoot, StringMap } from '../../models';
 import PieceCountSelection from './PieceCountSelection/PieceCountSelection';
-import { getPlayablePuzzleList, getPieceCountMap } from '../../store/selectors';
+import { getPlayablePuzzleMap, getPieceCountMap } from '../../store/selectors';
 import { puzzleSolverActions } from '../../store/puzzleSolverScreen';
 
 interface DispatchProps {
@@ -23,8 +23,9 @@ interface DispatchProps {
 }
 
 interface StateProps {
-  playablePuzzles: PlayablePuzzle[];
+  playablePuzzleMap: StringMap<PlayablePuzzle>;
   selectedPuzzle: PlayablePuzzle;
+  selectedBackground: Background;
   pieceCountMap: StringMap<number>;
 }
 
@@ -37,15 +38,17 @@ class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps, any> {
   };
 
   componentDidUpdate(prevProps: PuzzleOfTheDayPageProps) {
-    if ((this.props.playablePuzzles !== prevProps.playablePuzzles)
-      && this.props.playablePuzzles != null
-      && this.props.playablePuzzles.length > 0) {
-      this.props.selectPuzzle(this.props.playablePuzzles[0].links.self);
+    if ((this.props.playablePuzzleMap !== prevProps.playablePuzzleMap)
+      && this.props.playablePuzzleMap != null) {
+      const playablePuzzleList = Object.values(this.props.playablePuzzleMap);
+        if (playablePuzzleList.length > 0) {
+        this.props.selectPuzzle(playablePuzzleList[0].links.self);
 
-      this.props.playablePuzzles.forEach((playablePuzzle) => {
-        this.props.fetchBackgroundByLink(playablePuzzle.links.background);
-        this.props.fetchGeneratedTemplateByLink(playablePuzzle.links.generatedTemplate);
-      });
+        playablePuzzleList.forEach((playablePuzzle) => {
+          this.props.fetchBackgroundByLink(playablePuzzle.links.background);
+          this.props.fetchGeneratedTemplateByLink(playablePuzzle.links.generatedTemplate);
+        });
+      }
     }
     if (this.props.selectedPuzzle != prevProps.selectedPuzzle) {
       const {background, template} = this.props.selectedPuzzle.links;
@@ -60,15 +63,18 @@ class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps, any> {
 
   render() {
     const {
-      selectedPuzzle
+      selectedPuzzle,
+      selectedBackground
     } = this.props;
 
     return (
         <div className={styles.mainContainer}>
           <h1>Today's Puzzles</h1>
           <div className={styles.contentContainer}>
-            <div className={styles.gameContainer}>
-              <GameContainer/>
+            <div className={styles.backgroundContainer}>
+              { 
+                selectedBackground && <img src={selectedBackground.links['image-compressed'] || selectedBackground.links.image} />
+              }
             </div>
             <PieceCountSelection
               selectedId={selectedPuzzle ? selectedPuzzle.links.self : null}
@@ -80,13 +86,15 @@ class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps, any> {
   }
 }
 
-function mapStateToProps(_state: any, ownProps: any): StateProps {
+function mapStateToProps(_state: any): StateProps {
   const state = (_state as StateRoot); // Required because we can't change type of _state
 
+  const selectedPuzzle = state.playablePuzzles.linkMap[state.playablePuzzles.selectedId!];
   return {
     pieceCountMap: getPieceCountMap(state),
-    playablePuzzles: getPlayablePuzzleList(state),
-    selectedPuzzle: state.playablePuzzles.linkMap[state.playablePuzzles.selectedId!]
+    playablePuzzleMap: getPlayablePuzzleMap(state),
+    selectedPuzzle: selectedPuzzle,
+    selectedBackground: selectedPuzzle && state.backgrounds.linkMap[selectedPuzzle.links.background!]
   };
 }
 

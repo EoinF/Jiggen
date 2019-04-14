@@ -8,6 +8,8 @@ import { templatesActions } from "./templates";
 import { CustomPuzzle } from "./customPuzzle";
 
 export interface PuzzleSolverScreenState {
+    isActive: boolean;
+
     selectedBackground: string | null;
     selectedTemplate: string | null;
 
@@ -18,6 +20,7 @@ export interface PuzzleSolverScreenState {
 }
 
 const initialState: PuzzleSolverScreenState = {
+    isActive: false,
     isFreshPuzzle: true,
     selectedBackground: null,
     selectedTemplate: null,
@@ -29,12 +32,14 @@ const {
 	selectTemplate,
     selectBackground,
     setPuzzleStatus,
+    setIsActive,
     setTemplateReady,
     setBackgroundReady
 } = createActions({
 	SELECT_TEMPLATE: (selectedLink) => ({selectedLink}),
 	SELECT_BACKGROUND: (selectedLink) => ({selectedLink}),
     SET_PUZZLE_STATUS: (isFreshPuzzle) => ({isFreshPuzzle}),
+    SET_IS_ACTIVE: (isActive) => ({isActive}),
     SET_TEMPLATE_READY: () => ({}),
     SET_BACKGROUND_READY: () => ({}),
 });
@@ -66,6 +71,12 @@ const reducers = handleActions({
             return {
                 ...state,
                 isFreshPuzzle: payload.isFreshPuzzle
+            }
+        },
+        SET_IS_ACTIVE: (state, {payload}: Action<any>): Partial<PuzzleSolverScreenState> => {
+            return {
+                ...state,
+                isActive: payload.isActive
             }
         },
         SET_TEMPLATE_READY: (state, {payload}: Action<any>): Partial<PuzzleSolverScreenState> => {
@@ -113,7 +124,8 @@ const selectAndDownloadTemplate = (link: string): JiggenThunkAction => {
 const puzzleSolverActions = {
     selectAndDownloadBackground,
     selectAndDownloadTemplate,
-    setPuzzleStatus
+    setPuzzleStatus,
+    setIsActive
 }
 
 export {

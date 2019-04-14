@@ -16,6 +16,7 @@ interface TemplateSelectionState {
 
 interface StateProps {
 	templates: Template[];
+	customPuzzleId: string;
 }
 
 interface DispatchProps {
@@ -53,7 +54,7 @@ class TemplateSelectionModal extends Component<TemplateSelectionProps, TemplateS
 
 	render() {
 		if (this.state.isSubmitted) {
-			return <Redirect to="/custom/new" push={true} />
+			return <Redirect to={`/custom/${this.props.customPuzzleId}`} push={true} />
 		} else {
 			return (
 				<ModalWrapper>
@@ -75,7 +76,8 @@ class TemplateSelectionModal extends Component<TemplateSelectionProps, TemplateS
 
 const mapStateToProps = (state: StateRoot): StateProps => {
   return {
-    templates: state.templates.resourceList
+    templates: Object.values(state.templates.linkMap),
+	customPuzzleId: state.customPuzzle.id
   }
 }
 

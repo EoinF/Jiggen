@@ -8,7 +8,8 @@ import CustomPuzzlesPage from './pages/CustomPuzzlesPage/CustomPuzzlesPage';
 import PuzzleOfTheDayPage from './pages/PuzzleOfTheDayPage';
 import NavigationBar from './widgets/NavigationBar/NavigationBar';
 import ModalManager from './pages/ModalManager/ModalManager';
-import CreatePuzzlePage from './pages/CreatePuzzlePage/CreatePuzzlePage';
+import { GameContainer } from './widgets';
+import PlayPage from './pages/PlayPage/PlayPage';
 
 
 class App extends Component {
@@ -19,6 +20,7 @@ class App extends Component {
 				<BrowserRouter basename={process.env.REACT_APP_PUBLIC_URL || ''}>
 					<ModalManager>
 						<AppContents/>
+						<GameContainer/>
 					</ModalManager>
 				</BrowserRouter>
   			</Provider>
@@ -29,9 +31,9 @@ class App extends Component {
 const AppContents = () => {
 	return <div className='flexContainer'>
 		<Switch>
-			<Route exact path='/custom' component={CustomPuzzlesPage}/>
-			<Route path='/custom/new' component={CreatePuzzlePage}/>
+			<Route path='/custom' component={CustomPuzzlesPage}/>
 			<Route path='/daily' component={PuzzleOfTheDayPage}/>
+			<Route path='/play' component={PlayPage}/>
 			<Route path='/'>
 				<Redirect to="/daily"/>
 			</Route>

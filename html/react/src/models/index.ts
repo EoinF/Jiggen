@@ -29,7 +29,6 @@ export class Resource {
 
 export interface BaseState<T extends Resource> {
     selectedId: string | null;
-    resourceList: T[];
 	linkMap:  StringMap<T>;
 	isFetching: boolean;
 }

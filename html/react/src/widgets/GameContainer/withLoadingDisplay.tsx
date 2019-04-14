@@ -22,6 +22,7 @@ interface StateProps {
     selectedGeneratedTemplate: GeneratedTemplate;
     selectedTemplate: Template;
     downloadedImage: DownloadedImage;
+    isActive: boolean;
 }
 
 type LoadingDisplayWrapperProps = StateProps & DispatchProps;
@@ -65,48 +66,52 @@ class LoadingDisplayWrapper extends Component<LoadingDisplayWrapperProps, Loadin
     }
 
     render() {
-        if (this.props.downloadedImage && this.props.downloadedImage.isDownloading) {
-            const downloadedData = this.toDataString(this.props.downloadedImage.bytesDownloaded);
-            const totalData = this.toDataString(this.props.downloadedImage.bytesTotal);
+        if (!this.props.isActive) {
+            return null;
+        } else {
+            if (this.props.downloadedImage && this.props.downloadedImage.isDownloading) {
+                const downloadedData = this.toDataString(this.props.downloadedImage.bytesDownloaded);
+                const totalData = this.toDataString(this.props.downloadedImage.bytesTotal);
 
-            const dataComponent = this.props.downloadedImage.bytesTotal > 0
-                ? <div>Downloading {downloadedData} / {totalData}</div>
-                    : <div>Downloading {downloadedData}</div>
+                const dataComponent = this.props.downloadedImage.bytesTotal > 0
+                    ? <div>Downloading {downloadedData} / {totalData}</div>
+                        : <div>Downloading {downloadedData}</div>
 
-            return <div className={styles.mainContainer}>
-                <div className={styles.loadingContainer}>
-                    {dataComponent}
-                    <img width='32px' height='32px'
-                        src={puzzlePieceIcon}
-                        className={styles.loadingSpinner}
-                        alt='Loading spinner'
-                    />
+                return <div className={styles.mainContainer}>
+                    <div className={styles.loadingContainer}>
+                        {dataComponent}
+                        <img width='32px' height='32px'
+                            src={puzzlePieceIcon}
+                            className={styles.loadingSpinner}
+                            alt='Loading spinner'
+                        />
+                    </div>
                 </div>
-            </div>
-        } else if (this.props.selectedGeneratedTemplate && !this.isGeneratedTemplateReady(this.props.selectedGeneratedTemplate)) {
-            return <div className={styles.mainContainer}>
-                <div className={styles.loadingContainer}>
-                    Downloading template data
-                    <img width='32px' height='32px'
-                        src={puzzlePieceIcon}
-                        className={styles.loadingSpinner}
-                        alt='Loading spinner'
-                    />
+            } else if (this.props.selectedGeneratedTemplate && !this.isGeneratedTemplateReady(this.props.selectedGeneratedTemplate)) {
+                return <div className={styles.mainContainer}>
+                    <div className={styles.loadingContainer}>
+                        Downloading template data
+                        <img width='32px' height='32px'
+                            src={puzzlePieceIcon}
+                            className={styles.loadingSpinner}
+                            alt='Loading spinner'
+                        />
+                    </div>
                 </div>
-            </div>
-        } else if (this.state.isGWTLoading) {
-            return <div className={styles.mainContainer}>
-                <div className={styles.loadingContainer}>
-                    <div>Unpacking the box...</div>
-                    <img width='32px' height='32px'
-                        src={puzzlePieceIcon}
-                        className={styles.loadingSpinner}
-                        alt='Loading spinner'
-                    />
+            } else if (this.state.isGWTLoading) {
+                return <div className={styles.mainContainer}>
+                    <div className={styles.loadingContainer}>
+                        <div>Unpacking the box...</div>
+                        <img width='32px' height='32px'
+                            src={puzzlePieceIcon}
+                            className={styles.loadingSpinner}
+                            alt='Loading spinner'
+                        />
+                    </div>
                 </div>
-            </div>
-        } else  {
-            return this.props.children;
+            } else  {
+                return this.props.children;
+            }
         }
     }
 }
@@ -118,6 +123,7 @@ const mapStateToProps = (_state: any, ownProps: any): StateProps => {
         selectedTemplate,
         selectedGeneratedTemplate: selectedTemplate && state.generatedTemplates.linkMap[selectedTemplate.links.generatedTemplate!], 
         downloadedImage: state.downloadedImages.linkMap[state.puzzleSolverScreen.selectedBackground!],
+        isActive: state.puzzleSolverScreen.isActive
     };
 }
   

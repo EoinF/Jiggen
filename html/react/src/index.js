@@ -12,14 +12,14 @@ import { saveState } from './store/localStorage';
 import { Subject } from 'rxjs';
 import { throttleTime } from 'rxjs/operators';
 
-const puzzleList$ = new Subject();
-puzzleList$
+const puzzleMap$ = new Subject();
+puzzleMap$
 	.pipe(throttleTime(500))
 	.subscribe((value) => saveState("customPuzzles", value));
 
 store.subscribe(() => {
-	const puzzleList = store.getState().customPuzzle.puzzleList;
-	puzzleList$.next(puzzleList);
+	const puzzleMap = store.getState().customPuzzle.puzzleMap;
+	puzzleMap$.next(puzzleMap);
 });
 
 window.addEventListener('popstate', function (e) {

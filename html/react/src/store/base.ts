@@ -3,7 +3,6 @@ import { BaseState, StringMap, Resource } from '../models';
 
 const initialState: BaseState<Resource> = {
 	selectedId: null,
-	resourceList: [],
 	linkMap: {
 		// map of unique links to resources
 	},
@@ -21,7 +20,6 @@ function setResources(state: BaseState<Resource>, {resourceList}: {resourceList:
 
 	return {
 		...state,
-		resourceList,
 		linkMap,
 		isFetching: false
 	};
@@ -29,34 +27,17 @@ function setResources(state: BaseState<Resource>, {resourceList}: {resourceList:
 
 function addResources(state: BaseState<Resource>, {resourceList}: {resourceList: Resource[]}): BaseState<Resource> {
 	let {
-		resourceList: oldResourceList,
 		linkMap
 	} = state;
 
-	const newEntries: StringMap<Resource> = {};
 	const newLinks: StringMap<Resource> = {};
-	const newResourceList: Resource[] = [...oldResourceList];
 
 	resourceList.forEach((resource: Resource) => {
 		newLinks[resource.links.self] = resource;
-
-		// Check if the resource is already in the list
-		let i = 0;
-		for (i = 0; i < newResourceList.length; i++) {
-			if (newResourceList[i].links.self === resource.links.self) {
-				newResourceList[i] = resource;
-				break;
-			}
-		}
-		// If the resource doesn't already exist, add it
-		if (i === newResourceList.length) {
-			newResourceList.push(resource);
-		}
 	});
 
 	return {
 		...state,
-		resourceList: newResourceList,
 		linkMap: {
 			...linkMap,
 			...newLinks
@@ -67,23 +48,11 @@ function addResources(state: BaseState<Resource>, {resourceList}: {resourceList:
 
 function setOrUpdateResource<R extends Resource>(state: BaseState<R>, {resource}: {resource: R}): BaseState<R> {
 	let {
-		resourceList,
 		linkMap
 	} = state;
 
-	const resourceListUpdated = [...resourceList];
-	const index = resourceList.findIndex((r: R) => {
-		return r.links.self == resource.links.self
-	});
-	if (index != -1) {
-		resourceListUpdated[index] = resource;
-	} else {
-		resourceListUpdated.push(resource);
-	}
-
 	return {
 		...state,
-		resourceList: resourceListUpdated,
 		linkMap: {
 			...linkMap,
 			[resource.links.self]: resource
@@ -94,7 +63,6 @@ function setOrUpdateResource<R extends Resource>(state: BaseState<R>, {resource}
 
 function removeResource(state: BaseState<Resource>, {resource}: {resource: Resource}): BaseState<Resource> {
 	let {
-		resourceList,
 		linkMap
 	} = state;
 
@@ -103,7 +71,6 @@ function removeResource(state: BaseState<Resource>, {resource}: {resource: Resou
 
 	return {
 		...state,
-		resourceList: resourceList.filter(existingResource => existingResource.links.self !== resource.links.self),
 		linkMap: linkMapUpdated
 	};
 }

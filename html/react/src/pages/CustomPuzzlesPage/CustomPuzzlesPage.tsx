@@ -9,6 +9,8 @@ import { PlainLink } from '../../widgets';
 import { CustomPuzzle } from '../../store/customPuzzle';
 import PuzzleCard from '../../widgets/PuzzleCard/PuzzleCard';
 import { backgroundsActions } from '../../store/backgrounds';
+import { Switch, Route } from 'react-router';
+import CreatePuzzlePage from '../CreatePuzzlePage/CreatePuzzlePage';
 
 interface StateProps {
   customPuzzles: CustomPuzzle[];
@@ -21,15 +23,23 @@ interface DispatchProps {
 type CustomPuzzlePageProps = StateProps & DispatchProps;
 
 class CustomPuzzlePage extends Component<CustomPuzzlePageProps> {
-
   componentDidMount() {
     this.props.fetchBackgrounds();
   }
 
   render() {
-    return (
-        <div className={styles.mainContainer}>
-          { this.props.customPuzzles.map(
+    return <Switch>
+      <Route path='/custom/:id' component={CreatePuzzlePage} />
+      <Route render={() => <CustomPuzzles customPuzzles={this.props.customPuzzles}/>} />
+    </Switch>
+  }
+}
+
+type CustomPuzzlesProps = StateProps; 
+
+const CustomPuzzles = ({customPuzzles}: CustomPuzzlesProps) => {
+  return <div className={styles.mainContainer}>
+          { customPuzzles.map(
             (customPuzzle: CustomPuzzle) => 
               <PuzzleCard key={customPuzzle.id} puzzle={customPuzzle}/>
             )
@@ -41,13 +51,11 @@ class CustomPuzzlePage extends Component<CustomPuzzlePageProps> {
             </div>
           </PlainLink>
         </div>
-    );
-  }
 }
 
 const mapStateToProps = (state: StateRoot): StateProps => {
   return {
-    customPuzzles: state.customPuzzle.puzzleList
+    customPuzzles: Object.values(state.customPuzzle.puzzleMap)
   };
 }
 
