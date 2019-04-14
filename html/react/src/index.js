@@ -22,10 +22,6 @@ store.subscribe(() => {
 	puzzleMap$.next(puzzleMap);
 });
 
-window.addEventListener('popstate', function (e) {
-	store.dispatch(displayOptionsActions.disableFullScreenFallback());
-});
-
 ReactDOM.render(
   	<App store={store}/>
   , document.getElementById('react-root'));

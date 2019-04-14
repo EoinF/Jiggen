@@ -1,6 +1,3 @@
-import store from '../store';
-import { displayOptionsActions, DisplayOptionsState } from '../store/displayOptions';
-
 declare global {
     interface Document { 
 		webkitIsFullScreen: Boolean;
@@ -21,8 +18,7 @@ declare global {
 }
 
 function isFullScreen() {
-	 return document.fullscreen || document.webkitIsFullScreen || document.mozFullScreen 
-	 	|| (store.getState().displayOptions as DisplayOptionsState).showFullScreenFallback;
+	 return document.fullscreen || document.webkitIsFullScreen || document.mozFullScreen;
 }
 
 function onFullScreenChange(callback: EventListenerOrEventListenerObject) {
@@ -48,9 +44,6 @@ function setFullScreen(isFullScreen: Boolean, element: Element = {} as Element) 
 			|| element.msRequestFullscreen; // IE 11
 		if (requestFullScreen != null) {
 			requestFullScreen.call(element);
-		} else {
-			// Special fallback if no full screen api available (iOs safari and iOs chrome)
-			store.dispatch(displayOptionsActions.enableFullScreenFallback());
 		}
 	} else {
 		const cancelFullScreen = document.exitFullScreen
@@ -60,9 +53,6 @@ function setFullScreen(isFullScreen: Boolean, element: Element = {} as Element) 
 			|| document.msExitFullscreen; // IE 11
 		if (cancelFullScreen != null) {
 			cancelFullScreen.call(document);
-		} else {
-			// Special fallback if no full screen api available (iOs safari and iOs chrome)
-			store.dispatch(displayOptionsActions.disableFullScreenFallback());
 		}
 	}
 }

@@ -11,23 +11,19 @@ const modalTypeFromValue = (value: string): (ModalType | undefined) => {
 }
 
 export interface DisplayOptionsState {
-    showFullScreenFallback: boolean,
 	modalType?: ModalType,
 	isModalVisible: boolean
 }
 
 const initialState: DisplayOptionsState = {
-	showFullScreenFallback: false,
 	modalType: undefined,
 	isModalVisible: false
 };
 
 const {
-    setFullscreenFallback,
     showModal,
     hideModal
 } = createActions({
-    SET_FULLSCREEN_FALLBACK: (showFullScreenFallback) => ({showFullScreenFallback}),
     SHOW_MODAL: (modalType: ModalType) => ({modalType}),
     HIDE_MODAL: () => {}
 });
@@ -39,19 +35,7 @@ const showTemplatesModal = () => {
 	return showModal(ModalType.TEMPLATE_SELECT);
 }
 
-const enableFullScreenFallback = () => {
-    window.history.pushState('true', 'fullscreen');
-	return setFullscreenFallback(true);
-}
-const disableFullScreenFallback = () => {
-	return setFullscreenFallback(false);
-}
-
 const reducers = handleActions({
-        SET_FULLSCREEN_FALLBACK: (state: DisplayOptionsState, {payload}: Action<any>): DisplayOptionsState => ({
-            ...state,
-            showFullScreenFallback: payload.showFullScreenFallback
-        }),
         SHOW_MODAL: (state: DisplayOptionsState, {payload}: Action<any>): DisplayOptionsState => ({
             ...state,
             modalType: payload.modalType,
@@ -70,9 +54,7 @@ const displayOptionsActions = {
     showBackgroundsModal,
     showTemplatesModal,
     showModal,
-    hideModal,
-	disableFullScreenFallback,
-	enableFullScreenFallback
+    hideModal
 }
 
 export {
