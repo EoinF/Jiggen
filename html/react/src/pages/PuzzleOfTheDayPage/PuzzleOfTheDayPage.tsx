@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
-import { connect, MapStateToPropsParam } from 'react-redux';
+import { connect } from 'react-redux';
 
 import { playablePuzzlesActions, PlayablePuzzle } from '../../store/playablePuzzles';
-import { generatedTemplatesActions, GeneratedTemplate } from '../../store/generatedTemplates';
+import { generatedTemplatesActions } from '../../store/generatedTemplates';
 import { backgroundsActions, Background } from '../../store/backgrounds';
 
 import styles from './PuzzleOfTheDayPage.module.scss';
 
-import GameContainer from '../../widgets/GameContainer';
+import playIconSrc from '../../assets/play-icon.png';
 import { StateRoot, StringMap } from '../../models';
 import PieceCountSelection from './PieceCountSelection/PieceCountSelection';
 import { getPlayablePuzzleMap, getPieceCountMap } from '../../store/selectors';
 import { puzzleSolverActions } from '../../store/puzzleSolverScreen';
+import { PlainLink } from '../../widgets';
 
 interface DispatchProps {
   selectPuzzle(id: string): void;
@@ -80,6 +81,12 @@ class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps, any> {
               selectedId={selectedPuzzle ? selectedPuzzle.links.self : null}
               pieceCountMap={this.props.pieceCountMap}
               onClick={this.onSelectPieceCount} />
+            <PlainLink to={`/play`}>
+              <div className={styles.playIcon}>
+                <img src={playIconSrc} />
+                <span>Play</span>
+              </div>
+            </PlainLink>
           </div>
         </div>
     );

@@ -10,7 +10,6 @@ import editIconSrc from '../../assets/edit-icon.png';
 
 import styles from './PuzzleCard.module.scss';
 import { puzzleSolverActions } from '../../store/puzzleSolverScreen';
-import gwtAdapter from '../../gwtAdapter';
 import { PlainLink } from '..';
 
 interface OwnProps {
