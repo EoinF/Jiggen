@@ -43,6 +43,10 @@
 
 .mainContainer {
     position: relative;
+
+    // Tablet/Desktop
+    max-width: 25rem;
+    margin: auto;
 }
 
 .cardTitleContainer {

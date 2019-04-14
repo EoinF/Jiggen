@@ -17,6 +17,7 @@ h1 {
 	flex: 1;
 	display: flex;
 	flex-flow: column nowrap;
+	align-items: center;
 
 	> * {
 		flex: 1;
@@ -24,6 +25,7 @@ h1 {
 }
 
 .backgroundContainer {
+	max-width: 800px;
 	margin: 0 1rem 0.5rem;
 	img {
 		width: 100%;
