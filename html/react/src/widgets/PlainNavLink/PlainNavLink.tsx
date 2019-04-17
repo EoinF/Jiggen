@@ -1,8 +1,8 @@
 import React from 'react';
-import { NavLink, LinkProps } from 'react-router-dom';
+import { NavLink, LinkProps, NavLinkProps } from 'react-router-dom';
 import styles from './PlainNavLink.module.scss';
 
-const PlainNavLink = (props: LinkProps) => {
+const PlainNavLink = (props: NavLinkProps) => {
 	const {
 		children,
 		className,

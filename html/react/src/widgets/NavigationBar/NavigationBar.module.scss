@@ -1,5 +1,7 @@
 @import '../../vars';
 
+$outlineColour: $purple100;
+
 .mainContainer {
     position: fixed;
     bottom: 0;
@@ -16,7 +18,6 @@
         display: flex;
         height: fit-content;
         margin: 0 1px;
-        padding: 2px;
         border: solid 1px $purple200;
         border-radius: 20px;
         
@@ -37,6 +38,7 @@
     flex-flow: column nowrap;
     align-content: center;
     justify-content: center;
+    padding: 2px 4px;
 
     label {
         padding: 0px 1px 3px;
@@ -46,6 +48,47 @@
             
         font-size: 0.875rem;
         font-weight: bold;
+        text-shadow: -1px 0 $outlineColour, 0 1px $outlineColour, 1px 0 $outlineColour, 0 -1px $outlineColour;
+    }
+}
+
+.currentPuzzleNavButton {
+    width: 64px;
+    position: relative;
+    display: flex;
+    flex-flow: column nowrap;
+    align-content: center;
+    justify-content: center;
+
+    .imageMargin {
+        box-sizing: content-box;
+        padding: 0 4px;
+        height: 48px;
+        width: 48px;
+    }
+
+    label {
+        position: relative;
+        z-index: 2;
+        
+        padding: 0px 1px 3px;
+        
+        text-align: center;
+        white-space: nowrap;
+
+        font-size: 0.875rem;
+        font-weight: bold;
+        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    }
+
+    img {
+        z-index: 1;
+        position: absolute;
+        top: 0;
+        border-radius: 20px;
+
+        width: 100%;
+        height: 100%;
     }
 }
 
