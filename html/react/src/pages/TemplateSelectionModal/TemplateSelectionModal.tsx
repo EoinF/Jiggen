@@ -36,13 +36,11 @@ class TemplateSelectionModal extends Component<TemplateSelectionProps, TemplateS
 	
 	componentDidMount() {
 		const {
-			fetchTemplates,
-			templates
+			fetchTemplates
 		} = this.props;
 		
-		if (templates.length === 0) {
-			fetchTemplates();
-		}
+		fetchTemplates();
+		
 	}
 
 	selectTemplate = (link: string) => {
