@@ -31,12 +31,12 @@ public class Jiggen extends Game {
 	private PuzzleSolverScreen puzzleSolverScreen;
     private TextureAtlas atlas = null;
 
-    public Consumer<Boolean> onSetFullScreen;
+    public Runnable onToggleFullScreen;
 	private Consumer<JiggenState> onStateChange;
 	private int maxTextureSize;
 
-    public Jiggen(Consumer<Boolean> onSetFullScreen, Consumer<JiggenState> onStateChange) {
-    	this.onSetFullScreen = onSetFullScreen;
+    public Jiggen(Runnable onToggleFullScreen, Consumer<JiggenState> onStateChange) {
+    	this.onToggleFullScreen = onToggleFullScreen;
 		this.onStateChange = onStateChange;
 	}
 

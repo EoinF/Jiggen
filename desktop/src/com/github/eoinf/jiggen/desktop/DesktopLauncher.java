@@ -27,8 +27,8 @@ public class DesktopLauncher {
         config.width = 900;
         config.height = 600;
 
-		Jiggen game = new Jiggen(isFullScreen -> {
-			if (isFullScreen) {
+		Jiggen game = new Jiggen(() -> {
+			if (!Gdx.graphics.isFullscreen()) {
 				Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
 			} else {
 				Gdx.graphics.setWindowedMode(config.width, config.height);

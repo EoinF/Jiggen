@@ -42,10 +42,10 @@ public class HtmlLauncher extends GwtApplication {
     public ApplicationListener createApplicationListener() {
         GWT.log("Initializing GWT Adapter");
 
-        Jiggen jiggen = new Jiggen(new Consumer<Boolean>() {
+        Jiggen jiggen = new Jiggen(new Runnable() {
             @Override
-            public void accept(Boolean isFullScreen) {
-                GwtAdapter.setFullScreen(isFullScreen);
+            public void run() {
+                GwtAdapter.toggleFullScreen();
             }
         }, new Consumer<JiggenState>() {
             @Override

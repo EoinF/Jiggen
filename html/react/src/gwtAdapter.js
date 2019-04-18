@@ -1,4 +1,4 @@
-import {setFullScreen} from './utils/fullScreen';
+import {toggleFullScreen} from './utils/fullScreen';
 import cachedImageDownload from './utils/cachedImageDownload';
 
 const onGwtLoadedPromise = new Promise((resolve, reject) => {
@@ -45,12 +45,12 @@ function resizeGameContainer(width, height) {
 	});
 }
 
-function setGwtFullScreen (isFullScreen) {
-	setFullScreen(isFullScreen, document.getElementById('embed-html'));
+function toggleGwtFullScreen () {
+	toggleFullScreen(document.getElementById('embed-html'));
 };
 
 onGwtLoadedPromise.then(() => {
-	window.gwtAdapter.setFullScreen = setGwtFullScreen;
+	window.gwtAdapter.toggleFullScreen = toggleGwtFullScreen;
 });
 
 export default {

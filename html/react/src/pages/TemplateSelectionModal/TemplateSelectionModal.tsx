@@ -40,7 +40,6 @@ class TemplateSelectionModal extends Component<TemplateSelectionProps, TemplateS
 		} = this.props;
 		
 		fetchTemplates();
-		
 	}
 
 	selectTemplate = (link: string) => {

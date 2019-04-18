@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
+import com.github.eoinf.jiggen.webapp.Jiggen;
 import com.github.eoinf.jiggen.webapp.graphics.WorldBoundedCamera;
 import com.github.eoinf.jiggen.webapp.screens.models.ConnectedPuzzlePieces;
 import com.github.eoinf.jiggen.webapp.screens.models.PuzzleGraphTemplate;
@@ -22,15 +23,21 @@ import static com.github.eoinf.jiggen.webapp.utils.PixmapUtils.getMinimumScaleTo
  */
 public class PuzzleViewController {
     private static float WORLD_BASE_PADDING = 50;
+    private final Jiggen game;
 
     private PuzzleViewModel puzzleViewModel;
     private HeldPieceController heldPieceController;
     private WorldBoundedCamera camera;
 
-    public PuzzleViewController(PuzzleViewModel puzzleViewModel, WorldBoundedCamera camera) {
+    public PuzzleViewController(Jiggen game, PuzzleViewModel puzzleViewModel, WorldBoundedCamera camera) {
+        this.game = game;
         this.puzzleViewModel = puzzleViewModel;
         this.camera = camera;
         heldPieceController = new HeldPieceController(puzzleViewModel, this, camera);
+    }
+
+    public void toggleFullScreen() {
+        this.game.onToggleFullScreen.run();
     }
 
     public void updatePuzzleGraph(PuzzleGraphTemplate puzzleGraphTemplate, Texture backgroundImage) {

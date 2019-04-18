@@ -29,14 +29,14 @@ public class PuzzleSolverScreen implements Screen {
         WorldBoundedCamera camera = new WorldBoundedCamera();
 
         puzzleViewModel = new PuzzleViewModel();
-        puzzleViewController = new PuzzleViewController(puzzleViewModel, camera);
+        puzzleViewController = new PuzzleViewController(game, puzzleViewModel, camera);
         this.puzzleView = new PuzzleView(camera, batch, skin, puzzleViewModel, puzzleViewController);
         this.toolbar = new PuzzleToolbar(uiTextureAtlas, puzzleViewModel, puzzleViewController);
 
         InputMultiplexer multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(toolbar.stage);
         multiplexer.addProcessor(puzzleView.stage);
         multiplexer.addProcessor(puzzleView.getGestureDetector());
+        multiplexer.addProcessor(toolbar.stage);
         Gdx.input.setInputProcessor(multiplexer);
 
         puzzleViewModel.getPuzzleTemplateObservable().subscribe(new Consumer<PuzzleGraphTemplate>() {
@@ -74,11 +74,11 @@ public class PuzzleSolverScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        puzzleView.act(delta);
         toolbar.act(delta);
+        puzzleView.act(delta);
 
-        puzzleView.draw();
         toolbar.draw();
+        puzzleView.draw();
     }
 
     @Override

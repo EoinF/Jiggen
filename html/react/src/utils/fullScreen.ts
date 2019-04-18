@@ -35,6 +35,10 @@ function unsetOnFullScreenChange(callback: EventListenerOrEventListenerObject) {
 	document.removeEventListener('MSFullscreenChange', callback, false);
 }
 
+function toggleFullScreen(element: Element = {} as Element) {
+    setFullScreen(!isFullScreen(), element);
+}
+
 function setFullScreen(isFullScreen: Boolean, element: Element = {} as Element) {
 	if (isFullScreen) {
 		// for newer Webkit and Firefox

@@ -120,11 +120,10 @@ public class GwtAdapter {
     }
 
     @JsMethod
-    public static native void setFullScreen(boolean isFullScreen);
+    public static native void toggleFullScreen();
 
     @JsMethod
     public static native void downloadImage(boolean isFullScreen);
-
 }
 
 @JsType(isNative = true)
