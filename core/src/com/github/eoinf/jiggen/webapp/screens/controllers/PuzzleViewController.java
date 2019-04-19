@@ -190,4 +190,12 @@ public class PuzzleViewController {
         // Notify observers
         puzzleViewModel.setConnectedPiecesList(connectedPuzzlePiecesList);
     }
+
+    public void showBackground() {
+        puzzleViewModel.setIsBackgroundVisible(true);
+    }
+
+    public void hideBackground() {
+        puzzleViewModel.setIsBackgroundVisible(false);
+    }
 }

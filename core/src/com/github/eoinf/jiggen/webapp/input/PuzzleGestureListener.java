@@ -47,7 +47,7 @@ public class PuzzleGestureListener implements EnhancedGestureListener {
     public boolean touchUp(float x, float y, int pointer, int button) {
         numPointersTouchedDown--;
         puzzleViewController.dropPiece();
-        return false;
+        return true;
     }
 
     @Override

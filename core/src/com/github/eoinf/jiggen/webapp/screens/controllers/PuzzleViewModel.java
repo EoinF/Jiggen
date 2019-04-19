@@ -29,6 +29,7 @@ public class PuzzleViewModel {
         heldPuzzlePieceSubject = SimpleSubject.createDefault(HeldPuzzlePiece.NONE);
         scalesSubject = SimpleSubject.createDefault(new Vector2(1, 1));
         worldBoundsSubject = SimpleSubject.createDefault(new GridPoint2());
+        isBackgroundVisibleSubject = SimpleSubject.createDefault(false);
 
         updateConnectedPiecesSubject = SimpleSubject.create();
 
@@ -150,5 +151,16 @@ public class PuzzleViewModel {
     }
     void updateConnectedPieceGroup(ConnectedPuzzlePieces connectedPieces) {
         updateConnectedPiecesSubject.onNext(connectedPieces);
+    }
+
+    //
+    // Update puzzle piece
+    //
+    private SimpleSubject<Boolean> isBackgroundVisibleSubject;
+    public SimpleObservable<Boolean> getIsBackgroundVisibleObservable() {
+        return isBackgroundVisibleSubject;
+    }
+    void setIsBackgroundVisible(boolean isVisible) {
+        isBackgroundVisibleSubject.onNext(isVisible);
     }
 }

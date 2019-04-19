@@ -38,7 +38,13 @@ public class PuzzleToolbar implements ScreenView {
                 .fillX()
                 .top();
 
-        stage.addActor(mainTable);
+        mainTable.row();
+
+        mainTable
+                .add(createBottomTable(uiTextureAtlas, puzzleViewController))
+                .expand()
+                .fillX()
+                .bottom();
 
         puzzleViewModel.getResizeScreenObservable().subscribe(new Consumer<GridPoint2>() {
             @Override
@@ -80,25 +86,25 @@ public class PuzzleToolbar implements ScreenView {
         Table bottomTable = new Table();
         bottomTable.align(Align.bottom);
 
-        ImageButton resizeButton = new ImageButton(
-                new TextureRegionDrawable(uiTextureAtlas.findRegion("toolbar/resize"))
+        ImageButton showBackgroundButton = new ImageButton(
+                new TextureRegionDrawable(uiTextureAtlas.findRegion("toolbar/show-background"))
         );
 
         //
         // Content
         //
         bottomTable
-                .add(resizeButton)
+                .add(showBackgroundButton)
                 .expand()
                 .pad(5)
                 .top()
                 .right();
 
-        resizeButton.addListener(new ClickListener() {
+        showBackgroundButton.addListener(new ClickListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
-                puzzleViewController.toggleFullScreen();
-                super.clicked(event, x, y);
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                puzzleViewController.showBackground();
+                super.touchUp(event, x, y, pointer, button);
             }
         });
         return bottomTable;

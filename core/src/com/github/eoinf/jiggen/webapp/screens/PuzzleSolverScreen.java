@@ -13,6 +13,7 @@ import com.github.eoinf.jiggen.webapp.graphics.WorldBoundedCamera;
 import com.github.eoinf.jiggen.webapp.screens.controllers.PuzzleViewController;
 import com.github.eoinf.jiggen.webapp.screens.controllers.PuzzleViewModel;
 import com.github.eoinf.jiggen.webapp.screens.models.PuzzleGraphTemplate;
+import com.github.eoinf.jiggen.webapp.screens.views.BackgroundView;
 import com.github.eoinf.jiggen.webapp.screens.views.PuzzleToolbar;
 import com.github.eoinf.jiggen.webapp.screens.views.PuzzleView;
 
@@ -20,10 +21,11 @@ import java.util.function.Consumer;
 
 public class PuzzleSolverScreen implements Screen {
 
-    private PuzzleView puzzleView;
-    private PuzzleToolbar toolbar;
-    private PuzzleViewModel puzzleViewModel;
-    private PuzzleViewController puzzleViewController;
+    private final BackgroundView backgroundView;
+    private final PuzzleView puzzleView;
+    private final PuzzleToolbar toolbar;
+    private final PuzzleViewModel puzzleViewModel;
+    private final PuzzleViewController puzzleViewController;
 
     public PuzzleSolverScreen(Jiggen game, PuzzleOverlayBatch batch, TextureAtlas uiTextureAtlas, Skin skin) {
         WorldBoundedCamera camera = new WorldBoundedCamera();
@@ -32,8 +34,10 @@ public class PuzzleSolverScreen implements Screen {
         puzzleViewController = new PuzzleViewController(game, puzzleViewModel, camera);
         this.puzzleView = new PuzzleView(camera, batch, skin, puzzleViewModel, puzzleViewController);
         this.toolbar = new PuzzleToolbar(uiTextureAtlas, puzzleViewModel, puzzleViewController);
+        this.backgroundView = new BackgroundView(uiTextureAtlas, puzzleViewModel, puzzleViewController);
 
         InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(backgroundView.stage);
         multiplexer.addProcessor(puzzleView.stage);
         multiplexer.addProcessor(puzzleView.getGestureDetector());
         multiplexer.addProcessor(toolbar.stage);
@@ -61,6 +65,8 @@ public class PuzzleSolverScreen implements Screen {
                 puzzleViewController.updateWorldBounds(newScreenSize.x, newScreenSize.y);
             }
         });
+
+        puzzleViewController.showBackground();
     }
 
     public void setTemplate(PuzzleGraphTemplate puzzleGraphTemplate) {
@@ -74,11 +80,22 @@ public class PuzzleSolverScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        toolbar.act(delta);
-        puzzleView.act(delta);
+
+        boolean isBackgroundVisible = puzzleViewModel.getIsBackgroundVisibleObservable().getValue();
+
+        if (isBackgroundVisible) {
+            backgroundView.act(delta);
+        } else {
+            toolbar.act(delta);
+            puzzleView.act(delta);
+        }
+
 
         toolbar.draw();
         puzzleView.draw();
+        if (isBackgroundVisible) {
+            backgroundView.draw();
+        }
     }
 
     @Override

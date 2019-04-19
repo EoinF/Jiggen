@@ -175,7 +175,7 @@ public abstract class PixmapUtils {
     }
 
     public static void setBackgroundColour(Table table, Color colour) {
-        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGB888);
+        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         pixmap.setColor(colour);
         pixmap.fill();
         Drawable background = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
