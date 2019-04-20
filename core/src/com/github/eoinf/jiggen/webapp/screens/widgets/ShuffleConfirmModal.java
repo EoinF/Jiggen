@@ -11,6 +11,9 @@ import com.github.eoinf.jiggen.utils.PixmapUtils;
 import com.github.eoinf.jiggen.webapp.screens.controllers.PuzzleViewController;
 
 public class ShuffleConfirmModal extends Table {
+    private static final float BORDER_WIDTH = 1;
+    private static final float MODAL_PADDING = 10;
+
     public ShuffleConfirmModal(PuzzleViewController puzzleViewController, Skin skin) {
         //
         // Layout
@@ -18,27 +21,38 @@ public class ShuffleConfirmModal extends Table {
         super(skin);
         setFillParent(true);
 
-        Table modalContainer = new Table();
+        Table modalBorder = new Table();
+        PixmapUtils.setBackgroundColour(modalBorder, Color.WHITE);
 
+        Table modalContainer = new Table();
         PixmapUtils.setBackgroundColour(modalContainer, Color.PURPLE);
 
         Label title = new Label("Shuffle the puzzle pieces?", skin);
         Label description = new Label("Warning: You will lose all current progress on this puzzle", skin);
-        TextButton confirm = new TextButton("Shuffle the pieces", skin);
+
+        TextButton confirm = new TextButton("Shuffle", skin);
         TextButton cancel = new TextButton("Cancel", skin);
 
         modalContainer.add(title)
+                .colspan(2)
+                .expandX()
+                .padBottom(5)
                 .center();
         modalContainer.row();
         modalContainer.add(description)
+                .colspan(2)
+                .expandX()
+                .padBottom(5)
                 .center();
         modalContainer.row();
         modalContainer.add(confirm);
         modalContainer.add(cancel);
 
-        modalContainer.pad(20);
+        modalBorder.pad(BORDER_WIDTH);
+        modalContainer.pad(MODAL_PADDING);
 
-        add(modalContainer);
+        modalBorder.add(modalContainer);
+        add(modalBorder);
 
         confirm.addListener(new ClickListener() {
             @Override
