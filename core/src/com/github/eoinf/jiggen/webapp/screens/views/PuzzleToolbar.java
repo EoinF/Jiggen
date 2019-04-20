@@ -89,6 +89,9 @@ public class PuzzleToolbar implements ScreenView {
         ImageButton showBackgroundButton = new ImageButton(
                 new TextureRegionDrawable(uiTextureAtlas.findRegion("toolbar/show-background"))
         );
+        ImageButton shuffleButton = new ImageButton(
+                new TextureRegionDrawable(uiTextureAtlas.findRegion("toolbar/shuffle"))
+        );
 
         //
         // Content
@@ -100,10 +103,26 @@ public class PuzzleToolbar implements ScreenView {
                 .top()
                 .right();
 
+        bottomTable.row();
+
+        bottomTable.add(shuffleButton)
+                .expand()
+                .pad(5)
+                .top()
+                .right();
+
         showBackgroundButton.addListener(new ClickListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 puzzleViewController.showBackground();
+                super.touchUp(event, x, y, pointer, button);
+            }
+        });
+
+        shuffleButton.addListener(new ClickListener() {
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                puzzleViewController.showShuffleModal();
                 super.touchUp(event, x, y, pointer, button);
             }
         });

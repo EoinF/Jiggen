@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.github.eoinf.jiggen.webapp.screens.models.ConnectedPuzzlePieces;
+import com.github.eoinf.jiggen.webapp.screens.models.ModalViewType;
 import com.github.eoinf.jiggen.webapp.screens.models.PuzzleGraphTemplate;
 import com.github.eoinf.jiggen.webapp.screens.widgets.HeldPuzzlePiece;
 import com.github.eoinf.jiggen.webapp.utils.SimpleObservable;
@@ -29,7 +30,7 @@ public class PuzzleViewModel {
         heldPuzzlePieceSubject = SimpleSubject.createDefault(HeldPuzzlePiece.NONE);
         scalesSubject = SimpleSubject.createDefault(new Vector2(1, 1));
         worldBoundsSubject = SimpleSubject.createDefault(new GridPoint2());
-        isBackgroundVisibleSubject = SimpleSubject.createDefault(false);
+        modalViewTypeSubject = SimpleSubject.createDefault(ModalViewType.NONE);
 
         updateConnectedPiecesSubject = SimpleSubject.create();
 
@@ -154,13 +155,13 @@ public class PuzzleViewModel {
     }
 
     //
-    // Update puzzle piece
+    // Modal type visible
     //
-    private SimpleSubject<Boolean> isBackgroundVisibleSubject;
-    public SimpleObservable<Boolean> getIsBackgroundVisibleObservable() {
-        return isBackgroundVisibleSubject;
+    private SimpleSubject<ModalViewType> modalViewTypeSubject;
+    public SimpleObservable<ModalViewType> getModalViewTypeSubject() {
+        return modalViewTypeSubject;
     }
-    void setIsBackgroundVisible(boolean isVisible) {
-        isBackgroundVisibleSubject.onNext(isVisible);
+    void setActiveModal(ModalViewType type) {
+        modalViewTypeSubject.onNext(type);
     }
 }

@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.github.eoinf.jiggen.webapp.Jiggen;
 import com.github.eoinf.jiggen.webapp.graphics.WorldBoundedCamera;
 import com.github.eoinf.jiggen.webapp.screens.models.ConnectedPuzzlePieces;
+import com.github.eoinf.jiggen.webapp.screens.models.ModalViewType;
 import com.github.eoinf.jiggen.webapp.screens.models.PuzzleGraphTemplate;
 import com.github.eoinf.jiggen.webapp.screens.models.PuzzlePiece;
 import com.github.eoinf.jiggen.webapp.screens.models.PuzzlePieceTemplate;
@@ -192,10 +193,13 @@ public class PuzzleViewController {
     }
 
     public void showBackground() {
-        puzzleViewModel.setIsBackgroundVisible(true);
+        puzzleViewModel.setActiveModal(ModalViewType.BACKGROUND_DISPLAY);
     }
 
-    public void hideBackground() {
-        puzzleViewModel.setIsBackgroundVisible(false);
+    public void showShuffleModal() {
+        puzzleViewModel.setActiveModal(ModalViewType.SHUFFLE_CONFIRM);
+    }
+    public void hideModal() {
+        puzzleViewModel.setActiveModal(ModalViewType.NONE);
     }
 }
