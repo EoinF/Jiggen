@@ -82,8 +82,8 @@ public class PuzzleSolverScreen implements Screen {
         toolbar.act(delta);
         puzzleView.act(delta);
 
-        toolbar.draw();
         puzzleView.draw();
+        toolbar.draw();
         modalView.draw();
     }
 
