@@ -6,13 +6,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.github.eoinf.jiggen.webapp.screens.controllers.PuzzleViewController;
 import com.github.eoinf.jiggen.webapp.utils.PixmapUtils;
 
 public class ShuffleConfirmModal extends Table {
     private static final float BORDER_WIDTH = 1;
-    private static final float MODAL_PADDING = 10;
+    private static final float MODAL_PADDING = 15;
 
     public ShuffleConfirmModal(PuzzleViewController puzzleViewController, Skin skin) {
         //
@@ -25,23 +26,29 @@ public class ShuffleConfirmModal extends Table {
         PixmapUtils.setBackgroundColour(modalBorder, Color.WHITE);
 
         Table modalContainer = new Table();
+
         PixmapUtils.setBackgroundColour(modalContainer, Color.PURPLE);
 
         Label title = new Label("Shuffle the puzzle pieces?", skin);
+        title.setWrap(true);
         Label description = new Label("Warning: You will lose all current progress on this puzzle", skin);
+        description.setWrap(true);
 
         TextButton confirm = new TextButton("Shuffle", skin);
         TextButton cancel = new TextButton("Cancel", skin);
 
         modalContainer.add(title)
-                .colspan(2)
+                .prefWidth(Value.percentWidth(1f))
                 .expandX()
-                .padBottom(5)
+                .fillX()
+                .colspan(2)
+                .padBottom(10)
                 .center();
         modalContainer.row();
         modalContainer.add(description)
-                .colspan(2)
                 .expandX()
+                .fillX()
+                .colspan(2)
                 .padBottom(5)
                 .center();
         modalContainer.row();
