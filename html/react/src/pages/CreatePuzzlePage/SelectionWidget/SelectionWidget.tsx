@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import {ResponsiveImage} from '../../../widgets';
 import styles from './SelectionWidget.module.scss';
 import { Resource } from '../../../models';
@@ -8,22 +8,21 @@ interface SelectionWidgetProps {
 	fallbackImageSrc: string
 	notSelectedCaption: string
 	onClick(): void;
+	children: ReactNode;
 }
 
-const SelectionWidget = ({selection, fallbackImageSrc, notSelectedCaption, onClick}: SelectionWidgetProps) => {
-	let imageSrc = fallbackImageSrc;
-
-	if (selection != null) {
-		imageSrc = selection.links['image-compressed'] || selection.links.image;
-	}
+const SelectionWidget = ({children, fallbackImageSrc, notSelectedCaption, onClick}: SelectionWidgetProps) => {
 	return (
-		<div className={styles.mainContainer} onClick={onClick}>
-			{selection == null && 
-				<div className={styles.caption}>
-					{notSelectedCaption}
-				</div>
+		<div className={styles.mainContainer} onClick={onClick}> 
+			{ children != null 
+				? children 
+				: <React.Fragment>
+					<div className={styles.caption}>
+						{notSelectedCaption}
+					</div>
+					<ResponsiveImage src={fallbackImageSrc} alt=""/>
+				</React.Fragment>
 			}
-			<ResponsiveImage src={imageSrc} alt=""/>
 		</div>
 	);
 }

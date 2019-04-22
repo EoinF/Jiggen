@@ -11,6 +11,7 @@ import editIconSrc from '../../assets/edit-icon.png';
 import styles from './PuzzleCard.module.scss';
 import { puzzleSolverActions } from '../../store/puzzleSolverScreen';
 import { PlainLink } from '..';
+import PieceCountDisplay from '../PieceCountDisplay/PieceCountDisplay';
 
 interface OwnProps {
     puzzle: CustomPuzzle;
@@ -28,7 +29,7 @@ interface DispatchProps {
 
 type PuzzleCardProps = OwnProps & StateProps & DispatchProps;
 
-const PuzzleCard = ({background, puzzle, deleteCustomPuzzle, playCustomPuzzle} : PuzzleCardProps) => {
+const PuzzleCard = ({background, template, puzzle, deleteCustomPuzzle, playCustomPuzzle} : PuzzleCardProps) => {
     let backgroundSrc = '';
     if (background != null) {
         backgroundSrc = background.links['image-thumbnail48x48']
@@ -47,8 +48,12 @@ const PuzzleCard = ({background, puzzle, deleteCustomPuzzle, playCustomPuzzle} :
             <div className={styles.icon}>
                 <img src={backgroundSrc} />
             </div>
-            <div className={styles.icon}>
+            <div className={`${styles.icon} ${styles.templateSelectionContainer}`}>
                 <img src={templateIconSrc}/>
+                {
+                    template != null 
+                    && <PieceCountDisplay count={template.pieces}/> 
+                }
             </div>
             <PlainLink to={`/play`}>
                 <div className={styles.iconSmall} onClick={playCustomPuzzle}>

@@ -1,0 +1,16 @@
+@import '../../vars.scss';
+
+.pieceCount {
+	position: absolute;
+
+	background: rgba($purple500, 0.9);
+	font-size: 1.25rem;
+	color: $black;
+
+    border-radius: 0.25rem;
+	border: 1px solid rgba($purple100, 0.7);
+	padding: 0.125rem 0.1875rem;
+	z-index: 1;
+	bottom: 0.0625rem;
+	right: 0.0625rem;
+}

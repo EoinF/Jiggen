@@ -11,6 +11,7 @@ import PuzzleCard from '../../widgets/PuzzleCard/PuzzleCard';
 import { backgroundsActions } from '../../store/backgrounds';
 import { Switch, Route } from 'react-router';
 import CreatePuzzlePage from '../CreatePuzzlePage/CreatePuzzlePage';
+import { templatesActions } from '../../store/templates';
 
 interface StateProps {
   customPuzzles: CustomPuzzle[];
@@ -18,6 +19,7 @@ interface StateProps {
 
 interface DispatchProps {
   fetchBackgrounds(): void;
+  fetchTemplates(): void;
 }
 
 type CustomPuzzlePageProps = StateProps & DispatchProps;
@@ -25,6 +27,7 @@ type CustomPuzzlePageProps = StateProps & DispatchProps;
 class CustomPuzzlePage extends Component<CustomPuzzlePageProps> {
   componentDidMount() {
     this.props.fetchBackgrounds();
+    this.props.fetchTemplates();
   }
 
   render() {
@@ -61,7 +64,8 @@ const mapStateToProps = (state: StateRoot): StateProps => {
 
 const mapDispatchToProps = (dispatch: Function) : DispatchProps => {
   return {
-    fetchBackgrounds: () => dispatch(backgroundsActions.fetchBackgrounds())
+    fetchBackgrounds: () => dispatch(backgroundsActions.fetchBackgrounds()),
+    fetchTemplates: () => dispatch(templatesActions.fetchTemplates())
   };
 }
 

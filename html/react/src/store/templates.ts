@@ -6,7 +6,14 @@ import { createActions, handleActions, Action } from 'redux-actions';
 import { Dispatch } from 'redux';
 import store from '.';
 
-export class Template extends Resource {}
+export class Template extends Resource {
+    pieces: number;
+
+    constructor(links: any, name: string) {
+        super(links, name);
+        this.pieces = 0;
+    }
+}
 
 export interface TemplatesState extends BaseState<Template> {}
 

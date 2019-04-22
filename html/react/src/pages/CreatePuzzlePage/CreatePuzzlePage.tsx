@@ -11,9 +11,11 @@ import { Background, backgroundsActions } from '../../store/backgrounds';
 import { StateRoot } from '../../models';
 import { displayOptionsActions } from '../../store/displayOptions';
 import { Template, templatesActions } from '../../store/templates';
-import { PlainLink } from '../../widgets';
+import { PlainLink, ResponsiveImage } from '../../widgets';
 import { customPuzzleActions } from '../../store/customPuzzle';
 import { RouteComponentProps } from 'react-router';
+import TemplateWidget from '../../widgets/TemplateWidget/TemplateWidget';
+import PieceCountDisplay from '../../widgets/PieceCountDisplay/PieceCountDisplay';
 
 interface StateProps {
   puzzleName: string;
@@ -92,13 +94,29 @@ class CreatePuzzlePage extends Component<CreatePuzzlePageProps> {
                   fallbackImageSrc={templateLogo}
                   notSelectedCaption='Choose a Template'
                   onClick={this.props.showTemplatesModal}
-                />
+                >
+                  {
+                    selectedTemplate && <div className={styles.templateSelectionContainer}>
+                      <ResponsiveImage 
+                        src={selectedTemplate.links['image-compressed'] || selectedTemplate.links.image} 
+                        alt={selectedTemplate.name}
+                      />
+                      <PieceCountDisplay count={selectedTemplate.pieces} />
+                    </div>
+                  }
+                </SelectionWidget>
                 <SelectionWidget
                   selection={selectedBackground}
                   fallbackImageSrc={backgroundLogo}
                   notSelectedCaption='Choose a Background'
                   onClick={this.props.showBackgroundsModal}
-                />
+                >
+                  {selectedBackground && <ResponsiveImage 
+                      src={selectedBackground.links['image-compressed'] || selectedBackground.links.image} 
+                      alt={selectedBackground.name}
+                    />
+                  }
+                </SelectionWidget>
             </div>
             <div className={styles.buttonControls}>
               { isReady ? ( 

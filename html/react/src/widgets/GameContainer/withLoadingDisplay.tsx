@@ -118,7 +118,7 @@ class LoadingDisplayWrapper extends Component<LoadingDisplayWrapperProps, Loadin
 
 const mapStateToProps = (_state: any, ownProps: any): StateProps => {
     const state = (_state as StateRoot); // Required because we can't change type of _state
-    const selectedTemplate = state.generatedTemplates.linkMap[state.puzzleSolverScreen.selectedTemplate!]
+    const selectedTemplate = state.templates.linkMap[state.puzzleSolverScreen.selectedTemplate!]
     return {
         selectedTemplate,
         selectedGeneratedTemplate: selectedTemplate && state.generatedTemplates.linkMap[selectedTemplate.links.generatedTemplate!], 

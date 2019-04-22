@@ -93,11 +93,19 @@ class BackgroundSelectionModal extends Component<BackgroundSelectionModalProps, 
 						<BackgroundSelectionForm
 								onSelectBackground={this.onSelectBackground} />
 					</CardContainer>
-					<ImageDisplayReel
-						resourceList={backgrounds}
-						onClickLink={this.onSelectBackgroundLink}
-						onError={this.onError}
-					/>
+					<ImageDisplayReel 
+							displayComponents={this.props.backgrounds.map(background  => (
+								<li key={background.links.self}>
+									<div onClick={() => this.onSelectBackgroundLink(background.links.self)}>
+										<img 
+											src={background.links['image-compressed'] || background.links.image} 
+											alt={background.name}
+											onError={() => this.onError(background)}
+										/>
+									</div>
+								</li>)
+							)}
+						/>
 				</div>
 			</div>
 		}

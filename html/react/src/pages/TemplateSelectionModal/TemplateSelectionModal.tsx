@@ -9,6 +9,7 @@ import { Template, templatesActions } from '../../store/templates';
 import { StateRoot } from '../../models';
 import { Redirect } from 'react-router';
 import { customPuzzleActions } from '../../store/customPuzzle';
+import TemplateWidget from '../../widgets/TemplateWidget/TemplateWidget';
 
 interface TemplateSelectionState {
 	isSubmitted: Boolean;
@@ -60,9 +61,11 @@ class TemplateSelectionModal extends Component<TemplateSelectionProps, TemplateS
 							<span>Choose a Template</span>
 						</h1>
 						<ImageDisplayReel 
-							resourceList={this.props.templates}
-							onClickLink={this.selectTemplate}
-							onError={this.onError}
+							displayComponents={this.props.templates.map(template => (
+								<li key={template.links.self} onClick={() => this.selectTemplate(template.links.self)}>
+									<TemplateWidget template={template} onError={this.onError} />
+								</li>)
+							)}
 						/>
 					</div>
 				</ModalWrapper>
