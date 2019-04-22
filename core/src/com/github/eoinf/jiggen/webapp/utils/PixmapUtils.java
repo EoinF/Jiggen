@@ -1,8 +1,14 @@
 package com.github.eoinf.jiggen.webapp.utils;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 public class PixmapUtils {
     public static Pixmap stretchPixmap(Pixmap srcMap, GridPoint2 dstBounds) {
@@ -46,6 +52,16 @@ public class PixmapUtils {
         }
 
         return new Vector2(s1, s2);
+    }
+
+
+    public static void setBackgroundColour(Table table, Color colour) {
+        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pixmap.setColor(colour);
+        pixmap.fill();
+        Drawable background = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
+        table.setBackground(background);
+        pixmap.dispose();
     }
 
 }

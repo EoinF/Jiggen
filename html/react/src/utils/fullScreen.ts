@@ -61,4 +61,4 @@ function setFullScreen(isFullScreen: Boolean, element: Element = {} as Element) 
 	}
 }
 
-export {setFullScreen, onFullScreenChange, unsetOnFullScreenChange, isFullScreen};
+export {setFullScreen, onFullScreenChange, unsetOnFullScreenChange, isFullScreen, toggleFullScreen};

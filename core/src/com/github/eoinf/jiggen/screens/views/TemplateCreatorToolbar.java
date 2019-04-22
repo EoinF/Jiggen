@@ -20,13 +20,14 @@ import com.github.eoinf.jiggen.TemplateCreator.WaveDistortionData;
 import com.github.eoinf.jiggen.TemplateCreator.lines.SinWave;
 import com.github.eoinf.jiggen.screens.controllers.TemplateCreatorViewController;
 import com.github.eoinf.jiggen.screens.controllers.TemplateCreatorViewModel;
-import com.github.eoinf.jiggen.utils.PixmapUtils;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.util.Random;
 import java.util.function.Consumer;
+
+import static com.github.eoinf.jiggen.webapp.utils.PixmapUtils.setBackgroundColour;
 
 public class TemplateCreatorToolbar implements ScreenView {
     public Stage stage;
@@ -48,7 +49,7 @@ public class TemplateCreatorToolbar implements ScreenView {
         mainTable.setFillParent(true);
 
         Table toolbarTable = new Table();
-        PixmapUtils.setBackgroundColour(toolbarTable, new Color(0.3f, 0.6f, 1f, 1f));
+        setBackgroundColour(toolbarTable, new Color(0.3f, 0.6f, 1f, 1f));
         mainTable
                 .add(toolbarTable)
                 .expand()

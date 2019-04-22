@@ -8,9 +8,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.GridPoint2;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.github.eoinf.jiggen.webapp.screens.models.IntRectangle;
 
 import java.util.ArrayList;
@@ -172,15 +169,6 @@ public abstract class PixmapUtils {
             }
         }
         return backgroundFiles;
-    }
-
-    public static void setBackgroundColour(Table table, Color colour) {
-        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pixmap.setColor(colour);
-        pixmap.fill();
-        Drawable background = new TextureRegionDrawable(new TextureRegion(new Texture(pixmap)));
-        table.setBackground(background);
-        pixmap.dispose();
     }
 
     public static boolean overlaps(IntRectangle rect1, IntRectangle rect2) {

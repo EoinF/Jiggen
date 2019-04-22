@@ -7,8 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.github.eoinf.jiggen.utils.PixmapUtils;
 import com.github.eoinf.jiggen.webapp.screens.controllers.PuzzleViewController;
+import com.github.eoinf.jiggen.webapp.utils.PixmapUtils;
 
 public class ShuffleConfirmModal extends Table {
     private static final float BORDER_WIDTH = 1;
