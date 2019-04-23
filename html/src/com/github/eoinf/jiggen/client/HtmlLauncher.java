@@ -59,4 +59,12 @@ public class HtmlLauncher extends GwtApplication {
         GwtAdapter.setApp(this);
         return jiggen;
     }
+
+    /**
+     * Required for fetching from assets folder, as it defaults to current path
+     * @return base url for fetching assets
+     */
+    public static native String getHostPageBaseURL() /*-{
+            return $doc.location.origin + "/";
+          }-*/;
 }
