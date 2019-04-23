@@ -58,6 +58,7 @@ class TemplateSelectionModal extends Component<TemplateSelectionProps, TemplateS
 		
 		fetchTemplates();
 		this.filterTemplates();
+		this.calculateDomain();
 	}
 
 	componentDidUpdate(prevProps: TemplateSelectionProps, prevState: TemplateSelectionState) {
@@ -91,9 +92,18 @@ class TemplateSelectionModal extends Component<TemplateSelectionProps, TemplateS
 		if (this.props.templates.length > 0) {
 			const piecesList = this.props.templates.map(template => template.pieces);
 			
-			const domainMin = Math.min(...piecesList);
-			const domainMax = Math.max(...piecesList);
-			this.setState({ domainMin, domainMax });
+			let domainMin = Math.min(...piecesList);
+			let domainMax = Math.max(...piecesList);
+			// Round down to the next multiple of 5
+			domainMin = domainMin - (domainMin % 5);
+			// Round up to the next multiple of 5
+			domainMax = domainMax + (4 - ((domainMax-1) % 5));
+			this.setState({ 
+				domainMin,
+				domainMax,
+				valueMin: domainMin,
+				valueMax: domainMax
+			});
 		}
 	}
 

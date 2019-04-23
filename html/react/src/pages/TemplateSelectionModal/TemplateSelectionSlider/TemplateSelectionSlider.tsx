@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Slider, Handles, Tracks, Ticks, GetHandleProps, SliderItem, GetTrackProps, TicksObject } from 'react-compound-slider'
+import { Slider, Handles, Tracks, Ticks, GetHandleProps, SliderItem, GetTrackProps, Rail } from 'react-compound-slider'
 import styles from './TemplateSelectionSlider.module.scss';
  
 interface TemplateSelectionSliderProps {
@@ -22,7 +22,16 @@ class TemplateSelectionSlider extends Component<TemplateSelectionSliderProps, Te
             valueMin: props.valueMin,
             valueMax: props.valueMax
         }
-        
+    }
+
+    componentDidUpdate(prevProps: TemplateSelectionSliderProps) {
+        if (this.props.valueMin != prevProps.valueMin || 
+            this.props.valueMax != prevProps.valueMax) {
+                this.setState({
+                    valueMin: this.props.valueMin,
+                    valueMax: this.props.valueMax
+                })
+        }
     }
 
     onUpdate = (valueMin: number, valueMax: number) => {
@@ -36,14 +45,21 @@ class TemplateSelectionSlider extends Component<TemplateSelectionSliderProps, Te
             <label className={styles.sliderLabel}>pieces: {this.state.valueMin}-{this.state.valueMax}</label>
             <Slider
                 className={styles.slider}
-                mode={2}
+                mode={3}
                 step={5}
                 domain={[minPieces, maxPieces]}
                 values={[valueMin, valueMax]}
                 onChange={(values) => onChange(values[0], values[1])}
                 onUpdate={(values) => this.onUpdate(values[0], values[1])}
-            >
-                <div className={styles.rail}></div>
+            >    
+                <Rail> 
+                    {({ getRailProps }) => <React.Fragment>
+                        <div className={styles.rail} {...getRailProps()}>
+                            <div className={styles.railInner} />
+                        </div>
+                    </React.Fragment>
+                    }
+                </Rail>
                 <Handles>
                     {({ handles, getHandleProps }) => (
                         <div className={styles.handlesContainer}>
@@ -110,7 +126,9 @@ const Handle = (handleProps: HandleProps) => {
             className={styles.handle}
             style={{'left': `${percent}%`}}
             {...getHandleProps(id)}
-        />
+        >
+            <div className={styles.handleInner} />
+        </div>
     </React.Fragment>;
 }
 
