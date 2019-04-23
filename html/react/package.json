@@ -16,6 +16,7 @@
     "normalize.css": "^8.0.1",
     "query-string": "^5.1.1",
     "react": "^16.6.3",
+    "react-compound-slider": "^1.2.1",
     "react-dom": "^16.7.0",
     "react-redux": "^5.1.1",
     "react-router-dom": "^4.4.0",

@@ -1,0 +1,83 @@
+@import '../../../vars.scss';
+
+.mainContainer {
+    position: relative;
+    margin: 0 1rem 0.5rem 1rem;
+    border-radius: 1.5rem;
+    border: solid 1px $purple100;
+    background: $purple300;
+    padding: 0 1.5rem;
+}
+.sliderLabel {
+    position: absolute;
+    top: 0.25rem;
+    left: 1rem;
+    font-size: 0.75rem;
+}
+
+.slider {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 3rem;
+}
+
+.rail {
+    background: black;
+    flex: 1;
+    height: 1px;
+}
+
+.handlesContainer {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+
+    .handle {
+        position: absolute;
+        transform: translateX(-50%);
+        height: 0.75rem;
+        width: 0.75rem;
+        background: white;
+        border-radius: 2rem;
+        border: 1px solid $purple200;
+        z-index: 2;
+    }
+}
+
+.domainMin {
+    position: absolute;
+    font-size: 0.75rem;
+    left: -0.5rem;
+    bottom: 0.25rem;
+}
+.domainMax {
+    position: absolute;
+    font-size: 0.75rem;
+    right: -0.5rem;
+    bottom: 0.25rem;
+}
+
+.tracksContainer {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+
+    .track {
+        position: absolute;
+        // transform: translateY(-50%);
+        height: 0.375rem;
+        background: $purple500;
+        border: 1px solid $purple300;
+    }
+}
+
+.valueMin {
+    top: 0;
+}

@@ -10,9 +10,16 @@ import { StateRoot } from '../../models';
 import { Redirect } from 'react-router';
 import { customPuzzleActions } from '../../store/customPuzzle';
 import TemplateWidget from '../../widgets/TemplateWidget/TemplateWidget';
+import TemplateSelectionSlider from './TemplateSelectionSlider/TemplateSelectionSlider';
+
 
 interface TemplateSelectionState {
 	isSubmitted: Boolean;
+	domainMin: number;
+	domainMax: number;
+	valueMin: number;
+	valueMax: number;
+	filteredTemplates: Template[];
 }
 
 interface StateProps {
@@ -29,11 +36,20 @@ type TemplateSelectionProps = StateProps & DispatchProps;
 
 class TemplateSelectionModal extends Component<TemplateSelectionProps, TemplateSelectionState> {
 	state = {
-		isSubmitted: false
+		isSubmitted: false,
+		domainMin: 0,
+		domainMax: 0,
+		valueMin: 0,
+		valueMax: 100,
+		filteredTemplates: [] as Template[]
 	}
 	onError = (resource: Template) => {
 		
 	};
+
+	onChangeSlider = (valueMin: number, valueMax: number) => {
+		this.setState({valueMin, valueMax});
+	}
 	
 	componentDidMount() {
 		const {
@@ -41,6 +57,16 @@ class TemplateSelectionModal extends Component<TemplateSelectionProps, TemplateS
 		} = this.props;
 		
 		fetchTemplates();
+		this.filterTemplates();
+	}
+
+	componentDidUpdate(prevProps: TemplateSelectionProps, prevState: TemplateSelectionState) {
+		if (prevProps.templates != this.props.templates) {
+			this.filterTemplates();
+			this.calculateDomain();
+		} else if (prevState.valueMin != this.state.valueMin || prevState.valueMax != this.state.valueMax) {
+			this.filterTemplates();
+		}
 	}
 
 	selectTemplate = (link: string) => {
@@ -50,7 +76,37 @@ class TemplateSelectionModal extends Component<TemplateSelectionProps, TemplateS
 		this.props.selectTemplate(link);
 	}
 
+	filterTemplates = () => {
+		const {templates} = this.props;
+		const {valueMin, valueMax} = this.state;
+
+		const filteredTemplates = templates.filter(template => 
+			template.pieces >= valueMin 
+			&& template.pieces <= valueMax
+		);
+		this.setState({filteredTemplates});
+	}
+
+	calculateDomain = () => {
+		if (this.props.templates.length > 0) {
+			const piecesList = this.props.templates.map(template => template.pieces);
+			
+			const domainMin = Math.min(...piecesList);
+			const domainMax = Math.max(...piecesList);
+			this.setState({ domainMin, domainMax });
+		}
+	}
+
 	render() {
+		const {
+			domainMin,
+			domainMax,
+			valueMin,
+			valueMax
+		} = this.state;
+
+		const isTemplateSliderVisible = domainMin != domainMax;
+
 		if (this.state.isSubmitted) {
 			return <Redirect to={`/custom/${this.props.customPuzzleId}`} push={true} />
 		} else {
@@ -60,13 +116,25 @@ class TemplateSelectionModal extends Component<TemplateSelectionProps, TemplateS
 						<h1>
 							<span>Choose a Template</span>
 						</h1>
-						<ImageDisplayReel 
-							displayComponents={this.props.templates.map(template => (
-								<li key={template.links.self} onClick={() => this.selectTemplate(template.links.self)}>
-									<TemplateWidget template={template} onError={this.onError} />
-								</li>)
-							)}
-						/>
+						{isTemplateSliderVisible &&
+							<TemplateSelectionSlider 
+								minPieces={domainMin} 
+								maxPieces={domainMax}
+								onChange={this.onChangeSlider}
+								valueMin={valueMin}
+								valueMax={valueMax}
+							/>
+						}
+						{ (this.state.filteredTemplates.length === 0) ?
+						<div className={styles.noTemplatesMessage}>No templates match your current search</div>
+						: <ImageDisplayReel 
+								displayComponents={this.state.filteredTemplates.map(template => (
+									<li key={template.links.self} onClick={() => this.selectTemplate(template.links.self)}>
+										<TemplateWidget template={template} onError={this.onError} />
+									</li>)
+								)}
+							/>
+						}
 					</div>
 				</ModalWrapper>
 			);
@@ -77,7 +145,7 @@ class TemplateSelectionModal extends Component<TemplateSelectionProps, TemplateS
 const mapStateToProps = (state: StateRoot): StateProps => {
   return {
     templates: Object.values(state.templates.linkMap),
-	customPuzzleId: state.customPuzzle.id
+		customPuzzleId: state.customPuzzle.id
   }
 }
 
