@@ -105,7 +105,7 @@ class TemplateSelectionModal extends Component<TemplateSelectionProps, TemplateS
 			valueMax
 		} = this.state;
 
-		const isTemplateSliderVisible = domainMin != domainMax;
+		const isTemplateSliderVisible = domainMin !== domainMax;
 
 		if (this.state.isSubmitted) {
 			return <Redirect to={`/custom/${this.props.customPuzzleId}`} push={true} />

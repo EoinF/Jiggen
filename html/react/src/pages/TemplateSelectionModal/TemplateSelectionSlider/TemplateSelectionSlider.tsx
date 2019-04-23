@@ -73,18 +73,9 @@ class TemplateSelectionSlider extends Component<TemplateSelectionSliderProps, Te
                     </div>
                     )}
                 </Tracks>
-                <Ticks count={1}>
-                    {({ ticks }) => (
-                    <div className={styles.ticks}>
-                        {/* {ticks.map(tick => (
-                        <Tick key={tick.id} tick={tick} count={ticks.length} />
-                        ))} */}
-                        <div className={styles.domainMin}>{ticks[0].value}</div>
-                        <div className={styles.domainMax}>{ticks[1].value}</div>
-                    </div>
-                    )}
-                </Ticks>
             </Slider>
+            <div className={styles.domainMin}>{minPieces}</div>
+            <div className={styles.domainMax}>{maxPieces}</div>
         </div>;
     }
 }
