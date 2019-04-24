@@ -2,7 +2,7 @@ import { createActions, handleActions, Action } from "redux-actions";
 import { JiggenThunkAction, Resource, StateRoot } from "../models";
 import { downloadedImagesActions } from "./downloadedImages";
 import gwtAdapter from "../gwtAdapter";
-import { generatedTemplatesActions } from "./generatedTemplates";
+import { downloadedTemplatesActions } from "./downloadedTemplates";
 import { backgroundsActions } from "./backgrounds";
 import { templatesActions } from "./templates";
 import { CustomPuzzle } from "./customPuzzle";
@@ -114,8 +114,8 @@ const selectAndDownloadTemplate = (link: string): JiggenThunkAction => {
         if (state.puzzleSolverScreen.selectedTemplate !== link) {
             dispatch(selectTemplate(link));
             const template = await templatesActions.getOrDownloadTemplate(link, dispatch, getState);
-            const generatedTemplate = await generatedTemplatesActions.getOrDownloadGeneratedTemplate(template.links.generatedTemplate, dispatch, getState);
-            gwtAdapter.setTemplate(generatedTemplate);
+            const downloadedTemplate = await downloadedTemplatesActions.getOrDownloadTemplate(template, dispatch, getState);
+            gwtAdapter.setTemplate(downloadedTemplate);
             dispatch(setTemplateReady());
         }
 	};

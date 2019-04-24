@@ -43,6 +43,14 @@ h1 {
 	}
 }
 
+.pieceCountContainer {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+
 @media (orientation: landscape) and (max-height: $breakpoint-height-mobile) {
 	.contentContainer {
 		flex-flow: row nowrap;

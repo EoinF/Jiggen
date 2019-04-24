@@ -38,4 +38,14 @@ export default function downloadImage (src: string, setTotalBytes: Function, set
         }
       
         xhr.send();
-	};
+  };
+  
+  export function downloadImageAsPromise(src: string) {
+    return new Promise<string>((resolve, reject) => {
+      downloadImage(src, 
+        () => {}, 
+        () => {},
+        reject,
+        resolve)
+    });
+  }

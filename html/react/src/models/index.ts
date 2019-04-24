@@ -2,7 +2,7 @@ import { BaseAction } from 'redux-actions';
 import { ThunkAction } from 'redux-thunk';
 import { BackgroundsState } from '../store/backgrounds';
 import { PlayablePuzzlesState } from '../store/playablePuzzles';
-import { GeneratedTemplatesState } from '../store/generatedTemplates';
+import { DownloadedTemplatesState } from '../store/downloadedTemplates';
 import { DisplayOptionsState } from '../store/displayOptions';
 import { DownloadedImagesState } from '../store/downloadedImages';
 import { PuzzleSolverScreenState } from '../store/puzzleSolverScreen';
@@ -14,7 +14,7 @@ export interface StringMap<T> {
 }
 
 export class Resource {
-    links: any;
+    links: StringMap<string>;
     name: string;
     
     constructor(links: any, name: string) {
@@ -36,7 +36,7 @@ export interface BaseState<T extends Resource> {
 export interface StateRoot {
 	templates: TemplatesState,
     backgrounds: BackgroundsState,
-    generatedTemplates: GeneratedTemplatesState,
+    downloadedTemplates: DownloadedTemplatesState,
     resourceLinks: any,
     displayOptions: DisplayOptionsState,
     playablePuzzles: PlayablePuzzlesState,
@@ -48,7 +48,7 @@ export interface StateRoot {
 export interface ReducersRoot {
 	templates: any,
     backgrounds: any,
-    generatedTemplates: any,
+    downloadedTemplates: any,
     resourceLinks: any,
     displayOptions: any,
     playablePuzzles: any,

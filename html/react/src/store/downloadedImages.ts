@@ -30,52 +30,52 @@ const initialState: DownloadedImagesState = {
 };
 
 const {
-    setDownloadedImage,
-    setDownloadedBytes,
-    setTotalBytes,
-    downloadSuccess,
-    downloadFailure
+    imageSetDownloadedImage,
+    imageSetDownloadedBytes,
+    imageSetTotalBytes,
+    imageDownloadSuccess,
+    imageDownloadFailure
 } = createActions({
-	SET_DOWNLOADED_IMAGE: (image: DownloadedImage) => ({ resource: image }),
-	SET_DOWNLOADED_BYTES: (id: string, bytes: number) => ({ resourceId: id, bytes}),
-    SET_TOTAL_BYTES: (id: string, bytes: number) => ({ resourceId: id, bytes }),
-	DOWNLOAD_SUCCESS: (id: string, url: string) => ({ resourceId: id, url }),
-    DOWNLOAD_FAILURE: (id: string, error: string) => ({resourceId: id, error})
+	IMAGE_SET_DOWNLOADED_IMAGE: (image: DownloadedImage) => ({ resource: image }),
+	IMAGE_SET_DOWNLOADED_BYTES: (id: string, bytes: number) => ({ resourceId: id, bytes}),
+    IMAGE_SET_TOTAL_BYTES: (id: string, bytes: number) => ({ resourceId: id, bytes }),
+	IMAGE_DOWNLOAD_SUCCESS: (id: string, url: string) => ({ resourceId: id, url }),
+    IMAGE_DOWNLOAD_FAILURE: (id: string, error: string) => ({resourceId: id, error})
 });
 
 function downloadImage (resource: Resource): JiggenThunkAction {
 	return (dispatch, getState) => {
-        dispatch(setDownloadedImage(new DownloadedImage(resource)));
+        dispatch(imageSetDownloadedImage(new DownloadedImage(resource)));
         const resourceId = resource.links.self;
 
         cachedImageDownload(resource.links.image,
-        (bytes: number) => dispatch(setTotalBytes(resourceId, bytes)),
-        (bytes: number) => dispatch(setDownloadedBytes(resourceId, bytes)),
-        (error: String) => dispatch(downloadFailure(resourceId, error)),
-        (url: String) => dispatch(downloadSuccess(resourceId, url))
+        (bytes: number) => dispatch(imageSetTotalBytes(resourceId, bytes)),
+        (bytes: number) => dispatch(imageSetDownloadedBytes(resourceId, bytes)),
+        (error: String) => dispatch(imageDownloadFailure(resourceId, error)),
+        (url: String) => dispatch(imageDownloadSuccess(resourceId, url))
         );
   };
 }
 
 const reducers = handleActions({
-        SET_DOWNLOADED_IMAGE: (state, {payload}: Action<any>) => base.setOrUpdateResource<DownloadedImage>(state, payload),
-        SET_DOWNLOADED_BYTES: (state: DownloadedImagesState, {payload}: Action<any>) => {
+        IMAGE_SET_DOWNLOADED_IMAGE: (state, {payload}: Action<any>) => base.setOrUpdateResource<DownloadedImage>(state, payload),
+        IMAGE_SET_DOWNLOADED_BYTES: (state: DownloadedImagesState, {payload}: Action<any>) => {
             const resource = { ...state.linkMap[payload.resourceId] };
             resource.bytesDownloaded = payload.bytes;
             return base.setOrUpdateResource(state, {resource});
         },
-        SET_TOTAL_BYTES:  (state: DownloadedImagesState, {payload}: Action<any>) => {
+        IMAGE_SET_TOTAL_BYTES:  (state: DownloadedImagesState, {payload}: Action<any>) => {
             const resource = { ...state.linkMap[payload.resourceId] };
             resource.bytesTotal = payload.bytes;
             return base.setOrUpdateResource(state, {resource});
         },
-        DOWNLOAD_SUCCESS:  (state: DownloadedImagesState, {payload}: Action<any>) => {
+        IMAGE_DOWNLOAD_SUCCESS:  (state: DownloadedImagesState, {payload}: Action<any>) => {
             const resource = { ...state.linkMap[payload.resourceId] };
             resource.isDownloading = false;
             resource.links.image = payload.url;
             return base.setOrUpdateResource(state, {resource});
         },
-        DOWNLOAD_FAILURE:  (state: DownloadedImagesState, {payload}: Action<any>) => {
+        IMAGE_DOWNLOAD_FAILURE:  (state: DownloadedImagesState, {payload}: Action<any>) => {
             const resource = { ...state.linkMap[payload.resourceId] };
             resource.error = payload.error;
             return base.setOrUpdateResource(state, {resource});

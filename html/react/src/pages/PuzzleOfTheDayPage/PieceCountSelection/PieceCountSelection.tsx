@@ -1,28 +1,23 @@
 import * as React from 'react';
 import styles from './PieceCountSelection.module.scss';
-import { GeneratedTemplate } from '../../../store/generatedTemplates';
-import { StringMap } from '../../../models';
+import { StateRoot } from '../../../models';
 import pieceBackground from './piece-outline.png';
+import { PlayablePuzzle } from '../../../store/playablePuzzles';
+import { connect } from 'react-redux';
 
-interface PieceCountSelectionProps {
-    selectedId: string | null;
-    pieceCountMap: StringMap<number>;
-    onClick(key: string): void;
+interface StateProps {
+    count: number;
 }
 
-const PieceCountSelection = ({selectedId, pieceCountMap, onClick}: PieceCountSelectionProps) => {
-    return <div className={styles.pieceCountSelectionContainer}>
-        { Object.keys(pieceCountMap).map(key =>
-            <PieceCountItem
-                isSelected={key == selectedId}
-                count={pieceCountMap[key]}
-                onClick={() => onClick(key)} />
-            )
-        }
-    </div>
-};
+interface OwnProps {
+    isSelected: boolean;
+    puzzle: PlayablePuzzle;
+    onClick(): void;
+}
 
-const PieceCountItem = ({isSelected, count, onClick}: any) => {
+type PieceCountSelectionProps = OwnProps & StateProps;
+
+const PieceCountSelection = ({isSelected, count, onClick}: PieceCountSelectionProps) => {
     let className = styles.pieceCountItem;
     if (isSelected) {
         className += ` ${styles.selectedItem}`;
@@ -36,4 +31,14 @@ const PieceCountItem = ({isSelected, count, onClick}: any) => {
     </div>
 }
 
-export default PieceCountSelection;
+const mapStateToProps = (_state: any, ownProps: OwnProps): StateProps => {
+    const state = _state as StateRoot;
+
+    const template = state.templates.linkMap[ownProps.puzzle.links.template!];
+
+    return {
+        count: template && template.pieces
+    }
+}
+
+export default connect(mapStateToProps)(PieceCountSelection);

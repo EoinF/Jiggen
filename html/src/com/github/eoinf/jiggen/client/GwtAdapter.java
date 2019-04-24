@@ -62,9 +62,10 @@ public class GwtAdapter {
         });
     }
 
-    public static void setTemplate(GeneratedTemplate generatedTemplate) {
-        String atlasLink = generatedTemplate.links.atlas;
-        String[] imageLinks = generatedTemplate.links.images;
+    public static void setTemplate(DownloadedTemplate downloadedTemplate) {
+        GeneratedTemplate generatedTemplate = downloadedTemplate.generatedTemplate;
+        String atlasLink = downloadedTemplate.atlasDataUrl;
+        LinkPair[] imageLinks = downloadedTemplate.atlasImageDataUrls;
 
         DynamicPreloader preloader = (DynamicPreloader) gdxApp.getPreloader();
         Map<Integer, IntRectangle> verticesMap = generatedTemplate.vertices.toMap();
@@ -75,7 +76,7 @@ public class GwtAdapter {
                 new Preloader.Asset(atlasLink, AssetFilter.AssetType.Text, Integer.MAX_VALUE, "text/plain"));
 
         for (int i = 0; i < imageLinks.length; i++) {
-            assets.add(new Preloader.Asset(imageLinks[i], AssetFilter.AssetType.Image, Integer.MAX_VALUE,
+            assets.add(new Preloader.Asset(imageLinks[i].cachedSrc, AssetFilter.AssetType.Image, Integer.MAX_VALUE,
                     "image/" + generatedTemplate.extension));
         }
 
@@ -93,9 +94,10 @@ public class GwtAdapter {
                     FileHandle atlasFile = new GwtFileHandle(preloader, atlasLink, Files.FileType.Internal);
                     Map<String, FileHandle> imageFileMap = new HashMap<>();
                     for (int i = 0; i < imageLinks.length; i++) {
-                        String[] linkParts = String.valueOf(imageLinks[i]).split("/");
+                        String[] linkParts = String.valueOf(imageLinks[i].src).split("/");
                         GWT.log("Saving file as " + linkParts[linkParts.length-1]);
-                        imageFileMap.put(linkParts[linkParts.length - 1], new GwtFileHandle(preloader, imageLinks[i], Files.FileType.Internal));
+                        imageFileMap.put(linkParts[linkParts.length - 1],
+                                new GwtFileHandle(preloader, imageLinks[i].cachedSrc, Files.FileType.Internal));
                     }
                     FileHandle fakeDirectory = new FileHandle() {
                         @Override
@@ -132,10 +134,21 @@ class RawTemplate {
     HateosLinks links;
 }
 
+@JsType(isNative = true)
+class LinkPair {
+    String src;
+    String cachedSrc;
+}
+
+@JsType(isNative = true)
+class DownloadedTemplate {
+    GeneratedTemplate generatedTemplate;
+    String atlasDataUrl;
+    LinkPair[] atlasImageDataUrls;
+}
 
 @JsType(isNative = true)
 class GeneratedTemplate {
-    String id;
     String extension;
     HateosLinks links;
     GwtVerticesMap vertices;

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect, DispatchProp } from 'react-redux';
 
 import styles from './CustomPuzzlePage.module.scss';
-import { GeneratedTemplate } from '../../store/generatedTemplates';
 
 import { StateRoot } from '../../models';
 import { PlainLink } from '../../widgets';

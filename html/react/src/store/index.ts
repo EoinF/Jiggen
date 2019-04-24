@@ -13,7 +13,7 @@ import {
 import { ReducersRoot } from '../models';
 
 import templates from './templates';
-import generatedTemplates from './generatedTemplates';
+import downloadedTemplates from './downloadedTemplates';
 import backgrounds from './backgrounds';
 import playablePuzzles from './playablePuzzles';
 import displayOptions from './displayOptions';
@@ -31,7 +31,7 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const reducersMap: ReducersRoot = {
     templates,
     backgrounds,
-    generatedTemplates,
+    downloadedTemplates,
     resourceLinks: resourceLinkReducers,
     displayOptions,
 	playablePuzzles,

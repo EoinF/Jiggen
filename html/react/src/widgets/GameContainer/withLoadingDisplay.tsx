@@ -7,8 +7,7 @@ import puzzlePieceIcon from './piece-outline-rounded.png';
 import { StateRoot, Resource } from "../../models";
 import { connect } from "react-redux";
 import { DownloadedImage } from "../../store/downloadedImages";
-import { GeneratedTemplate } from "../../store/generatedTemplates";
-import { Template } from "../../store/templates";
+import { DownloadedTemplate } from "../../store/downloadedTemplates";
 
 interface LoadingDisplayState {
     isGWTLoading: Boolean;
@@ -19,8 +18,7 @@ interface DispatchProps {
     fetchTemplate(resource: Resource): void;
 }
 interface StateProps {
-    selectedGeneratedTemplate: GeneratedTemplate;
-    selectedTemplate: Template;
+    downloadedTemplate: DownloadedTemplate;
     downloadedImage: DownloadedImage;
     isActive: boolean;
 }
@@ -40,10 +38,6 @@ class LoadingDisplayWrapper extends Component<LoadingDisplayWrapperProps, Loadin
     }
     componentWillUnmount() {
         this.gwtSubscription!.unsubscribe();
-    }
-
-    isGeneratedTemplateReady = (generatedTemplate: GeneratedTemplate) => {
-        return generatedTemplate.vertices != null;
     }
 
     onLoad = () => {
@@ -87,7 +81,7 @@ class LoadingDisplayWrapper extends Component<LoadingDisplayWrapperProps, Loadin
                         />
                     </div>
                 </div>
-            } else if (this.props.selectedGeneratedTemplate && !this.isGeneratedTemplateReady(this.props.selectedGeneratedTemplate)) {
+            } else if (this.props.downloadedTemplate && this.props.downloadedTemplate.isDownloading) {
                 return <div className={styles.mainContainer}>
                     <div className={styles.loadingContainer}>
                         Downloading template data
@@ -118,10 +112,8 @@ class LoadingDisplayWrapper extends Component<LoadingDisplayWrapperProps, Loadin
 
 const mapStateToProps = (_state: any, ownProps: any): StateProps => {
     const state = (_state as StateRoot); // Required because we can't change type of _state
-    const selectedTemplate = state.templates.linkMap[state.puzzleSolverScreen.selectedTemplate!]
     return {
-        selectedTemplate,
-        selectedGeneratedTemplate: selectedTemplate && state.generatedTemplates.linkMap[selectedTemplate.links.generatedTemplate!], 
+        downloadedTemplate: state.downloadedTemplates.linkMap[state.puzzleSolverScreen.selectedTemplate!], 
         downloadedImage: state.downloadedImages.linkMap[state.puzzleSolverScreen.selectedBackground!],
         isActive: state.puzzleSolverScreen.isActive
     };

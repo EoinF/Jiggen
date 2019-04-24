@@ -68,7 +68,7 @@ const {
 	REMOVE_BACKGROUND: (background: Background) => {
 		if (background.isUpload || background.isCustom) {
 			 // broken upload links can never be restored so remove them for good
-			const savedSuggestions: Background[] = JSON.parse(localStorage.getItem('savedBackgrounds') || '{}');
+			const savedSuggestions: StringMap<Background> = JSON.parse(localStorage.getItem('savedBackgrounds') || '{}');
 			delete savedSuggestions[background.links.self];
 
 			localStorage.setItem('savedBackgrounds', JSON.stringify(savedSuggestions));
