@@ -12,6 +12,24 @@ if ('function' === typeof importScripts) {
         workbox.routing.registerNavigationRoute('/index.html', {
                 blacklist: [/^\/_/, /\/[^\/]+\.[^\/]+$/],
         });
+
+        self.addEventListener('fetch', (event) => {
+          event.respondWith(
+            caches.open("customPuzzles").then(cache => {
+              console.log("checking cache for: ", event.request);
+              return cache.match(event.request).then(function(cachedResponse) {
+                console.log("cache had: ", cachedResponse);
+                if (cachedResponse == null) {
+                  return fetch(event.request).then(function(networkResponse) {
+                    return networkResponse;
+                  });
+                } else {
+                  return cachedResponse;
+                }
+              })
+            })
+          );
+        });
     } else {
       console.log('Workbox could not be loaded. No Offline support');
     }

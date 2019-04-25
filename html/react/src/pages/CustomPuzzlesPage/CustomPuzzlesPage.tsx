@@ -24,11 +24,6 @@ interface DispatchProps {
 type CustomPuzzlePageProps = StateProps & DispatchProps;
 
 class CustomPuzzlePage extends Component<CustomPuzzlePageProps> {
-  componentDidMount() {
-    this.props.fetchBackgrounds();
-    this.props.fetchTemplates();
-  }
-
   render() {
     return <Switch>
       <Route path='/custom/:id' component={CreatePuzzlePage} />

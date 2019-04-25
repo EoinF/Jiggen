@@ -1,7 +1,11 @@
 import { createActions, handleActions, Action } from "redux-actions";
 import { loadState } from "./localStorage";
-import { StringMap } from "../models";
+import { StringMap, JiggenThunkAction, StateRoot } from "../models";
 import uuid from 'uuid';
+import { GeneratedTemplate } from "./downloadedTemplates";
+import { Template } from "./templates";
+import { downloadImageAsPromise, downloadImageAsXHRPromise } from "../utils/cachedImageDownload";
+import { Background } from "./backgrounds";
 
 export interface CustomPuzzle {
     id: string;
@@ -98,12 +102,61 @@ const reducers = handleActions({
 	initialState
 );
 
+const saveAndCachePuzzle = (): JiggenThunkAction => {
+    return async (dispatch, getState) => {
+        const state = (getState() as StateRoot);
+        dispatch(customPuzzleSavePuzzle());
+
+        const templateLink = state.customPuzzle.selectedTemplate!;
+
+        const templateResponse = await fetch(templateLink);
+        const template = await templateResponse.clone().json() as Template;
+
+        const templateImageLink = template.links.image;
+        const templateImageResponse = await fetch(templateImageLink);
+        
+        const backgroundLink = state.customPuzzle.selectedBackground!;
+        const backgroundResponse = await fetch(backgroundLink);
+        const background = await backgroundResponse.clone().json() as Background;
+        
+        const backgroundImageLink = background.links.image;
+        const backgroundImageResponse = await fetch(backgroundImageLink);
+
+        const generatedTemplateLink = template.links.generatedTemplate;
+        const generatedTemplateResponse = await fetch(generatedTemplateLink);
+        const generatedTemplate = await generatedTemplateResponse.clone().json() as GeneratedTemplate;
+
+        const atlasLink = generatedTemplate.links.atlas;
+        const atlasResponse = await fetch(atlasLink);
+
+        const atlasImageResponses = await Promise.all<any>(generatedTemplate.links.images.map(async link => {
+                return {
+                    link,
+                    response: await fetch(link)
+                }
+            }
+        ));
+        
+        caches.open("customPuzzles").then((cache) => {
+            cache.put(templateLink, templateResponse);
+            cache.put(templateImageLink, templateImageResponse);
+            cache.put(backgroundLink, backgroundResponse);
+            cache.put(backgroundImageLink, backgroundImageResponse);
+            cache.put(generatedTemplateLink, generatedTemplateResponse);
+            cache.put(atlasLink, atlasResponse);
+            atlasImageResponses.forEach(({link, response}) => {
+                cache.put(link, response);
+            });
+        });
+    };
+}
+
 const customPuzzleActions = {
     selectBackground: customPuzzleSelectBackground,
     selectTemplate: customPuzzleSelectTemplate,
     setName: customPuzzleSetName,
     selectPuzzle: customPuzzleSelectPuzzle,
-    savePuzzle: customPuzzleSavePuzzle,
+    savePuzzle: saveAndCachePuzzle,
     deletePuzzle: customPuzzleDeletePuzzle
 }
 
