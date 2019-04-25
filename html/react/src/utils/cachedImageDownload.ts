@@ -1,43 +1,37 @@
 
-export default function downloadImage (src: string, setTotalBytes: Function, setDownloadedBytes: Function,
+export default async function downloadImage (src: string, setTotalBytes: Function, setDownloadedBytes: Function,
     onFailure: Function, onSuccess: Function) {
-        const xhr = new XMLHttpRequest();
-        let notifiedNotComputable = false;
-      
-        xhr.open('GET', src, true);
-        xhr.responseType = 'arraybuffer';
-      
-        xhr.onprogress = function (ev) {
-          if (ev.lengthComputable) {
-              setTotalBytes(ev.total);
-          } else {
-            if (!notifiedNotComputable) {
-              notifiedNotComputable = true;
-              setTotalBytes(-1);
-            }
-          }
-          setDownloadedBytes(ev.loaded);
+      const response = await fetch(src);
+
+      if (response.status >= 300 || response.status < 200) {
+        onFailure(response.statusText)
+        return response;
+      }
+
+      // Clone the response because the body can only be read once
+      const clonedResponse = response.clone();
+      const reader = response.body!.getReader();
+
+      setTotalBytes(parseInt(response.headers.get('Content-Length') || '-1'));
+
+      const chunks = [];
+      let downloadedBytes = 0;
+
+      while(true) {
+        const {done, value} = await reader.read();
+                
+        if (done) {
+          break;
         }
+
+        chunks.push(value);
+        downloadedBytes += value.length;
+        setDownloadedBytes(downloadedBytes);
+      }
+      const blob = new Blob(chunks);
+      onSuccess(window.URL.createObjectURL(blob));
       
-        xhr.onloadend = function () {
-          if (!xhr.status.toString().match(/^2/)) {
-            onFailure(xhr.statusText);
-          } else {
-            const options: any = {};
-            var headers = xhr.getAllResponseHeaders();
-            var m = headers.match(/^Content-Type\:\s*(.*?)$/mi);
-      
-            if (m && m[1]) {
-              options.type = m[1];
-            }
-      
-            var blob = new Blob([this.response], options);
-      
-            onSuccess(window.URL.createObjectURL(blob));
-          }
-        }
-      
-        xhr.send();
+      return clonedResponse;
   };
   
   export function downloadImageAsPromise(src: string) {
