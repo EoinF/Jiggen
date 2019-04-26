@@ -27,11 +27,11 @@ public class ShuffleConfirmModal extends Table {
 
         Table modalContainer = new Table();
 
-        PixmapUtils.setBackgroundColour(modalContainer, Color.PURPLE);
+        PixmapUtils.setBackgroundColour(modalContainer, new Color(121/255f, 46/255f, 158/255f, 1));
 
-        Label title = new Label("Shuffle the puzzle pieces?", skin);
+        Label title = new Label("Shuffle the puzzle pieces?", skin, "white");
         title.setWrap(true);
-        Label description = new Label("Warning: You will lose all current progress on this puzzle", skin);
+        Label description = new Label("Warning: You will lose all current progress on this puzzle", skin, "white");
         description.setWrap(true);
 
         TextButton confirm = new TextButton("Shuffle", skin);
