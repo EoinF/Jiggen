@@ -3,8 +3,8 @@ import { loadState } from "./localStorage";
 import { StringMap, JiggenThunkAction, StateRoot } from "../models";
 import uuid from 'uuid';
 import { GeneratedTemplate, downloadedTemplatesActions } from "./downloadedTemplates";
-import { Template } from "./templates";
-import { Background } from "./backgrounds";
+import { Template, templatesActions } from "./templates";
+import { Background, backgroundsActions } from "./backgrounds";
 import { downloadedImagesActions } from "./downloadedImages";
 
 export interface CustomPuzzle {
@@ -134,6 +134,7 @@ function savePuzzle(existingPuzzle: CustomPuzzle | undefined = undefined): Jigge
             /*
                 Template
             */
+            await templatesActions.getOrDownloadTemplate(templateLink, dispatch, getState);
             const templateResponse = await fetch(templateLink);
             const template = await templateResponse.clone().json() as Template;
 
@@ -161,6 +162,7 @@ function savePuzzle(existingPuzzle: CustomPuzzle | undefined = undefined): Jigge
             /*
                 Background
             */
+            await backgroundsActions.getOrDownloadBackground(backgroundLink, dispatch, getState);
             const backgroundResponse = await fetch(backgroundLink);
             const background = await backgroundResponse.clone().json() as Background;
             
