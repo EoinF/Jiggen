@@ -2,9 +2,10 @@ import React, { Component } from "react";
 
 import { Background } from "../../../store/backgrounds";
 import { connect } from "react-redux";
-import { DownloadedImage, downloadedImagesActions } from "../../../store/downloadedImages";
+import { DownloadedImage } from "../../../store/downloadedImages";
 import styles from '../PuzzleCard.module.scss';
 import { StateRoot } from "../../../models";
+import ProgressBar from "../ProgressBar/ProgressBar";
 
 interface OwnProps {
     background: Background;
@@ -17,9 +18,8 @@ interface StateProps {
 type BackgroundIconProps = OwnProps & StateProps;
 
 class BackgroundIcon extends Component<BackgroundIconProps> {
-
     render() {
-        const {background, downloadedBackground} = this.props;
+        const {background} = this.props;
         let backgroundSrc = '';
         if (background != null) {
             backgroundSrc = background.links['image-thumbnail48x48']
@@ -28,34 +28,28 @@ class BackgroundIcon extends Component<BackgroundIconProps> {
         }
 
         return <div className={styles.icon} >
-            <img src={backgroundSrc} />
-            <ProgressBar downloadedBackground={downloadedBackground}/>
+            <img className={styles.iconImage} src={backgroundSrc} />
+            <this.ProgressBar/>
         </div>;
     }
-}
 
-interface ProgressBarProps {
-    downloadedBackground: DownloadedImage;
-}
-
-const ProgressBar = ({downloadedBackground}: ProgressBarProps) => {
-    if (downloadedBackground == null || !downloadedBackground.isDownloading) {
-        return null;
-    } else {
-        if (downloadedBackground != null && downloadedBackground.bytesTotal === -1) {
-            return <div>
-                Loading...
-            </div>
+    ProgressBar = () => {
+        if (this.props.downloadedBackground == null) {
+            return <ProgressBar
+                current={0}
+                total={1}
+            />;
+        } else if (this.props.downloadedBackground != null && this.props.downloadedBackground.isDownloading) {
+            return <ProgressBar
+                current={this.props.downloadedBackground.bytesDownloaded}
+                total={this.props.downloadedBackground.bytesTotal}
+            />;
         } else {
-            const percentDownloaded = 100 * downloadedBackground.bytesDownloaded / downloadedBackground.bytesTotal;
-            return <div className={styles.progressBarContainer}>
-                <div className={styles.progressBar}>
-                    <div className={styles.progressBarInner} style={{width: `${percentDownloaded}%`}} />
-                </div>
-            </div>
+            return null;
         }
     }
 }
+
 
 const mapStateToProps = (_state: any, ownProps: OwnProps) : StateProps => {
     const state = _state as StateRoot;

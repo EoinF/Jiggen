@@ -21,7 +21,7 @@
     width: fit-content;
     height: fit-content;
     
-    img {
+    .iconImage {
         width: 48px;
         height: 48px;
         box-sizing: content-box;
@@ -36,7 +36,7 @@
     border-radius: 18px;
     padding: 2px;
     background-image: radial-gradient($purple400, $purple300);
-    img {
+    .iconImage {
         width: 32px;
         height: 32px;
         box-sizing: content-box;
@@ -79,40 +79,17 @@
     position: relative;
 }
 
-.progressBarContainer {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: flex-end;
-
-    background: rgba($black, 0.5);
-    border: 1px solid black;
-    border-radius: 12px;
-
-    .progressBar {
-        margin: 0 0.375rem;
-        height: 0.375rem;
-        border: 1px solid black;
-        border-radius: 30px;
-        background: $grey100;
-
-        margin-bottom: 3px;
-
-        .progressBarInner {
-            animation: progress-pulse 1s linear 0s infinite alternate;
-            border-right: 1px solid $blue100;
-            height: 100%;
-        }
-    }
+.highlightedText {
+    font-weight: bold;
+    color: $yellow200;
+    animation: textPulse 1s linear 0s infinite alternate
 }
 
-@keyframes progress-pulse {
+@keyframes textPulse {
     from {
-        background: $blue100;
+        opacity: 0.4;
     }
     to {
-        background: $blue200;
+        opacity: 1;
     }
-} 
+}

@@ -13,6 +13,7 @@ export interface CustomPuzzle {
     template: string | null;
     name: string;
     isDownloaded: boolean;
+    isDownloading: boolean;
 }
 
 export interface CustomPuzzleState {
@@ -25,7 +26,8 @@ const newPuzzle = {
     name: "Custom Puzzle",
     background: null,
     template: null,
-    isDownloaded: false
+    isDownloaded: false,
+    isDownloading: false
 };
 
 const initialState: CustomPuzzleState = {
@@ -40,7 +42,8 @@ const {
     customPuzzleSelectPuzzle,
     customPuzzleSavePuzzle,
     customPuzzleDeletePuzzle,
-    customPuzzleDownloadComplete
+    customPuzzleDownloadComplete,
+    customPuzzleDownloadStart
 } = createActions({
 	CUSTOM_PUZZLE_SET_NAME: (name) => ({name}),
 	CUSTOM_PUZZLE_SELECT_TEMPLATE: (selectedLink) => ({selectedLink}),
@@ -48,7 +51,8 @@ const {
     CUSTOM_PUZZLE_SELECT_PUZZLE: (id) => ({id}),
     CUSTOM_PUZZLE_SAVE_PUZZLE: () => ({}),
     CUSTOM_PUZZLE_DELETE_PUZZLE: (customPuzzle: CustomPuzzle) => ({customPuzzle}),
-    CUSTOM_PUZZLE_DOWNLOAD_COMPLETE: (id) => ({id})
+    CUSTOM_PUZZLE_DOWNLOAD_COMPLETE: (id) => ({id}),
+    CUSTOM_PUZZLE_DOWNLOAD_START: (id) => ({id})
 });
 
 const reducers = handleActions({
@@ -91,7 +95,11 @@ const reducers = handleActions({
                 ...state,
                 puzzleMap: {
                     ...state.puzzleMap,
-                    [state.currentPuzzle.id]: state.currentPuzzle
+                    [state.currentPuzzle.id]: {
+                        ...state.currentPuzzle,
+                        isDownloaded: false,
+                        isDownloading: true
+                    }
                 }
             }
         },
@@ -106,12 +114,26 @@ const reducers = handleActions({
         CUSTOM_PUZZLE_DOWNLOAD_COMPLETE: (state, {payload}: Action<any>): Partial<CustomPuzzleState> => {
             const updatedCustomPuzzle = {...state.puzzleMap[payload.id]};
             updatedCustomPuzzle.isDownloaded = true;
-            const updatedPuzzleMap = {...state.puzzleMap};
-            updatedPuzzleMap[payload.id] = updatedCustomPuzzle;
+            updatedCustomPuzzle.isDownloading = false;
             
             return {
                 ...state,
-                puzzleMap: updatedPuzzleMap
+                puzzleMap: {
+                    ...state.puzzleMap,
+                    [payload.id]: updatedCustomPuzzle
+                }
+            }
+        },
+        CUSTOM_PUZZLE_DOWNLOAD_START: (state, {payload}: Action<any>): Partial<CustomPuzzleState> => {
+            const updatedCustomPuzzle = {...state.puzzleMap[payload.id]};
+            updatedCustomPuzzle.isDownloading = true;
+            
+            return {
+                ...state,
+                puzzleMap: {
+                    ...state.puzzleMap,
+                    [payload.id]: updatedCustomPuzzle
+                }
             }
         }
     },
@@ -124,10 +146,11 @@ function savePuzzle(existingPuzzle: CustomPuzzle | undefined = undefined): Jigge
         const puzzle: CustomPuzzle = existingPuzzle || getState().customPuzzle.currentPuzzle;
         if (existingPuzzle == null) { // Only dispatch a new event when it's a new puzzle being saved
             dispatch(customPuzzleSavePuzzle());
+        } else {
+            dispatch(customPuzzleDownloadStart(puzzle.id));
         }
 
         if (puzzle.background != null && puzzle.template != null) {
-
             const templateLink = puzzle.template;
             const backgroundLink = puzzle.background;
 
@@ -165,15 +188,15 @@ function savePuzzle(existingPuzzle: CustomPuzzle | undefined = undefined): Jigge
             await backgroundsActions.getOrDownloadBackground(backgroundLink, dispatch, getState);
             const backgroundResponse = await fetch(backgroundLink);
             const background = await backgroundResponse.clone().json() as Background;
-            
-            const backgroundImageLink = background.links.image;
-            
-            // Wait for the background image to download (avoids duplicate downloads)
-            await downloadedImagesActions.getOrDownloadImage(background, dispatch, getState);
-            const backgroundImageResponse = await fetch(backgroundImageLink);
+
             const backgroundImageCompressedLink = background.links['image-compressed'];
             const backgroundImageCompressedResponse = await fetch(backgroundImageCompressedLink);
-
+            
+            // Wait for the background image to download (avoids duplicate downloads)
+            const backgroundImageLink = background.links.image;
+            const backgroundImageResponse = await new Promise<Response>((resolve => {
+                dispatch(downloadedImagesActions.downloadImage(background, resolve));
+            }));
             
             await caches.open("customPuzzles").then((cache) => {
                 return Promise.all([

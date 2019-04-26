@@ -3,7 +3,6 @@ import { CustomPuzzle, customPuzzleActions } from "../../store/customPuzzle";
 import { connect } from "react-redux";
 import { Template, templatesActions } from "../../store/templates";
 import { Background, backgroundsActions } from "../../store/backgrounds";
-import templateIconSrc from './template-icon48x48.png';
 import playIconSrc from '../../assets/play-icon.png';
 import deleteIconSrc from '../../assets/delete-icon.png';
 import editIconSrc from '../../assets/edit-icon.png';
@@ -11,12 +10,17 @@ import editIconSrc from '../../assets/edit-icon.png';
 import styles from './PuzzleCard.module.scss';
 import { puzzleSolverActions } from '../../store/puzzleSolverScreen';
 import { PlainLink } from '..';
-import PieceCountDisplay from '../PieceCountDisplay/PieceCountDisplay';
 import { StateRoot } from '../../models';
 import BackgroundIcon from './BackgroundIcon/BackgroundIcon';
+import TemplateIcon from './TemplateIcon/TemplateIcon';
+import PopupNotification from '../PopupNotification/PopupNotification';
 
 interface OwnProps {
     puzzle: CustomPuzzle;
+}
+
+interface OwnState {
+    isDownloadComplete: boolean;
 }
 
 interface StateProps {
@@ -32,9 +36,19 @@ interface DispatchProps {
 
 type PuzzleCardProps = OwnProps & StateProps & DispatchProps;
 
-class PuzzleCard extends Component<PuzzleCardProps> {
+class PuzzleCard extends Component<PuzzleCardProps, OwnState> {
+    state = {
+        isDownloadComplete: false
+    }
+
     componentDidMount() {
         this.props.preloadCustomPuzzle();
+    }
+
+    componentDidUpdate(prevProps: PuzzleCardProps) {
+        if (this.props.puzzle.isDownloaded && this.props.puzzle.isDownloaded != prevProps.puzzle.isDownloaded) {
+            this.setState({isDownloadComplete: true});
+        }
     }
 
     render() { 
@@ -52,27 +66,33 @@ class PuzzleCard extends Component<PuzzleCardProps> {
             </div>
             <div className={styles.mainContent}>
                 <BackgroundIcon background={background} />
-                <div className={`${styles.icon} ${styles.templateSelectionContainer}`}>
-                    <img src={templateIconSrc}/>
-                    {
-                        template != null 
-                        && <PieceCountDisplay count={template.pieces}/> 
-                    }
-                </div>
+                <TemplateIcon template={template} />
                 <PlainLink to={`/play`}>
                     <div className={styles.iconSmall} onClick={playCustomPuzzle}>
-                        <img src={playIconSrc}/>
+                        <img className={styles.iconImage} src={playIconSrc}/>
                     </div>
                 </PlainLink>
                 <PlainLink to={`/custom/${puzzle.id}`}>
                     <div className={styles.iconSmall}>
-                        <img src={editIconSrc}/>
+                        <img className={styles.iconImage} src={editIconSrc}/>
                     </div>
                 </PlainLink>
                 <div className={styles.iconSmall} onClick={deleteCustomPuzzle}>
                     <img src={deleteIconSrc}/>
                 </div>
             </div>
+            {
+                this.state.isDownloadComplete && (
+                <PopupNotification>
+                    <div>
+                        <span>Puzzle </span> 
+                        <span className={styles.highlightedText}>{this.props.puzzle.name}</span>
+                        <span> downloaded and ready for </span> 
+                        <span className={styles.highlightedText}>offline</span>
+                        <span> use</span>
+                    </div>
+                </PopupNotification>
+            )}
         </div>;
     }
 }

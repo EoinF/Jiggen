@@ -43,17 +43,19 @@ const {
     IMAGE_DOWNLOAD_FAILURE: (id: string, error: string) => ({resourceId: id, error})
 });
 
-function downloadImage (resource: Resource): JiggenThunkAction {
+function downloadImage (resource: Resource, onSuccess: Function): JiggenThunkAction {
 	return (dispatch, getState) => {
         dispatch(imageSetDownloadedImage(new DownloadedImage(resource)));
         const resourceId = resource.links.self;
 
-        cachedImageDownload(resource.links.image,
+        const response = cachedImageDownload(resource.links.image,
         (bytes: number) => dispatch(imageSetTotalBytes(resourceId, bytes)),
         (bytes: number) => dispatch(imageSetDownloadedBytes(resourceId, bytes)),
         (error: String) => dispatch(imageDownloadFailure(resourceId, error)),
-        (url: String) => dispatch(imageDownloadSuccess(resourceId, url))
-        );
+        (url: String) => {
+            onSuccess(response);
+            dispatch(imageDownloadSuccess(resourceId, url))
+        });
   };
 }
 
@@ -98,7 +100,7 @@ const getOrDownloadImage = (resource: Resource, dispatch: Dispatch, getState: an
                     unsubscribe();
                 }
             });
-            const downloadImageThunk = downloadImage(resource);
+            const downloadImageThunk = downloadImage(resource, () => {});
             downloadImageThunk(dispatch, getState, null);
         }
     });

@@ -1,0 +1,55 @@
+@import '../../vars.scss';
+
+.mainContainer {
+    position: fixed;
+    z-index: 7;
+    top: 4rem;
+    left: 2rem;
+    right: 2rem;
+}
+
+.popupContainer {
+    background: $purple300;
+    border: 1px solid $white;
+    padding: 1rem;
+    margin: auto;
+
+    max-width: 500px;
+
+    font-size: 1rem;
+    overflow: hidden;
+    
+	animation: notificationFadeOut 7s ease-out 0s 1 forwards, bobUp 0.5s ease-in 0s 1 forwards;
+}
+
+@keyframes bobUp {
+    from {
+        margin-top: 1rem;
+    }
+    to {
+        margin-top: 0;
+    }
+}
+
+@keyframes notificationFadeOut {
+    0% {
+        opacity: 1;
+    }
+    80% {
+        opacity: 0.9;
+    }
+    99% {
+        opacity: 0;
+        width: auto;
+        padding: 1rem;
+        height: auto;
+        border: 1px solid white;
+    }
+    100% {
+        opacity: 0;
+        width: 0;
+        height: 0;
+        padding: 0;
+        border: none;
+    }
+}
