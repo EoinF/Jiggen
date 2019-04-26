@@ -12,17 +12,15 @@ import { StateRoot } from '../../models';
 import { displayOptionsActions } from '../../store/displayOptions';
 import { Template, templatesActions } from '../../store/templates';
 import { PlainLink, ResponsiveImage } from '../../widgets';
-import { customPuzzleActions } from '../../store/customPuzzle';
+import { customPuzzleActions, CustomPuzzle } from '../../store/customPuzzle';
 import { RouteComponentProps } from 'react-router';
 import TemplateWidget from '../../widgets/TemplateWidget/TemplateWidget';
 import PieceCountDisplay from '../../widgets/PieceCountDisplay/PieceCountDisplay';
 
 interface StateProps {
-  puzzleName: string;
+  customPuzzle: CustomPuzzle;
   selectedTemplate: Template;
   selectedBackground: Background;
-  templateLink: string | null;
-  backgroundLink: string | null;
 }
 
 interface DispatchProps {
@@ -53,11 +51,11 @@ class CreatePuzzlePage extends Component<CreatePuzzlePageProps> {
   }
 
   componentDidUpdate = (prevProps: CreatePuzzlePageProps) => {
-    if (this.props.templateLink != null && this.props.templateLink != prevProps.templateLink) {
-      this.props.fetchTemplateByLink(this.props.templateLink);
+    if (this.props.customPuzzle.template != null && this.props.customPuzzle.template != prevProps.customPuzzle.template) {
+      this.props.fetchTemplateByLink(this.props.customPuzzle.template);
     }
-    if (this.props.backgroundLink != null && this.props.backgroundLink != prevProps.backgroundLink) {
-      this.props.fetchBackgroundByLink(this.props.backgroundLink);
+    if (this.props.customPuzzle.background != null && this.props.customPuzzle.background != prevProps.customPuzzle.background) {
+      this.props.fetchBackgroundByLink(this.props.customPuzzle.background);
     }
   }
 
@@ -67,14 +65,14 @@ class CreatePuzzlePage extends Component<CreatePuzzlePageProps> {
 
   render() {
     const {
-      puzzleName,
+      customPuzzle,
       selectedTemplate,
       selectedBackground
     } = this.props;
 
     const isReady = selectedTemplate != null 
       && selectedBackground != null
-      && puzzleName.length > 0;
+      && customPuzzle.name.length > 0;
 
     return (
         <div className={styles.mainContainer}>
@@ -83,7 +81,7 @@ class CreatePuzzlePage extends Component<CreatePuzzlePageProps> {
               <div className={styles.inputContainer}>
                 <input 
                   maxLength={24}
-                  value={this.props.puzzleName}
+                  value={customPuzzle.name}
                   onChange={this.onChangeName}
                 />
               </div>
@@ -138,11 +136,9 @@ class CreatePuzzlePage extends Component<CreatePuzzlePageProps> {
 
 const mapStateToProps = (state: StateRoot): StateProps => {
   return {
-    puzzleName: state.customPuzzle.name,
-    templateLink: state.customPuzzle.selectedTemplate,
-    backgroundLink: state.customPuzzle.selectedBackground,
-    selectedTemplate: state.templates.linkMap[state.customPuzzle.selectedTemplate!],
-    selectedBackground: state.backgrounds.linkMap[state.customPuzzle.selectedBackground!]
+    customPuzzle: state.customPuzzle.currentPuzzle,
+    selectedTemplate: state.templates.linkMap[state.customPuzzle.currentPuzzle.template!],
+    selectedBackground: state.backgrounds.linkMap[state.customPuzzle.currentPuzzle.background!]
   };
 }
 

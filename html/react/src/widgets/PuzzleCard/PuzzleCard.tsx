@@ -12,7 +12,8 @@ import styles from './PuzzleCard.module.scss';
 import { puzzleSolverActions } from '../../store/puzzleSolverScreen';
 import { PlainLink } from '..';
 import PieceCountDisplay from '../PieceCountDisplay/PieceCountDisplay';
-import { downloadedImagesActions } from '../../store/downloadedImages';
+import { StateRoot } from '../../models';
+import BackgroundIcon from './BackgroundIcon/BackgroundIcon';
 
 interface OwnProps {
     puzzle: CustomPuzzle;
@@ -31,19 +32,16 @@ interface DispatchProps {
 
 type PuzzleCardProps = OwnProps & StateProps & DispatchProps;
 
-class PuzzleCard extends Component<PuzzleCardProps> { 
+class PuzzleCard extends Component<PuzzleCardProps> {
     componentDidMount() {
         this.props.preloadCustomPuzzle();
     }
 
     render() { 
-        const {background, template, puzzle, deleteCustomPuzzle, playCustomPuzzle} = this.props;
-        let backgroundSrc = '';
-        if (background != null) {
-            backgroundSrc = background.links['image-thumbnail48x48']
-                || background.links['image-compressed']
-                || background.links['image'];
-        }
+        const {
+            background, template, puzzle,
+            deleteCustomPuzzle, playCustomPuzzle
+        } = this.props;
 
         return <div className={styles.mainContainer}>
             <div className={styles.cardTitleContainer}>
@@ -53,9 +51,7 @@ class PuzzleCard extends Component<PuzzleCardProps> {
                 <div className={styles.cardTitleBackground}/>
             </div>
             <div className={styles.mainContent}>
-                <div className={styles.icon}>
-                    <img src={backgroundSrc} />
-                </div>
+                <BackgroundIcon background={background} />
                 <div className={`${styles.icon} ${styles.templateSelectionContainer}`}>
                     <img src={templateIconSrc}/>
                     {
@@ -81,23 +77,21 @@ class PuzzleCard extends Component<PuzzleCardProps> {
     }
 }
 
-const mapStateToProps = (state: any, ownProps: OwnProps) : StateProps => {
+const mapStateToProps = (_state: any, ownProps: OwnProps) : StateProps => {
+    const state = _state as StateRoot;
     return {
-        template: state.templates.linkMap[ownProps.puzzle.template],
-        background: state.backgrounds.linkMap[ownProps.puzzle.background]
+        template: state.templates.linkMap[ownProps.puzzle.template!],
+        background: state.backgrounds.linkMap[ownProps.puzzle.background!]
     };
 }
 
 const mapDispatchToProps = (dispatch: Function, ownProps: OwnProps) : DispatchProps => {
     return {
         deleteCustomPuzzle: () => dispatch(customPuzzleActions.deletePuzzle(ownProps.puzzle)),
-        preloadCustomPuzzle: () => {
-            templatesActions.fetchByLink(ownProps.puzzle.template);
-            backgroundsActions.fetchByLink(ownProps.puzzle.background);
-        },
+        preloadCustomPuzzle: () => dispatch(customPuzzleActions.savePuzzle(ownProps.puzzle)),
         playCustomPuzzle: () => {
-            dispatch(puzzleSolverActions.selectAndDownloadBackground(ownProps.puzzle.background));
-            dispatch(puzzleSolverActions.selectAndDownloadTemplate(ownProps.puzzle.template));
+            dispatch(puzzleSolverActions.selectAndDownloadBackground(ownProps.puzzle.background!));
+            dispatch(puzzleSolverActions.selectAndDownloadTemplate(ownProps.puzzle.template!));
         }
     };
 }

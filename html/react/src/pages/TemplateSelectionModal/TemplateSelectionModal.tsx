@@ -155,7 +155,7 @@ class TemplateSelectionModal extends Component<TemplateSelectionProps, TemplateS
 const mapStateToProps = (state: StateRoot): StateProps => {
   return {
     templates: Object.values(state.templates.linkMap),
-		customPuzzleId: state.customPuzzle.id
+		customPuzzleId: state.customPuzzle.currentPuzzle.id
   }
 }
 

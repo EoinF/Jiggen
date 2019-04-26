@@ -1,7 +1,7 @@
 
 export default async function downloadImage (src: string, setTotalBytes: Function, setDownloadedBytes: Function,
     onFailure: Function, onSuccess: Function) {
-      const response = await fetch(src);
+      const response = await fetch(src, {mode: 'cors'});
 
       if (response.status >= 300 || response.status < 200) {
         onFailure(response.statusText)
@@ -11,8 +11,8 @@ export default async function downloadImage (src: string, setTotalBytes: Functio
       // Clone the response because the body can only be read once
       const clonedResponse = response.clone();
       const reader = response.body!.getReader();
-
-      setTotalBytes(parseInt(response.headers.get('Content-Length') || '-1'));
+        
+      setTotalBytes(parseInt(response.headers.get('content-length') || '-1'));
 
       const chunks = [];
       let downloadedBytes = 0;
@@ -23,6 +23,7 @@ export default async function downloadImage (src: string, setTotalBytes: Functio
         if (done) {
           break;
         }
+        setTotalBytes(parseInt(response.headers.get('content-length') || '-1'));
 
         chunks.push(value);
         downloadedBytes += value.length;

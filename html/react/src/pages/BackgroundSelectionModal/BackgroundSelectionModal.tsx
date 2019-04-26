@@ -114,7 +114,7 @@ class BackgroundSelectionModal extends Component<BackgroundSelectionModalProps, 
 const mapStateToProps = (state: StateRoot) => {
   return {
 	backgrounds: Object.values(state.backgrounds.linkMap).filter(Resource.hasImage),
-	customPuzzleId: state.customPuzzle.id
+	customPuzzleId: state.customPuzzle.currentPuzzle.id
   };
 }
 
