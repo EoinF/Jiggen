@@ -218,13 +218,61 @@ function savePuzzle(existingPuzzle: CustomPuzzle | undefined = undefined): Jigge
     };
 }
 
+function deletePuzzle(puzzle: CustomPuzzle): JiggenThunkAction {
+    return async (dispatch, getState) => {
+        const templateLink = puzzle.template!;
+        const backgroundLink = puzzle.background!;
+
+        /*
+            Template
+        */
+        const template = await templatesActions.getOrDownloadTemplate(templateLink, dispatch, getState);
+        const templateImageLink = template.links.image;
+
+        const downloadedTemplate = await downloadedTemplatesActions.getOrDownloadTemplate(template, dispatch, getState);
+
+        const generatedTemplateLink = template.links.generatedTemplate;
+        const generatedTemplate = downloadedTemplate.generatedTemplate!;
+
+        const atlasLink = generatedTemplate.links.atlas;
+        
+        /*
+            Background
+        */
+        const background = await backgroundsActions.getOrDownloadBackground(backgroundLink, dispatch, getState);
+        const backgroundImageCompressedLink = background.links['image-compressed'];
+        const backgroundImageLink = background.links.image;
+
+        function onError(err: Error) {
+            console.log(err);
+        }
+
+        await caches.open("customPuzzles").then((cache) => {
+            return Promise.all([
+                cache.delete(templateLink).catch(onError),
+                cache.delete(templateImageLink).catch(onError),
+                cache.delete(backgroundLink).catch(onError),
+                cache.delete(backgroundImageLink).catch(onError),
+                cache.delete(backgroundImageCompressedLink).catch(onError),
+                cache.delete(generatedTemplateLink).catch(onError),
+                cache.delete(atlasLink).catch(onError),
+                ...generatedTemplate.links.images.map(link => 
+                    cache.delete(link).catch(onError)
+                )
+            ]);
+        });
+        
+        dispatch(customPuzzleDeletePuzzle(puzzle));
+    }
+};
+
 const customPuzzleActions = {
     selectBackground: customPuzzleSelectBackground,
     selectTemplate: customPuzzleSelectTemplate,
     setName: customPuzzleSetName,
     selectPuzzle: customPuzzleSelectPuzzle,
     savePuzzle,
-    deletePuzzle: customPuzzleDeletePuzzle
+    deletePuzzle
 }
 
 export {
