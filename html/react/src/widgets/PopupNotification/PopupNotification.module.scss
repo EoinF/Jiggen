@@ -24,7 +24,7 @@
 
 @keyframes bobUp {
     from {
-        margin-bottom: 0;
+        margin-bottom: 2rem;
     }
     to {
         margin-bottom: 6rem;
@@ -33,7 +33,7 @@
 
 @keyframes notificationFadeOut {
     0% {
-        opacity: 1;
+        opacity: 0.8;
         // opacity: 0.95;
     }
     90% {
