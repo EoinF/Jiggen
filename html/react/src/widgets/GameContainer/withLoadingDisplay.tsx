@@ -3,11 +3,11 @@ import { from, Subscription } from "rxjs";
 import gwtAdapter from "../../gwtAdapter";
 import styles from './GameContainer.module.scss';
 
-import puzzlePieceIcon from './piece-outline-rounded.png';
 import { StateRoot, Resource } from "../../models";
 import { connect } from "react-redux";
 import { DownloadedImage } from "../../store/downloadedImages";
 import { DownloadedTemplate } from "../../store/downloadedTemplates";
+import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 
 interface LoadingDisplayState {
     isGWTLoading: Boolean;
@@ -74,33 +74,21 @@ class LoadingDisplayWrapper extends Component<LoadingDisplayWrapperProps, Loadin
                 return <div className={styles.mainContainer}>
                     <div className={styles.loadingContainer}>
                         {dataComponent}
-                        <img width='32px' height='32px'
-                            src={puzzlePieceIcon}
-                            className={styles.loadingSpinner}
-                            alt='Loading spinner'
-                        />
+                        <LoadingSpinner/>
                     </div>
                 </div>
             } else if (this.props.downloadedTemplate && this.props.downloadedTemplate.isDownloading) {
                 return <div className={styles.mainContainer}>
                     <div className={styles.loadingContainer}>
                         Downloading template data
-                        <img width='32px' height='32px'
-                            src={puzzlePieceIcon}
-                            className={styles.loadingSpinner}
-                            alt='Loading spinner'
-                        />
+                        <LoadingSpinner/>
                     </div>
                 </div>
             } else if (this.state.isGWTLoading) {
                 return <div className={styles.mainContainer}>
                     <div className={styles.loadingContainer}>
                         <div>Unpacking the box...</div>
-                        <img width='32px' height='32px'
-                            src={puzzlePieceIcon}
-                            className={styles.loadingSpinner}
-                            alt='Loading spinner'
-                        />
+                        <LoadingSpinner/>
                     </div>
                 </div>
             } else  {

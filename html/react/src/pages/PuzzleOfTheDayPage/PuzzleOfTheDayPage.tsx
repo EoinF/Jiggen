@@ -14,6 +14,9 @@ import { PlainLink } from '../../widgets';
 import { templatesActions } from '../../store/templates';
 import { getPlayablePuzzles } from '../../store/selectors';
 
+import puzzlePieceIcon from '../../assets/piece-outline-rounded.png';
+import LoadingSpinner from '../../widgets/LoadingSpinner/LoadingSpinner';
+
 interface DispatchProps {
   selectPuzzle(id: string): void;
   selectBackground(link: string): void;
@@ -73,7 +76,11 @@ class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps, any> {
           <div className={styles.contentContainer}>
             <div className={styles.backgroundContainer}>
               { 
-                selectedBackground && <img src={selectedBackground.links['image-compressed'] || selectedBackground.links.image} />
+                selectedBackground ? <img className={styles.backgroundImage} src={selectedBackground.links['image-compressed'] || selectedBackground.links.image} /> :
+                  <div className={styles.loadingContainer}>
+                    <h1>Loading daily puzzles...</h1>
+                    <LoadingSpinner/>
+                  </div>
               }
             </div>
 
@@ -85,12 +92,13 @@ class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps, any> {
                 onClick={() => this.onSelectPieceCount(puzzle.links.self)} />
               )}
             </div>
-            <PlainLink to={`/play`}>
-              <div className={styles.playIcon}>
-                <img src={playIconSrc} />
-                <span>Play</span>
-              </div>
-            </PlainLink>
+            { selectedBackground && <PlainLink to={`/play`}>
+                <div className={styles.playIcon}>
+                  <img src={playIconSrc} />
+                  <span>Play</span>
+                </div>
+              </PlainLink>
+            }
           </div>
         </div>
     );
