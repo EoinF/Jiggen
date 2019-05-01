@@ -16,9 +16,7 @@ if ('function' === typeof importScripts) {
         self.addEventListener('fetch', (event) => {
           event.respondWith(
             caches.open("customPuzzles").then(cache => {
-              console.log("checking cache for: ", event.request);
               return cache.match(event.request).then(function(cachedResponse) {
-                console.log("cache had: ", cachedResponse);
                 if (cachedResponse == null) {
                   return fetch(event.request).then(function(networkResponse) {
                     return networkResponse;
