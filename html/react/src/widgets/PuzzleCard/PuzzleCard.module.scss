@@ -81,15 +81,15 @@
 
 .highlightedText {
     font-weight: bold;
-    color: $yellow200;
-    animation: textPulse 1s linear 0s infinite alternate
+    color: $purple600;
+    animation: textPulse 1s ease-in 0s infinite alternate
 }
 
 @keyframes textPulse {
     from {
-        opacity: 0.4;
+        color: $yellow100;
     }
     to {
-        opacity: 1;
+        color: $yellow300;
     }
 }
