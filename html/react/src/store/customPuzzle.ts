@@ -13,12 +13,12 @@ export interface CustomPuzzle {
     background: string | null;
     template: string | null;
     name: string;
+    isDownloaded: boolean;
 }
 
 export interface CustomPuzzleState {
     currentPuzzle: CustomPuzzle;
     puzzlesDownloading: string[];
-    puzzlesDownloaded: string[];
     puzzleMap: StringMap<CustomPuzzle>;
 }
 
@@ -26,13 +26,13 @@ const newPuzzle = (): CustomPuzzle => ({
     id: uuid.v4(),
     name: "Custom Puzzle",
     background: null,
-    template: null
+    template: null,
+    isDownloaded: false
 });
 
 const initialState: CustomPuzzleState = {
     puzzleMap: loadState("customPuzzles") || {},
     puzzlesDownloading: [],
-    puzzlesDownloaded: [],
     currentPuzzle: newPuzzle()
 };
 
@@ -98,16 +98,13 @@ const reducers = handleActions({
                     ...state.puzzleMap,
                     [state.currentPuzzle.id]: {
                         ...state.currentPuzzle,
+                        isDownloaded: false
                     }
                 },
                 puzzlesDownloading: [
                     ...state.puzzlesDownloading,
                     state.currentPuzzle.id
-                ],
-                puzzlesDownloaded: [
-                    ...state.puzzlesDownloaded,
-                    state.currentPuzzle.id
-                ].filter(id => id !== state.currentPuzzle.id)
+                ]
             }
         },
         CUSTOM_PUZZLE_DELETE_PUZZLE: (state, {payload}: Action<any>): Partial<CustomPuzzleState> => {
@@ -116,17 +113,19 @@ const reducers = handleActions({
             return {
                 ...state,
                 puzzleMap: updatedPuzzleMap,
-                puzzlesDownloaded: [...state.puzzlesDownloaded].filter(id => id != payload.customPuzzle.id),
                 puzzlesDownloading: [...state.puzzlesDownloading].filter(id => id != payload.customPuzzle.id)
             }
         },
         CUSTOM_PUZZLE_DOWNLOAD_COMPLETE: (state, {payload}: Action<any>): Partial<CustomPuzzleState> => {
             return {
                 ...state,
-                puzzlesDownloaded: [
-                    ...state.puzzlesDownloaded,
-                    payload.id
-                ],
+                puzzleMap: {
+                    ...state.puzzleMap,
+                    [payload.id]: {
+                        ...state.puzzleMap[payload.id],
+                        isDownloaded: true
+                    }
+                },
                 puzzlesDownloading: [
                     ...state.puzzlesDownloading
                 ].filter(id => id !== payload.id)
@@ -156,17 +155,16 @@ function savePuzzle(existingPuzzle: CustomPuzzle | undefined = undefined): Jigge
     return async (dispatch, getState) => {
         const customPuzzleState = (getState() as StateRoot).customPuzzle;
         const puzzle: CustomPuzzle = existingPuzzle || customPuzzleState.currentPuzzle;
-        
 
         if (puzzle.background != null && puzzle.template != null && !customPuzzleState.puzzlesDownloading.includes(puzzle.id)) {
             if (existingPuzzle == null) { // Only dispatch a save event when it's a new puzzle being saved
                 dispatch(customPuzzleSavePuzzle());
             } else {
                 dispatch(customPuzzleDownloadStart(puzzle.id));
-
                 const puzzles = Object.values(customPuzzleState.puzzleMap);
                 // Delete existing resources if no longer needed
                 await deleteCachedLinks(puzzle.template, puzzle.background, puzzles, dispatch, getState);
+                // dispatch(customPuzzleUpdatePuzzle(puzzle));
             }
 
             const templateLink = puzzle.template;
@@ -255,7 +253,7 @@ async function deleteCachedLinks (templateLink: string, backgroundLink: string, 
     /*
         Template
     */
-    if (puzzles.every(p => p.template !== templateLink)) {
+    if (templateLink != null && puzzles.every(p => p.template !== templateLink)) {
         const template = await templatesActions.getOrDownloadTemplate(templateLink, dispatch, getState);
         linksToDelete.push(templateLink);
         linksToDelete.push(template.links.image);
@@ -271,7 +269,7 @@ async function deleteCachedLinks (templateLink: string, backgroundLink: string, 
     /*
         Background
     */
-    if (puzzles.every(p => p.background !== backgroundLink)) {
+    if (backgroundLink != null && puzzles.every(p => p.background !== backgroundLink)) {
         const background = await backgroundsActions.getOrDownloadBackground(backgroundLink, dispatch, getState);
         linksToDelete.push(backgroundLink);
         linksToDelete.push(background.links['image-compressed']);

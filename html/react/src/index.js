@@ -9,16 +9,25 @@ import App from './App';
 
 import { saveState } from './store/localStorage';
 import { Subject } from 'rxjs';
-import { throttleTime } from 'rxjs/operators';
+import { first, debounceTime } from 'rxjs/operators';
+import { customPuzzleActions } from './store/customPuzzle';
 
 const puzzleMap$ = new Subject();
 puzzleMap$
-	.pipe(throttleTime(500))
+	.pipe(debounceTime(500))
 	.subscribe((value) => saveState("customPuzzles", value));
 
 store.subscribe(() => {
 	const puzzleMap = store.getState().customPuzzle.puzzleMap;
 	puzzleMap$.next(puzzleMap);
+});
+
+puzzleMap$.pipe(
+	first()
+).subscribe((puzzles) => {
+	for (const key in puzzles) {
+		store.dispatch(customPuzzleActions.savePuzzle(puzzles[key]));
+	}
 });
 
 ReactDOM.render(

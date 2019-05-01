@@ -26,13 +26,11 @@ interface OwnState {
 interface StateProps {
     template: Template;
     background: Background;
-    isDownloaded: boolean;
 }
 
 interface DispatchProps {
     deleteCustomPuzzle(): void;
     playCustomPuzzle(): void;
-    preloadCustomPuzzle(): void;
 }
 
 type PuzzleCardProps = OwnProps & StateProps & DispatchProps;
@@ -42,19 +40,13 @@ class PuzzleCard extends Component<PuzzleCardProps, OwnState> {
         isDownloadComplete: false
     }
 
-    componentDidMount() {
-        if (!this.props.isDownloaded) {
-            this.props.preloadCustomPuzzle();
-        }
-    }
-
     componentDidUpdate(prevProps: PuzzleCardProps) {
-        if (this.props.isDownloaded && this.props.isDownloaded != prevProps.isDownloaded) {
+        if (this.props.puzzle.isDownloaded && this.props.puzzle.isDownloaded != prevProps.puzzle.isDownloaded) {
             this.setState({isDownloadComplete: true});
         }
     }
 
-    render() { 
+    render() {
         const {
             background, template, puzzle,
             deleteCustomPuzzle, playCustomPuzzle
@@ -95,7 +87,8 @@ class PuzzleCard extends Component<PuzzleCardProps, OwnState> {
                         <span> use</span>
                     </div>
                 </PopupNotification>
-            )}
+            )
+            }
         </div>;
     }
 }
@@ -104,15 +97,13 @@ const mapStateToProps = (_state: any, ownProps: OwnProps) : StateProps => {
     const state = _state as StateRoot;
     return {
         template: state.templates.linkMap[ownProps.puzzle.template!],
-        background: state.backgrounds.linkMap[ownProps.puzzle.background!],
-        isDownloaded: state.customPuzzle.puzzlesDownloaded.includes(ownProps.puzzle.id)
+        background: state.backgrounds.linkMap[ownProps.puzzle.background!]
     };
 }
 
 const mapDispatchToProps = (dispatch: Function, ownProps: OwnProps) : DispatchProps => {
     return {
         deleteCustomPuzzle: () => dispatch(customPuzzleActions.deletePuzzle(ownProps.puzzle)),
-        preloadCustomPuzzle: () => dispatch(customPuzzleActions.savePuzzle(ownProps.puzzle)),
         playCustomPuzzle: () => {
             dispatch(puzzleSolverActions.selectAndDownloadBackground(ownProps.puzzle.background!));
             dispatch(puzzleSolverActions.selectAndDownloadTemplate(ownProps.puzzle.template!));
