@@ -18,45 +18,12 @@ public class TextureOverlayImage extends Widget {
     private TextureRegionDrawable overlay;
 
     /**
-     * Creates an image with no region or patch, stretched, and aligned center.
-     */
-    public TextureOverlayImage() {
-        this((TextureRegionDrawable) null);
-    }
-
-
-    /**
      * Creates an image stretched, and aligned center.
      *
      * @param region May be null.
      */
     public TextureOverlayImage(TextureRegion region) {
         this(new TextureRegionDrawable(region), Scaling.none, Align.center);
-    }
-
-    /**
-     * Creates an image stretched, and aligned center.
-     */
-    public TextureOverlayImage(Texture texture) {
-        this(new TextureRegionDrawable(new TextureRegion(texture)));
-    }
-
-    /**
-     * Creates an image stretched, and aligned center.
-     *
-     * @param drawable May be null.
-     */
-    public TextureOverlayImage(TextureRegionDrawable drawable) {
-        this(drawable, Scaling.none, Align.center);
-    }
-
-    /**
-     * Creates an image aligned center.
-     *
-     * @param drawable May be null.
-     */
-    public TextureOverlayImage(TextureRegionDrawable drawable, Scaling scaling) {
-        this(drawable, scaling, Align.center);
     }
 
     /**
@@ -113,10 +80,11 @@ public class TextureOverlayImage extends Widget {
         float scaleY = getScaleY();
 
         if (drawable != null) {
+            TextureRegion region = drawable.getRegion();
             float rotation = getRotation();
+            pBatch.setTextureBounds(region.getU(), region.getV(), region.getU2(), region.getV2());
             pBatch.draw(drawable.getRegion(), x + imageX, y + imageY, getOriginX() - imageX, getOriginY() - imageY,
                     imageWidth, imageHeight, scaleX, scaleY, rotation);
-
         }
     }
 
@@ -148,25 +116,6 @@ public class TextureOverlayImage extends Widget {
         this.drawable = drawable;
     }
 
-    /**
-     * @return May be null.
-     */
-    public TextureRegionDrawable getDrawable() {
-        return drawable;
-    }
-
-    public void setScaling(Scaling scaling) {
-        if (scaling == null) throw new IllegalArgumentException("scaling cannot be null.");
-        this.scaling = scaling;
-        invalidate();
-    }
-
-    public void setAlign(int align) {
-        this.align = align;
-        invalidate();
-    }
-
-
     @Override
     public float getMinWidth() {
         return 0;
@@ -187,21 +136,5 @@ public class TextureOverlayImage extends Widget {
     public float getPrefHeight() {
         if (drawable != null) return drawable.getMinHeight();
         return 0;
-    }
-
-    public float getImageX() {
-        return imageX;
-    }
-
-    public float getImageY() {
-        return imageY;
-    }
-
-    public float getImageWidth() {
-        return imageWidth;
-    }
-
-    public float getImageHeight() {
-        return imageHeight;
     }
 }

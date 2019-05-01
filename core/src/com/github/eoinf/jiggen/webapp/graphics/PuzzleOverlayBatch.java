@@ -1266,4 +1266,13 @@ public class PuzzleOverlayBatch implements Batch {
         getShader().setUniformf("u_camera_zoom", zoom);
         getShader().end();
     }
+
+    public void setTextureBounds(float x, float y, float z, float w) {
+        this.end();
+        shader.begin();
+        shader.setUniformf("u_texture_region_bounds", x , y, z, w);
+        shader.end();
+
+        this.begin();
+    }
 }
