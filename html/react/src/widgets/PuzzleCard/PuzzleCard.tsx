@@ -26,6 +26,7 @@ interface OwnState {
 interface StateProps {
     template: Template;
     background: Background;
+    isDownloaded: boolean;
 }
 
 interface DispatchProps {
@@ -42,11 +43,13 @@ class PuzzleCard extends Component<PuzzleCardProps, OwnState> {
     }
 
     componentDidMount() {
-        this.props.preloadCustomPuzzle();
+        if (!this.props.isDownloaded) {
+            this.props.preloadCustomPuzzle();
+        }
     }
 
     componentDidUpdate(prevProps: PuzzleCardProps) {
-        if (this.props.puzzle.isDownloaded && this.props.puzzle.isDownloaded != prevProps.puzzle.isDownloaded) {
+        if (this.props.isDownloaded && this.props.isDownloaded != prevProps.isDownloaded) {
             this.setState({isDownloadComplete: true});
         }
     }
@@ -101,7 +104,8 @@ const mapStateToProps = (_state: any, ownProps: OwnProps) : StateProps => {
     const state = _state as StateRoot;
     return {
         template: state.templates.linkMap[ownProps.puzzle.template!],
-        background: state.backgrounds.linkMap[ownProps.puzzle.background!]
+        background: state.backgrounds.linkMap[ownProps.puzzle.background!],
+        isDownloaded: state.customPuzzle.puzzlesDownloaded.includes(ownProps.puzzle.id)
     };
 }
 

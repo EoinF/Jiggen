@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'normalize.css';
-import registerServiceWorker, {unregister} from './registerServiceWorker';
-import { displayOptionsActions } from './store/displayOptions';
+import registerServiceWorker from './registerServiceWorker';
 
 import store from './store';
 

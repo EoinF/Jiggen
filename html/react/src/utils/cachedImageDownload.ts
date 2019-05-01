@@ -23,7 +23,6 @@ export default async function downloadImage (src: string, setTotalBytes: Functio
         if (done) {
           break;
         }
-        setTotalBytes(parseInt(response.headers.get('content-length') || '-1'));
 
         chunks.push(value);
         downloadedBytes += value.length;

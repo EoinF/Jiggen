@@ -32,7 +32,7 @@
   "scripts": {
     "start": "set REACT_APP_API_URL=https://api.jiggen.app && npm run start-js",
     "start-local": "npm run start-js",
-    "serve": "npm run build && npx serve ./build",
+    "serve": "set REACT_APP_API_URL=https://api.jiggen.app && npm run build && npx serve ./build",
     "build-sw": "node ./src/sw-build.js",
     "build": "npm run build-js",
     "start-js": "react-scripts start",
