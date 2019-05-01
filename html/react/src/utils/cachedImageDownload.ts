@@ -12,6 +12,7 @@ export default async function downloadImage (src: string, setTotalBytes: Functio
       const clonedResponse = response.clone();
       const reader = response.body!.getReader();
         
+      let isTotalBytesSet = false;
       setTotalBytes(parseInt(response.headers.get('content-length') || '-1'));
 
       const chunks = [];
@@ -22,6 +23,14 @@ export default async function downloadImage (src: string, setTotalBytes: Functio
                 
         if (done) {
           break;
+        }
+
+        if (!isTotalBytesSet) {
+          const contentLength = response.headers.get('content-length');
+          if (contentLength != null) {
+            setTotalBytes(parseInt(contentLength));
+            isTotalBytesSet = true;
+          }
         }
 
         chunks.push(value);

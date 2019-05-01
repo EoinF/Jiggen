@@ -6,6 +6,7 @@ import { GeneratedTemplate, downloadedTemplatesActions } from "./downloadedTempl
 import { Template, templatesActions } from "./templates";
 import { Background, backgroundsActions } from "./backgrounds";
 import { downloadedImagesActions } from "./downloadedImages";
+import { Dispatch } from "redux";
 
 export interface CustomPuzzle {
     id: string;
@@ -104,7 +105,7 @@ const reducers = handleActions({
                     state.currentPuzzle.id
                 ],
                 puzzlesDownloaded: [
-                    ...state.puzzlesDownloading,
+                    ...state.puzzlesDownloaded,
                     state.currentPuzzle.id
                 ].filter(id => id !== state.currentPuzzle.id)
             }
@@ -162,6 +163,10 @@ function savePuzzle(existingPuzzle: CustomPuzzle | undefined = undefined): Jigge
                 dispatch(customPuzzleSavePuzzle());
             } else {
                 dispatch(customPuzzleDownloadStart(puzzle.id));
+
+                const puzzles = Object.values(customPuzzleState.puzzleMap);
+                // Delete existing resources if no longer needed
+                await deleteCachedLinks(puzzle.template, puzzle.background, puzzles, dispatch, getState);
             }
 
             const templateLink = puzzle.template;
@@ -238,47 +243,51 @@ function deletePuzzle(puzzle: CustomPuzzle): JiggenThunkAction {
         const templateLink = puzzle.template!;
         const backgroundLink = puzzle.background!;
 
-        const linksToDelete: string[] = [];
-
-        /*
-            Template
-        */
-        if (puzzles.every(p => p.template !== templateLink)) {
-            const template = await templatesActions.getOrDownloadTemplate(templateLink, dispatch, getState);
-            linksToDelete.push(templateLink);
-            linksToDelete.push(template.links.image);
-
-            const downloadedTemplate = await downloadedTemplatesActions.getOrDownloadTemplate(template, dispatch, getState);
-
-            linksToDelete.push(template.links.generatedTemplate);
-            const generatedTemplate = downloadedTemplate.generatedTemplate!;
-
-            linksToDelete.push(generatedTemplate.links.atlas);
-            linksToDelete.push(...generatedTemplate.links.images);
-        }
-        /*
-            Background
-        */
-        if (puzzles.every(p => p.background !== backgroundLink)) {
-            const background = await backgroundsActions.getOrDownloadBackground(backgroundLink, dispatch, getState);
-            linksToDelete.push(backgroundLink);
-            linksToDelete.push(background.links['image-compressed']);
-            linksToDelete.push(background.links.image);
-        }
-
-        function onError(err: Error) {
-            console.log(err);
-        }
-
-        await caches.open("customPuzzles").then((cache) => {
-            return Promise.all(
-                linksToDelete.map(link => cache.delete(link).catch(onError))
-            );
-        });
-        
+        await deleteCachedLinks(templateLink, backgroundLink, puzzles, dispatch, getState);
         dispatch(customPuzzleDeletePuzzle(puzzle));
+        
     }
 };
+
+async function deleteCachedLinks (templateLink: string, backgroundLink: string, puzzles: CustomPuzzle[], dispatch: Dispatch, getState: Function): Promise<any> {
+    const linksToDelete: string[] = [];
+
+    /*
+        Template
+    */
+    if (puzzles.every(p => p.template !== templateLink)) {
+        const template = await templatesActions.getOrDownloadTemplate(templateLink, dispatch, getState);
+        linksToDelete.push(templateLink);
+        linksToDelete.push(template.links.image);
+
+        const downloadedTemplate = await downloadedTemplatesActions.getOrDownloadTemplate(template, dispatch, getState);
+
+        linksToDelete.push(template.links.generatedTemplate);
+        const generatedTemplate = downloadedTemplate.generatedTemplate!;
+
+        linksToDelete.push(generatedTemplate.links.atlas);
+        linksToDelete.push(...generatedTemplate.links.images);
+    }
+    /*
+        Background
+    */
+    if (puzzles.every(p => p.background !== backgroundLink)) {
+        const background = await backgroundsActions.getOrDownloadBackground(backgroundLink, dispatch, getState);
+        linksToDelete.push(backgroundLink);
+        linksToDelete.push(background.links['image-compressed']);
+        linksToDelete.push(background.links.image);
+    }
+
+    function onError(err: Error) {
+        console.log(err);
+    }
+
+    await caches.open("customPuzzles").then((cache) => {
+        return Promise.all(
+            linksToDelete.map(link => cache.delete(link).catch(onError))
+        );
+    });
+}
 
 const customPuzzleActions = {
     selectBackground: customPuzzleSelectBackground,
