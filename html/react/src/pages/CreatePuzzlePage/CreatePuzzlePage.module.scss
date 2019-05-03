@@ -40,16 +40,12 @@ h1, h2 {
     font-weight: bold;
     background-color: rgba($color: $purple300, $alpha: 1);
     
+    padding: 0.25rem 0.75rem;
     margin: 0.25rem;
     
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 2.5rem;
-
+    border-radius: 1rem;
+    border: 1px solid white;
     outline: none;
-    border: none;
-    // border: 1px solid #916c92;
-    // border: solid 1px white;
 
     &:disabled {
       background: $purple150;

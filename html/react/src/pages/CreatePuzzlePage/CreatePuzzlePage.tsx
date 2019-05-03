@@ -119,13 +119,13 @@ class CreatePuzzlePage extends Component<CreatePuzzlePageProps> {
             <div className={styles.buttonControls}>
               { isReady ? ( 
                 <PlainLink to="/custom">
-                  <button onClick={this.props.saveCustomPuzzle} className={styles.save}>✓</button>
+                  <button onClick={this.props.saveCustomPuzzle} className={styles.save}>Save</button>
               </PlainLink> ) : (
-                <button disabled onClick={this.props.saveCustomPuzzle} className={styles.save}>✓</button>
+                <button disabled onClick={this.props.saveCustomPuzzle} className={styles.save}>Save</button>
                 )
               }
               <PlainLink to="/custom">
-                <button className={styles.cancel}>X</button>
+                <button className={styles.cancel}>Cancel</button>
               </PlainLink>
             </div>
           </div>
