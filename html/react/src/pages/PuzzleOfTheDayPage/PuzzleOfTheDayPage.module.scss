@@ -18,10 +18,6 @@ h1 {
 	display: flex;
 	flex-flow: column nowrap;
 	align-items: center;
-
-	> * {
-		flex: 1;
-	}
 }
 
 .playIcon {
@@ -49,9 +45,10 @@ h1 {
 }
 
 .backgroundContainer {
+	flex: 1;
 	width: 100%;
 	max-width: 500px;
-	margin: 0 1rem 0.5rem;
+	margin: 0 0.5rem;
 	.backgroundImage {
 		width: 100%;
 		height: auto;
@@ -59,15 +56,25 @@ h1 {
 }
 
 .pieceCountContainer {
+	flex: 1;
     display: flex;
     flex-flow: row nowrap;
     justify-content: center;
     align-items: flex-start;
 }
 
+.playButtonContainer {
+	flex: 1;
+	margin: 0 0.25rem;
+}
+
 
 @media (orientation: landscape) and (max-height: $breakpoint-height-mobile) {
 	.contentContainer {
-		flex-flow: row nowrap;
+		flex-flow: row wrap;
+	}
+
+	.backgroundContainer {
+		flex: 3; // Now take up as much space as possible
 	}
 }

@@ -92,13 +92,15 @@ class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps, any> {
                 onClick={() => this.onSelectPieceCount(puzzle.links.self)} />
               )}
             </div>
-            { selectedBackground && <PlainLink to={`/play`}>
+            <div className={styles.playButtonContainer}>
+            { selectedBackground && <PlainLink to="/play">
                 <div className={styles.playIcon}>
                   <img src={playIconSrc} />
                   <span>Play</span>
                 </div>
               </PlainLink>
             }
+            </div>
           </div>
         </div>
     );
