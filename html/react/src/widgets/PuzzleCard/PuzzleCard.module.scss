@@ -1,5 +1,15 @@
 @import '../../vars.scss';
 
+.mainContainer {
+    position: relative;
+    flex: 1;
+
+    // Tablet/Desktop
+    max-width: 18rem;
+    
+    margin: 0.5rem;
+}
+
 .mainContent {
     display: flex;
     flex-flow: row nowrap;
@@ -10,8 +20,6 @@
     border-radius: 30px;
     padding: 0 0.75rem;
     height: 4rem;
-    
-    margin-bottom: 0.75rem;
 }
 
 .icon {
@@ -43,13 +51,6 @@
     }
 }
 
-.mainContainer {
-    position: relative;
-
-    // Tablet/Desktop
-    max-width: 25rem;
-    margin: auto;
-}
 
 .cardTitleContainer {
     position: absolute;

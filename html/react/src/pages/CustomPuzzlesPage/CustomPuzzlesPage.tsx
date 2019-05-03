@@ -41,12 +41,14 @@ const CustomPuzzles = ({customPuzzles}: CustomPuzzlesProps) => {
               <PuzzleCard key={customPuzzle.id} puzzle={customPuzzle}/>
             )
           }
-          <PlainLink to="/custom/new">
-            <div className={styles.puzzleCard}>
-              <span className={styles.plusIcon}>+</span>
-              <span className={styles.description}>New Puzzle</span>
-            </div>
-          </PlainLink>
+          <div className={styles.puzzleCardContainer}>
+            <PlainLink to="/custom/new">
+              <div className={styles.puzzleCardContent}>
+                <span className={styles.plusIcon}>+</span>
+                <span className={styles.description}>New Puzzle</span>
+              </div>
+            </PlainLink>
+          </div>
         </div>
 }
 

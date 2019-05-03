@@ -5,7 +5,6 @@ import styles from './PlainLink.module.scss';
 const PlainLink = (props: LinkProps) => {
 	const {
 		children,
-		className,
 		...otherProps
 	} = props;
 	return (

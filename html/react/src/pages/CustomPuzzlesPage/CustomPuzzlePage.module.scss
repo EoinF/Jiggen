@@ -1,32 +1,40 @@
 @import '../../vars.scss';
 
 .mainContainer {
-  flex: 1;
-  justify-items: center;
-  padding: 1.5rem;
+    padding: 1.5rem;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    justify-items: center;
 }
 
-.puzzleCard {
+.puzzleCardContainer {
+    display: flex;
+
+    // Tablet/Desktop
+    max-width: 18rem;
+    margin: 0.5rem;
+    flex: 1;
+
+    > a {
+        width: 100%;
+    }
+}
+
+.puzzleCardContent {
     display: flex;
     align-items: center;
-
+    padding: 0 1.5rem;
+    height: 4rem;
+    
     border: 2px dotted $purple500;
     border-radius: 30px;
-    padding: 0 1rem;
-    height: 4rem;
-
-    margin-bottom: 0.5rem;
 
     .plusIcon {
-        padding-left: 0.5rem;
         padding-right: 1rem;
         font-size: 2rem;
     }
     .description {
         flex: 1;
     }
-
-    // Tablet/Desktop
-    max-width: 25rem;
-    margin: auto;
 }
