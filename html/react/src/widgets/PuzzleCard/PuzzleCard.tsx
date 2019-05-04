@@ -45,6 +45,21 @@ class PuzzleCard extends Component<PuzzleCardProps, OwnState> {
             this.setState({isDownloadComplete: true});
         }
     }
+    
+    PlayButton = () => {
+        const {
+            puzzle, playCustomPuzzle
+        } = this.props;
+        
+        const templateLink = encodeURIComponent(puzzle.template!);
+        const backgroundLink = encodeURIComponent(puzzle.background!);
+        const playPuzzleLink = `/play?template=${templateLink}&background=${backgroundLink}`;
+        return <PlainLink to={playPuzzleLink}>
+            <div className={styles.iconSmall} onClick={playCustomPuzzle}>
+                <img className={styles.iconImage} src={playIconSrc}/>
+            </div>
+        </PlainLink>;
+    }
 
     render() {
         const {
@@ -62,11 +77,7 @@ class PuzzleCard extends Component<PuzzleCardProps, OwnState> {
             <div className={styles.mainContent}>
                 <BackgroundIcon background={background} />
                 <TemplateIcon template={template} />
-                <PlainLink to={`/play`}>
-                    <div className={styles.iconSmall} onClick={playCustomPuzzle}>
-                        <img className={styles.iconImage} src={playIconSrc}/>
-                    </div>
-                </PlainLink>
+                <this.PlayButton/>
                 <PlainLink to={`/custom/${puzzle.id}`}>
                     <div className={styles.iconSmall}>
                         <img className={styles.iconImage} src={editIconSrc}/>
