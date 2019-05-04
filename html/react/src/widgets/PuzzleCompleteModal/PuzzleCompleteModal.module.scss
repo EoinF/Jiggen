@@ -1,0 +1,41 @@
+@import '../../vars';
+
+.mainContainer {
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+    border: 1px solid $white;
+    border-radius: 0.5rem;
+
+    background: $purple200;
+    padding: 1.5rem 2.5rem 2rem;
+}
+
+.modalTitleContainer {
+    padding: 0 1rem 2rem 1rem;
+
+    .modalTitle {
+        font-size: 1.5rem;
+        font-weight: normal;
+    
+    }
+}
+
+.buttonControls {
+    width: 100%;
+    display: flex;
+    flex-flow: row nowrap;
+
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.button {
+    font-size: 1rem;
+    cursor: pointer;
+    background: $purple300;
+
+    border: 1px solid $white;
+    border-radius: 0.75rem;
+    padding: 0.5rem;
+}

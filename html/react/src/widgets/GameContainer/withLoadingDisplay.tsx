@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { from, Subscription } from "rxjs";
-import gwtAdapter from "../../gwtAdapter";
+import { gwtAppLoaded$ } from "../../gwtAdapter";
 import styles from './GameContainer.module.scss';
 
 import { StateRoot, Resource } from "../../models";
@@ -33,8 +33,7 @@ class LoadingDisplayWrapper extends Component<LoadingDisplayWrapperProps, Loadin
     }
 
     componentDidMount() {
-        const onGwtLoaded$ = from(gwtAdapter.onGwtLoadedPromise);
-        this.gwtSubscription = onGwtLoaded$.subscribe(this.onLoad);
+        this.gwtSubscription = gwtAppLoaded$.subscribe(this.onLoad);
     }
     componentWillUnmount() {
         this.gwtSubscription!.unsubscribe();

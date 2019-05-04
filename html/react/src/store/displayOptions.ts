@@ -2,12 +2,15 @@ import { createActions, handleActions, Action } from "redux-actions";
 
 export enum ModalType {
     BACKGROUND_SELECT = '#backgrounds',
-    TEMPLATE_SELECT = '#templates'
+    TEMPLATE_SELECT = '#templates',
+    PUZZLE_COMPLETE = ''
 }
 
 const modalTypeFromValue = (value: string): (ModalType | undefined) => {
-    return Object.values(ModalType)
-        .find((v: ModalType) => v === value);
+    return value != '' 
+        ? Object.values(ModalType)
+            .find((v: ModalType) => v === value) 
+        : undefined;
 }
 
 export interface DisplayOptionsState {

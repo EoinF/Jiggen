@@ -50,13 +50,7 @@ public class HtmlLauncher extends GwtApplication {
         }, new Consumer<JiggenState>() {
             @Override
             public void accept(JiggenState nextState) {
-                switch (nextState) {
-                    case LOADED:
-                        BrowserWindow.setGwtLoaded();
-                        break;
-                    case PUZZLE_COMPLETE:
-                        BrowserWindow.setPuzzleComplete();
-                }
+                BrowserWindow.nextAppState(nextState);
             }
         });
         GwtAdapter.setJiggen(jiggen);

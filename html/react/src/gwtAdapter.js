@@ -1,46 +1,50 @@
-import {toggleFullScreen} from './utils/fullScreen';
+import { toggleFullScreen } from './utils/fullScreen';
 import cachedImageDownload from './utils/cachedImageDownload';
+import { Subject } from 'rxjs';
+import { filter, shareReplay, first } from 'rxjs/operators';
 
-const onGwtLoadedPromise = new Promise((resolve, reject) => {
-	// Used by the gwt application to notify that the gwt app has been instantiated
-	// (important because we need to wait for window.gwtAdapter to become available)
-	window.setGwtLoaded = resolve;
-});
+const appState$ = new Subject();
+window.nextAppState = (val) => appState$.next(val);
+
+const gwtAppLoaded$ = appState$.pipe(
+	filter(value => value === "LOADED"),
+	shareReplay(1)
+);
 
 // Set up cached image download for gdx app to use
 window.downloadImage = cachedImageDownload;
 
 
 function setTemplate(generatedTemplate) {
-	onGwtLoadedPromise.then(() => {
+	gwtAppLoaded$.subscribe(() => {
 		// The gwtAdapter object is exported from java gwt code using JsInterop
 		window.gwtAdapter.setTemplate(generatedTemplate);
 	});
 }
 
 function setBackground(background) {
-	onGwtLoadedPromise.then(() => {
+	gwtAppLoaded$.subscribe(() => {
 		// The gwtAdapter object is exported from java gwt code using JsInterop
 		window.gwtAdapter.setBackground(background);
 	});
 }
 
 function startDemo() {
-	onGwtLoadedPromise.then(() => {
+	gwtAppLoaded$.subscribe(() => {
 		// The gwtAdapter object is exported from java gwt code using JsInterop
 		window.gwtAdapter.startDemo();
 	});
 }
 
 function shuffle() {
-	onGwtLoadedPromise.then(() => {
+	gwtAppLoaded$.subscribe(() => {
 		// The gwtAdapter object is exported from java gwt code using JsInterop
 		window.gwtAdapter.shuffle();
 	});
 }
 
 function resizeGameContainer(width, height) {
-	onGwtLoadedPromise.then(() => {
+	gwtAppLoaded$.subscribe(() => {
 		window.gwtAdapter.resizeGameContainer(width, height);
 	});
 }
@@ -49,12 +53,16 @@ function toggleGwtFullScreen () {
 	toggleFullScreen(document.getElementById('embed-html'));
 };
 
-onGwtLoadedPromise.then(() => {
+gwtAppLoaded$.subscribe(() => {
 	window.gwtAdapter.toggleFullScreen = toggleGwtFullScreen;
 });
 
+export {gwtAppLoaded$};
+
 export default {
-	onGwtLoadedPromise,
+	onGwtLoadedPromise: gwtAppLoaded$.pipe(first()).toPromise(),
+	gwtAppLoaded$,
+	appState$,
 	setBackground,
 	setTemplate,
 	startDemo,

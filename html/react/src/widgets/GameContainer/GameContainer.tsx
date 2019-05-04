@@ -15,9 +15,11 @@ import styles from './GameContainer.module.scss';
 import { StateRoot } from '../../models';
 import withLoadingWrapper from './withLoadingDisplay';
 import { puzzleSolverActions } from '../../store/puzzleSolverScreen';
+import { displayOptionsActions, ModalType } from '../../store/displayOptions';
 
 interface DispatchProps {
   setPuzzleStatus(isFreshPuzzle: Boolean): void;
+  setPuzzleComplete(): void;
 }
 
 interface StateProps {
@@ -31,6 +33,7 @@ class GameContainer extends React.Component<GameContainerProps> {
   gameContainerRef: React.RefObject<any>;
   updateContainerSize$: Subject<void>;
   updateContainerSubscription: Subscription;
+  appStateSubscription: Subscription;
   onKeyDownEventListener: EventListener;
 
   constructor(props: GameContainerProps) {
@@ -42,6 +45,13 @@ class GameContainer extends React.Component<GameContainerProps> {
     this.updateContainerSize$ = new Subject();
 
     this.updateContainerSubscription = this.updateContainerSize$.subscribe(this.updateContainerSize);
+    this.appStateSubscription = gwtAdapter.appState$.subscribe(state => {
+      switch(state) {
+        case "PUZZLE_COMPLETE":
+          this.props.setPuzzleComplete();
+          break;
+      }
+    });
     
     onFullScreenChange(this.onFullScreenChange);
     
@@ -88,6 +98,7 @@ class GameContainer extends React.Component<GameContainerProps> {
     const originalGameContainer = document.getElementById('jiggen-puzzle-solver');
     originalGameContainer!.appendChild(document.getElementById('embed-html')!);
 
+    this.appStateSubscription.unsubscribe();
     this.updateContainerSubscription.unsubscribe();
     if (document.removeEventListener) {
       document.removeEventListener('keydown', this.onKeyDownEventListener);
@@ -130,7 +141,8 @@ const mapDispatchToProps = (dispatch: Function): DispatchProps => {
   return {
     setPuzzleStatus: (isFreshPuzzle: Boolean) => {
       dispatch(puzzleSolverActions.setPuzzleStatus(isFreshPuzzle))
-    }
+    },
+    setPuzzleComplete: () => dispatch(displayOptionsActions.showModal(ModalType.PUZZLE_COMPLETE))
   };
 }
 
