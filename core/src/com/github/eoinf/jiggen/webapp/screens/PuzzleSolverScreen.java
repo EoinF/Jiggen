@@ -8,15 +8,18 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.github.eoinf.jiggen.webapp.Jiggen;
+import com.github.eoinf.jiggen.webapp.JiggenState;
 import com.github.eoinf.jiggen.webapp.graphics.PuzzleOverlayBatch;
 import com.github.eoinf.jiggen.webapp.graphics.WorldBoundedCamera;
 import com.github.eoinf.jiggen.webapp.screens.controllers.PuzzleViewController;
 import com.github.eoinf.jiggen.webapp.screens.controllers.PuzzleViewModel;
+import com.github.eoinf.jiggen.webapp.screens.models.ConnectedPuzzlePieces;
 import com.github.eoinf.jiggen.webapp.screens.models.PuzzleGraphTemplate;
 import com.github.eoinf.jiggen.webapp.screens.views.ModalView;
 import com.github.eoinf.jiggen.webapp.screens.views.PuzzleToolbar;
 import com.github.eoinf.jiggen.webapp.screens.views.PuzzleView;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 public class PuzzleSolverScreen implements Screen {
@@ -63,6 +66,15 @@ public class PuzzleSolverScreen implements Screen {
             @Override
             public void accept(GridPoint2 newScreenSize) {
                 puzzleViewController.updateWorldBounds(newScreenSize.x, newScreenSize.y);
+            }
+        });
+
+        puzzleViewModel.getConnectedPiecesListObservable().subscribe(new Consumer<List<ConnectedPuzzlePieces>>() {
+            @Override
+            public void accept(List<ConnectedPuzzlePieces> connectedPuzzlePieces) {
+                if (connectedPuzzlePieces.size() == 1) {
+                    game.onStateChange.accept(JiggenState.PUZZLE_COMPLETE);
+                }
             }
         });
     }

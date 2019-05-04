@@ -32,7 +32,7 @@ public class Jiggen extends Game {
     private TextureAtlas atlas = null;
 
     public Runnable onToggleFullScreen;
-	private Consumer<JiggenState> onStateChange;
+	public Consumer<JiggenState> onStateChange;
 	private int maxTextureSize;
 
     public Jiggen(Runnable onToggleFullScreen, Consumer<JiggenState> onStateChange) {

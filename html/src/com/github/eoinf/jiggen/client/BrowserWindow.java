@@ -15,4 +15,6 @@ public class BrowserWindow {
                                             SetDownloadedBytesCallback setDownloadedBytes,
                                             DownloadFailureCallback onFailure,
                                             DownloadSuccessCallback onSuccess);
+
+    public static native void setPuzzleComplete();
 }

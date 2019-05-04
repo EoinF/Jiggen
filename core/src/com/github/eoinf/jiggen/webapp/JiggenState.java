@@ -1,5 +1,6 @@
 package com.github.eoinf.jiggen.webapp;
 
 public enum JiggenState {
-    LOADED
+    LOADED,
+    PUZZLE_COMPLETE
 }
