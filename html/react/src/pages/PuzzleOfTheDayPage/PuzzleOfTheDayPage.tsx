@@ -19,8 +19,6 @@ import LoadingSpinner from '../../widgets/LoadingSpinner/LoadingSpinner';
 
 interface DispatchProps {
   selectPuzzle(id: string): void;
-  selectBackground(link: string): void;
-  selectTemplate(link: string): void;
   fetchPuzzlesOfTheDay(): void;
   fetchTemplateByLink(link: string): void;
   fetchBackgroundByLink(link: string): void;
@@ -52,15 +50,24 @@ class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps, any> {
         })
       }
     }
-    if (this.props.selectedPuzzle != prevProps.selectedPuzzle) {
-      const {background, template} = this.props.selectedPuzzle.links;
-      this.props.selectBackground(background);
-      this.props.selectTemplate(template);
-    }
   };
 
   onSelectPieceCount = (link: string) => {
     this.props.selectPuzzle(link);
+  }
+
+  PlayButton = () => {
+    const selectedPuzzle= this.props.selectedPuzzle;
+
+    const templateLink = encodeURIComponent(selectedPuzzle.links.template);
+    const backgroundLink = encodeURIComponent(selectedPuzzle.links.background);
+    const playPuzzleLink = `/play?template=${templateLink}&background=${backgroundLink}`;
+    return <PlainLink to={playPuzzleLink}>
+      <div className={styles.playIcon}>
+        <img src={playIconSrc} />
+        <span>Play</span>
+      </div>
+    </PlainLink>;
   }
 
   render() {
@@ -93,13 +100,7 @@ class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps, any> {
               )}
             </div>
             <div className={styles.playButtonContainer}>
-            { selectedBackground && <PlainLink to="/play">
-                <div className={styles.playIcon}>
-                  <img src={playIconSrc} />
-                  <span>Play</span>
-                </div>
-              </PlainLink>
-            }
+              { selectedBackground && <this.PlayButton/> }
             </div>
           </div>
         </div>
@@ -122,8 +123,6 @@ function mapStateToProps(_state: any): StateProps {
 const mapDispatchToProps = (dispatch: Function): DispatchProps => {
   return {
     selectPuzzle: (link: string) => dispatch(playablePuzzlesActions.selectPlayablePuzzle(link)),
-    selectBackground: (link: string) => dispatch(puzzleSolverActions.selectAndDownloadBackground(link)),
-    selectTemplate: (link: string) => dispatch(puzzleSolverActions.selectAndDownloadTemplate(link)),
     fetchPuzzlesOfTheDay: () => dispatch(playablePuzzlesActions.fetchPuzzlesOfTheDay()),
     fetchBackgroundByLink: (link: string) => dispatch(backgroundsActions.fetchByLink(link)),
     fetchTemplateByLink: (link: string) => dispatch(templatesActions.fetchByLink(link))

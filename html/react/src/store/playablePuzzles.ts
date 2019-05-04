@@ -32,7 +32,6 @@ function fetchPuzzlesOfTheDay (): JiggenThunkAction {
 	};
 }
 
-
 const reducers = handleActions({
 		FETCH_PLAYABLE_PUZZLES: (state, {payload}: Action<any>) => base.setIsFetching(state, payload),
 		SET_PLAYABLE_PUZZLES: (state, {payload}: Action<any>) => base.setResources(state, payload),
