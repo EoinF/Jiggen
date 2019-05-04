@@ -137,13 +137,15 @@ class TemplateSelectionModal extends Component<TemplateSelectionProps, TemplateS
 						}
 						{ (this.state.filteredTemplates.length === 0) ?
 						<div className={styles.noTemplatesMessage}>No templates match your current search</div>
-						: <ImageDisplayReel 
+						: <div className={styles.templatesContainer}>
+							<ImageDisplayReel 
 								displayComponents={this.state.filteredTemplates.map(template => (
 									<li key={template.links.self} onClick={() => this.selectTemplate(template.links.self)}>
 										<TemplateWidget template={template} onError={this.onError} />
 									</li>)
 								)}
 							/>
+						</div>
 						}
 					</div>
 				</ModalWrapper>

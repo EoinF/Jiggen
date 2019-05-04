@@ -1,7 +1,7 @@
 @import '../../vars';
 
 .mainContainer {
-    @media (min-width: $breakpoint-width-mobile) {
+    // @media (min-width: $breakpoint-width-mobile) {
         position: fixed;
         top: 0;
         left: 0;
@@ -9,5 +9,12 @@
         bottom: 0;
         z-index: 999;
         overflow-y: auto;
-    }
+
+        background: rgba($black, 0.5);
+
+        display: flex;
+        flex-flow: column wrap;
+        align-content: center;
+        justify-content: center;
+    // }
 }

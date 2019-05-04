@@ -57,7 +57,7 @@ class ModalManager extends Component<ModalManagerProps> {
             children
         } = this.props;
         // Hide the background content if on mobile
-        let backgroundContentClassName = isModalVisible ? 'hiddenIfMobile expandToFit': 'expandToFit';
+        let backgroundContentClassName = 'expandToFit'; //isModalVisible ? 'hiddenIfMobile expandToFit': 'expandToFit';
 
         return <React.Fragment>
             <div className={backgroundContentClassName}>
