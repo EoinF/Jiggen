@@ -4,7 +4,6 @@ import com.github.eoinf.jiggen.client.callbacks.DownloadFailureCallback;
 import com.github.eoinf.jiggen.client.callbacks.DownloadSuccessCallback;
 import com.github.eoinf.jiggen.client.callbacks.SetDownloadedBytesCallback;
 import com.github.eoinf.jiggen.client.callbacks.SetTotalBytesCallback;
-import com.github.eoinf.jiggen.webapp.JiggenState;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 
@@ -16,5 +15,5 @@ public class BrowserWindow {
                                             DownloadFailureCallback onFailure,
                                             DownloadSuccessCallback onSuccess);
 
-    public static native void nextAppState(JiggenState nextState);
+    public static native void nextAppState(String nextState);
 }
