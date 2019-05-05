@@ -28,7 +28,7 @@ float isEdgeOfTexture(vec2 direction) {
     }
     else {
         vec4 texelColor = texture2D(u_texture, texelToCheck);
-        return step(texelColor.a, 0.99);
+        return 1.0 - texelColor.a;
     }
 }
 

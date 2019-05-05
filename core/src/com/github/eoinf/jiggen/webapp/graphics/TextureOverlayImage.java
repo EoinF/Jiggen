@@ -105,7 +105,7 @@ public class TextureOverlayImage extends Widget {
     public void setDrawable(TextureRegionDrawable drawable) {
         drawable.getRegion()
                 .getTexture()
-                .setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+                .setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
         if (this.drawable == drawable) return;
         if (drawable != null) {
