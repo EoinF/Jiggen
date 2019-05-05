@@ -6,6 +6,7 @@
         <meta name="theme-color" content="#792e9e">
         <meta name="Description" content="Create and solve jigsaw puzzles on your phone, tablet or desktop.
             New puzzles are added every day.">
+        <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
 
         <!--
             Generated favicon data at https://realfavicongenerator.net
@@ -15,17 +16,14 @@
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
         <meta name="msapplication-TileColor" content="#2d89ef">
 
-        <!--
-          manifest.json provides metadata used when your web app is added to the
-          homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
-        -->
-        <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
         <script>
             (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
             m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
             })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
+            ga('set', 'allowAdFeatures', false);
+            ga('set', 'anonymizeIp', true);
             ga('create', 'UA-134366573-1', 'auto');
             ga('send', 'pageview');
         </script>
