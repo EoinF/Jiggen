@@ -99,15 +99,14 @@ public class PuzzleToolbar implements ScreenView {
         bottomTable
                 .add(showBackgroundButton)
                 .expand()
-                .pad(5)
                 .top()
                 .right();
 
         bottomTable.row();
 
-        bottomTable.add(shuffleButton)
+        bottomTable
+                .add(shuffleButton)
                 .expand()
-                .pad(5)
                 .top()
                 .right();
 
