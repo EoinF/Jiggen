@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import static com.github.eoinf.jiggen.utils.PixmapUtils.getRandomBackground;
 import static com.github.eoinf.jiggen.utils.PixmapUtils.getRandomTemplate;
 
 public class DesktopLauncher {
@@ -41,8 +40,9 @@ public class DesktopLauncher {
 		});
 		new LwjglApplication(game, config);
 		Gdx.app.postRunnable(() -> {
-			loadTemplateFromAtlas(game);
-			game.setBackground(getRandomBackground());
+			loadTemplateFromAtlas(game, "generated-templates/20x10");
+			game.setBackground(Gdx.files.internal("backgrounds/highres.jpg"));
+//			game.setBackground(getRandomBackground());
 		});
 	}
 
@@ -59,11 +59,11 @@ public class DesktopLauncher {
 		game.setTemplate(puzzle);
 	}
 
-	private static void loadTemplateFromAtlas(Jiggen game) {
-    	FileHandle atlasFile = Gdx.files.internal("generated-templates/pieces.atlas");
-    	FileHandle atlasFolder = Gdx.files.internal("generated-templates");
-		FileHandle verticesJson = Gdx.files.internal("generated-templates/vertices.json");
-		FileHandle edgesJson = Gdx.files.internal("generated-templates/edges.json");
+	private static void loadTemplateFromAtlas(Jiggen game, String templateFilePath) {
+    	FileHandle atlasFile = Gdx.files.internal(templateFilePath + "/pieces.atlas");
+    	FileHandle atlasFolder = Gdx.files.internal(templateFilePath);
+		FileHandle verticesJson = Gdx.files.internal(templateFilePath + "/vertices.json");
+		FileHandle edgesJson = Gdx.files.internal(templateFilePath + "/edges.json");
 
 		Json json = new Json();
 		VerticesMap verticesObject = json.fromJson(VerticesMap.class, verticesJson);
