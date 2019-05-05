@@ -8,12 +8,12 @@ window.nextAppState = (val) => appState$.next(val);
 
 const gwtAppLoaded$ = appState$.pipe(
 	filter(value => value === "LOADED"),
+	first(),
 	shareReplay(1)
 );
 
 // Set up cached image download for gdx app to use
 window.downloadImage = cachedImageDownload;
-
 
 function setTemplate(generatedTemplate) {
 	gwtAppLoaded$.subscribe(() => {
@@ -33,6 +33,18 @@ function startDemo() {
 	gwtAppLoaded$.subscribe(() => {
 		// The gwtAdapter object is exported from java gwt code using JsInterop
 		window.gwtAdapter.startDemo();
+	});
+}
+function pauseGame() {
+	gwtAppLoaded$.subscribe(() => {
+		// The gwtAdapter object is exported from java gwt code using JsInterop
+		window.gwtAdapter.pauseGame();
+	});
+}
+function resumeGame() {
+	gwtAppLoaded$.subscribe(() => {
+		// The gwtAdapter object is exported from java gwt code using JsInterop
+		window.gwtAdapter.resumeGame();
 	});
 }
 
@@ -66,6 +78,8 @@ export default {
 	setBackground,
 	setTemplate,
 	startDemo,
+	pauseGame,
+	resumeGame,
 	shuffle,
 	resizeGameContainer,
 	toggleGwtFullScreen

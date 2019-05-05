@@ -29,6 +29,7 @@ public class PuzzleSolverScreen implements Screen {
     private final PuzzleToolbar toolbar;
     private final PuzzleViewModel puzzleViewModel;
     private final PuzzleViewController puzzleViewController;
+    private boolean paused;
 
     public PuzzleSolverScreen(Jiggen game, PuzzleOverlayBatch batch, TextureAtlas uiTextureAtlas, Skin skin) {
         WorldBoundedCamera camera = new WorldBoundedCamera();
@@ -77,6 +78,8 @@ public class PuzzleSolverScreen implements Screen {
                 }
             }
         });
+
+        this.paused = false;
     }
 
     public void setTemplate(PuzzleGraphTemplate puzzleGraphTemplate) {
@@ -90,13 +93,15 @@ public class PuzzleSolverScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        modalView.act(delta);
-        toolbar.act(delta);
-        puzzleView.act(delta);
+        if (!paused) {
+            modalView.act(delta);
+            toolbar.act(delta);
+            puzzleView.act(delta);
 
-        puzzleView.draw();
-        toolbar.draw();
-        modalView.draw();
+            puzzleView.draw();
+            toolbar.draw();
+            modalView.draw();
+        }
     }
 
     @Override
@@ -106,12 +111,12 @@ public class PuzzleSolverScreen implements Screen {
 
     @Override
     public void pause() {
-
+        this.paused = true;
     }
 
     @Override
     public void resume() {
-
+        this.paused = false;
     }
 
     @Override

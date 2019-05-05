@@ -29,23 +29,23 @@ const initialState: PuzzleSolverScreenState = {
 };
 
 const {
-	selectTemplate,
-    selectBackground,
-    setPuzzleStatus,
-    setIsActive,
-    setTemplateReady,
-    setBackgroundReady
+	puzzleSolverSelectTemplate,
+    puzzleSolverSelectBackground,
+    puzzleSolverSetPuzzleStatus,
+    puzzleSolverSetIsActive,
+    puzzleSolverSetTemplateReady,
+    puzzleSolverSetBackgroundReady
 } = createActions({
-	SELECT_TEMPLATE: (selectedLink) => ({selectedLink}),
-	SELECT_BACKGROUND: (selectedLink) => ({selectedLink}),
-    SET_PUZZLE_STATUS: (isFreshPuzzle) => ({isFreshPuzzle}),
-    SET_IS_ACTIVE: (isActive) => ({isActive}),
-    SET_TEMPLATE_READY: () => ({}),
-    SET_BACKGROUND_READY: () => ({}),
+	PUZZLE_SOLVER_SELECT_TEMPLATE: (selectedLink) => ({selectedLink}),
+	PUZZLE_SOLVER_SELECT_BACKGROUND: (selectedLink) => ({selectedLink}),
+    PUZZLE_SOLVER_SET_PUZZLE_STATUS: (isFreshPuzzle) => ({isFreshPuzzle}),
+    PUZZLE_SOLVER_SET_IS_ACTIVE: (isActive) => ({isActive}),
+    PUZZLE_SOLVER_SET_TEMPLATE_READY: () => ({}),
+    PUZZLE_SOLVER_SET_BACKGROUND_READY: () => ({}),
 });
 
 const reducers = handleActions({
-        SELECT_TEMPLATE: (state, {payload}: Action<any>): Partial<PuzzleSolverScreenState> => {
+        PUZZLE_SOLVER_SELECT_TEMPLATE: (state, {payload}: Action<any>): Partial<PuzzleSolverScreenState> => {
             const oldLink = state.selectedBackground;
             const wasFreshPuzzle = state.isFreshPuzzle;
             const isFreshPuzzle = wasFreshPuzzle || oldLink != payload.link;
@@ -56,7 +56,7 @@ const reducers = handleActions({
                 isTemplateReady: false
             }
         },
-        SELECT_BACKGROUND: (state, {payload}: Action<any>): Partial<PuzzleSolverScreenState> => {
+        PUZZLE_SOLVER_SELECT_BACKGROUND: (state, {payload}: Action<any>): Partial<PuzzleSolverScreenState> => {
             const oldLink = state.selectedBackground;
             const wasFreshPuzzle = state.isFreshPuzzle;
             const isFreshPuzzle = wasFreshPuzzle || oldLink != payload.link;
@@ -67,25 +67,25 @@ const reducers = handleActions({
                 isBackgroundReady: false
             }
         },
-        SET_PUZZLE_STATUS: (state, {payload}: Action<any>): Partial<PuzzleSolverScreenState> => {
+        PUZZLE_SOLVER_SET_PUZZLE_STATUS: (state, {payload}: Action<any>): Partial<PuzzleSolverScreenState> => {
             return {
                 ...state,
                 isFreshPuzzle: payload.isFreshPuzzle
             }
         },
-        SET_IS_ACTIVE: (state, {payload}: Action<any>): Partial<PuzzleSolverScreenState> => {
+        PUZZLE_SOLVER_SET_IS_ACTIVE: (state, {payload}: Action<any>): Partial<PuzzleSolverScreenState> => {
             return {
                 ...state,
                 isActive: payload.isActive
             }
         },
-        SET_TEMPLATE_READY: (state, {payload}: Action<any>): Partial<PuzzleSolverScreenState> => {
+        PUZZLE_SOLVER_SET_TEMPLATE_READY: (state, {payload}: Action<any>): Partial<PuzzleSolverScreenState> => {
             return {
                 ...state,
                 isTemplateReady: true
             }
         },
-        SET_BACKGROUND_READY: (state, {payload}: Action<any>): Partial<PuzzleSolverScreenState> => {
+        PUZZLE_SOLVER_SET_BACKGROUND_READY: (state, {payload}: Action<any>): Partial<PuzzleSolverScreenState> => {
             return {
                 ...state,
                 isBackgroundReady: true
@@ -99,11 +99,11 @@ const selectAndDownloadBackground = (link: string): JiggenThunkAction => {
     return async (dispatch, getState) => {
         const state = getState() as StateRoot;
         if (state.puzzleSolverScreen.selectedBackground !== link) {
-            dispatch(selectBackground(link));
+            dispatch(puzzleSolverSelectBackground(link));
             const background = await backgroundsActions.getOrDownloadBackground(link, dispatch, getState);
             const downloadedBackground = await downloadedImagesActions.getOrDownloadImage(background, dispatch, getState);
             gwtAdapter.setBackground(downloadedBackground);
-            dispatch(setBackgroundReady());
+            dispatch(puzzleSolverSetBackgroundReady());
         }
 	};
 };
@@ -112,19 +112,28 @@ const selectAndDownloadTemplate = (link: string): JiggenThunkAction => {
     return async (dispatch, getState) => {
         const state = getState() as StateRoot;
         if (state.puzzleSolverScreen.selectedTemplate !== link) {
-            dispatch(selectTemplate(link));
+            dispatch(puzzleSolverSelectTemplate(link));
             const template = await templatesActions.getOrDownloadTemplate(link, dispatch, getState);
             const downloadedTemplate = await downloadedTemplatesActions.getOrDownloadTemplate(template, dispatch, getState);
             gwtAdapter.setTemplate(downloadedTemplate);
-            dispatch(setTemplateReady());
+            dispatch(puzzleSolverSetTemplateReady());
         }
 	};
 };
 
+const setIsActive = (isActive: boolean) => {
+    if (isActive) {
+        gwtAdapter.resumeGame();
+    } else {
+        gwtAdapter.pauseGame();
+    }
+    return puzzleSolverSetIsActive(isActive);
+} 
+
 const puzzleSolverActions = {
     selectAndDownloadBackground,
     selectAndDownloadTemplate,
-    setPuzzleStatus,
+    setPuzzleStatus: puzzleSolverSetPuzzleStatus,
     setIsActive
 }
 
