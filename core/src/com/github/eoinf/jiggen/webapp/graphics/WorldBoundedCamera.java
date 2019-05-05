@@ -2,34 +2,41 @@ package com.github.eoinf.jiggen.webapp.graphics;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
-public class WorldBoundedCamera extends OrthographicCamera {
+public class WorldBoundedCamera {
     private static float minZoom = 0.3f;
 
     private static float ZOOM_RATE = 0.05f;
-    private static float ZOOM_MODIFIER = 0.008f;
+    private static float ZOOM_RESET_MODIFIER = 0.8f;
     private static float ZOOM_OVERFLOW = 0.2f;
-    private static int ZOOM_RESET_COOLDOWN = 20;
+    private static float ZOOM_RESET_COOLDOWN_SECONDS = 0.3f;
 
-    private int zoomResetCooldown;
+    private float zoomResetCooldown;
 
     private float worldWidth;
     private float worldHeight;
     private float maxZoom;
 
-    @Override
-    public void update() {
-        zoomResetCooldown--;
-        adjustPositionToWorldBounds();
-        adjustZoomToWorldBounds();
-        super.update();
+    public WorldBoundedCamera() {
+        this.camera = new OrthographicCamera();
     }
 
-    private void adjustZoomToWorldBounds() {
+    private OrthographicCamera camera;
+    public OrthographicCamera getCamera() {
+        return this.camera;
+    }
+
+    public void adjustToWorldBounds(float delta) {
+        zoomResetCooldown -= delta;
+        adjustPositionToWorldBounds();
+        adjustZoomToWorldBounds(delta);
+    }
+
+    private void adjustZoomToWorldBounds(float delta) {
         if (zoomResetCooldown < 0) {
-            if (zoom > maxZoom) {
-                this.zoom -= ZOOM_MODIFIER;
-            } else if (zoom < minZoom) {
-                this.zoom = minZoom;
+            if (this.camera.zoom > maxZoom) {
+                this.camera.zoom -= ZOOM_RESET_MODIFIER * delta;
+            } else if (this.camera.zoom < minZoom) {
+                this.camera.zoom = minZoom;
             }
         }
     }
@@ -37,10 +44,10 @@ public class WorldBoundedCamera extends OrthographicCamera {
     private void adjustPositionToWorldBounds() {
         float x = x();
         float y = y();
-        float minX = (this.zoom * this.viewportWidth / 2f);
-        float maxX = worldWidth - minX;
-        float minY = (this.zoom * this.viewportHeight / 2f);
-        float maxY = worldHeight - minY;
+        float minX = (this.camera.zoom * this.camera.viewportWidth / 2f);
+        float maxX = Math.max(minX, worldWidth - minX);
+        float minY = (this.camera.zoom * this.camera.viewportHeight / 2f);
+        float maxY = Math.max(minY, worldHeight - minY);
 
         if (x > maxX) {
             this.setX(maxX);
@@ -55,11 +62,11 @@ public class WorldBoundedCamera extends OrthographicCamera {
     }
 
     public float x() {
-        return this.position.x;
+        return this.camera.position.x;
     }
 
     public float y() {
-        return this.position.y;
+        return this.camera.position.y;
     }
 
     public void setCameraBounds(float worldWidth, float worldHeight, float maxZoom) {
@@ -67,23 +74,23 @@ public class WorldBoundedCamera extends OrthographicCamera {
         this.worldHeight = worldHeight;
         this.maxZoom = maxZoom;
 
-        this.position.x = this.worldWidth / 2;
-        this.position.y = this.worldHeight / 2;
-        this.zoom = maxZoom;
+        this.camera.position.x = this.worldWidth / 2;
+        this.camera.position.y = this.worldHeight / 2;
+        this.camera.zoom = maxZoom;
     }
 
     public void setX(float x) {
-        this.position.x = x;
+        this.camera.position.x = x;
     }
 
     public void setY(float y) {
-        this.position.y = y;
+        this.camera.position.y = y;
     }
 
     public void setZoom(float newZoom) {
         newZoom = Math.min(maxZoom + ZOOM_OVERFLOW, newZoom);
-        this.zoom = Math.max(minZoom, newZoom);
-        zoomResetCooldown = ZOOM_RESET_COOLDOWN;
+        this.camera.zoom = Math.max(minZoom, newZoom);
+        zoomResetCooldown = ZOOM_RESET_COOLDOWN_SECONDS;
     }
 
     public float getZoomRate() {

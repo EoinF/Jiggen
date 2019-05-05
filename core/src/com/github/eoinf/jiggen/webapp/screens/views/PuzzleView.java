@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -30,28 +29,22 @@ import java.util.function.Consumer;
 
 public class PuzzleView implements ScreenView {
     private final EnhancedGestureDetector gestureDetector;
-    private final PuzzleOverlayBatch batch;
     public Stage stage;
     private ScreenViewport viewport;
-    private Group root;
 
     private Map<ConnectedPuzzlePieces, ConnectedPiecesGroup> connectedPiecesGroupMap;
     private PuzzleViewModel puzzleViewModel;
     private PuzzleViewController puzzleViewController;
-    private WorldBoundedCamera camera;
+    private WorldBoundedCamera worldBoundedCamera;
 
-    public PuzzleView(WorldBoundedCamera camera, PuzzleOverlayBatch batch, Skin skin, PuzzleViewModel puzzleViewModel,
+    public PuzzleView(WorldBoundedCamera worldBoundedCamera, PuzzleOverlayBatch batch, Skin skin, PuzzleViewModel puzzleViewModel,
                       PuzzleViewController puzzleViewController) {
-        this.batch = batch;
-        this.camera = camera;
-        this.viewport = new ScreenViewport(camera);
+        this.worldBoundedCamera = worldBoundedCamera;
+        this.viewport = new ScreenViewport(worldBoundedCamera.getCamera());
         this.connectedPiecesGroupMap = new HashMap<>();
         this.puzzleViewModel = puzzleViewModel;
         this.puzzleViewController = puzzleViewController;
         this.stage = new Stage(viewport, batch);
-
-        this.root = new Group();
-        stage.addActor(root);
 
         this.gestureDetector = new EnhancedGestureDetector(new PuzzleGestureListener(puzzleViewController, stage));
 
@@ -120,8 +113,8 @@ public class PuzzleView implements ScreenView {
         puzzleViewModel.getCameraZoomObservable().subscribe(new Consumer<Float>() {
             @Override
             public void accept(Float zoom) {
-                camera.setZoom(zoom);
-                batch.setCameraZoom(camera.zoom);
+                worldBoundedCamera.setZoom(zoom);
+                batch.setCameraZoom(worldBoundedCamera.getCamera().zoom);
             }
         });
 
@@ -132,10 +125,10 @@ public class PuzzleView implements ScreenView {
                 float maxZoomY = worldBounds.y / (float)viewport.getScreenHeight();
 
                 float maxZoom = Math.max(maxZoomX, maxZoomY);
-                camera.setCameraBounds(worldBounds.x, worldBounds.y, maxZoom);
+                worldBoundedCamera.setCameraBounds(worldBounds.x, worldBounds.y, maxZoom);
                 viewport.apply(true);
 
-                batch.setCameraZoom(camera.zoom);
+                batch.setCameraZoom(worldBoundedCamera.getCamera().zoom);
             }
         });
     }
@@ -153,16 +146,16 @@ public class PuzzleView implements ScreenView {
         } else {
             connectedPiecesGroup = new ConnectedPiecesGroup(connectedPieces, scales, background);
             connectedPiecesGroupMap.put(connectedPieces, connectedPiecesGroup);
-            root.addActor(connectedPiecesGroup);
+            stage.addActor(connectedPiecesGroup);
         }
     }
 
     public void act(float delta) {
-        camera.update();
+        worldBoundedCamera.adjustToWorldBounds(delta);
 
         HeldPuzzlePiece heldPiece = puzzleViewModel.getHeldPieceObservable().getValue();
         if (heldPiece.getPiecesHeld() != null) {
-            Vector3 mousePositionInWorld = camera.unproject(
+            Vector3 mousePositionInWorld = worldBoundedCamera.getCamera().unproject(
                     new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
 
             Vector2 updatedPosition = new Vector2(mousePositionInWorld.x + heldPiece.getOffset().x,
@@ -173,7 +166,6 @@ public class PuzzleView implements ScreenView {
     }
 
     public void draw() {
-        this.batch.setProjectionMatrix(camera.combined);
         stage.draw();
     }
 

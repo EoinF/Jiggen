@@ -23,18 +23,18 @@ import static com.github.eoinf.jiggen.webapp.utils.PixmapUtils.getMinimumScaleTo
  * This is enforced with the 'protected' keyword
  */
 public class PuzzleViewController {
-    private static float WORLD_BASE_PADDING = 50;
+    private static float WORLD_BASE_PADDING = 20;
     private final Jiggen game;
 
     private PuzzleViewModel puzzleViewModel;
     private HeldPieceController heldPieceController;
-    private WorldBoundedCamera camera;
+    private WorldBoundedCamera worldBoundedCamera;
 
-    public PuzzleViewController(Jiggen game, PuzzleViewModel puzzleViewModel, WorldBoundedCamera camera) {
+    public PuzzleViewController(Jiggen game, PuzzleViewModel puzzleViewModel, WorldBoundedCamera worldBoundedCamera) {
         this.game = game;
         this.puzzleViewModel = puzzleViewModel;
-        this.camera = camera;
-        heldPieceController = new HeldPieceController(puzzleViewModel, this, camera);
+        this.worldBoundedCamera = worldBoundedCamera;
+        heldPieceController = new HeldPieceController(puzzleViewModel, this, worldBoundedCamera);
     }
 
     public void toggleFullScreen() {
@@ -107,7 +107,7 @@ public class PuzzleViewController {
     }
 
     public void zoomBy(float zoomDelta) {
-        puzzleViewModel.setCameraZoom(camera.zoom + (zoomDelta * camera.getZoomRate()));
+        puzzleViewModel.setCameraZoom(worldBoundedCamera.getCamera().zoom + (zoomDelta * worldBoundedCamera.getZoomRate()));
     }
 
     public void shuffle() {
@@ -163,7 +163,7 @@ public class PuzzleViewController {
 
     public void panBy(float deltaX, float deltaY) {
         if (!puzzleViewModel.isHoldingPiece()) {
-            camera.translate(-deltaX * camera.zoom, deltaY * camera.zoom);
+            worldBoundedCamera.getCamera().translate(-deltaX * worldBoundedCamera.getCamera().zoom, deltaY * worldBoundedCamera.getCamera().zoom);
         }
     }
 
