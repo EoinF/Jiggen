@@ -16,8 +16,8 @@ uniform sampler2D u_background;
 
 const float inverseTotalPixelChecks = 1.0/4.0;
 
-float isEdgeOfTexture(vec2 direction) {
-    vec2 texelToCheck = v_texCoords + ((u_texture_texel_size * direction) * u_camera_zoom);
+float isEdgeOfTexture(vec2 direction, vec2 scaled_texel_size) {
+    vec2 texelToCheck = v_texCoords + scaled_texel_size * direction;
 
     if (texelToCheck.x < u_texture_region_bounds.x
         || texelToCheck.x > u_texture_region_bounds.z
@@ -34,14 +34,15 @@ float isEdgeOfTexture(vec2 direction) {
 
 void main()
 {
+    vec2 scaled_texel_size = u_texture_texel_size * u_camera_zoom;
     vec4 template_colour = texture2D(u_texture, v_texCoords);
 
     vec4 combination_colour = vec4(1.0, 1.0, 1.0, template_colour.a);
     float total = 0.0;
-    total += isEdgeOfTexture(vec2(1.0, 0.0));
-    total += isEdgeOfTexture(vec2(-1.0, 0.0));
-    total += isEdgeOfTexture(vec2(0.0, 1.0));
-    total += isEdgeOfTexture(vec2(0.0, -1.0));
+    total += isEdgeOfTexture(vec2(1.0, 0.0), scaled_texel_size);
+    total += isEdgeOfTexture(vec2(-1.0, 0.0), scaled_texel_size);
+    total += isEdgeOfTexture(vec2(0.0, 1.0)), scaled_texel_size;
+    total += isEdgeOfTexture(vec2(0.0, -1.0), scaled_texel_size);
 
     combination_colour.rgb *= 1.0 - smoothstep(0.15, 0.3, total * inverseTotalPixelChecks);
 
