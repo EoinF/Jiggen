@@ -113,6 +113,14 @@ public class GwtAdapter {
         });
     }
 
+    public static void pauseGame() {
+        jiggen.pause();
+    }
+
+    public static void resumeGame() {
+        jiggen.resume();
+    }
+
     static void setJiggen(Jiggen _jiggen) {
         jiggen = _jiggen;
     }
@@ -123,14 +131,6 @@ public class GwtAdapter {
 
     @JsMethod
     public static native void toggleFullScreen();
-
-    static void pauseGame() {
-        jiggen.pause();
-    }
-
-    static void resumeGame() {
-        jiggen.resume();
-    }
 
     @JsMethod
     public static native void downloadImage(boolean isFullScreen);
