@@ -41,7 +41,7 @@ void main()
     float total = 0.0;
     total += isEdgeOfTexture(vec2(1.0, 0.0), scaled_texel_size);
     total += isEdgeOfTexture(vec2(-1.0, 0.0), scaled_texel_size);
-    total += isEdgeOfTexture(vec2(0.0, 1.0)), scaled_texel_size;
+    total += isEdgeOfTexture(vec2(0.0, 1.0), scaled_texel_size);
     total += isEdgeOfTexture(vec2(0.0, -1.0), scaled_texel_size);
 
     combination_colour.rgb *= 1.0 - smoothstep(0.15, 0.3, total * inverseTotalPixelChecks);
