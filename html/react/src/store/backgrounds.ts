@@ -6,6 +6,8 @@ import { getOrFetchResourceLinks } from '../actions/resourceLinks';
 import base from './base';
 import { Dispatch } from 'redux';
 import store from '.';
+import { loadState, saveState } from './localStorage';
+import { backgroundsStateKey } from '../constants';
 
 export class Background extends Resource {
 	width?: number;
@@ -38,7 +40,7 @@ export interface BackgroundsState extends BaseState<Background> {}
 
 const initialState: BackgroundsState = {
 	...base.initialState as BackgroundsState,
-	linkMap: JSON.parse(localStorage.getItem('savedBackgrounds') || '{}')
+	linkMap: loadState(backgroundsStateKey) || {}
 };
 
 const {
@@ -54,11 +56,12 @@ const {
 	SET_BACKGROUNDS: (backgrounds: Background[]) => ({resourceList: backgrounds}),
 	ADD_BACKGROUNDS: (backgrounds: Background[]) => ({ resourceList: backgrounds}),
 	SET_BACKGROUND: (background: Background) => {
-		const savedSuggestions: StringMap<Background> = JSON.parse(localStorage.getItem('savedBackgrounds') || '{}');
+		const savedSuggestions: StringMap<Background> = loadState(backgroundsStateKey) || {};
 
-		if (Object.keys(savedSuggestions).every((link: string) => background.links.self !== link)) {
+		if ((background.isCustom || background.isUpload)
+			&& Object.keys(savedSuggestions).every((link: string) => background.links.self !== link)) {
 			savedSuggestions[background.links.self] = background;
-			localStorage.setItem('savedBackgrounds', JSON.stringify(savedSuggestions));
+			saveState(backgroundsStateKey, savedSuggestions);
 		}
 			
 		return {resource: background};
@@ -66,13 +69,11 @@ const {
 	UPDATE_BACKGROUND: (backgroundId: string, updatedAttributes: Background) => ({resourceId: backgroundId, updatedAttributes}),
 	SELECT_BACKGROUND: (backgroundId: string) => ({selectedId: backgroundId}),
 	REMOVE_BACKGROUND: (background: Background) => {
-		if (background.isUpload || background.isCustom) {
-			 // broken upload links can never be restored so remove them for good
-			const savedSuggestions: StringMap<Background> = JSON.parse(localStorage.getItem('savedBackgrounds') || '{}');
-			delete savedSuggestions[background.links.self];
-
-			localStorage.setItem('savedBackgrounds', JSON.stringify(savedSuggestions));
-		}
+		// broken upload links can never be restored so remove them for good
+		const savedSuggestions: StringMap<Background> = loadState(backgroundsStateKey) || {};
+		delete savedSuggestions[background.links.self];
+		saveState(backgroundsStateKey, savedSuggestions);
+		
 		return {resource: background};
 	},
 });
