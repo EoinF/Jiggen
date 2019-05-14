@@ -11,11 +11,12 @@ import { saveState } from './store/localStorage';
 import { Subject } from 'rxjs';
 import { first, debounceTime } from 'rxjs/operators';
 import { customPuzzleActions } from './store/customPuzzle';
+import { customPuzzlesStateKey } from './constants';
 
 const puzzleMap$ = new Subject();
 puzzleMap$
 	.pipe(debounceTime(500))
-	.subscribe((value) => saveState("customPuzzles", value));
+	.subscribe((value) => saveState(customPuzzlesStateKey, value));
 
 store.subscribe(() => {
 	const puzzleMap = store.getState().customPuzzle.puzzleMap;

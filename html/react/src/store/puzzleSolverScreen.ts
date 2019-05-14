@@ -3,7 +3,7 @@ import { JiggenThunkAction, Resource, StateRoot } from "../models";
 import { downloadedImagesActions } from "./downloadedImages";
 import gwtAdapter from "../gwtAdapter";
 import { downloadedTemplatesActions } from "./downloadedTemplates";
-import { backgroundsActions } from "./backgrounds";
+import { backgroundsActions, Background } from "./backgrounds";
 import { templatesActions } from "./templates";
 import { CustomPuzzle } from "./customPuzzle";
 
@@ -95,12 +95,18 @@ const reducers = handleActions({
 	initialState
 );
 
-const selectAndDownloadBackground = (link: string): JiggenThunkAction => {
+const selectAndDownloadBackground = (link: string, isCustom: boolean): JiggenThunkAction => {
     return async (dispatch, getState) => {
         const state = getState() as StateRoot;
         if (state.puzzleSolverScreen.selectedBackground !== link) {
             dispatch(puzzleSolverSelectBackground(link));
-            const background = await backgroundsActions.getOrDownloadBackground(link, dispatch, getState);
+            let background: Background;
+            if (isCustom) {
+                background = new Background(link, true);
+                backgroundsActions.setBackground(background);
+            } else {
+                background = await backgroundsActions.getOrDownloadBackground(link, dispatch, getState);
+            }
             const downloadedBackground = await downloadedImagesActions.getOrDownloadImage(background, dispatch, getState);
             gwtAdapter.setBackground(downloadedBackground);
             dispatch(puzzleSolverSetBackgroundReady());

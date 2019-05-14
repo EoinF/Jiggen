@@ -25,7 +25,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-	selectBackgroundByLink(link: string): void;
+	selectBackground(background: Background): void;
 	addBackground(background: Background): void;
 	addBackgrounds(backgrounds: Background[]): void;
 	fetchBackgrounds(): void;
@@ -59,7 +59,7 @@ class BackgroundSelectionModal extends Component<BackgroundSelectionModalProps, 
 
 	onSelectBackground = (background: Background) => {
 		this.props.addBackground(background);
-		this.props.selectBackgroundByLink(background.links.self);
+		this.props.selectBackground(background);
 		this.setState({
 			isSubmitted: true
 		});
@@ -120,7 +120,7 @@ const mapStateToProps = (state: StateRoot) => {
 
 const mapDispatchToProps = (dispatch: Function): DispatchProps => {
   return {
-		selectBackgroundByLink: (link: string) => dispatch(customPuzzleActions.selectBackground(link)),
+		selectBackground: (background: Background) => dispatch(customPuzzleActions.selectBackground(background)),
 		addBackground: (background: Background) => dispatch(backgroundsActions.setBackground(background)),
 		addBackgrounds: (backgrounds: Background[]) => dispatch(backgroundsActions.addBackgrounds(backgrounds)),
 		fetchBackgrounds: () => dispatch(backgroundsActions.fetchBackgrounds()),

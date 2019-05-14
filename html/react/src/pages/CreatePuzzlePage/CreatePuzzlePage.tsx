@@ -14,13 +14,12 @@ import { Template, templatesActions } from '../../store/templates';
 import { PlainLink, ResponsiveImage } from '../../widgets';
 import { customPuzzleActions, CustomPuzzle } from '../../store/customPuzzle';
 import { RouteComponentProps } from 'react-router';
-import TemplateWidget from '../../widgets/TemplateWidget/TemplateWidget';
 import PieceCountDisplay from '../../widgets/PieceCountDisplay/PieceCountDisplay';
 
 interface StateProps {
   customPuzzle: CustomPuzzle;
-  selectedTemplate: Template;
-  selectedBackground: Background;
+  selectedTemplate: Template | null;
+  selectedBackground: Background | null;
 }
 
 interface DispatchProps {
@@ -30,6 +29,7 @@ interface DispatchProps {
   saveCustomPuzzle(): void;
   selectCustomPuzzle(id: string | null): void;
   fetchBackgroundByLink(link: string): void;
+  addBackground(background: Background): void;
   fetchTemplateByLink(link: string): void;
 }
 
@@ -54,8 +54,13 @@ class CreatePuzzlePage extends Component<CreatePuzzlePageProps> {
     if (this.props.customPuzzle.template != null && this.props.customPuzzle.template != prevProps.customPuzzle.template) {
       this.props.fetchTemplateByLink(this.props.customPuzzle.template);
     }
-    if (this.props.customPuzzle.background != null && this.props.customPuzzle.background != prevProps.customPuzzle.background) {
-      this.props.fetchBackgroundByLink(this.props.customPuzzle.background);
+    if (this.props.customPuzzle.background != null && prevProps.customPuzzle.background != null
+       && (this.props.customPuzzle.background.links.self != prevProps.customPuzzle.background.links.self)) {
+      if (this.props.customPuzzle.background.isCustom) {
+        this.props.addBackground(this.props.customPuzzle.background)
+      } else {
+        this.props.fetchBackgroundByLink(this.props.customPuzzle.background.links.self);
+      }
     }
   }
 
@@ -135,8 +140,10 @@ class CreatePuzzlePage extends Component<CreatePuzzlePageProps> {
 const mapStateToProps = (state: StateRoot): StateProps => {
   return {
     customPuzzle: state.customPuzzle.currentPuzzle,
-    selectedTemplate: state.templates.linkMap[state.customPuzzle.currentPuzzle.template!],
-    selectedBackground: state.backgrounds.linkMap[state.customPuzzle.currentPuzzle.background!]
+    selectedTemplate: state.customPuzzle.currentPuzzle.template != null
+      ? state.templates.linkMap[state.customPuzzle.currentPuzzle.template]: null,
+    selectedBackground: state.customPuzzle.currentPuzzle.background != null 
+      ? state.backgrounds.linkMap[state.customPuzzle.currentPuzzle.background.links.self]: null
   };
 }
 
@@ -148,6 +155,7 @@ const mapDispatchToProps = (dispatch: Function): DispatchProps => {
     showTemplatesModal: () => dispatch(displayOptionsActions.showTemplatesModal()),
     saveCustomPuzzle: () => dispatch(customPuzzleActions.savePuzzle()),
     fetchBackgroundByLink: (link: string) => dispatch(backgroundsActions.fetchByLink(link)),
+    addBackground: (background: Background) => dispatch(backgroundsActions.setBackground(background)),
     fetchTemplateByLink: (link: string) => dispatch(templatesActions.fetchByLink(link))
   }
 }

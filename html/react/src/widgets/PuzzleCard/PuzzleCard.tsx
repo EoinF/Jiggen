@@ -52,8 +52,15 @@ class PuzzleCard extends Component<PuzzleCardProps, OwnState> {
         } = this.props;
         
         const templateLink = encodeURIComponent(puzzle.template!);
-        const backgroundLink = encodeURIComponent(puzzle.background!);
-        const playPuzzleLink = `/play?template=${templateLink}&background=${backgroundLink}`;
+        let playPuzzleLink: string;
+        if (puzzle.background!.isCustom) {
+            const backgroundLink = encodeURIComponent(puzzle.background!.links.image);
+            playPuzzleLink = `/play?template=${templateLink}&backgroundImage=${backgroundLink}`;
+        } else {
+            const backgroundLink = encodeURIComponent(puzzle.background!.links.self);
+            playPuzzleLink = `/play?template=${templateLink}&background=${backgroundLink}`;
+        }
+
         return <PlainLink to={playPuzzleLink}>
             <div className={styles.iconSmall} onClick={playCustomPuzzle}>
                 <img className={styles.iconImage} src={playIconSrc}/>
@@ -108,7 +115,7 @@ const mapStateToProps = (_state: any, ownProps: OwnProps) : StateProps => {
     const state = _state as StateRoot;
     return {
         template: state.templates.linkMap[ownProps.puzzle.template!],
-        background: state.backgrounds.linkMap[ownProps.puzzle.background!]
+        background: state.backgrounds.linkMap[ownProps.puzzle.background!.links.self]
     };
 }
 
@@ -116,7 +123,7 @@ const mapDispatchToProps = (dispatch: Function, ownProps: OwnProps) : DispatchPr
     return {
         deleteCustomPuzzle: () => dispatch(customPuzzleActions.deletePuzzle(ownProps.puzzle)),
         playCustomPuzzle: () => {
-            dispatch(puzzleSolverActions.selectAndDownloadBackground(ownProps.puzzle.background!));
+            dispatch(puzzleSolverActions.selectAndDownloadBackground(ownProps.puzzle.background!.links.self));
             dispatch(puzzleSolverActions.selectAndDownloadTemplate(ownProps.puzzle.template!));
         }
     };
