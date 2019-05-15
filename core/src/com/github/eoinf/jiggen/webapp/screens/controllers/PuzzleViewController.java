@@ -62,6 +62,7 @@ public class PuzzleViewController {
             }
 
             puzzleViewModel.setConnectedPiecesList(puzzlePieces);
+            shuffle();
         }
     }
 

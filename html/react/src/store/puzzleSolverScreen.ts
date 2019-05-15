@@ -5,7 +5,6 @@ import gwtAdapter from "../gwtAdapter";
 import { downloadedTemplatesActions } from "./downloadedTemplates";
 import { backgroundsActions, Background } from "./backgrounds";
 import { templatesActions } from "./templates";
-import { CustomPuzzle } from "./customPuzzle";
 
 export interface PuzzleSolverScreenState {
     isActive: boolean;

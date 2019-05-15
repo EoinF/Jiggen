@@ -114,7 +114,7 @@ class CreatePuzzlePage extends Component<CreatePuzzlePageProps> {
                 onClick={this.props.showBackgroundsModal}
               >
                 {selectedBackground && <ResponsiveImage 
-                    src={selectedBackground.links['image-compressed'] || selectedBackground.links.image} 
+                    src={selectedBackground.links['image-compressed'] || selectedBackground.links.image}
                     alt={selectedBackground.name}
                   />
                 }

@@ -12,12 +12,12 @@ import { backgroundsStateKey } from '../constants';
 export class Background extends Resource {
 	width?: number;
 	height?: number;
-	isCustom: Boolean;
-	isUpload: Boolean;
+	isCustom: boolean;
+	isUpload: boolean;
 
-	constructor(image: HTMLImageElement, isCustom?: Boolean, isUpload?: Boolean);
-	constructor(link: string, isCustom?: Boolean, isUpload?: Boolean);
-	constructor(imageOrLink: HTMLImageElement | string, isCustom: Boolean = false, isUpload: Boolean = false) {
+	constructor(image: HTMLImageElement, isCustom?: boolean, isUpload?: boolean);
+	constructor(link: string, isCustom?: boolean, isUpload?: boolean);
+	constructor(imageOrLink: HTMLImageElement | string, isCustom: boolean = false, isUpload: boolean = false) {
 		let link:string;
 		if (imageOrLink instanceof HTMLImageElement) {
 			link = imageOrLink.src;

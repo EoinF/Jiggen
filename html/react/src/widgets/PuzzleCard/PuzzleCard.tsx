@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { CustomPuzzle, customPuzzleActions } from "../../store/customPuzzle";
 import { connect } from "react-redux";
-import { Template, templatesActions } from "../../store/templates";
-import { Background, backgroundsActions } from "../../store/backgrounds";
+import { Template } from "../../store/templates";
+import { Background } from "../../store/backgrounds";
 import playIconSrc from '../../assets/play-icon.png';
 import deleteIconSrc from '../../assets/delete-icon.png';
 import editIconSrc from '../../assets/edit-icon.png';
@@ -123,7 +123,10 @@ const mapDispatchToProps = (dispatch: Function, ownProps: OwnProps) : DispatchPr
     return {
         deleteCustomPuzzle: () => dispatch(customPuzzleActions.deletePuzzle(ownProps.puzzle)),
         playCustomPuzzle: () => {
-            dispatch(puzzleSolverActions.selectAndDownloadBackground(ownProps.puzzle.background!.links.self));
+            dispatch(puzzleSolverActions.selectAndDownloadBackground(
+                    ownProps.puzzle.background!.links.self,
+                    ownProps.puzzle.background!.isCustom
+                ));
             dispatch(puzzleSolverActions.selectAndDownloadTemplate(ownProps.puzzle.template!));
         }
     };

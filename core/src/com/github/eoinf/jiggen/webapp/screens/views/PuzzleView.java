@@ -52,11 +52,7 @@ public class PuzzleView implements ScreenView {
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
                 if (keycode == Input.Keys.SPACE) {
-                    puzzleViewController.shuffle();
-                } else if (keycode == Input.Keys.T) {
-//                    puzzleViewModel.centreCamera();
-//                    boundedCamera.setX(worldWidth / 2);
-//                    boundedCamera.setY(worldHeight / 2);
+                    puzzleViewController.showShuffleModal();
                 }
                 return super.keyDown(event, keycode);
             }
