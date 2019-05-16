@@ -18,10 +18,12 @@
 }
 
 .templatesContainer {
+	flex: 1;
 	background: $purple200;
 }
 
 
 .noTemplatesMessage {
+	flex: 1;
 	padding: 1rem;
 }

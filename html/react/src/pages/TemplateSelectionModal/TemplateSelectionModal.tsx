@@ -127,7 +127,7 @@ class TemplateSelectionModal extends Component<TemplateSelectionProps, TemplateS
 							<span>Choose a Template</span>
 						</h1>
 						{isTemplateSliderVisible &&
-							<TemplateSelectionSlider 
+							<TemplateSelectionSlider
 								minPieces={domainMin} 
 								maxPieces={domainMax}
 								onChange={this.onChangeSlider}
