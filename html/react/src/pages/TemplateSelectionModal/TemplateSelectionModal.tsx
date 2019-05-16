@@ -11,6 +11,7 @@ import { Redirect } from 'react-router';
 import { customPuzzleActions } from '../../store/customPuzzle';
 import TemplateWidget from '../../widgets/TemplateWidget/TemplateWidget';
 import TemplateSelectionSlider from './TemplateSelectionSlider/TemplateSelectionSlider';
+import { getSortedTemplates } from '../../store/selectors';
 
 
 interface TemplateSelectionState {
@@ -156,8 +157,8 @@ class TemplateSelectionModal extends Component<TemplateSelectionProps, TemplateS
 
 const mapStateToProps = (state: StateRoot): StateProps => {
   return {
-    templates: Object.values(state.templates.linkMap),
-		customPuzzleId: state.customPuzzle.currentPuzzle.id
+    templates: getSortedTemplates(state),
+	customPuzzleId: state.customPuzzle.currentPuzzle.id
   }
 }
 
