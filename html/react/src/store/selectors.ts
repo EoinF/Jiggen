@@ -16,7 +16,6 @@ export const getPlayablePuzzles = createSelector(
     }
 );
 
-
 export const getSortedTemplates = createSelector(
   [getTemplates],
   (templates: Template[]) => {

@@ -128,13 +128,15 @@ class TemplateSelectionModal extends Component<TemplateSelectionProps, TemplateS
 							<span>Choose a Template</span>
 						</h1>
 						{isTemplateSliderVisible &&
-							<TemplateSelectionSlider
-								minPieces={domainMin} 
-								maxPieces={domainMax}
-								onChange={this.onChangeSlider}
-								valueMin={valueMin}
-								valueMax={valueMax}
-							/>
+							<div className={styles.templateSelectionSliderContainer}>
+								<TemplateSelectionSlider 
+									minPieces={domainMin} 
+									maxPieces={domainMax}
+									onChange={this.onChangeSlider}
+									valueMin={valueMin}
+									valueMax={valueMax}
+								/>
+							</div>
 						}
 						{ (this.state.filteredTemplates.length === 0) ?
 						<div className={styles.noTemplatesMessage}>No templates match your current search</div>

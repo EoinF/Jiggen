@@ -1,9 +1,12 @@
 @import '../../vars.scss';
 
-.templateSelectionContainer {
-		position: relative;
-		display: flex;
-		margin-bottom: 0.125rem;
-		min-height: 20vh;
-		min-width: 80vw;
+.mainContainer, .loading {
+	position: relative;
+	display: flex;
+	margin-bottom: 0.125rem;
+}
+
+.loading {
+	min-height: 20vh;
+	min-width: 50vh;
 }
