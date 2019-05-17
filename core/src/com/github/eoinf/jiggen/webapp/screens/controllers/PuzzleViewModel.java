@@ -95,7 +95,6 @@ public class PuzzleViewModel {
     //
     // Start a new puzzle
     //
-
     private SimpleSubject<List<ConnectedPuzzlePieces>> connectedPiecesListSubject;
 
     public SimpleObservable<List<ConnectedPuzzlePieces>> getConnectedPiecesListObservable() {

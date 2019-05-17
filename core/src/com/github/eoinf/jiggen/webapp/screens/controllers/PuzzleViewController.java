@@ -1,5 +1,6 @@
 package com.github.eoinf.jiggen.webapp.screens.controllers;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.GridPoint2;
@@ -25,6 +26,7 @@ import static com.github.eoinf.jiggen.webapp.utils.PixmapUtils.getMinimumScaleTo
 public class PuzzleViewController {
     private static float WORLD_BASE_PADDING = 20;
     private final Jiggen game;
+    private static GridPoint2 previousViewportSize;
 
     private PuzzleViewModel puzzleViewModel;
     private HeldPieceController heldPieceController;
@@ -34,6 +36,7 @@ public class PuzzleViewController {
         this.game = game;
         this.puzzleViewModel = puzzleViewModel;
         this.worldBoundedCamera = worldBoundedCamera;
+        previousViewportSize = new GridPoint2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         heldPieceController = new HeldPieceController(puzzleViewModel, this, worldBoundedCamera);
     }
 
@@ -66,45 +69,69 @@ public class PuzzleViewController {
         }
     }
 
-    public void updateWorldBounds(float viewportWidth, float viewportHeight) {
+    public void updateWorldBounds(int viewportWidth, int viewportHeight) {
         Vector2 scales = puzzleViewModel.getScalesObservable().getValue();
         PuzzleGraphTemplate puzzleGraphTemplate = puzzleViewModel.getPuzzleTemplateObservable().getValue();
         if (scales != null && puzzleGraphTemplate != null) {
-            float padding = WORLD_BASE_PADDING +
-                    // 10% of the width + height so it scales well
-                    (puzzleGraphTemplate.getWidth() * scales.x + puzzleGraphTemplate.getHeight() * scales.y) / 10f;
-
-            // Calculate the minimum required world width for the puzzle to be maximally visible
-            int worldWidth = (int) (puzzleGraphTemplate.getWidth() * scales.x + padding);
-            int worldHeight = (int) (puzzleGraphTemplate.getHeight() * scales.y + padding);
-
-            // Ensure all the puzzle pieces will remain within the world bounds
-            for (ConnectedPuzzlePieces connectedPieces: puzzleViewModel.getConnectedPiecesListObservable().getValue()) {
-                int maxX = (int)(connectedPieces.getPosition().x + connectedPieces.getWidth());
-                int maxY = (int)(connectedPieces.getPosition().y + connectedPieces.getHeight());
-
-                if (worldWidth < maxX) {
-                    worldWidth = maxX;
-                }
-                if (worldHeight < maxY) {
-                    worldHeight = maxY;
-                }
-            }
-
-            // Calculate the minimum required world width for the puzzle to be maximally visible
-            worldWidth = Math.max(worldWidth, (int)viewportWidth);
-            worldHeight = Math.max(worldHeight, (int)viewportHeight);
-
-            // Allocate extra space so the world bounds match the viewport when fully zoomed out
-            double heightRatio = worldHeight / viewportHeight;
-            double widthRatio = worldWidth / viewportWidth;
-            if (heightRatio > widthRatio) {
-                worldWidth = (int)(viewportWidth * heightRatio);
-            } else {
-                worldHeight = (int)(viewportHeight * widthRatio);
-            }
-            puzzleViewModel.setWorldBounds(new GridPoint2(worldWidth, worldHeight));
+            adjustConnectedPiecesToViewport(viewportWidth, viewportHeight);
+            adjustWorldBoundsToViewport(puzzleGraphTemplate, scales, viewportWidth, viewportHeight);
         }
+    }
+
+    /**
+     * Adjusts the puzzle piece positions so they remain in the same relative location when screen is resized
+     * @param viewportWidth new viewport width
+     * @param viewportHeight new viewport height
+     */
+    private void adjustConnectedPiecesToViewport(int viewportWidth, int viewportHeight) {
+        List<ConnectedPuzzlePieces> puzzlePiecesList = puzzleViewModel.getConnectedPiecesListObservable().getValue();
+        float diffX = viewportWidth / (float)previousViewportSize.x;
+        float diffY = (float)viewportHeight /  (float)previousViewportSize.y;
+        for (ConnectedPuzzlePieces connectedPieces: puzzlePiecesList) {
+            Vector2 position = connectedPieces.getPosition();
+            connectedPieces.setPosition(new Vector2(position.x * diffX, position.y * diffY));
+        }
+        puzzleViewModel.setConnectedPiecesList(puzzlePiecesList);
+    }
+
+    private void adjustWorldBoundsToViewport(PuzzleGraphTemplate puzzleGraphTemplate, Vector2 scales,
+                                             int viewportWidth, int viewportHeight) {
+        List<ConnectedPuzzlePieces> puzzlePiecesList = puzzleViewModel.getConnectedPiecesListObservable().getValue();
+
+        float padding = WORLD_BASE_PADDING +
+                // 5% of the width + height so it scales well
+                (puzzleGraphTemplate.getWidth() * scales.x + puzzleGraphTemplate.getHeight() * scales.y) / 20f;
+
+        // Calculate the minimum required world width for the puzzle to be maximally visible
+        int worldWidth = (int) (puzzleGraphTemplate.getWidth() * scales.x + padding);
+        int worldHeight = (int) (puzzleGraphTemplate.getHeight() * scales.y + padding);
+
+        // Ensure all the puzzle pieces will remain within the world bounds
+        for (ConnectedPuzzlePieces connectedPieces: puzzlePiecesList) {
+            int maxX = (int)(connectedPieces.getPosition().x + connectedPieces.getWidth());
+            int maxY = (int)(connectedPieces.getPosition().y + connectedPieces.getHeight());
+
+            if (worldWidth < maxX) {
+                worldWidth = maxX;
+            }
+            if (worldHeight < maxY) {
+                worldHeight = maxY;
+            }
+        }
+
+        // Calculate the minimum required world width for the puzzle to be maximally visible
+        worldWidth = Math.max(worldWidth, viewportWidth);
+        worldHeight = Math.max(worldHeight, viewportHeight);
+
+        // Allocate extra space so the world bounds match the viewport when fully zoomed out
+        double heightRatio = worldHeight / (float)viewportHeight;
+        double widthRatio = worldWidth / (float)viewportWidth;
+        if (heightRatio > widthRatio) {
+            worldWidth = (int)(viewportWidth * heightRatio);
+        } else {
+            worldHeight = (int)(viewportHeight * widthRatio);
+        }
+        puzzleViewModel.setWorldBounds(new GridPoint2(worldWidth, worldHeight));
     }
 
     public void zoomBy(float zoomDelta) {
@@ -152,6 +179,7 @@ public class PuzzleViewController {
 
     public void resizeScreen(int width, int height) {
         puzzleViewModel.resizeScreen(width, height);
+        previousViewportSize = new GridPoint2(width, height);
     }
 
     public void pickUpPiece(ConnectedPuzzlePieces piece, Vector2 mouseOffset) {
