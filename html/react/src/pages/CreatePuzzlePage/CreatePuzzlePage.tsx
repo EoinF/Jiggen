@@ -7,6 +7,9 @@ import SelectionWidget from './SelectionWidget';
 
 import templateLogo from '../../assets/template-icon.png';
 import backgroundLogo from './Background-icon.png';
+import saveIcon from '../../assets/tick-icon.png';
+import cancelIcon from '../../assets/back-icon.png';
+
 import { Background, backgroundsActions } from '../../store/backgrounds';
 import { StateRoot } from '../../models';
 import { displayOptionsActions } from '../../store/displayOptions';
@@ -121,16 +124,20 @@ class CreatePuzzlePage extends Component<CreatePuzzlePageProps> {
               </SelectionWidget>
           </div>
           <div className={styles.buttonControls}>
+            <PlainLink to="/custom">
+              <button className={styles.iconSmall}>
+                <img src={cancelIcon}/>
+              </button>
+            </PlainLink>
             { isReady ? ( 
               <PlainLink to="/custom">
-                <button onClick={this.props.saveCustomPuzzle} className={styles.save}>Save</button>
+                <button onClick={this.props.saveCustomPuzzle} className={styles.iconSmall}>
+                <img src={saveIcon}/></button>
             </PlainLink> ) : (
-              <button disabled onClick={this.props.saveCustomPuzzle} className={styles.save}>Save</button>
+              <button disabled onClick={this.props.saveCustomPuzzle} className={styles.iconSmall}>
+              <img src={saveIcon}/></button>
               )
             }
-            <PlainLink to="/custom">
-              <button className={styles.cancel}>Cancel</button>
-            </PlainLink>
           </div>
         </div>
     );
