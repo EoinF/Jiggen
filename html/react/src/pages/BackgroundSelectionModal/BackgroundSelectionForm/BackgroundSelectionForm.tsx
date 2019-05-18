@@ -37,7 +37,7 @@ class BackgroundSelectionForm extends Component<BackgroundSelectionFormProps, Ba
 
 	onValidUploadImage = (image: HTMLImageElement) => {
 		this.setState({
-			validBackgroundImage: new Background(image, false, true)
+			validBackgroundImage: new Background(image, true, true)
 		})
 	}
 	
