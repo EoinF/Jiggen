@@ -36,6 +36,12 @@ h1, h2 {
 }
 
 .iconSmall {
+  &:disabled {
+    opacity: 0.4;
+    cursor: initial;
+    background: $grey200;
+  }
+
   display: flex;
   width: fit-content;
   height: fit-content;
@@ -44,7 +50,7 @@ h1, h2 {
 
   border: none;
   border-radius: 18px;
-  padding: 2px;
+  padding: 0.125rem;
   margin: 0.2rem;
   background-image: radial-gradient($purple400, $purple300);
   .iconImage {
