@@ -84,60 +84,62 @@ class CreatePuzzlePage extends Component<CreatePuzzlePageProps> {
 
     return (
         <div className={styles.mainContainer}>
-          <div className={styles.inputField}>
-            <div className={styles.inputContainer}>
-              <input 
-                maxLength={24}
-                value={customPuzzle.name}
-                onChange={this.onChangeName}
-              />
+          <div className={styles.controlsContainer}>
+            <div className={styles.inputField}>
+              <div className={styles.inputContainer}>
+                <input 
+                  maxLength={24}
+                  value={customPuzzle.name}
+                  onChange={this.onChangeName}
+                />
+              </div>
             </div>
-          </div>
-          <div className={styles.selectionContainer}>
-              <SelectionWidget
-                selection={selectedTemplate}
-                fallbackImageSrc={templateLogo}
-                notSelectedCaption='Choose a Template'
-                onClick={this.props.showTemplatesModal}
-              >
-                {
-                  selectedTemplate && <div className={styles.templateSelectionContainer}>
-                    <ResponsiveImage 
-                      src={selectedTemplate.links['image-compressed'] || selectedTemplate.links.image} 
-                      alt={selectedTemplate.name}
+            <div className={styles.selectionContainer}>
+                <SelectionWidget
+                  selection={selectedTemplate}
+                  fallbackImageSrc={templateLogo}
+                  notSelectedCaption='Choose a Template'
+                  onClick={this.props.showTemplatesModal}
+                >
+                  {
+                    selectedTemplate && <div className={styles.templateSelectionContainer}>
+                      <ResponsiveImage 
+                        src={selectedTemplate.links['image-compressed'] || selectedTemplate.links.image} 
+                        alt={selectedTemplate.name}
+                      />
+                      <PieceCountDisplay count={selectedTemplate.pieces} />
+                    </div>
+                  }
+                </SelectionWidget>
+                <SelectionWidget
+                  selection={selectedBackground}
+                  fallbackImageSrc={backgroundLogo}
+                  notSelectedCaption='Choose a Background'
+                  onClick={this.props.showBackgroundsModal}
+                >
+                  {selectedBackground && <ResponsiveImage 
+                      src={selectedBackground.links['image-compressed'] || selectedBackground.links.image}
+                      alt={selectedBackground.name}
                     />
-                    <PieceCountDisplay count={selectedTemplate.pieces} />
-                  </div>
-                }
-              </SelectionWidget>
-              <SelectionWidget
-                selection={selectedBackground}
-                fallbackImageSrc={backgroundLogo}
-                notSelectedCaption='Choose a Background'
-                onClick={this.props.showBackgroundsModal}
-              >
-                {selectedBackground && <ResponsiveImage 
-                    src={selectedBackground.links['image-compressed'] || selectedBackground.links.image}
-                    alt={selectedBackground.name}
-                  />
-                }
-              </SelectionWidget>
-          </div>
-          <div className={styles.buttonControls}>
-            <PlainLink to="/custom">
-              <button className={styles.iconSmall}>
-                <img src={cancelIcon}/>
-              </button>
-            </PlainLink>
-            { isReady ? ( 
+                  }
+                </SelectionWidget>
+            </div>
+            <div className={styles.buttonControls}>
               <PlainLink to="/custom">
-                <button onClick={this.props.saveCustomPuzzle} className={styles.iconSmall}>
+                <button className={styles.iconSmall}>
+                  <img src={cancelIcon}/>
+                </button>
+              </PlainLink>
+              { isReady ? ( 
+                <PlainLink to="/custom">
+                  <button onClick={this.props.saveCustomPuzzle} className={styles.iconSmall}>
+                  <img src={saveIcon}/></button>
+              </PlainLink> ) : (
+                <button disabled onClick={this.props.saveCustomPuzzle} className={styles.iconSmall}>
                 <img src={saveIcon}/></button>
-            </PlainLink> ) : (
-              <button disabled onClick={this.props.saveCustomPuzzle} className={styles.iconSmall}>
-              <img src={saveIcon}/></button>
-              )
-            }
+                )
+              }
+            </div>
           </div>
         </div>
     );

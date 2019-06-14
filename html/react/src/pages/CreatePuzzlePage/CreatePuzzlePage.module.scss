@@ -3,10 +3,18 @@
 .mainContainer {
   flex: 1;
 
-  margin: 0.25rem 0;
+  display: flex;
+  justify-content: center;
 
+  margin: 0.25rem 0;
+}
+
+.controlsContainer {
   display: grid;
   grid-template-rows: auto 1fr auto; 
+  
+  flex: 1;
+  max-width: 35rem;
 }
 
 h1, h2 {
@@ -60,18 +68,6 @@ h1, h2 {
   }
 }
 
-.save {
-  color: #00ff00;
-  
-  &:disabled {
-    color: green;
-  }
-}
-
-.cancel {
-  color: #ffc04a;
-}
-
 .inputField {
   display: flex;
   flex-flow: row nowrap;
@@ -110,14 +106,11 @@ h1, h2 {
 
   .inputField {
     grid-row: 2;
-    // order: 1;
   }
 
   .buttonControls {
     grid-row: 2;
-    // order: 2;
   }
-  
 }
 
 .templateSelectionContainer {
