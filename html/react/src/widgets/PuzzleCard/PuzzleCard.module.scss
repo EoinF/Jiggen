@@ -1,90 +1,243 @@
 @import '../../vars.scss';
 
-.mainContainer {
-    position: relative;
-    flex: 1;
+// Mobile design
+@media(max-width: 550px) {
+    .mainContainer {
+        position: relative;
+        flex: 1;
 
-    // Tablet/Desktop
-    max-width: 18rem;
+        max-width: 18rem;
+        
+        margin: 0.5rem;
+    }
+
+    .mainContent {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        justify-content: space-around;
+
+        border: 1px solid white;
+        border-radius: 30px;
+        padding: 0 0.75rem;
+        height: 4rem;
+    }
     
-    margin: 0.5rem;
-}
+    .puzzleCardGroup {
+        flex: 1;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-around;
+    }
 
-.mainContent {
-    display: flex;
-    flex-flow: row nowrap;
-    align-items: center;
-    justify-content: space-between;
+    .icon {
+        position: relative;
+        display: flex;
+        flex-flow: column nowrap;
+        width: fit-content;
+        height: fit-content;
+        
+        .iconImage {
+            width: 48px;
+            height: 48px;
+            box-sizing: content-box;
+            border: 1px solid black;
+            border-radius: 12px;
+        }
+    }
+    .iconSmall {
+        display: flex;
+        width: fit-content;
+        height: fit-content;
+        border-radius: 18px;
+        padding: 2px;
+        background-image: radial-gradient($purple400, $purple300);
+        .iconImage {
+            width: 32px;
+            height: 32px;
+            box-sizing: content-box;
+        }
+    }
 
-    border: 1px solid white;
-    border-radius: 30px;
-    padding: 0 0.75rem;
-    height: 4rem;
-}
+    .iconFull {
+        display: none;
+    }
 
-.icon {
-    position: relative;
-    display: flex;
-    flex-flow: column nowrap;
-    width: fit-content;
-    height: fit-content;
-    
-    .iconImage {
-        width: 48px;
-        height: 48px;
-        box-sizing: content-box;
-        border: 1px solid black;
-        border-radius: 12px;
+    .cardTitleContainer {
+        position: absolute;
+        top: -0.5rem;
+        right: 1.5rem;
+    }
+
+    .cardTitleBackground {
+        width: 100%;
+        position: relative;
+        top: -0.8rem;
+        height: 0.5rem;
+        z-index: 1;
+        background: $purple200;
+    }
+
+    .cardTitle {
+        padding: 0 0.25rem;
+        position: relative;
+        z-index: 2;
+
+        white-space: nowrap;
+        font-size: 1rem;
+    }
+
+    .templateSelectionContainer {
+        position: relative;
+    }
+
+    .highlightedText {
+        font-weight: bold;
+        color: $purple600;
+        animation: textPulse 1s ease-in 0s infinite alternate
     }
 }
-.iconSmall {
-    display: flex;
-    width: fit-content;
-    height: fit-content;
-    border-radius: 18px;
-    padding: 2px;
-    background-image: radial-gradient($purple400, $purple300);
-    .iconImage {
-        width: 32px;
-        height: 32px;
-        box-sizing: content-box;
+
+// Tablet/desktop design
+@media(min-width: 551px) {
+    .mainContainer {
+        position: relative;
+        flex: 1;
+
+        max-width: 30rem;
+        
+        margin: 1rem;
+    }
+
+    .mainContent {
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: center;
+        justify-content: space-between;
+
+        border: 1px solid white;
+
+        border-radius: 30px;
+        padding: 0.75rem;
+    }
+
+    .puzzleCardGroup {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        
+        &:first-child {
+            height: 16rem;
+        }
+    }
+
+    .icon {
+        position: relative;
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+
+        flex: 1;
+        margin: 0.25rem;
+        max-height: fit-content;
+        max-width: fit-content;
+        width: 100%;
+        height: 100%;
+        
+        .iconImage {
+            min-width: 3rem;
+            min-height: 3rem;
+
+            height: auto;
+            max-height: 100%;
+            max-width: 100%;
+            box-sizing: content-box;
+            border: 1px solid black;
+            border-radius: 12px;
+        }
+    }
+
+    .iconFull {
+        height: inherit;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .iconMinimal {
+        display: none;
+    }
+
+    .iconSmall {
+        display: flex;
+        align-items: center;
+        
+        width: fit-content;
+        height: fit-content;
+        border: 1px solid $black;
+        border-radius: 24px;
+        padding: 0.25rem 1rem 0.25rem;
+        margin: 0.125rem 0.25rem;
+        background-image: radial-gradient($purple400, $purple300);
+        .iconImage {
+            margin-right: 0.25rem;
+            width: 32px;
+            height: 32px;
+            box-sizing: content-box;
+        }
+    }
+
+    .playIcon::after {
+        font-size: 1.25rem;
+        content: "Play";
+    }
+    .editIcon::after {
+        font-size: 1.25rem;
+        content: "Edit";
+    }
+    .deleteIcon::after {
+        font-size: 1.25rem;
+        content: "Delete";
+    }
+
+
+    .cardTitleContainer {
+        position: absolute;
+        top: -1rem;
+        right: 1.5rem;
+    }
+
+    .cardTitleBackground {
+        width: 100%;
+        position: relative;
+        top: -0.8rem;
+        height: 0.5rem;
+        z-index: 1;
+        background: $purple200;
+    }
+
+    .cardTitle {
+        padding: 0 0.25rem;
+        position: relative;
+        z-index: 2;
+
+        white-space: nowrap;
+        font-size: 1.5rem;
+    }
+
+    .templateSelectionContainer {
+        flex: 1;
+        position: relative;
+    }
+
+    .highlightedText {
+        font-weight: bold;
+        color: $purple600;
+        animation: textPulse 1s ease-in 0s infinite alternate
     }
 }
 
-
-.cardTitleContainer {
-    position: absolute;
-    top: -0.5rem;
-    right: 1.5rem;
-}
-
-.cardTitleBackground {
-    width: 100%;
-    position: relative;
-    top: -0.8rem;
-    height: 0.5rem;
-    z-index: 1;
-    background: $purple200;
-}
-
-.cardTitle {
-    padding: 0 0.25rem;
-    position: relative;
-    z-index: 2;
-
-    white-space: nowrap;
-    font-size: 1rem;
-}
-
-.templateSelectionContainer {
-    position: relative;
-}
-
-.highlightedText {
-    font-weight: bold;
-    color: $purple600;
-    animation: textPulse 1s ease-in 0s infinite alternate
-}
 
 @keyframes textPulse {
     from {

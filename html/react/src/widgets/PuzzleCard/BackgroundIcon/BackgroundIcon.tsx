@@ -8,11 +8,11 @@ import { StateRoot } from "../../../models";
 import ProgressBar from "../ProgressBar/ProgressBar";
 
 interface OwnProps {
-    background: Background;
+    background: Background | null;
 }
 
 interface StateProps {
-    downloadedBackground: DownloadedImage;
+    downloadedBackground: DownloadedImage | null;
 }
 
 type BackgroundIconProps = OwnProps & StateProps;

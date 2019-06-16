@@ -24,8 +24,8 @@ interface OwnState {
 }
 
 interface StateProps {
-    template: Template;
-    background: Background;
+    template: Template | null;
+    background: Background | null;
 }
 
 interface DispatchProps {
@@ -62,7 +62,7 @@ class PuzzleCard extends Component<PuzzleCardProps, OwnState> {
         }
 
         return <PlainLink to={playPuzzleLink}>
-            <div className={styles.iconSmall} onClick={playCustomPuzzle}>
+            <div className={[styles.iconSmall, styles.playIcon].join(" ")} onClick={playCustomPuzzle}>
                 <img className={styles.iconImage} src={playIconSrc}/>
             </div>
         </PlainLink>;
@@ -82,16 +82,20 @@ class PuzzleCard extends Component<PuzzleCardProps, OwnState> {
                 <div className={styles.cardTitleBackground}/>
             </div>
             <div className={styles.mainContent}>
-                <BackgroundIcon background={background} />
-                <TemplateIcon template={template} />
-                <this.PlayButton/>
-                <PlainLink to={`/custom/${puzzle.id}`}>
-                    <div className={styles.iconSmall}>
-                        <img className={styles.iconImage} src={editIconSrc}/>
+                <div className={styles.puzzleCardGroup}>
+                    <BackgroundIcon background={background} />
+                    <TemplateIcon template={template} />
+                </div>
+                <div className={styles.puzzleCardGroup}>
+                    <this.PlayButton/>
+                    <PlainLink to={`/custom/${puzzle.id}`}>
+                        <div className={[styles.iconSmall, styles.editIcon].join(" ")}>
+                            <img className={styles.iconImage} src={editIconSrc}/>
+                        </div>
+                    </PlainLink>
+                    <div className={[styles.iconSmall, styles.deleteIcon].join(" ")} onClick={deleteCustomPuzzle}>
+                        <img className={styles.iconImage} src={deleteIconSrc}/>
                     </div>
-                </PlainLink>
-                <div className={styles.iconSmall} onClick={deleteCustomPuzzle}>
-                    <img src={deleteIconSrc}/>
                 </div>
             </div>
             {
@@ -114,8 +118,8 @@ class PuzzleCard extends Component<PuzzleCardProps, OwnState> {
 const mapStateToProps = (_state: any, ownProps: OwnProps) : StateProps => {
     const state = _state as StateRoot;
     return {
-        template: state.templates.linkMap[ownProps.puzzle.template!],
-        background: state.backgrounds.linkMap[ownProps.puzzle.background!.links.self]
+        template: ownProps.puzzle.template != null ? state.templates.linkMap[ownProps.puzzle.template]: null,
+        background: ownProps.puzzle.background && state.backgrounds.linkMap[ownProps.puzzle.background.links.self]
     };
 }
 

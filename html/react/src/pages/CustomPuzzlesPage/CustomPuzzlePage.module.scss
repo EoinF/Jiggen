@@ -1,40 +1,75 @@
 @import '../../vars.scss';
 
 .mainContainer {
+    flex: 1;
     padding: 1.5rem;
     display: flex;
     flex-flow: row wrap;
-    justify-content: space-around;
+    justify-content: center;
+    align-content: flex-start;
     justify-items: center;
 }
 
-.puzzleCardContainer {
-    display: flex;
 
-    // Tablet/Desktop
-    max-width: 18rem;
-    margin: 0.5rem;
-    flex: 1;
+// Mobile design
+@media(max-width: 550px) {
+    .puzzleCardContainer {
+        display: flex;
 
-    > a {
-        width: 100%;
+        min-width: 14rem;
+        max-width: 18rem;
+        margin: 0.5rem;
+        flex: 1;
+
+        > a {
+            width: 100%;
+        }
+    }
+
+    .puzzleCardContent {
+        display: flex;
+        align-items: center;
+        padding: 0 1.5rem;
+        height: 4rem;
+        
+        border: 2px dotted $purple500;
+        border-radius: 30px;
+
+        .plusIcon {
+            padding-right: 1rem;
+            font-size: 2rem;
+        }
+        .description {
+            flex: 1;
+        }
     }
 }
 
-.puzzleCardContent {
-    display: flex;
-    align-items: center;
-    padding: 0 1.5rem;
-    height: 4rem;
-    
-    border: 2px dotted $purple500;
-    border-radius: 30px;
-
-    .plusIcon {
-        padding-right: 1rem;
-        font-size: 2rem;
+// Tablet/desktop design
+@media(min-width: 551px) {
+    .puzzleCardContainer {
+        display: flex;
+        width: 30rem;
+        margin: 1rem;
+        
+        > a {
+            margin: auto;
+        }
     }
-    .description {
-        flex: 1;
+
+    .puzzleCardContent {
+        display: flex;
+        align-items: center;
+        border: 2px dotted $purple500;
+        border-radius: 40px;
+
+        padding: 0 2rem;
+        height: 4.5rem;
+        .plusIcon {
+            padding-right: 1rem;
+        }
+        .description {
+            flex: 1;
+        }
     }
 }

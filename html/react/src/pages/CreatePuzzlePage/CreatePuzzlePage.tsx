@@ -18,6 +18,7 @@ import { PlainLink, ResponsiveImage } from '../../widgets';
 import { customPuzzleActions, CustomPuzzle } from '../../store/customPuzzle';
 import { RouteComponentProps } from 'react-router';
 import PieceCountDisplay from '../../widgets/PieceCountDisplay/PieceCountDisplay';
+import TemplateDisplay from '../../widgets/TemplateDisplay/TemplateDisplay';
 
 interface StateProps {
   customPuzzle: CustomPuzzle;
@@ -102,13 +103,7 @@ class CreatePuzzlePage extends Component<CreatePuzzlePageProps> {
                   onClick={this.props.showTemplatesModal}
                 >
                   {
-                    selectedTemplate && <div className={styles.templateSelectionContainer}>
-                      <ResponsiveImage 
-                        src={selectedTemplate.links['image-compressed'] || selectedTemplate.links.image} 
-                        alt={selectedTemplate.name}
-                      />
-                      <PieceCountDisplay count={selectedTemplate.pieces} />
-                    </div>
+                    selectedTemplate && <TemplateDisplay template={selectedTemplate} />
                   }
                 </SelectionWidget>
                 <SelectionWidget
