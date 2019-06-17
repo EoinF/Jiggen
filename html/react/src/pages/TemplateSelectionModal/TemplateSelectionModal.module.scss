@@ -3,7 +3,7 @@
 .mainContainer {
     display: flex;
     flex-flow: column nowrap;
-    max-width: 90rem;
+    max-width: 70rem;
 	flex: 1;
 	
 	width: 100%;
@@ -23,7 +23,9 @@
 }
 
 .templateSelectionSliderContainer {
+	width: 100%;
 	max-width: 40rem;
+	margin: auto;
 }
 
 .noTemplatesMessage {

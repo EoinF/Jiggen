@@ -27,7 +27,7 @@ h1, h2 {
 .selectionContainer {
   margin: 0 0.5rem;
   display: flex;
-  flex-flow: column nowrap;
+  flex-flow: column wrap;
   flex: 1;
   justify-content: center;
 

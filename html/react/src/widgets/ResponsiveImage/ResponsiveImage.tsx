@@ -20,10 +20,12 @@ class ResponsiveImage extends Component<ResponsiveImageProps> {
 
 		return (
 			<div className={styles.mainContainer}>
-				<img
-					src={src}
-					alt={alt}
-				/>
+				<div className={styles.innerContainer}>
+					<img
+						src={src}
+						alt={alt}
+					/>
+				</div>
 			</div>
 		);
 	}

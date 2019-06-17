@@ -12,7 +12,7 @@
 
 
 // Mobile design
-@media(max-width: 550px) {
+@media (max-width: 550px), (max-height: 550px) {
     .puzzleCardContainer {
         display: flex;
 
@@ -30,6 +30,7 @@
         display: flex;
         align-items: center;
         padding: 0 1.5rem;
+        width: 18rem;
         height: 4rem;
         
         border: 2px dotted $purple500;
@@ -46,7 +47,7 @@
 }
 
 // Tablet/desktop design
-@media(min-width: 551px) {
+@media (min-width: 551px) and (min-height: 551px) {
     .puzzleCardContainer {
         display: flex;
         width: 30rem;

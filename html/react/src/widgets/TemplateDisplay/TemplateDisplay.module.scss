@@ -6,13 +6,14 @@
     align-items: center;
     justify-content: center;
     position: relative;
+    
+    margin: auto;
 }
 
 .templateImage {
     min-width: 3rem;
     min-height: 3rem;
 
-    height: auto;
     max-height: 100%;
     max-width: 100%;
     box-sizing: content-box;
