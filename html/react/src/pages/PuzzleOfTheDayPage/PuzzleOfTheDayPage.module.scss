@@ -48,7 +48,7 @@ h1 {
 }
 
 .backgroundContainer {
-	flex: 10;
+	flex: 1;
 	width: 100%;
     max-width: calc(20vw + 50vh);
 	margin: 0 0.5rem;
@@ -59,16 +59,22 @@ h1 {
 }
 
 .pieceCountContainer {
-	flex: 2;
     display: flex;
     flex-flow: row nowrap;
     justify-content: center;
     align-items: flex-start;
+    margin: 1rem auto;
 }
 
 .playButtonContainer {
-	flex: 1;
 	margin: 0 0.25rem;
+}
+
+.controlsContainer {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    flex-flow: column nowrap;
 }
 
 

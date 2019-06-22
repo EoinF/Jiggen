@@ -93,18 +93,19 @@ class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps, any> {
                   </div>
               }
             </div>
-
-            <div className={styles.pieceCountContainer}>
-              { puzzles.map(puzzle => <div key={puzzle.links.self}>
-                <PieceCountSelection
-                  isSelected={ selectedPuzzle === puzzle}
-                  puzzle={puzzle}
-                  onClick={() => this.onSelectPieceCount(puzzle.links.self)} />
-                </div>
-              )}
-            </div>
-            <div className={styles.playButtonContainer}>
-              { selectedBackground && <this.PlayButton/> }
+            <div className={styles.controlsContainer}>
+              <div className={styles.pieceCountContainer}>
+                { puzzles.map(puzzle => <div key={puzzle.links.self}>
+                  <PieceCountSelection
+                    isSelected={ selectedPuzzle === puzzle}
+                    puzzle={puzzle}
+                    onClick={() => this.onSelectPieceCount(puzzle.links.self)} />
+                  </div>
+                )}
+              </div>
+              <div className={styles.playButtonContainer}>
+                { selectedBackground && <this.PlayButton/> }
+              </div>
             </div>
           </div>
         </div>
