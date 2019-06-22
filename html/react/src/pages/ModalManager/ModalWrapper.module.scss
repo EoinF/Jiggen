@@ -19,6 +19,24 @@
 }
 
 .innerContainer {
+    // position: relative;
+    max-width: 70rem;
     height: 100%;
     overflow-y: auto;
+    overflow-x: visible;
+}
+
+.closeButton {
+    cursor: pointer;
+    // width: 0;
+    top: 0;
+    position: absolute;
+    margin-top: 0;
+    transform: translate(-50%);
+}
+
+@media (min-width: $breakpoint-width-mobile) {
+    .closeButton {
+        transform: translate(50%);
+    }
 }

@@ -14,8 +14,8 @@ type ModalWrapperProps = DispatchProps;
 class ModalWrapper extends Component<ModalWrapperProps> {
     render() {
         return <div className={styles.mainContainer}>
-            <div className={styles.closeButton} onClick={this.props.closeModal}>x</div>
             <div className={styles.innerContainer}>
+        <div className={styles.closeButton} onClick={this.props.closeModal}>x</div> 
                 {this.props.children}
             </div>
         </div>;
