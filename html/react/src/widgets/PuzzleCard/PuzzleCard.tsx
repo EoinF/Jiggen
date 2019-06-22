@@ -41,7 +41,7 @@ class PuzzleCard extends Component<PuzzleCardProps, OwnState> {
     }
 
     componentDidUpdate(prevProps: PuzzleCardProps) {
-        if (this.props.puzzle.isDownloaded && this.props.puzzle.isDownloaded != prevProps.puzzle.isDownloaded) {
+        if (this.props.puzzle.isDownloaded && this.props.puzzle.isDownloaded !== prevProps.puzzle.isDownloaded) {
             this.setState({isDownloadComplete: true});
         }
     }
@@ -63,15 +63,14 @@ class PuzzleCard extends Component<PuzzleCardProps, OwnState> {
 
         return <PlainLink to={playPuzzleLink}>
             <div className={[styles.iconSmall, styles.playIcon].join(" ")} onClick={playCustomPuzzle}>
-                <img className={styles.iconImage} src={playIconSrc}/>
+                <img className={styles.iconImage} src={playIconSrc} alt="play"/>
             </div>
         </PlainLink>;
     }
 
     render() {
         const {
-            background, template, puzzle,
-            deleteCustomPuzzle, playCustomPuzzle
+            background, template, puzzle, deleteCustomPuzzle
         } = this.props;
 
         return <div className={styles.mainContainer}>
@@ -90,11 +89,11 @@ class PuzzleCard extends Component<PuzzleCardProps, OwnState> {
                     <this.PlayButton/>
                     <PlainLink to={`/custom/${puzzle.id}`}>
                         <div className={[styles.iconSmall, styles.editIcon].join(" ")}>
-                            <img className={styles.iconImage} src={editIconSrc}/>
+                            <img className={styles.iconImage} src={editIconSrc} alt="edit" />
                         </div>
                     </PlainLink>
                     <div className={[styles.iconSmall, styles.deleteIcon].join(" ")} onClick={deleteCustomPuzzle}>
-                        <img className={styles.iconImage} src={deleteIconSrc}/>
+                        <img className={styles.iconImage} src={deleteIconSrc} alt="delete" />
                     </div>
                 </div>
             </div>

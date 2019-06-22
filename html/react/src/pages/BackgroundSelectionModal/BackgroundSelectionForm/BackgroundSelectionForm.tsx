@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
 
 import styles from './BackgroundSelectionForm.module.scss';
 import ImageFileInput from '../../../widgets/ImageFileInput/ImageFileInput';

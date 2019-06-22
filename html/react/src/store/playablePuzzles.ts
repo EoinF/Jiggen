@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { handleActions, createActions, Action } from 'redux-actions';
 
-import { Resource, ReducersRoot, BaseState, JiggenThunkAction } from '../models';
+import { Resource, BaseState, JiggenThunkAction } from '../models';
 import base from './base';
 import { getOrFetchResourceLinks } from '../actions/resourceLinks';
 

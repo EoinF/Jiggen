@@ -1,5 +1,5 @@
 import { createActions, handleActions, Action } from "redux-actions";
-import { JiggenThunkAction, Resource, StateRoot } from "../models";
+import { JiggenThunkAction, StateRoot } from "../models";
 import { downloadedImagesActions } from "./downloadedImages";
 import gwtAdapter from "../gwtAdapter";
 import { downloadedTemplatesActions } from "./downloadedTemplates";
@@ -47,7 +47,7 @@ const reducers = handleActions({
         PUZZLE_SOLVER_SELECT_TEMPLATE: (state, {payload}: Action<any>): Partial<PuzzleSolverScreenState> => {
             const oldLink = state.selectedBackground;
             const wasFreshPuzzle = state.isFreshPuzzle;
-            const isFreshPuzzle = wasFreshPuzzle || oldLink != payload.link;
+            const isFreshPuzzle = wasFreshPuzzle || oldLink !== payload.link;
             return {
                 ...state,
                 selectedTemplate: payload.selectedLink,
@@ -58,7 +58,7 @@ const reducers = handleActions({
         PUZZLE_SOLVER_SELECT_BACKGROUND: (state, {payload}: Action<any>): Partial<PuzzleSolverScreenState> => {
             const oldLink = state.selectedBackground;
             const wasFreshPuzzle = state.isFreshPuzzle;
-            const isFreshPuzzle = wasFreshPuzzle || oldLink != payload.link;
+            const isFreshPuzzle = wasFreshPuzzle || oldLink !== payload.link;
             return {
                 ...state,
                 selectedBackground: payload.selectedLink,

@@ -28,7 +28,7 @@ class BackgroundIcon extends Component<BackgroundIconProps> {
         }
 
         return <div className={styles.icon} >
-            <img className={styles.iconImage} src={backgroundSrc} />
+            <img className={styles.iconImage} src={backgroundSrc} alt="background" />
             <this.ProgressBar/>
         </div>;
     }

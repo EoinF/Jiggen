@@ -48,7 +48,6 @@ const {
 	setBackgrounds,
 	addBackgrounds,
 	setBackground,
-	updateBackground,
 	selectBackground,
 	removeBackground
 } = createActions({

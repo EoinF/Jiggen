@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, LinkProps, NavLinkProps } from 'react-router-dom';
+import { NavLink, NavLinkProps } from 'react-router-dom';
 import styles from './PlainNavLink.module.scss';
 
 const PlainNavLink = (props: NavLinkProps) => {

@@ -26,7 +26,7 @@ const PieceCountSelection = ({isSelected, count, onClick}: PieceCountSelectionPr
         className={className}
         onClick={onClick}
     >
-        <img src={pieceBackground}/>
+        <img src={pieceBackground} alt={`${count} pieces`}/>
         <div>{count}</div>
     </div>
 }

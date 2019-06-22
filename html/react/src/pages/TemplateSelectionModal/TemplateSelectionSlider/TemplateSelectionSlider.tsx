@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Slider, Handles, Tracks, Ticks, GetHandleProps, SliderItem, GetTrackProps, Rail } from 'react-compound-slider'
+import { Slider, Handles, Tracks, GetHandleProps, SliderItem, GetTrackProps, Rail } from 'react-compound-slider'
 import styles from './TemplateSelectionSlider.module.scss';
  
 interface TemplateSelectionSliderProps {
@@ -25,8 +25,8 @@ class TemplateSelectionSlider extends Component<TemplateSelectionSliderProps, Te
     }
 
     componentDidUpdate(prevProps: TemplateSelectionSliderProps) {
-        if (this.props.valueMin != prevProps.valueMin || 
-            this.props.valueMax != prevProps.valueMax) {
+        if (this.props.valueMin !== prevProps.valueMin || 
+            this.props.valueMax !== prevProps.valueMax) {
                 this.setState({
                     valueMin: this.props.valueMin,
                     valueMax: this.props.valueMax
@@ -149,21 +149,5 @@ const Track = ({source, target, getTrackProps}: TrackProps) => {
     {...getTrackProps()}
   />
 }
-
-interface TickProps {
-    key: string;
-    tick: SliderItem;
-    count: number;
-}
-
-const Tick = ({key, count, tick}: TickProps) => (
-    <div 
-        key={key}
-        style={{'left': `${tick.percent}%`}}
-        className={styles.tick}
-    >
-        {tick.value}
-    </div>
-)
 
 export default TemplateSelectionSlider;

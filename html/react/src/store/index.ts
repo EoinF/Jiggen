@@ -19,7 +19,7 @@ import playablePuzzles from './playablePuzzles';
 import displayOptions from './displayOptions';
 import downloadedImages from './downloadedImages';
 import puzzleSolverScreen from './puzzleSolverScreen';
-import customPuzzle, { CustomPuzzleState } from './customPuzzle';
+import customPuzzle from './customPuzzle';
 
 import thunk from 'redux-thunk';
 

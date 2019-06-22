@@ -7,14 +7,12 @@ import { Background, backgroundsActions } from '../../store/backgrounds';
 import styles from './PuzzleOfTheDayPage.module.scss';
 
 import playIconSrc from '../../assets/play-icon.png';
-import { StateRoot, StringMap } from '../../models';
+import { StateRoot } from '../../models';
 import PieceCountSelection from './PieceCountSelection/PieceCountSelection';
-import { puzzleSolverActions } from '../../store/puzzleSolverScreen';
 import { PlainLink } from '../../widgets';
 import { templatesActions } from '../../store/templates';
 import { getPlayablePuzzles } from '../../store/selectors';
 
-import puzzlePieceIcon from '../../assets/piece-outline-rounded.png';
 import LoadingSpinner from '../../widgets/LoadingSpinner/LoadingSpinner';
 
 interface DispatchProps {
@@ -64,7 +62,7 @@ class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps, any> {
     const playPuzzleLink = `/play?template=${templateLink}&background=${backgroundLink}`;
     return <PlainLink to={playPuzzleLink}>
       <div className={styles.playIcon}>
-        <img src={playIconSrc} />
+        <img src={playIconSrc} alt="play" />
         <span>Play</span>
       </div>
     </PlainLink>;
@@ -83,7 +81,12 @@ class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps, any> {
           <div className={styles.contentContainer}>
             <div className={styles.backgroundContainer}>
               { 
-                selectedBackground ? <img className={styles.backgroundImage} src={selectedBackground.links['image-compressed'] || selectedBackground.links.image} /> :
+                selectedBackground ? 
+                  <img 
+                    className={styles.backgroundImage} 
+                    src={selectedBackground.links['image-compressed'] || selectedBackground.links.image}
+                    alt={selectedBackground.name}
+                  /> :
                   <div className={styles.loadingContainer}>
                     <h1>Loading daily puzzles...</h1>
                     <LoadingSpinner/>
@@ -94,7 +97,7 @@ class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps, any> {
             <div className={styles.pieceCountContainer}>
               { puzzles.map(puzzle => <div key={puzzle.links.self}>
                 <PieceCountSelection
-                  isSelected={ selectedPuzzle == puzzle}
+                  isSelected={ selectedPuzzle === puzzle}
                   puzzle={puzzle}
                   onClick={() => this.onSelectPieceCount(puzzle.links.self)} />
                 </div>

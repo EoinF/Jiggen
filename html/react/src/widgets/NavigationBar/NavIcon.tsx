@@ -9,7 +9,7 @@ interface NavIconProps {
 export const NavIcon = ({imgSrc, labelText}: NavIconProps) => (
     <div className={styles.navButton}>
         <div className={styles.imageContainer}>
-            <img src={imgSrc} width="48px" height="48px"/>
+            <img src={imgSrc} width="48px" height="48px" alt={labelText} />
         </div>
         <label>{labelText}</label>
     </div>

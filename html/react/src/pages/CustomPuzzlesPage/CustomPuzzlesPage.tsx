@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { connect, DispatchProp } from 'react-redux';
+import { connect } from 'react-redux';
 
 import styles from './CustomPuzzlePage.module.scss';
 

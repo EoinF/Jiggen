@@ -63,10 +63,10 @@ class TemplateSelectionModal extends Component<TemplateSelectionProps, TemplateS
 	}
 
 	componentDidUpdate(prevProps: TemplateSelectionProps, prevState: TemplateSelectionState) {
-		if (prevProps.templates != this.props.templates) {
+		if (prevProps.templates !== this.props.templates) {
 			this.filterTemplates();
 			this.calculateDomain();
-		} else if (prevState.valueMin != this.state.valueMin || prevState.valueMax != this.state.valueMax) {
+		} else if (prevState.valueMin !== this.state.valueMin || prevState.valueMax !== this.state.valueMax) {
 			this.filterTemplates();
 		}
 	}

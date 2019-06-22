@@ -1,4 +1,4 @@
-import React, { ReactNode, Component } from "react";
+import React, { Component } from "react";
 import styles from './PopupNotification.module.scss';
 
 class PopupNotification extends Component {

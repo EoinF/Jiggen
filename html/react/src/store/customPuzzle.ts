@@ -114,7 +114,7 @@ const reducers = handleActions({
         return {
             ...state,
             puzzleMap: updatedPuzzleMap,
-            puzzlesDownloading: [...state.puzzlesDownloading].filter(id => id != payload.customPuzzle.id)
+            puzzlesDownloading: [...state.puzzlesDownloading].filter(id => id !== payload.customPuzzle.id)
         }
     },
     CUSTOM_PUZZLE_DOWNLOAD_COMPLETE: (state, { payload }: Action<any>): Partial<CustomPuzzleState> => {
@@ -261,7 +261,7 @@ function savePuzzle(existingPuzzle: CustomPuzzle | undefined = undefined): Jigge
 function deletePuzzle(puzzle: CustomPuzzle): JiggenThunkAction {
     return async (dispatch, getState) => {
         const puzzles = Object.values((getState() as StateRoot).customPuzzle.puzzleMap)
-            .filter(p => p.id != puzzle.id);
+            .filter(p => p.id !== puzzle.id);
         const templateLink = puzzle.template!;
         const background = puzzle.background!;
 

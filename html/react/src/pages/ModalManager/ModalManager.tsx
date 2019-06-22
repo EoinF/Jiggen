@@ -24,10 +24,10 @@ class ModalManager extends Component<ModalManagerProps> {
     }
 
     componentDidUpdate(prevProps: ModalManagerProps) {
-        if (this.props.isModalVisible != prevProps.isModalVisible) {
+        if (this.props.isModalVisible !== prevProps.isModalVisible) {
             this.updateFromProps();
         }
-        if (this.props.location.hash != prevProps.location.hash) {
+        if (this.props.location.hash !== prevProps.location.hash) {
             this.updateFromHash(this.props.location.hash);
         } 
     }

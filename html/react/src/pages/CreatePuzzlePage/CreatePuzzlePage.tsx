@@ -17,7 +17,6 @@ import { Template, templatesActions } from '../../store/templates';
 import { PlainLink, ResponsiveImage } from '../../widgets';
 import { customPuzzleActions, CustomPuzzle } from '../../store/customPuzzle';
 import { RouteComponentProps } from 'react-router';
-import PieceCountDisplay from '../../widgets/PieceCountDisplay/PieceCountDisplay';
 import TemplateDisplay from '../../widgets/TemplateDisplay/TemplateDisplay';
 
 interface StateProps {
@@ -55,11 +54,11 @@ class CreatePuzzlePage extends Component<CreatePuzzlePageProps> {
   }
 
   componentDidUpdate = (prevProps: CreatePuzzlePageProps) => {
-    if (this.props.customPuzzle.template != null && this.props.customPuzzle.template != prevProps.customPuzzle.template) {
+    if (this.props.customPuzzle.template != null && this.props.customPuzzle.template !== prevProps.customPuzzle.template) {
       this.props.fetchTemplateByLink(this.props.customPuzzle.template);
     }
     if (this.props.customPuzzle.background != null && prevProps.customPuzzle.background != null
-       && (this.props.customPuzzle.background.links.self != prevProps.customPuzzle.background.links.self)) {
+       && (this.props.customPuzzle.background.links.self !== prevProps.customPuzzle.background.links.self)) {
       if (this.props.customPuzzle.background.isCustom) {
         this.props.addBackground(this.props.customPuzzle.background)
       } else {
@@ -122,16 +121,16 @@ class CreatePuzzlePage extends Component<CreatePuzzlePageProps> {
             <div className={styles.buttonControls}>
               <PlainLink to="/custom">
                 <button className={styles.iconSmall}>
-                  <img src={cancelIcon}/>
+                  <img src={cancelIcon} alt="cancel"/>
                 </button>
               </PlainLink>
               { isReady ? ( 
                 <PlainLink to="/custom">
                   <button onClick={this.props.saveCustomPuzzle} className={styles.iconSmall}>
-                  <img src={saveIcon}/></button>
+                  <img src={saveIcon} alt="save"/></button>
               </PlainLink> ) : (
                 <button disabled onClick={this.props.saveCustomPuzzle} className={styles.iconSmall}>
-                <img src={saveIcon}/></button>
+                <img src={saveIcon} alt="save"/></button>
                 )
               }
             </div>

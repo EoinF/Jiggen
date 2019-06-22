@@ -42,7 +42,7 @@ class TemplateIcon extends Component<TemplateIconProps> {
     MinimalTemplateIcon = () => {
         const {template} = this.props;
         return <div className={`${styles.icon}`}>
-            <img src={templateIconSrc} className={styles.iconImage}/>
+            <img src={templateIconSrc} className={styles.iconImage} alt={'template'}/>
             {
                 template != null 
                 && <PieceCountDisplay count={template.pieces}/> 

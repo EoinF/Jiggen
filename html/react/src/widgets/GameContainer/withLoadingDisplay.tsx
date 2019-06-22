@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { from, Subscription } from "rxjs";
+import { Subscription } from "rxjs";
 import { gwtAppLoaded$ } from "../../gwtAdapter";
 import styles from './GameContainer.module.scss';
 

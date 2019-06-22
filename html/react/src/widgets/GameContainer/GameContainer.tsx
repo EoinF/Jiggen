@@ -108,7 +108,7 @@ class GameContainer extends React.Component<GameContainerProps> {
   }
 
   componentDidUpdate(prevProps: GameContainerProps) {
-    if (prevProps.isActive != this.props.isActive && this.props.isFreshPuzzle) {
+    if (prevProps.isActive !== this.props.isActive && this.props.isFreshPuzzle) {
       gwtAdapter.shuffle();
       this.props.setPuzzleStatus(false);
     }

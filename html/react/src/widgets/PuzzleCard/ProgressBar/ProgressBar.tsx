@@ -17,7 +17,7 @@ const ProgressBar = ({current, total}: ProgressBarProps) => {
     }
     return <div className={styles.progressBarContainer}>
         <div className={styles.imageContainer}>
-            <img className={styles.downloadIcon} src={downloadIcon} />
+            <img className={styles.downloadIcon} src={downloadIcon} alt="downloading..." />
         </div>
         <div className={styles.progressBar}>
             {barContents}

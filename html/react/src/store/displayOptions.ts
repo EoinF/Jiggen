@@ -7,7 +7,7 @@ export enum ModalType {
 }
 
 const modalTypeFromValue = (value: string): (ModalType | undefined) => {
-    return value != '' 
+    return value !== '' 
         ? Object.values(ModalType)
             .find((v: ModalType) => v === value) 
         : undefined;

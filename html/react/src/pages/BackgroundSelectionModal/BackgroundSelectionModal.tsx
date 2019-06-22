@@ -80,7 +80,6 @@ class BackgroundSelectionModal extends Component<BackgroundSelectionModalProps, 
 
 	MainContent = () => {
 		const {
-			backgrounds,
 			customPuzzleId
 		} = this.props;
 

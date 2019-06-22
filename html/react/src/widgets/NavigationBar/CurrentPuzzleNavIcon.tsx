@@ -25,7 +25,7 @@ const CurrentPuzzleNavIcon = ({selectedBackground, selectedTemplate}: CurrentPuz
         return <PlainNavLink to={playPuzzleLink} activeClassName={styles.selected}>
             <div className={styles.currentPuzzleNavButton}>
                 <div className={styles.imageMargin}/>
-                <img src={imgSrc}/> 
+                <img src={imgSrc} alt="current puzzle"/> 
                 <label>Play</label>
             </div>
         </PlainNavLink>;

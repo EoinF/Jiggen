@@ -33,7 +33,7 @@ class ImageDisplayReel extends Component<ImageDisplayReelProps, ImageDisplayReel
 	}
 
 	componentDidUpdate(prevProps: ImageDisplayReelProps) {
-		if (prevProps.displayComponents != this.props.displayComponents) {
+		if (prevProps.displayComponents !== this.props.displayComponents) {
 			this.sortComponents(this.props.displayComponents);
 		}
 	}
