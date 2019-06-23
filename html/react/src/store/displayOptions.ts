@@ -45,7 +45,6 @@ const reducers = handleActions({
     initialState
 );
 
-
 const displayOptionsActions = {
     showBackgroundsModal,
     showTemplatesModal,

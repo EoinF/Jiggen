@@ -4,6 +4,7 @@ import { ModalType, displayOptionsActions } from '../../store/displayOptions';
 import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router';
 import ModalSwitcher from './ModalSwitcher';
+import ModalWrapper from './ModalWrapper';
 
 interface StateProps {
     modalType: ModalType,
@@ -18,18 +19,37 @@ interface DispatchProps {
 type ModalManagerProps = StateProps & DispatchProps & RouteComponentProps;
 
 class ModalManager extends Component<ModalManagerProps> {
+
+    componentDidUpdate(prevProps: ModalManagerProps) {
+        const locationState = this.props.location.state;
+        if (this.props.isModalVisible !== prevProps.isModalVisible) {
+            if (this.props.isModalVisible) {
+                this.props.history.push({...this.props.location, state: {isVisible: true}});
+            } else if (locationState != null && locationState.isVisible) {
+                this.props.history.goBack();
+            }
+        } else if (locationState == null || !locationState.isVisible) {
+            this.props.hideModal();
+        }
+    }
+
     render() {
         const {
             modalType,
             isModalVisible,
             children
         } = this.props;
-
         return <React.Fragment>
             <div className={'expandToFit'}>
                 {children}
             </div>
-            <ModalSwitcher modalType={modalType} isModalVisible={isModalVisible} />
+            {
+                isModalVisible && 
+                <ModalWrapper>
+                    <ModalSwitcher modalType={modalType} isModalVisible={isModalVisible} onClose={this.props.history.goBack} />
+                </ModalWrapper>
+            }
+            
         </React.Fragment>
     }
 }

@@ -122,36 +122,34 @@ class TemplateSelectionModal extends Component<TemplateSelectionProps, TemplateS
 			return <Redirect to={`/custom/${this.props.customPuzzleId}`} push={true} />
 		} else {
 			return (
-				<ModalWrapper>
-					<div className={styles.mainContainer}>
-						<h1>
-							<span>Choose a Template</span>
-						</h1>
-						{isTemplateSliderVisible &&
-							<div className={styles.templateSelectionSliderContainer}>
-								<TemplateSelectionSlider 
-									minPieces={domainMin} 
-									maxPieces={domainMax}
-									onChange={this.onChangeSlider}
-									valueMin={valueMin}
-									valueMax={valueMax}
-								/>
-							</div>
-						}
-						{ (this.state.filteredTemplates.length === 0) ?
-						<div className={styles.noTemplatesMessage}>No templates match your current search</div>
-						: <div className={styles.templatesContainer}>
-							<ImageDisplayReel 
-								displayComponents={this.state.filteredTemplates.map(template => (
-									<li key={template.links.self} onClick={() => this.selectTemplate(template.links.self)}>
-										<TemplateWidget template={template} onError={this.onError} />
-									</li>)
-								)}
+				<div className={styles.mainContainer}>
+					<h1>
+						<span>Choose a Template</span>
+					</h1>
+					{isTemplateSliderVisible &&
+						<div className={styles.templateSelectionSliderContainer}>
+							<TemplateSelectionSlider 
+								minPieces={domainMin} 
+								maxPieces={domainMax}
+								onChange={this.onChangeSlider}
+								valueMin={valueMin}
+								valueMax={valueMax}
 							/>
 						</div>
-						}
+					}
+					{ (this.state.filteredTemplates.length === 0) ?
+					<div className={styles.noTemplatesMessage}>No templates match your current search</div>
+					: <div className={styles.templatesContainer}>
+						<ImageDisplayReel 
+							displayComponents={this.state.filteredTemplates.map(template => (
+								<li key={template.links.self} onClick={() => this.selectTemplate(template.links.self)}>
+									<TemplateWidget template={template} onError={this.onError} />
+								</li>)
+							)}
+						/>
 					</div>
-				</ModalWrapper>
+					}
+				</div>
 			);
 		}
 	}

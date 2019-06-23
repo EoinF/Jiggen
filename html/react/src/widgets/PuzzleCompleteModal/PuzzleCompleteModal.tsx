@@ -12,19 +12,17 @@ interface DispatchProps {
 
 
 const PuzzleCompleteModal = ({hideModal}: DispatchProps) => {
-    return <ModalWrapper>
-        <div className={styles.mainContainer}>
-            <div className={styles.modalTitleContainer}>
-                <h1 className={styles.modalTitle}>Puzzle complete!</h1>
-            </div>
-            <div className={styles.buttonControls}>
-                <PlainLink to="/custom">
-                    <div className={styles.button} onClick={hideModal}>More puzzles</div>
-                </PlainLink>
-                <div className={styles.button} onClick={hideModal}>Back</div>
-            </div>
+    return <div className={styles.mainContainer}>
+        <div className={styles.modalTitleContainer}>
+            <h1 className={styles.modalTitle}>Puzzle complete!</h1>
         </div>
-    </ModalWrapper>
+        <div className={styles.buttonControls}>
+            <PlainLink to="/custom">
+                <div className={styles.button} onClick={hideModal}>More puzzles</div>
+            </PlainLink>
+            <div className={styles.button} onClick={hideModal}>Back</div>
+        </div>
+    </div>
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({

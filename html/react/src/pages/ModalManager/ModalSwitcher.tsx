@@ -7,6 +7,7 @@ import PuzzleCompleteModal from '../../widgets/PuzzleCompleteModal/PuzzleComplet
 interface ModalSwitcherProps {
     modalType: ModalType,
     isModalVisible: boolean;
+    onClose: () => void;
 }
 
 class ModalSwitcher extends Component<ModalSwitcherProps> {

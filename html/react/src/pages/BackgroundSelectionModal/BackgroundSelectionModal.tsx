@@ -9,7 +9,6 @@ import {
 } from '../../store/backgrounds';
 
 import styles from './BackgroundSelectionModal.module.scss';
-import ModalWrapper from '../ModalManager/ModalWrapper';
 import BackgroundSelectionForm from './BackgroundSelectionForm';
 import { StateRoot, Resource } from '../../models';
 import { Redirect } from 'react-router';
@@ -48,12 +47,10 @@ class BackgroundSelectionModal extends Component<BackgroundSelectionModalProps, 
 
 	render () {
 		return (
-			<ModalWrapper>
-				<div className={styles.mainContainer}>
-					<h1>Choose a Background</h1>
-					<this.MainContent/>
-				</div>
-			</ModalWrapper>
+			<div className={styles.mainContainer}>
+				<h1>Choose a Background</h1>
+				<this.MainContent/>
+			</div>
 		);
 	}
 
