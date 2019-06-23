@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import { StateRoot } from '../../models';
-import { ModalType, displayOptionsActions, modalTypeFromValue } from '../../store/displayOptions';
+import { ModalType, displayOptionsActions } from '../../store/displayOptions';
 import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router';
 import ModalSwitcher from './ModalSwitcher';
 
 interface StateProps {
-    modalType: string,
+    modalType: ModalType,
     isModalVisible: boolean;
 }
 
@@ -18,49 +18,15 @@ interface DispatchProps {
 type ModalManagerProps = StateProps & DispatchProps & RouteComponentProps;
 
 class ModalManager extends Component<ModalManagerProps> {
-    componentDidMount() {
-        this.updateFromProps();
-        this.updateFromHash(this.props.location.hash);
-    }
-
-    componentDidUpdate(prevProps: ModalManagerProps) {
-        if (this.props.isModalVisible !== prevProps.isModalVisible) {
-            this.updateFromProps();
-        }
-        if (this.props.location.hash !== prevProps.location.hash) {
-            this.updateFromHash(this.props.location.hash);
-        } 
-    }
-
-    updateFromHash(hash: string) {
-        const modalType = modalTypeFromValue(hash);
-        if (modalType != null) {
-            this.props.showModal(modalType);
-        } else {
-            this.props.hideModal();
-        }
-    }
-
-    updateFromProps() {
-        if (this.props.isModalVisible) {
-            const modalTypeFromHash = modalTypeFromValue(this.props.location.hash);
-            if (modalTypeFromHash == null) {
-                this.props.history.push({...this.props.location, hash: this.props.modalType});
-            }
-        }
-    }
-
     render() {
         const {
             modalType,
             isModalVisible,
             children
         } = this.props;
-        // Hide the background content if on mobile
-        let backgroundContentClassName = 'expandToFit'; //isModalVisible ? 'hiddenIfMobile expandToFit': 'expandToFit';
 
         return <React.Fragment>
-            <div className={backgroundContentClassName}>
+            <div className={'expandToFit'}>
                 {children}
             </div>
             <ModalSwitcher modalType={modalType} isModalVisible={isModalVisible} />

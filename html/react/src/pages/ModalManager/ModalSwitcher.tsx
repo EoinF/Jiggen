@@ -5,7 +5,7 @@ import TemplateSelectionModal from '../TemplateSelectionModal/TemplateSelectionM
 import PuzzleCompleteModal from '../../widgets/PuzzleCompleteModal/PuzzleCompleteModal';
 
 interface ModalSwitcherProps {
-    modalType: string,
+    modalType: ModalType,
     isModalVisible: boolean;
 }
 

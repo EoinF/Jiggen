@@ -1,16 +1,9 @@
 import { createActions, handleActions, Action } from "redux-actions";
 
 export enum ModalType {
-    BACKGROUND_SELECT = '#backgrounds',
-    TEMPLATE_SELECT = '#templates',
-    PUZZLE_COMPLETE = ''
-}
-
-const modalTypeFromValue = (value: string): (ModalType | undefined) => {
-    return value !== '' 
-        ? Object.values(ModalType)
-            .find((v: ModalType) => v === value) 
-        : undefined;
+    BACKGROUND_SELECT,
+    TEMPLATE_SELECT,
+    PUZZLE_COMPLETE
 }
 
 export interface DisplayOptionsState {
@@ -61,7 +54,6 @@ const displayOptionsActions = {
 }
 
 export {
-    displayOptionsActions,
-    modalTypeFromValue
+    displayOptionsActions
 }
 export default reducers;
