@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import { displayOptionsActions } from '../../store/displayOptions';
 import { Dispatch } from 'redux';
 
+import whiteCrossIcon from '../../assets/close-icon.png';
+
 interface DispatchProps {
     closeModal: () => void;
 }
@@ -15,7 +17,9 @@ class ModalWrapper extends Component<ModalWrapperProps> {
     render() {
         return <div className={styles.mainContainer}>
             <div className={styles.innerContainer}>
-        <div className={styles.closeButton} onClick={this.props.closeModal}>x</div> 
+                <div>
+                    <div className={styles.closeButton} onClick={this.props.closeModal}><img src={whiteCrossIcon} alt="close" /></div> 
+                </div>
                 {this.props.children}
             </div>
         </div>;

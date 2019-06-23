@@ -1,42 +1,43 @@
 @import '../../vars';
 
 .mainContainer {
-    // @media (min-width: $breakpoint-width-mobile) {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 999;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999;
 
-        background: rgba($black, 0.5);
+    background: rgba($black, 0.5);
 
-        display: flex;
-        flex-flow: column wrap;
-        align-content: center;
-        justify-content: center;
-    // }
+    display: flex;
+    flex-flow: column wrap;
+    align-content: center;
+    justify-content: center;
 }
 
 .innerContainer {
-    // position: relative;
+    margin-top: 1.5rem;
     max-width: 70rem;
-    height: 100%;
     overflow-y: auto;
-    overflow-x: visible;
 }
 
 .closeButton {
     cursor: pointer;
-    // width: 0;
-    top: 0;
     position: absolute;
-    margin-top: 0;
-    transform: translate(-50%);
+    background: $grey100;
+    border-radius: 30px;
+    padding: 0.25rem;
+    transform: translate(-50%, -50%);
+    line-height: 1rem;
+    z-index: 100;
 }
 
-@media (min-width: $breakpoint-width-mobile) {
+@media (max-width: $breakpoint-width-mobile) {
     .closeButton {
-        transform: translate(50%);
+        transform: unset;
+    }
+    .innerContainer {
+        margin-top: 0;
     }
 }
