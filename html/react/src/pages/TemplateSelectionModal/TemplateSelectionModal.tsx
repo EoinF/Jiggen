@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import ImageDisplayReel from '../../widgets/ImageDisplayReel';
 
 import styles from './TemplateSelectionModal.module.scss';
-import ModalWrapper from '../ModalManager/ModalWrapper';
 import { Template, templatesActions } from '../../store/templates';
 import { StateRoot } from '../../models';
 import { Redirect } from 'react-router';

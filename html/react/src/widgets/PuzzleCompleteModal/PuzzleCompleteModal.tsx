@@ -1,5 +1,4 @@
 import React from 'react';
-import ModalWrapper from '../../pages/ModalManager/ModalWrapper';
 import styles from './PuzzleCompleteModal.module.scss';
 import PlainLink from '../PlainLink';
 import { Dispatch } from 'redux';
