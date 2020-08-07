@@ -62,7 +62,7 @@ const {
 			savedSuggestions[background.links.self] = background;
 			saveState(backgroundsStateKey, savedSuggestions);
 		}
-			
+
 		return {resource: background};
 	},
 	UPDATE_BACKGROUND: (backgroundId: string, updatedAttributes: Background) => ({resourceId: backgroundId, updatedAttributes}),
@@ -129,7 +129,7 @@ function selectBackgroundByLink (link: string): JiggenThunkAction {
 }
 
 const reducers = handleActions<BackgroundsState>({
-		FETCH_BACKGROUNDS: (state, {payload}: Action<any>) => base.setIsFetching(state, payload) as BackgroundsState,
+		START_FETCHING_BACKGROUNDS: (state, {payload}: Action<any>) => base.setIsFetching(state, payload) as BackgroundsState,
 		SET_BACKGROUND: (state, {payload}: Action<any>) => base.setOrUpdateResource(state, payload) as BackgroundsState,
 		SET_BACKGROUNDS: (state, {payload}: Action<any>) => base.setResources(state, payload) as BackgroundsState,
 		ADD_BACKGROUNDS: (state, {payload}: Action<any>) => {

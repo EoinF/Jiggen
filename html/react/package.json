@@ -12,19 +12,20 @@
     "@types/redux-thunk": "^2.1.0",
     "@types/uuid": "^3.4.4",
     "axios": "^0.19.0",
-    "node-sass": "^4.12.0",
+    "node-sass": "^4.14.1",
     "normalize.css": "^8.0.1",
     "query-string": "^6.5.0",
     "react": "^16.6.3",
     "react-compound-slider": "^1.2.1",
     "react-dom": "^16.7.0",
     "react-redux": "^5.1.1",
-    "react-router-dom": "^4.4.0",
-    "react-scripts": "^3.0.1",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "^3.4.1",
     "redux": "^4.0.1",
     "redux-actions": "^2.6.4",
     "reselect": "^4.0.0",
     "rxjs": "^6.3.3",
+    "seedrandom": "^3.0.5",
     "typescript": "^3.2.2",
     "uuid": "^3.3.2",
     "workbox-build": "^4.1.1"
@@ -45,5 +46,8 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "@types/seedrandom": "^2.4.28"
+  }
 }
