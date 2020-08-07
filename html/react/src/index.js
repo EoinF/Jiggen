@@ -19,7 +19,6 @@ puzzleMap$
 	.subscribe((value) => saveState(customPuzzlesStateKey, value));
 
 store.subscribe(() => {
-	console.log("on sub")
 	const puzzleMap = store.getState().customPuzzle.puzzleMap;
 	puzzleMap$.next(puzzleMap);
 });
