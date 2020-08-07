@@ -9,7 +9,7 @@ import App from './App';
 
 import { saveState } from './store/localStorage';
 import { Subject } from 'rxjs';
-import { first, debounceTime } from 'rxjs/operators';
+import { debounceTime } from 'rxjs/operators';
 import { customPuzzleActions } from './store/customPuzzle';
 import { customPuzzlesStateKey } from './constants';
 
@@ -19,17 +19,16 @@ puzzleMap$
 	.subscribe((value) => saveState(customPuzzlesStateKey, value));
 
 store.subscribe(() => {
+	console.log("on sub")
 	const puzzleMap = store.getState().customPuzzle.puzzleMap;
 	puzzleMap$.next(puzzleMap);
 });
 
-puzzleMap$.pipe(
-	first()
-).subscribe((puzzles) => {
-	for (const key in puzzles) {
-		store.dispatch(customPuzzleActions.savePuzzle(puzzles[key]));
-	}
-});
+const puzzleMap = store.getState().customPuzzle.puzzleMap;
+for (const key in store.getState().customPuzzle.puzzleMap) {
+	store.dispatch(customPuzzleActions.savePuzzle(puzzleMap[key]));
+}
+
 
 ReactDOM.render(
   	<App store={store}/>

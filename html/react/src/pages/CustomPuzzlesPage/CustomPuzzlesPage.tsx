@@ -32,12 +32,12 @@ class CustomPuzzlePage extends Component<CustomPuzzlePageProps> {
   }
 }
 
-type CustomPuzzlesProps = StateProps; 
+type CustomPuzzlesProps = StateProps;
 
 const CustomPuzzles = ({customPuzzles}: CustomPuzzlesProps) => {
   return <div className={styles.mainContainer}>
           { customPuzzles.map(
-            (customPuzzle: CustomPuzzle) => 
+            (customPuzzle: CustomPuzzle) =>
               <PuzzleCard key={customPuzzle.id} puzzle={customPuzzle}/>
             )
           }

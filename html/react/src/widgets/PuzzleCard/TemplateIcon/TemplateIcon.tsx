@@ -20,51 +20,51 @@ interface StateProps {
 
 type TemplateIconProps = OwnProps & StateProps;
 
+
+const FullTemplateIcon = ({template}: OwnProps) => {
+    return (template != null) ? <TemplateDisplay template={template} /> : <MinimalTemplateIcon template={template} />
+}
+
+const MinimalTemplateIcon = ({template}: OwnProps) => (
+ <div className={`${styles.icon}`}>
+        <img src={templateIconSrc} className={styles.iconImage} alt={'template'}/>
+        {
+            template != null
+            && <PieceCountDisplay count={template.pieces}/>
+        }
+    </div>
+);
+
+const TemplateProgressBar = ({downloadedTemplate}: StateProps) => {
+    if (downloadedTemplate == null) {
+        return <ProgressBar
+            current={0}
+            total={1}
+        />;
+    } else if (downloadedTemplate != null && downloadedTemplate.isDownloading) {
+        return <ProgressBar
+            current={0}
+            total={-1}
+        />;
+    } else {
+        return null;
+    }
+}
+
 class TemplateIcon extends Component<TemplateIconProps> {
 
     render() {
         return <div className={styles.templateSelectionContainer}>
             <div className={styles.iconFull}>
-                <this.FullTemplateIcon/>
+                <FullTemplateIcon template={this.props.template} />
             </div>
             <div className={`${styles.icon} ${styles.iconMinimal}`}>
-                <this.MinimalTemplateIcon/>
+                <MinimalTemplateIcon template={this.props.template} />
             </div>
-            <this.ProgressBar/>
+            <TemplateProgressBar downloadedTemplate={this.props.downloadedTemplate}/>
         </div>
     }
 
-    FullTemplateIcon = () => {
-        const {template} = this.props;
-        return template != null ? <TemplateDisplay template={template} /> : <this.MinimalTemplateIcon/>
-    }
-
-    MinimalTemplateIcon = () => {
-        const {template} = this.props;
-        return <div className={`${styles.icon}`}>
-            <img src={templateIconSrc} className={styles.iconImage} alt={'template'}/>
-            {
-                template != null 
-                && <PieceCountDisplay count={template.pieces}/> 
-            }
-        </div>;
-    }
-
-    ProgressBar = () => {
-        if (this.props.downloadedTemplate == null) {
-            return <ProgressBar
-                current={0}
-                total={1}
-            />;
-        } else if (this.props.downloadedTemplate != null && this.props.downloadedTemplate.isDownloading) {
-            return <ProgressBar
-                current={0}
-                total={-1}
-            />;
-        } else {
-            return null;
-        }
-    }
 }
 
 
