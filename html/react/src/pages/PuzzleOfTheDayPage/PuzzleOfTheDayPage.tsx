@@ -33,7 +33,7 @@ type PuzzleOfTheDayPageProps = DispatchProps & StateProps;
 class PuzzleOfTheDayPage extends Component<PuzzleOfTheDayPageProps, any> {
 
   componentDidMount() {
-    // this.props.fetchPuzzlesOfTheDay();
+    this.props.fetchPuzzlesOfTheDay();
   };
 
   componentDidUpdate(prevProps: PuzzleOfTheDayPageProps) {
